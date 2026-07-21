@@ -38,6 +38,8 @@ import com.towermarsh.opendata.logging.LoggingManager;
 import java.io.IOException;
 
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * OpenData application entry point.
@@ -52,14 +54,15 @@ public final class Main {
      *
      * @param args command line arguments
      */
+    @SuppressWarnings("null")
     public static void main(
             String[] args) {
-
+        Logger logger = null;
         try {
 
             LoggingManager.initialise(
                     Path.of("logs"));
-
+            logger = LoggingManager.getLogger();
             CommandLineArguments arguments
                     = CommandLineArguments.parse(args);
 
@@ -70,8 +73,8 @@ public final class Main {
 
         } catch (ConfigurationException | IOException ex) {
 
-
-            System.exit(1);
+            logger.log(Level.SEVERE, "Error: {0}", ex.getMessage());
+            System.exit(0);
         }
     }
 }

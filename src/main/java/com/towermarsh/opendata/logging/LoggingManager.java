@@ -48,7 +48,10 @@ public class LoggingManager {
     private static final String APPLICATION_NAME
             = "OpenData";
 
-    private static Logger logger;
+       /**
+     * set the logger name to this class
+     */
+    protected static final Logger logger = Logger.getLogger(LoggingManager.class.getName());
 
     private LoggingManager() {
         // Utility class
@@ -88,8 +91,8 @@ public class LoggingManager {
 
         rootLogger.addHandler(fileHandler);
 
-        logger
-                = Logger.getLogger(APPLICATION_NAME);
+//        logger
+//                = Logger.getLogger(APPLICATION_NAME);
 
         logger.info(
                 "Logging initialised");
@@ -102,11 +105,11 @@ public class LoggingManager {
      */
     public static Logger getLogger() {
 
-        if (logger == null) {
-
-            logger
-                    = Logger.getLogger(APPLICATION_NAME);
-        }
+//        if (logger == null) {
+//
+//            logger
+//                    = Logger.getLogger(APPLICATION_NAME);
+//        }
 
         return logger;
     }
