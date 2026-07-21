@@ -1,0 +1,16 @@
+flowchart TD
+    Args[Parse CLI]
+    Plugin[Resolve plugin]
+    Defaults[Load defaults]
+    Override[Load optional override]
+    Merge[Merge and validate]
+    Acquire[Acquire source]
+    Archive[Archive and checksum]
+    Parse[Parse]
+    Validate[Validate]
+    Transform[Transform]
+    Persist[Transactional load]
+    Report[Run report]
+
+    Args --> Plugin --> Defaults --> Override --> Merge
+    Merge --> Acquire --> Archive --> Parse --> Validate --> Transform --> Persist --> Report

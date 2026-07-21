@@ -1,0 +1,29 @@
+@startuml
+title OpenData - Runtime Sequence
+
+actor Operator
+participant OpenDataApplication as App
+participant CliParser as Cli
+participant PluginRegistry as Registry
+participant ConfigurationService as Config
+participant DatasetPlugin as Plugin
+participant "Data Provider" as Provider
+database "SQL Server" as DB
+
+Operator -> App : --plugin ofgem [--file override]
+App -> Cli : parse(args)
+Cli --> App : CommandRequest
+App -> Registry : resolve("ofgem")
+Registry --> App : OfgemPlugin
+App -> Config : load defaults and override
+Config --> App : validated configuration
+App -> Plugin : execute(context)
+Plugin -> Provider : retrieve source
+Provider --> Plugin : source response
+Plugin -> Plugin : archive, parse,\nvalidate, transform
+Plugin -> DB : transactional load
+DB --> Plugin : persistence result
+Plugin --> App : RunReport
+App --> Operator : summary and exit code
+
+@enduml

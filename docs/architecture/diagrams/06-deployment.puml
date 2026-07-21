@@ -1,0 +1,27 @@
+@startuml
+title OpenData - Deployment
+
+node "Windows Host" {
+  node "Java Runtime" {
+    artifact "opendata.jar" as Jar
+  }
+
+  folder "config" as Config
+  folder "secrets" as Secrets
+  folder "data/archive" as Archive
+  folder "logs" as Logs
+  component "Task Scheduler" as Scheduler
+}
+
+cloud "Open Data Provider" as Provider
+database "Microsoft SQL Server" as SQL
+
+Scheduler --> Jar : scheduled command
+Jar --> Config : read properties
+Jar --> Secrets : read protected credential
+Jar --> Archive : write source files
+Jar --> Logs : JUL output
+Jar --> Provider : HTTPS
+Jar --> SQL : JDBC/TLS
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+title OpenData - Component Dependencies
+left to right direction
+
+package "com.towermarsh.opendata" {
+  [app] as app
+  [cli] as cli
+  [core] as core
+  [plugin] as contracts
+  [config] as config
+  [download] as download
+  [file] as file
+  [persistence] as persistence
+  [logging] as logging
+  [plugins.ofgem] as ofgem
+}
+
+app --> cli
+app --> core
+app --> logging
+core --> contracts
+core --> config
+core --> download
+core --> file
+core --> persistence
+ofgem --> contracts
+ofgem --> config
+ofgem --> download
+ofgem --> file
+ofgem --> persistence
+ofgem --> logging
+
+note bottom of core
+The core must not depend
+on plugins.ofgem.
+end note
+
+@enduml

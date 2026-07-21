@@ -1,0 +1,15 @@
+stateDiagram-v2
+    [*] --> Resolved
+    Resolved --> Configured
+    Configured --> Planned
+    Planned --> Acquiring
+    Acquiring --> Parsing
+    Parsing --> Validating
+    Validating --> Persisting
+    Persisting --> Completed
+    Acquiring --> Failed
+    Parsing --> Failed
+    Validating --> Failed
+    Persisting --> Failed
+    Completed --> [*]
+    Failed --> [*]
