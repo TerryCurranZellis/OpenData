@@ -25,11 +25,11 @@
  */
 package com.towermarsh.opendata.app;
 
+
 import com.towermarsh.opendata.config.ApplicationConfig;
-import com.towermarsh.opendata.config.ConfigLoader;
+import com.towermarsh.opendata.config.ConfigurationLoader;
 import com.towermarsh.opendata.exception.ConfigurationException;
 import com.towermarsh.opendata.logging.LoggingManager;
-
 import java.util.logging.Logger;
 
 /**
@@ -67,9 +67,7 @@ public final class OpenDataApplication {
             CommandLineArguments arguments)
             throws ConfigurationException {
 
-        ApplicationConfig config
-                = ConfigLoader.load(
-                        arguments.getConfigFile());
+        var config = ConfigurationLoader.load(arguments);
 
         logger.info(
                 "OpenData application started");

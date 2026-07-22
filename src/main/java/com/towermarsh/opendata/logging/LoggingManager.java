@@ -29,7 +29,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.logging.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Central logging configuration manager.
@@ -48,7 +51,7 @@ public class LoggingManager {
     private static final String APPLICATION_NAME
             = "OpenData";
 
-       /**
+    /**
      * set the logger name to this class
      */
     protected static final Logger logger = Logger.getLogger(LoggingManager.class.getName());
@@ -65,17 +68,12 @@ public class LoggingManager {
      */
     public static void initialise(Path logDirectory)
             throws IOException {
-
         if (!Files.exists(logDirectory)) {
             Files.createDirectories(logDirectory);
         }
-
-        Logger rootLogger
-                = Logger.getLogger("");
-
+        var rootLogger = Logger.getLogger("");
         rootLogger.setLevel(Level.INFO);
-
-        FileHandler fileHandler
+        var fileHandler
                 = new FileHandler(
                         logDirectory
                                 .resolve(
@@ -85,17 +83,9 @@ public class LoggingManager {
                                         + ".log")
                                 .toString(),
                         true);
-
-        fileHandler.setFormatter(
-                new SimpleFormatter());
-
+        fileHandler.setFormatter(new SimpleFormatter());
         rootLogger.addHandler(fileHandler);
-
-//        logger
-//                = Logger.getLogger(APPLICATION_NAME);
-
-        logger.info(
-                "Logging initialised");
+        logger.info("Logging initialised");
     }
 
     /**
@@ -104,13 +94,6 @@ public class LoggingManager {
      * @return logger instance
      */
     public static Logger getLogger() {
-
-//        if (logger == null) {
-//
-//            logger
-//                    = Logger.getLogger(APPLICATION_NAME);
-//        }
-
         return logger;
     }
 }

@@ -1,59 +1,16 @@
-/*
- *  Filename: ConfigException.java
- * 
- *  (C) Copyright Terry Curran 2026. All rights reserved
- * 
- *  This software is provided 'as-is', without any express or implied
- *  warranty.  In no event will the author be held liable for any damages
- *  arising from the use of this software.
- * 
- *  Permission is granted to anyone to use this software for any purpose,
- *  including commercial applications, and to alter it and redistribute it
- *  freely, subject to the following restrictions:
- * 
- *  1. The origin of this software must not be misrepresented; you must not
- *     claim that you wrote the original software. If you use this software
- *     in a product, an acknowledgement in the product documentation would be
- *     appreciated but is not required.
- *  2. Altered source versions must be plainly marked as such, and must not be
- *     misrepresented as being the original software.
- *  3. This notice may not be removed or altered from any source distribution.
- * 
- *  The author may be contacted by email to the following address:
- * 
- *  terry.curran@towermarsh.co.uk
- */
 package com.towermarsh.opendata.exception;
 
 /**
- * Indicates a configuration loading or validation failure.
- *
- * @author terry
- * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
- * @version 21 Jul 2026
+ * Thrown when application or plugin configuration cannot be loaded,
+ * parsed or validated.
  */
-public class ConfigurationException
-        extends OpenDataException {
+public final class ConfigurationException extends RuntimeException {
 
-    /**
-     * Creates a configuration exception.
-     *
-     * @param message error message
-     */
-    public ConfigurationException(String message) {
+    public ConfigurationException(final String message) {
         super(message);
     }
 
-    /**
-     * Creates a configuration exception.
-     *
-     * @param message error message
-     * @param cause underlying cause
-     */
-    public ConfigurationException(
-            String message,
-            Throwable cause) {
-
+    public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }
