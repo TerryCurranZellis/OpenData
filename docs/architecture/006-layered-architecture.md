@@ -1,12 +1,12 @@
-# Project Vision
+# Layered Architecture
 
-**Document ID:** 001
+**Document ID:** 006
 **Version:** 1.0
 **Status:** Draft
 
 ## Purpose
 
-Defines the long-term vision and objectives of the OpenData Framework.
+Defines architectural layers and boundaries.
 
 ## Scope
 
@@ -14,7 +14,7 @@ This document forms part of the OpenData Framework Software Architecture Manual 
 
 ## Overview
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Project Vision**.
+The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Layered Architecture**.
 
 ## Design Principles
 

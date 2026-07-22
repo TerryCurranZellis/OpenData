@@ -1,12 +1,12 @@
-# Project Vision
+# Logging
 
-**Document ID:** 001
+**Document ID:** 012
 **Version:** 1.0
 **Status:** Draft
 
 ## Purpose
 
-Defines the long-term vision and objectives of the OpenData Framework.
+Logging strategy and standards.
 
 ## Scope
 
@@ -14,7 +14,7 @@ This document forms part of the OpenData Framework Software Architecture Manual 
 
 ## Overview
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Project Vision**.
+The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Logging**.
 
 ## Design Principles
 
