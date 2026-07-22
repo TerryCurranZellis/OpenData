@@ -1,0 +1,30 @@
+{
+  "projectTitle": "OpenData Framework",
+  "manualTitle": "OpenData Framework Technical Documentation",
+  "author": "OpenData Framework Project",
+  "language": "en-GB",
+  "dateFormat": "dd MMMM yyyy",
+  "sourceDirectory": "docs",
+  "buildDirectory": "docs/build",
+  "diagramSourceDirectory": "docs/diagrams/source",
+  "diagramOutputDirectory": "docs/diagrams/generated",
+  "plantUmlJar": "tools/plantuml.jar",
+  "referenceDoc": "config/OpenData-Reference.docx",
+  "pdfEngine": "xelatex",
+  "includePatterns": [
+    "README.md",
+    "architecture/*.md",
+    "development/*.md",
+    "standards/*.md",
+    "guides/*.md",
+    "reference/*.md",
+    "roadmap/*.md",
+    "decisions/*.md"
+  ],
+  "excludePatterns": [
+    "_templates/**",
+    "_includes/**",
+    "build/**",
+    "diagrams/**"
+  ]
+}

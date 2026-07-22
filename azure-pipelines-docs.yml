@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - docs/*
+      - scripts/documentation/*
+      - config/documentation.json
+
+pool:
+  vmImage: windows-latest
+
+steps:
+- powershell: |
+    choco install pandoc -y
+  displayName: Install Pandoc
+
+- powershell: |
+    .\scripts\documentation\Build-Documentation.ps1 -Format Html -Validate -Clean
+  displayName: Validate and build documentation
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: docs/build
+    ArtifactName: documentation

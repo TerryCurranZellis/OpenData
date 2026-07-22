@@ -1,0 +1,23 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+title OpenData Processing Sequence
+
+actor User
+participant CLI
+participant Application
+participant Pipeline
+participant DatasetPlugin
+participant Repository
+
+User -> CLI: Execute command
+CLI -> Application: Run dataset
+Application -> Pipeline: Execute
+Pipeline -> DatasetPlugin: Extract / validate / transform
+Pipeline -> Repository: Load records
+Repository --> Pipeline: Import result
+Pipeline --> Application: Pipeline result
+Application --> CLI: Exit status
+
+@enduml

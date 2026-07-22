@@ -1,0 +1,21 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+title OpenData Component Diagram
+
+package "OpenData Framework" {
+  [Command Line Interface] as CLI
+  [Application Services] as APP
+  [Pipeline Engine] as PIPE
+  [Dataset Plugins] as PLUGINS
+  database "SQL Server" as DB
+
+  CLI --> APP
+  APP --> PIPE
+  PIPE --> PLUGINS
+  PIPE --> DB
+}
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+title OpenData Dataset Pipeline
+
+actor Operator
+participant CLI
+participant OpenDataApplication
+participant DatasetRegistry
+participant Pipeline
+participant DatasetPlugin
+participant Validator
+participant Repository
+
+Operator -> CLI: --plugin ofgem [--file settings]
+CLI -> OpenDataApplication: execute(arguments)
+OpenDataApplication -> DatasetRegistry: find("ofgem")
+DatasetRegistry --> OpenDataApplication: plugin
+OpenDataApplication -> Pipeline: execute(plugin, context)
+Pipeline -> DatasetPlugin: download()
+DatasetPlugin --> Pipeline: source file
+Pipeline -> DatasetPlugin: parse(source file)
+DatasetPlugin --> Pipeline: DataTable
+Pipeline -> Validator: validate(DataTable)
+Validator --> Pipeline: ValidationResult
+Pipeline -> DatasetPlugin: transform(DataTable)
+DatasetPlugin --> Pipeline: transformed data
+Pipeline -> Repository: load(transformed data)
+Repository --> Pipeline: ImportResult
+Pipeline --> OpenDataApplication: PipelineResult
+OpenDataApplication --> CLI: exit code and summary
+@enduml

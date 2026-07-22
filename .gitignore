@@ -34,3 +34,13 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
+# Generated documentation
+docs/build/*
+!docs/build/.gitkeep
+docs/diagrams/generated/*
+!docs/diagrams/generated/.gitkeep
+
+# Optional local tools and templates
+tools/plantuml.jar
+config/OpenData-Reference.docx

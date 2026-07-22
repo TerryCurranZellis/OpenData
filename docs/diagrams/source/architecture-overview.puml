@@ -1,0 +1,35 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+title OpenData Framework - Architecture Overview
+
+actor Operator
+component "CLI" as CLI
+component "Application Layer" as APP
+component "Configuration" as CFG
+component "Dataset Registry" as REG
+component "Pipeline Engine" as PIPE
+component "Dataset Plugin" as PLUGIN
+component "Validation" as VAL
+component "Database Services" as DBS
+component "Logging and Audit" as LOG
+cloud "Open Data Provider" as SOURCE
+database "SQL Server" as DB
+
+Operator --> CLI
+CLI --> APP
+APP --> CFG
+APP --> REG
+APP --> PIPE
+REG --> PLUGIN
+PIPE --> PLUGIN
+PLUGIN --> SOURCE
+PIPE --> VAL
+PIPE --> DBS
+DBS --> DB
+APP --> LOG
+PIPE --> LOG
+DBS --> LOG
+@enduml

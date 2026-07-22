@@ -1,0 +1,30 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'scripts/documentation/**'
+      - 'config/documentation.json'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'scripts/documentation/**'
+      - 'config/documentation.json'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pandoc
+        run: choco install pandoc -y
+      - name: Validate and build HTML
+        shell: powershell
+        run: .\scripts\documentation\Build-Documentation.ps1 -Format Html -Validate -Clean
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: opendata-documentation
+          path: docs/build/
