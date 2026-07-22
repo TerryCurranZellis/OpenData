@@ -259,6 +259,25 @@ public final class PropertiesPluginDefinitionLoader
         return names;
     }
 
+    private static TreeSet<String> extractPropertyNames(
+            final Map<String, String> values) {
+
+        final String rootPrefix = "property.";
+        final TreeSet<String> names = new TreeSet<>();
+        for (String key : values.keySet()) {
+            if (!key.startsWith(rootPrefix)) {
+                continue;
+            }
+
+            final String remainder = key.substring(rootPrefix.length());
+            final int lastDot = remainder.lastIndexOf('.');
+            if (lastDot > 0) {
+                names.add(remainder.substring(0, lastDot));
+            }
+        }
+        return names;
+    }
+
     private static Map<String, String> subMap(
             final Map<String, String> values,
             final String prefix) {
