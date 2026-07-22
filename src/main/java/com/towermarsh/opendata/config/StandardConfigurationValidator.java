@@ -1,6 +1,5 @@
 package com.towermarsh.opendata.config;
 
-import java.nio.file.Path;
 import java.time.Duration;
 
 import com.towermarsh.opendata.config.model.BootstrapConfig;
@@ -11,14 +10,19 @@ import com.towermarsh.opendata.exception.ConfigurationException;
  */
 public final class StandardConfigurationValidator implements ConfigurationValidator {
 
+    /**
+     * validate the configuration
+     *
+     * @param configuration configuration to validate
+     */
     @Override
     public void validate(final ApplicationConfig configuration) {
         final BootstrapConfig bootstrap = configuration.bootstrap();
 
-        final String connectTimeoutStr = bootstrap.values().get("http.connect-timeout-seconds");
+        final var connectTimeoutStr = bootstrap.values().get("http.connect-timeout-seconds");
         if (connectTimeoutStr != null) {
             try {
-                final int connectTimeoutSeconds = Integer.parseInt(connectTimeoutStr.trim());
+                final var connectTimeoutSeconds = Integer.parseInt(connectTimeoutStr.trim());
                 if (connectTimeoutSeconds <= 0) {
                     throw new ConfigurationException(
                             "http.connect-timeout-seconds must be greater than zero.");
@@ -30,10 +34,10 @@ public final class StandardConfigurationValidator implements ConfigurationValida
             }
         }
 
-        final String requestTimeoutStr = bootstrap.values().get("http.request-timeout-seconds");
+        final var requestTimeoutStr = bootstrap.values().get("http.request-timeout-seconds");
         if (requestTimeoutStr != null) {
             try {
-                final int requestTimeoutSeconds = Integer.parseInt(requestTimeoutStr.trim());
+                final var requestTimeoutSeconds = Integer.parseInt(requestTimeoutStr.trim());
                 if (requestTimeoutSeconds <= 0) {
                     throw new ConfigurationException(
                             "http.request-timeout-seconds must be greater than zero.");
@@ -45,12 +49,12 @@ public final class StandardConfigurationValidator implements ConfigurationValida
             }
         }
 
-        final Path workingDirectory = bootstrap.workingDirectory();
+        final var workingDirectory = bootstrap.workingDirectory();
         if (workingDirectory.toString().isBlank()) {
             throw new ConfigurationException("application.working-directory must not be blank.");
         }
 
-        final String lockTimeoutStr = bootstrap.values().get("pipeline.lock-timeout");
+        final var lockTimeoutStr = bootstrap.values().get("pipeline.lock-timeout");
         if (lockTimeoutStr != null) {
             try {
                 Duration.parse(lockTimeoutStr.trim());

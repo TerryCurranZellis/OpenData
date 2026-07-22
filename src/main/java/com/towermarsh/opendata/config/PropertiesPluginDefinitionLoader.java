@@ -34,42 +34,56 @@ import com.towermarsh.opendata.config.model.PluginPropertyType;
 /**
  * Parses Phase 1 plugin definitions from classpath properties files.
  *
- * <p>The expected resource is
- * {@code config/plugins/<plugin-id>.properties}. Supplied overrides are merged
- * after the classpath properties and therefore take precedence.</p>
+ * <p>
+ * The expected resource is {@code config/plugins/<plugin-id>.properties}.
+ * Supplied overrides are merged after the classpath properties and therefore
+ * take precedence.</p>
  */
 public final class PropertiesPluginDefinitionLoader
         implements PluginDefinitionLoader {
 
-    private static final String RESOURCE_PATTERN =
-            "config/plugins/%s.properties";
+    private static final String RESOURCE_PATTERN
+            = "config/plugins/%s.properties";
 
     private final ClassLoader classLoader;
 
+    /**
+     * instantiate class
+     */
     public PropertiesPluginDefinitionLoader() {
         this(Thread.currentThread().getContextClassLoader());
     }
 
+    /**
+     * instantiate class
+     *
+     * @param classLoader class to load
+     */
     public PropertiesPluginDefinitionLoader(final ClassLoader classLoader) {
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
     }
 
+    /**
+     * Load the plugin definition
+     *
+     * @param pluginId which plugin
+     * @param overrides plugin overrides
+     * @return the plugin definition
+     */
     @Override
     public PluginDefinition load(
             final String pluginId,
             final Map<String, String> overrides) {
 
-        final String normalisedPluginId = normalise(pluginId);
-        final String resourceName =
-                RESOURCE_PATTERN.formatted(normalisedPluginId);
+        final var normalisedPluginId = normalise(pluginId);
+        final var resourceName = RESOURCE_PATTERN.formatted(normalisedPluginId);
 
-        final Map<String, String> values =
-                loadRequiredResource(resourceName);
+        final var values = loadRequiredResource(resourceName);
         Objects.requireNonNull(overrides, "overrides")
-                .forEach((key, value) ->
-                        values.put(normalise(key), value == null ? "" : value.trim()));
+                .forEach((key, value)
+                        -> values.put(normalise(key), value == null ? "" : value.trim()));
 
-        final PluginDefinition definition = parse(values);
+        final var definition = parse(values);
         if (!definition.id().equals(normalisedPluginId)) {
             throw new PluginDefinitionException(
                     "Selected plugin '%s' does not match plugin.id '%s'."
@@ -80,13 +94,17 @@ public final class PropertiesPluginDefinitionLoader
         return definition;
     }
 
+    /**
+     * Parse the plugin definition
+     *
+     * @param values map of keys and values
+     * @return the plugin definition
+     */
     PluginDefinition parse(final Map<String, String> values) {
-        final String id = require(values, "plugin.id").toLowerCase(Locale.ROOT);
-        final List<PluginEndpointDefinition> endpoints = parseEndpoints(values);
-        final Map<String, PluginPropertyDefinition> properties =
-                parsePluginProperties(values);
-        final Map<String, CredentialReference> credentials =
-                parseCredentials(values);
+        final var id = require(values, "plugin.id").toLowerCase(Locale.ROOT);
+        final var endpoints = parseEndpoints(values);
+        final var properties = parsePluginProperties(values);
+        final var credentials = parseCredentials(values);
 
         return new PluginDefinition(
                 id,
@@ -101,16 +119,21 @@ public final class PropertiesPluginDefinitionLoader
                 credentials);
     }
 
+    /**
+     * Parse plugin end points
+     *
+     * @param values map of values
+     * @return list of plugin endpoints
+     */
     private List<PluginEndpointDefinition> parseEndpoints(
             final Map<String, String> values) {
 
-        final TreeSet<String> names = extractNames(values, "endpoint.");
+        final var names = extractNames(values, "endpoint.");
         final List<PluginEndpointDefinition> result = new ArrayList<>();
 
-        for (String name : names) {
-            final String prefix = "endpoint." + name + ".";
-            final Optional<LinkDiscoveryDefinition> discovery =
-                    parseLinkDiscovery(values, prefix);
+        for (var name : names) {
+            final var prefix = "endpoint." + name + ".";
+            final var discovery = parseLinkDiscovery(values, prefix);
 
             result.add(new PluginEndpointDefinition(
                     name,
@@ -118,10 +141,7 @@ public final class PropertiesPluginDefinitionLoader
                     URI.create(require(values, prefix + "url")),
                     enumValue(values, prefix + "method", HttpMethod.class),
                     DatasetFormat.parse(require(values, prefix + "format")),
-                    enumValue(
-                            values,
-                            prefix + "strategy",
-                            DownloadStrategyType.class),
+                    enumValue(values, prefix + "strategy", DownloadStrategyType.class),
                     getBoolean(values, prefix + "enabled", true),
                     getInt(values, prefix + "order", 0),
                     optional(values, prefix + "credential"),
@@ -136,11 +156,18 @@ public final class PropertiesPluginDefinitionLoader
                 .toList();
     }
 
+    /**
+     * pase links
+     *
+     * @param values map of values
+     * @param endpointPrefix endpoint
+     * @return definition if it exists
+     */
     private Optional<LinkDiscoveryDefinition> parseLinkDiscovery(
             final Map<String, String> values,
             final String endpointPrefix) {
 
-        final String prefix = endpointPrefix + "link-discovery.";
+        final var prefix = endpointPrefix + "link-discovery.";
         if (!values.containsKey(prefix + "css-selector")) {
             return Optional.empty();
         }
@@ -152,76 +179,76 @@ public final class PropertiesPluginDefinitionLoader
                 getBoolean(values, prefix + "select-last", false)));
     }
 
+    /**
+     * parse plugins
+     *
+     * @param values map of key value pairs
+     * @return map of plugin and properties
+     */
     private Map<String, PluginPropertyDefinition> parsePluginProperties(
             final Map<String, String> values) {
 
-        final TreeSet<String> names = extractPropertyNames(values);
-        final Map<String, PluginPropertyDefinition> result =
-                new LinkedHashMap<>();
+        final var names = extractPropertyNames(values);
+        final Map<String, PluginPropertyDefinition> result = new LinkedHashMap<>();
 
-        for (String name : names) {
-            final String prefix = "property." + name + ".";
-            final PluginPropertyDefinition definition =
-                    new PluginPropertyDefinition(
+        names.forEach((var name) -> {
+            final var prefix = "property." + name + ".";
+            final var definition
+                    = new PluginPropertyDefinition(
                             name,
                             require(values, prefix + "value"),
-                            enumValue(
-                                    values,
-                                    prefix + "type",
-                                    PluginPropertyType.class,
-                                    PluginPropertyType.STRING),
+                            enumValue(values, prefix + "type", PluginPropertyType.class, PluginPropertyType.STRING),
                             getBoolean(values, prefix + "sensitive", false),
                             values.getOrDefault(prefix + "description", ""));
 
             result.put(name.toLowerCase(Locale.ROOT), definition);
-        }
+        });
 
         return result;
     }
 
+    /**
+     * parse credentials some apis have credentials 
+     * @param values key value pair
+     * @return credentials mapped to plugin
+     */
     private Map<String, CredentialReference> parseCredentials(
             final Map<String, String> values) {
 
-        final TreeSet<String> names = extractNames(values, "credential.");
-        final Map<String, CredentialReference> result =
-                new LinkedHashMap<>();
+        final var names = extractNames(values, "credential.");
+        final Map<String, CredentialReference> result = new LinkedHashMap<>();
 
-        for (String name : names) {
-            final String prefix = "credential." + name + ".";
-            final CredentialReference reference = new CredentialReference(
+        names.forEach((var name) -> {
+            final var prefix = "credential." + name + ".";
+            final var reference = new CredentialReference(
                     name,
-                    enumValue(
-                            values,
-                            prefix + "authentication-type",
-                            AuthenticationType.class),
+                    enumValue( values, prefix + "authentication-type", AuthenticationType.class),
                     require(values, prefix + "provider"),
                     require(values, prefix + "secret-reference"),
-                    enumValue(
-                            values,
-                            prefix + "location",
-                            CredentialLocation.class,
-                            CredentialLocation.NONE),
+                    enumValue( values, prefix + "location", CredentialLocation.class,CredentialLocation.NONE),
                     values.getOrDefault(prefix + "parameter-name", ""));
-
             result.put(name.toLowerCase(Locale.ROOT), reference);
-        }
+        });
 
         return result;
     }
-
+/**
+ * load resources
+ * @param resourceName resource name
+ * @return map of resource for plugin
+ */
     private Map<String, String> loadRequiredResource(
             final String resourceName) {
 
-        try (InputStream input =
-                     classLoader.getResourceAsStream(resourceName)) {
+        try (var input = classLoader.getResourceAsStream(resourceName)) {
 
             if (input == null) {
                 throw new PluginDefinitionException(
                         "Plugin properties resource was not found: "
-                                + resourceName);
+                        + resourceName);
             }
 
-            final Properties properties = new Properties();
+            final var properties = new Properties();
             properties.load(new InputStreamReader(
                     input,
                     StandardCharsets.UTF_8));
@@ -235,23 +262,29 @@ public final class PropertiesPluginDefinitionLoader
         } catch (IOException exception) {
             throw new PluginDefinitionException(
                     "Unable to read plugin properties resource: "
-                            + resourceName,
+                    + resourceName,
                     exception);
         }
     }
 
+    /**
+     * extract value for keys
+     * @param values map of keys and values
+     * @param rootPrefix start at this location
+     * @return the key map
+     */
     private static TreeSet<String> extractNames(
             final Map<String, String> values,
             final String rootPrefix) {
 
-        final TreeSet<String> names = new TreeSet<>();
-        for (String key : values.keySet()) {
+        final var names = new TreeSet<String>();
+        for (var key : values.keySet()) {
             if (!key.startsWith(rootPrefix)) {
                 continue;
             }
 
-            final String remainder = key.substring(rootPrefix.length());
-            final int separator = remainder.indexOf('.');
+            final var remainder = key.substring(rootPrefix.length());
+            final var separator = remainder.indexOf('.');
             if (separator > 0) {
                 names.add(remainder.substring(0, separator));
             }
@@ -259,18 +292,23 @@ public final class PropertiesPluginDefinitionLoader
         return names;
     }
 
+    /**
+     * get the properties
+     * @param values map of key values
+     * @return the properties
+     */
     private static TreeSet<String> extractPropertyNames(
             final Map<String, String> values) {
 
-        final String rootPrefix = "property.";
-        final TreeSet<String> names = new TreeSet<>();
-        for (String key : values.keySet()) {
+        final var rootPrefix = "property.";
+        final var names = new TreeSet<String>();
+        for (var key : values.keySet()) {
             if (!key.startsWith(rootPrefix)) {
                 continue;
             }
 
-            final String remainder = key.substring(rootPrefix.length());
-            final int lastDot = remainder.lastIndexOf('.');
+            final var remainder = key.substring(rootPrefix.length());
+            final var lastDot = remainder.lastIndexOf('.');
             if (lastDot > 0) {
                 names.add(remainder.substring(0, lastDot));
             }
@@ -278,6 +316,12 @@ public final class PropertiesPluginDefinitionLoader
         return names;
     }
 
+    /**
+     * build a smaller map from a larger map
+     * @param values original map
+     * @param prefix start at this location
+     * @return the new map
+     */
     private static Map<String, String> subMap(
             final Map<String, String> values,
             final String prefix) {
@@ -289,6 +333,12 @@ public final class PropertiesPluginDefinitionLoader
                         Map.Entry::getValue));
     }
 
+    /**
+     * Check is a plugin parameter is present, its required
+     * @param values map to search
+     * @param key key to find
+     * @return the key
+     */
     private static String require(
             final Map<String, String> values,
             final String key) {
@@ -297,9 +347,15 @@ public final class PropertiesPluginDefinitionLoader
                 .map(String::trim)
                 .filter(value -> !value.isEmpty())
                 .orElseThrow(() -> new PluginDefinitionException(
-                        "Required plugin property is missing: " + key));
+                "Required plugin property is missing: " + key));
     }
 
+    /**
+     * look for optional values
+     * @param values map to check
+     * @param key key to find
+     * @return return the value if its there
+     */
     private static Optional<String> optional(
             final Map<String, String> values,
             final String key) {
@@ -309,30 +365,47 @@ public final class PropertiesPluginDefinitionLoader
                 .filter(value -> !value.isEmpty());
     }
 
+    /**
+     * check if a key is in the map, or if its a default value
+     * @param values map to check
+     * @param key key to find
+     * @param defaultValue default value to use
+     * @return true if the key or default is present
+     */
     private static boolean getBoolean(
             final Map<String, String> values,
             final String key,
             final boolean defaultValue) {
 
-        final String value = values.get(normalise(key));
+        final var value = values.get(normalise(key));
         if (value == null) {
             return defaultValue;
         }
 
         return switch (value.trim().toLowerCase(Locale.ROOT)) {
-            case "true", "yes", "1", "on" -> true;
-            case "false", "no", "0", "off" -> false;
-            default -> throw new PluginDefinitionException(
-                    "Invalid boolean value for " + key + ": " + value);
+            case "true", "yes", "1", "on" ->
+                true;
+            case "false", "no", "0", "off" ->
+                false;
+            default ->
+                throw new PluginDefinitionException(
+                        "Invalid boolean value for " + key + ": " + value);
         };
     }
 
+    /**
+     * get the integer value for a key
+     * @param values map to check
+     * @param key key to check
+     * @param defaultValue default value if key not founf
+     * @return 
+     */
     private static int getInt(
             final Map<String, String> values,
             final String key,
             final int defaultValue) {
 
-        final String value = values.get(normalise(key));
+        final var value = values.get(normalise(key));
         if (value == null) {
             return defaultValue;
         }
@@ -346,6 +419,14 @@ public final class PropertiesPluginDefinitionLoader
         }
     }
 
+    /**
+     * get the enum  from the map
+     * @param <E> the enum value to find
+     * @param values map of values
+     * @param key key to find
+     * @param enumClass enum class
+     * @return 
+     */
     private static <E extends Enum<E>> E enumValue(
             final Map<String, String> values,
             final String key,
@@ -353,14 +434,22 @@ public final class PropertiesPluginDefinitionLoader
 
         return enumValue(values, key, enumClass, null);
     }
-
+/**
+ * 
+ * @param <E>
+ * @param values
+ * @param key
+ * @param enumClass
+ * @param defaultValue
+ * @return 
+ */
     private static <E extends Enum<E>> E enumValue(
             final Map<String, String> values,
             final String key,
             final Class<E> enumClass,
             final E defaultValue) {
 
-        final String value = values.get(normalise(key));
+        final var value = values.get(normalise(key));
         if (value == null) {
             if (defaultValue != null) {
                 return defaultValue;
@@ -382,6 +471,11 @@ public final class PropertiesPluginDefinitionLoader
         }
     }
 
+    /**
+     * 
+     * @param value
+     * @return 
+     */
     private static String normalise(final String value) {
         return Objects.requireNonNull(value, "value")
                 .trim()
