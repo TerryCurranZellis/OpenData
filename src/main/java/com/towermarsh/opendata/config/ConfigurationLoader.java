@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
+import com.towermarsh.opendata.config.model.BootstrapConfig;
 import com.towermarsh.opendata.exception.ConfigurationException;
 
 /**
@@ -70,12 +71,26 @@ public final class ConfigurationLoader {
         final Map<String, String> values = new LinkedHashMap<>();
         merged.forEach((key, resolved) -> values.put(key, resolved.value()));
 
+        final BootstrapConfig bootstrap = buildBootstrapConfig(values);
+        final var plugin = new PropertiesPluginDefinitionLoader(classLoader).load(pluginId, values);
+
         return new ApplicationConfig(
-                pluginId,
-                values,
+                bootstrap,
+                plugin,
+                Map.of(),
                 arguments.overrideFile(),
                 arguments.dryRun(),
                 arguments.verbose());
+    }
+
+    private static BootstrapConfig buildBootstrapConfig(final Map<String, String> values) {
+        return new BootstrapConfig(
+                values.getOrDefault("application.name", "OpenData"),
+                values.getOrDefault("application.environment", "production"),
+                Path.of(values.getOrDefault("application.working-directory", "data/work")),
+                Path.of(values.getOrDefault("application.archive-directory", "data/archive")),
+                Path.of(values.getOrDefault("application.failed-directory", "data/failed")),
+                values);
     }
 
     private Map<String, String> loadOptionalClasspathProperties(final String resourceName) throws ConfigurationException {

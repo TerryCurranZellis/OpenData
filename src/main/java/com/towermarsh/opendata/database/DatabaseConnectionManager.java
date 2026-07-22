@@ -66,8 +66,8 @@ public final class DatabaseConnectionManager {
             throws SQLException {
 
         return DriverManager.getConnection(
-                config.getDatabaseUrl(),
-                config.getDatabaseUser(),
-                config.getDatabasePassword());
+                config.bootstrap().values().get("database.url"),
+                config.bootstrap().values().get("database.user"),
+                config.bootstrap().values().get("database.password"));
     }
 }

@@ -155,7 +155,7 @@ public final class PropertiesPluginDefinitionLoader
     private Map<String, PluginPropertyDefinition> parsePluginProperties(
             final Map<String, String> values) {
 
-        final TreeSet<String> names = extractNames(values, "property.");
+        final TreeSet<String> names = extractPropertyNames(values);
         final Map<String, PluginPropertyDefinition> result =
                 new LinkedHashMap<>();
 

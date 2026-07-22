@@ -34,9 +34,10 @@ class ConfigurationServiceTest {
                 new ConfigurationService().resolve(arguments);
 
         assertEquals("ofgem", configuration.pluginId());
-        assertEquals(250, configuration.getInt("database.batch-size", 1000));
-        assertEquals(Path.of("local-work"), configuration.getPath(
-                "application.working-directory", Path.of("unused")));
+        assertEquals(
+                250,
+                Integer.parseInt(configuration.bootstrap().values().get("database.batch-size")));
+        assertEquals(Path.of("local-work"), configuration.bootstrap().workingDirectory());
         assertTrue(configuration.dryRun());
     }
 }
