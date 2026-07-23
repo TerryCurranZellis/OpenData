@@ -1,0 +1,21 @@
+{
+  "replacement_files": [
+    "pom.xml",
+    "src/main/java/com/towermarsh/opendata/Main.java",
+    "src/main/java/com/towermarsh/opendata/parser/CsvDataParser.java"
+  ],
+  "new_components": [
+    "Classpath plugin registry",
+    "Commons CSV options",
+    "Excel parser and options",
+    "HTML link resolver",
+    "Direct streamed HTTP download",
+    "HTML link discovery download",
+    "Tests and documentation"
+  ],
+  "manual_review": [
+    "Correct OpenMeteo display name if still misspelled",
+    "Remove app.CommandLineArguments only after reference search",
+    "Consolidate legacy ConfigurationLoader classes later"
+  ]
+}

@@ -1,100 +1,137 @@
-/*
- * Filename: CsvDataParser.java
- *
- * (c) Copyright 2026 Terry Curran
- *
- * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * The author may be contacted by email to the following address:
- *
- * terry.curran@towermarsh.co.uk
- */
 package com.towermarsh.opendata.parser;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import com.towermarsh.opendata.exception.ImportException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
- * Parser for comma separated files.
+ * CSV parser implemented using Apache Commons CSV.
  *
- * @author Terry Curran
- * @version 21 Jul 2026
+ * <p>This implementation correctly handles quoted delimiters, escaped quotes,
+ * embedded line breaks, empty trailing values, comments and configurable
+ * header policies. It retains the existing {@link DataParser} result type so
+ * the wider ETL layer does not need to change in this batch.</p>
  */
-public final class CsvDataParser
-        implements DataParser {
+public final class CsvDataParser implements DataParser {
+
+    private final CsvParserOptions options;
+
+    /**
+     * Creates a parser with conventional UTF-8 CSV defaults.
+     */
+    public CsvDataParser() {
+        this(CsvParserOptions.defaults());
+    }
+
+    /**
+     * Creates a configured CSV parser.
+     *
+     * @param options parser options
+     */
+    public CsvDataParser(final CsvParserOptions options) {
+        this.options = Objects.requireNonNull(options, "options");
+    }
 
     @Override
-    public List<Map<String, String>> parse(
-            Path file)
+    public List<Map<String, String>> parse(final Path file)
             throws ImportException {
 
-        try {
+        Objects.requireNonNull(file, "file");
 
-            List<String> lines
-                    = Files.readAllLines(file);
+        final CSVFormat format = buildFormat(options);
 
-            if (lines.isEmpty()) {
-                return List.of();
+        try (Reader reader = Files.newBufferedReader(
+                    file,
+                    options.charset());
+             CSVParser parser = format.parse(reader)) {
+
+            final List<Map<String, String>> rows = new ArrayList<>();
+
+            if (options.firstRecordAsHeader()) {
+                final List<String> headers =
+                        List.copyOf(parser.getHeaderMap().keySet());
+
+                for (CSVRecord record : parser) {
+                    rows.add(toHeaderMap(record, headers));
+                }
+            } else {
+                for (CSVRecord record : parser) {
+                    rows.add(toOrdinalMap(record));
+                }
             }
 
-            String[] headers
-                    = lines.get(0)
-                            .split(",");
-
-            return lines.stream()
-                    .skip(1)
-                    .map(line
-                            -> createRecord(
-                            headers,
-                            line.split(",")))
-                    .collect(Collectors.toList());
-
-        } catch (IOException ex) {
-
+            return List.copyOf(rows);
+        } catch (IOException | IllegalArgumentException exception) {
             throw new ImportException(
-                    "Unable to parse CSV file",
-                    ex);
+                    "Unable to parse CSV file: " + file,
+                    exception);
         }
     }
 
-    private Map<String, String> createRecord(
-            String[] headers,
-            String[] values) {
+    private static CSVFormat buildFormat(
+            final CsvParserOptions options) {
 
-        Map<String, String> record
-                = new LinkedHashMap<>();
+        final CSVFormat.Builder builder = CSVFormat.RFC4180.builder()
+                .setDelimiter(options.delimiter())
+                .setQuote(options.quote().orElse(null))
+                .setEscape(options.escape().orElse(null))
+                .setCommentMarker(
+                        options.commentMarker().orElse(null))
+                .setTrim(options.trim())
+                .setIgnoreSurroundingSpaces(
+                        options.ignoreSurroundingSpaces())
+                .setIgnoreEmptyLines(options.ignoreEmptyLines())
+                .setAllowMissingColumnNames(
+                        options.allowMissingColumnNames())
+                .setDuplicateHeaderMode(
+                        options.duplicateHeaderMode())
+                .setNullString(options.nullString().orElse(null));
 
-        for (int i = 0;
-                i < headers.length;
-                i++) {
-
-            String value
-                    = i < values.length
-                            ? values[i]
-                            : "";
-
-            record.put(
-                    headers[i],
-                    value);
+        if (options.firstRecordAsHeader()) {
+            builder.setHeader();
+            builder.setSkipHeaderRecord(true);
         }
 
-        return record;
+        return builder.get();
+    }
+
+    private static Map<String, String> toHeaderMap(
+            final CSVRecord record,
+            final List<String> headers) {
+
+        final Map<String, String> row = new LinkedHashMap<>();
+
+        for (String header : headers) {
+            final String value = record.isSet(header)
+                    ? record.get(header)
+                    : "";
+            row.put(header, value);
+        }
+
+        return Map.copyOf(row);
+    }
+
+    private static Map<String, String> toOrdinalMap(
+            final CSVRecord record) {
+
+        final Map<String, String> row = new LinkedHashMap<>();
+
+        for (int index = 0; index < record.size(); index++) {
+            row.put("column_" + (index + 1), record.get(index));
+        }
+
+        return Map.copyOf(row);
     }
 }
