@@ -16,24 +16,18 @@ This document forms part of the OpenData Framework Software Architecture Manual 
 
 The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Component Interactions**.
 
-## Design Principles
+## Execution Sequence
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
+1. `CommandLineArgumentsProcessor` parses user arguments.
+2. `ServiceLoaderPluginRegistry` discovers installed plugins.
+3. Informational requests such as `--list-plugins` are completed without loading
+   dataset configuration.
+4. For an execution request, `PluginApplicationService` resolves the selected
+   plugin.
+5. `ConfigurationService` loads and validates `ApplicationConfig`.
+6. The plugin performs dataset-specific configuration validation.
+7. The plugin starts its pipeline.
+8. The application logs the `PluginExecutionResult`.
 
 ## Key Concepts
 
@@ -59,3 +53,4 @@ This document will be expanded as implementation progresses with UML diagrams, e
 | Version | Date | Description |
 |---------|------|-------------|
 |1.0|2026-07-22|Initial draft|
+|2.0|2026-07-23|Added execution sequence|

@@ -12,28 +12,52 @@ Explains dataset plugin model.
 
 This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
 
-## Overview
+## Plugin Discovery and Registration
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Plugin Architecture**.
+The initial implementation uses Java `ServiceLoader` to discover dataset
+plugins. The framework core depends only upon the `OpenDataPlugin` interface and
+does not contain direct references to Ofgem or any other dataset implementation.
 
-## Design Principles
+Each plugin registers its implementation using:
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
+```text
+META-INF/services/com.towermarsh.opendata.plugin.OpenDataPlugin
+```
 
-## Responsibilities
+The `ServiceLoaderPluginRegistry` validates discovered plugin identifiers and
+rejects duplicates during application startup.
 
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
+## Plugin Contract
+
+Every plugin must provide:
+
+- a stable lowercase identifier;
+- a human-readable display name;
+- plugin-specific configuration validation;
+- an execution method returning `PluginExecutionResult`.
+
+## Plugin Definition Contract
+
+The Java plugin implementation provides specialised behaviour. Its endpoints,
+formats, credentials, parser settings and target settings are represented by
+the structured `PluginDefinition` record.
+
+Each plugin receives an `ApplicationConfig` containing its parsed definition.
+A plugin must not load its own properties file directly.
+
+## Selection Flow
+
+The `--plugin` command-line value is used only to select a registered plugin.
+Configuration loading remains the responsibility of `ConfigurationService`.
+The selected plugin receives a fully resolved immutable `ApplicationConfig`.
+
+## Related New Document
+
+Add this entry to Related Documents:
+
+```text
+- plugin-registry.md
+```
 
 ## Key Concepts
 
@@ -49,6 +73,7 @@ The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework fo
 - 001-project-vision.md
 - 003-high-level-architecture.md
 - 004-package-structure.md
+- 007-plugin-architecture.md
 
 ## Future Enhancements
 
@@ -59,3 +84,4 @@ This document will be expanded as implementation progresses with UML diagrams, e
 | Version | Date | Description |
 |---------|------|-------------|
 |1.0|2026-07-22|Initial draft|
+|2.0|2026-07-23|Added plugin detail|
