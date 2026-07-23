@@ -27,6 +27,7 @@ The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework fo
 - Maven build
 - SQL Server initial target
 - Plugin extensibility
+- Plugin Registry 
 
 ## Responsibilities
 
@@ -34,6 +35,24 @@ The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework fo
 - Describe design constraints.
 - Identify extension points.
 - Provide implementation guidance.
+
+## Component Responsibility
+
+The Plugin Registry discovers installed dataset plugins, validates unique plugin
+identifiers, supports plugin listing and resolves the plugin requested by the
+command line.
+
+## Interaction Summary
+
+```text
+Command Line
+    -> Plugin Registry
+    -> Configuration Service
+    -> Selected Plugin
+    -> Pipeline Engine
+```
+
+The framework core remains independent of dataset-specific implementations.
 
 ## Key Concepts
 
@@ -59,3 +78,4 @@ This document will be expanded as implementation progresses with UML diagrams, e
 | Version | Date | Description |
 |---------|------|-------------|
 |1.0|2026-07-22|Initial draft|
+|2.0|2026-07-23|Updated components|

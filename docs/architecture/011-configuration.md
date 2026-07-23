@@ -16,24 +16,58 @@ This document forms part of the OpenData Framework Software Architecture Manual 
 
 The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Configuration**.
 
-## Design Principles
+## Configuration and Plugin Integration
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
+Configuration is resolved only after the command line has selected a plugin id.
 
-## Responsibilities
+The configuration loader then combines:
 
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
+1. framework built-in defaults;
+2. application classpath properties;
+3. selected plugin classpath properties;
+4. optional command-line override properties.
+
+The resulting immutable `ApplicationConfig` is passed to the selected plugin.
+
+Framework-wide validation runs before plugin-specific validation. This prevents
+plugins from duplicating checks for general settings such as HTTP timeout
+values, working directories and transaction configuration.
+
+## Plugin-Specific Namespaces
+
+Implementation-specific properties should use:
+
+```text
+plugin.<plugin-id>.<property-name>
+```
+
+For example:
+
+```properties
+plugin.ofgem.expected-columns=12
+```
+
+`ApplicationConfig.pluginValues()` returns the selected plugin's namespace with
+the prefix removed.
+
+## Phase 1 Structured Configuration.
+
+Phase 1 stores each plugin definition in a classpath properties file. The file
+is parsed immediately into immutable Java records. Plugin code consumes
+`ApplicationConfig` and `PluginDefinition`, not raw properties.
+
+`ApplicationConfig` now contains:
+
+- `BootstrapConfig`;
+- `PluginDefinition`;
+- runtime overrides;
+- the optional override file;
+- dry-run and verbose execution flags.
+
+This record-based boundary is deliberately storage independent. A future
+database repository can return JSON and deserialize it into the same
+`PluginDefinition` record.
+
 
 ## Key Concepts
 
@@ -49,6 +83,7 @@ The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework fo
 - 001-project-vision.md
 - 003-high-level-architecture.md
 - 004-package-structure.md
+- 007-plugin-registry.md
 
 ## Future Enhancements
 
@@ -59,3 +94,4 @@ This document will be expanded as implementation progresses with UML diagrams, e
 | Version | Date | Description |
 |---------|------|-------------|
 |1.0|2026-07-22|Initial draft|
+|2.0|2026-07-23|Added pluging registry
