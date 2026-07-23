@@ -1,3 +1,28 @@
+/*
+ *  Filename: OpenMeteoApiClient.java
+ * 
+ *  (C) Copyright Terry Curran 2026. All rights reserved
+ * 
+ *  This software is provided 'as-is', without any express or implied
+ *  warranty.  In no event will the author be held liable for any damages
+ *  arising from the use of this software.
+ * 
+ *  Permission is granted to anyone to use this software for any purpose,
+ *  including commercial applications, and to alter it and redistribute it
+ *  freely, subject to the following restrictions:
+ * 
+ *  1. The origin of this software must not be misrepresented; you must not
+ *     claim that you wrote the original software. If you use this software
+ *     in a product, an acknowledgement in the product documentation would be
+ *     appreciated but is not required.
+ *  2. Altered source versions must be plainly marked as such, and must not be
+ *     misrepresented as being the original software.
+ *  3. This notice may not be removed or altered from any source distribution.
+ * 
+ *  The author may be contacted by email to the following address:
+ * 
+ *  terry.curran@towermarsh.co.uk
+ */
 package com.towermarsh.opendata.plugin.openmeteo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,11 +45,14 @@ import java.util.logging.Logger;
 
 /**
  * Downloads and parses historical daily weather data from Open-Meteo.
+ *
+ * @author Terry Curran
+ * @version 21 Jul 2026
  */
-public final class OpenMetoApiClient {
+public final class OpenMeteoApiClient {
 
-    private static final Logger LOGGER =
-            Logger.getLogger(OpenMeteoApiClient.class.getName());
+    private static final Logger LOGGER
+            = Logger.getLogger(OpenMeteoApiClient.class.getName());
 
     private static final String DAILY_VARIABLES = String.join(",",
             "temperature_2m_max",
@@ -50,25 +78,25 @@ public final class OpenMetoApiClient {
     }
 
     OpenMeteoApiClient(
-            final OpenMetoConfiguration configuration,
+            final OpenMeteoConfiguration configuration,
             final HttpClient httpClient,
             final ObjectMapper objectMapper) {
-        this.configuration =
-                Objects.requireNonNull(configuration, "configuration");
-        this.httpClient =
-                Objects.requireNonNull(httpClient, "httpClient");
-        this.objectMapper =
-                Objects.requireNonNull(objectMapper, "objectMapper");
+        this.configuration
+                = Objects.requireNonNull(configuration, "configuration");
+        this.httpClient
+                = Objects.requireNonNull(httpClient, "httpClient");
+        this.objectMapper
+                = Objects.requireNonNull(objectMapper, "objectMapper");
     }
 
     /**
      * Downloads the configured historical date range.
      *
      * @return immutable list of daily records
-     * @throws OpenMetoException when download or parsing fails
+     * @throws com.towermarsh.opendata.plugin.openmeteo.OpenMeteoException
      */
     public List<DailyWeatherRecord> download()
-            throws OpenMetoException {
+            throws OpenMeteoException {
         var today = LocalDate.now(configuration.timezone());
         var range = configuration.resolveDateRange(today);
         return download(range.startDate(), range.endDate());
@@ -80,12 +108,12 @@ public final class OpenMetoApiClient {
      * @param startDate first date
      * @param endDate final date
      * @return immutable list of daily records
-     * @throws OpenMetoException when download or parsing fails
+     * @throws com.towermarsh.opendata.plugin.openmeteo.OpenMeteoException
      */
     public List<DailyWeatherRecord> download(
             final LocalDate startDate,
             final LocalDate endDate)
-            throws OpenMetoException {
+            throws OpenMeteoException {
 
         Objects.requireNonNull(startDate, "startDate");
         Objects.requireNonNull(endDate, "endDate");
@@ -118,18 +146,18 @@ public final class OpenMetoApiClient {
                             StandardCharsets.UTF_8));
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new OpenMetoException(
+            throw new OpenMeteoException(
                     "Open-Meteo request was interrupted",
                     exception);
         } catch (IOException exception) {
-            throw new OpenMetoException(
+            throw new OpenMeteoException(
                     "Unable to call the Open-Meteo archive API",
                     exception);
         }
 
         if (response.statusCode() < 200
                 || response.statusCode() >= 300) {
-            throw new OpenMetoException(
+            throw new OpenMeteoException(
                     "Open-Meteo returned HTTP %d: %s"
                             .formatted(
                                     response.statusCode(),
@@ -189,8 +217,8 @@ public final class OpenMetoApiClient {
                 index < response.daily().time().size();
                 index++) {
 
-            var weatherCode =
-                    response.daily().weatherCodes().get(index);
+            var weatherCode
+                    = response.daily().weatherCodes().get(index);
             var daylightMinutes = Math.round(
                     response.daily()
                             .daylightDurationSeconds()
@@ -306,8 +334,8 @@ public final class OpenMetoApiClient {
 
     private static String encode(final String value) {
         return URLEncoder.encode(
-                        value,
-                        StandardCharsets.UTF_8)
+                value,
+                StandardCharsets.UTF_8)
                 .replace("+", "%20");
     }
 

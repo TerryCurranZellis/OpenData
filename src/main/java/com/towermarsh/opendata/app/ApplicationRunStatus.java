@@ -26,6 +26,7 @@
 package com.towermarsh.opendata.app;
 
 /**
+ * Final execution status when the program completes
  *
  * @author Terry Curran
  * @version 23 Jul 2026
