@@ -1,49 +1,48 @@
 # Architecture Decision Record Register
 
-This register summarises the OpenData architecture decisions currently identified from the repository, project documentation, and design discussions.
+Statuses reflect the current codebase and documented future direction as of 22 July 2026.
 
-## Status meanings
-
-- **Accepted** — the architectural decision is approved.
-- **Proposed** — the decision is documented but still requires approval.
-- **Shelved** — the option remains potentially useful but is intentionally deferred.
-- **Rejected / Discarded** — the option is not to be pursued unless a later ADR supersedes the decision.
-- **Superseded** — a later ADR has replaced the decision.
-
-The **Delivery status** column records implementation progress separately from the architectural decision status.
-
-## ADR register
-
-| ADR | Decision | Decision status | Delivery status |
+| ADR | Decision | Status | Implementation state |
 |---|---|---|---|
-| ADR-0001 | Use a dataset plugin architecture | Accepted | Implemented |
-| ADR-0002 | Use Apache Commons CLI | Accepted | Implemented |
-| ADR-0003 | Use java.util.logging | Accepted | Implemented |
-| ADR-0004 | Use layered parameter-file configuration | Accepted | Implemented / evolving |
-| ADR-0005 | Use SQL Server persistence | Accepted | Partially implemented |
-| ADR-0006 | Use package-info.java for package documentation | Accepted | Implemented / ongoing |
-| ADR-0007 | Use a modular monolith | Accepted | Implemented |
-| ADR-0008 | Use Java 17 records and immutable configuration models | Accepted | Implemented |
-| ADR-0009 | Use a common staged ETL pipeline | Accepted | Partially implemented |
-| ADR-0010 | Use constructor injection without a dependency-injection framework | Accepted | Implemented |
-| ADR-0011 | Use the Java HTTP client for dataset downloads | Accepted | Implemented |
-| ADR-0012 | Keep plugin configuration in properties files before database-backed configuration | Shelved | Shelved for future development |
-| ADR-0013 | Describe plugins with manifests and resolve them through a registry | Accepted | Partially implemented |
-| ADR-0014 | Separate framework metadata from plugin business tables | Accepted | Partially implemented |
-| ADR-0015 | Use database interfaces with SQL Server as the first implementation | Accepted | Partially implemented |
-| ADR-0016 | Use a framework exception hierarchy and translate errors at boundaries | Accepted | Partially implemented |
-| ADR-0017 | Use Markdown, PlantUML, Javadoc, and Pandoc for documentation as code | Accepted | Implemented |
-| ADR-0018 | Prefer standard Java APIs and a minimal dependency set | Accepted | Implemented |
-| ADR-0019 | Use Ofgem as the first reference plugin | Accepted | In development |
-| ADR-0020 | Defer the internal scheduler and advanced orchestration | Shelved | Shelved for future development |
+| 0001 | Plugin architecture | Accepted | Partially implemented; runtime registry pending |
+| 0002 | Apache Commons CLI | Accepted | Implemented |
+| 0003 | `java.util.logging` | Accepted | Implemented |
+| 0004 | Parameter-file layering | Accepted | Implemented in configuration foundation |
+| 0005 | SQL Server persistence | Accepted | Foundation implemented |
+| 0006 | Package-info documentation | Accepted | Implemented |
+| 0007 | Modular monolith | Accepted | Implemented |
+| 0008 | Java 17 records and immutable models | Accepted | Implemented |
+| 0009 | Common staged ETL pipeline | Accepted | Contracts present; orchestration pending |
+| 0010 | Constructor injection without DI framework | Accepted | Implemented |
+| 0011 | JDK HTTP client downloads | Accepted | Implemented |
+| 0012 | Plugin properties before database configuration | Accepted | Implemented; database settings shelved |
+| 0013 | Plugin manifest and registry | Accepted | Planned/partial |
+| 0014 | Framework metadata and plugin business tables | Accepted | Deferred |
+| 0015 | Database abstraction, SQL Server first | Accepted | Implemented for SQL Server foundation |
+| 0016 | Exception hierarchy and boundary translation | Accepted | Implemented |
+| 0017 | Documentation as code | Accepted | Implemented |
+| 0018 | Minimal dependencies, standard Java first | Accepted | Implemented with justified adapters |
+| 0019 | Ofgem reference plugin | Accepted | In progress |
+| 0020 | Internal scheduling deferred | Deferred | Use external scheduling |
+| 0021 | Configuration resolution and validation | Accepted | Implemented |
+| 0022 | CLI control commands and exit codes | Accepted | Implemented |
+| 0023 | CSV and JSON parser adapters | Accepted | Implemented |
+| 0024 | Use IMAP as a reusable email attachment source | Pending | Future work |
+| 0025 | Introduce the Octopus email bill plugin | Pending | Existing parser available; integration deferred |
+| 0026 | Persist Octopus gas, electricity, and adjustment records as one transaction | Pending | Future work |
+| 0027 | Make email attachment processing idempotent | Pending | Future work |
+## Status vocabulary
 
-## Shelved decisions
+- **Accepted** — the decision governs current development.
+- **Proposed** — awaiting approval.
+- **Deferred** — intentionally postponed.
+- **Shelved** — retained for possible future work but not currently planned.
+- **Superseded** — replaced by another ADR.
+- **Rejected** — considered and not adopted.
 
-| ADR | Shelved item | Reason for deferral |
-|---|---|---|
-| ADR-0012 | Store plugin configuration in database tables and expose it as JSON | Phase 1 uses layered properties files; database bootstrap, administration, audit, import/export, and fallback behaviour need further design. |
-| ADR-0020 | Add an internal scheduler or background service | Reliable CLI execution and idempotent processing are required first; external schedulers can invoke the application meanwhile. |
+## Current review notes
 
-## Maintenance
-
-Update this register whenever an ADR is added, accepted, rejected, shelved, superseded, or materially implemented. An implementation change must not silently alter an accepted decision; create a superseding ADR where the architecture changes.
+- ADR-0013 should not be read as proof that dynamic discovery is complete.
+- ADR-0014 remains a target-state decision.
+- ADR-0019 is the selected reference implementation but is not yet wired end to end from `Main`.
+- ADR-0020 remains deferred.

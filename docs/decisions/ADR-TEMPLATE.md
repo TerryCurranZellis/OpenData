@@ -30,4 +30,4 @@ Explain why it was not selected.
 
 ## Implementation notes
 
-Describe important implementation constraints or follow-up work.
+Describe important implementation constraints, current delivery state, and follow-up work.

@@ -1,20 +1,25 @@
-# OpenData Missing ADR Package
+# Architecture Decision Records
 
-This package contains newly generated Architecture Decision Records beginning with ADR-0008, plus an ADR register covering ADR-0001 onward.
+ADRs record significant design decisions for OpenData.
 
-## Basis used
+## Numbering
 
-- Existing ADR names and statuses in the public OpenData GitHub repository.
-- The supplied `ADR-TEMPLATE.md`.
-- Architecture documents and retained OpenData design discussions.
-- Decisions represented in the generated code and documentation discussed in the project chats.
+The current sequence runs from ADR-0001 through ADR-0023.
 
-## Important review note
+## Current implementation note
 
-The earlier ZIP attachments from the chats were not directly available as filesystem attachments while this package was generated. Their known design decisions were available through the retained project context and design summary. Before committing, compare the delivery-status wording against the latest uncommitted source tree.
+An accepted ADR can describe either:
 
-## Suggested destination
+- a decision already implemented;
+- a decision governing work currently in progress;
+- an agreed target state whose implementation is explicitly marked deferred.
 
-Copy the new `ADR-0008` through `ADR-0020` files and `ADR-REGISTER.md` into:
+Use `ADR-REGISTER.md` to distinguish these states.
 
-`docs/decisions/`
+## Adding a decision
+
+1. Copy `ADR-TEMPLATE.md`.
+2. Allocate the next number.
+3. Describe context, decision, consequences, alternatives, and implementation notes.
+4. Update `ADR-REGISTER.md`.
+5. Update the changelog when the decision changes implementation.
