@@ -33,9 +33,21 @@ package com.towermarsh.opendata.app;
  */
 public enum ApplicationRunStatus {
 
+    /**
+     * Successful completion
+     */
     SUCCESS("Successful", 0),
+    /**
+     * command line error
+     */
     COMMAND_LINE_ERROR("Command-line error", 2),
+    /**
+     * configuration error
+     */
     CONFIGURATION_ERROR("Configuration error", 3),
+    /**
+     * application error
+     */
     APPLICATION_ERROR("Application error", 1);
 
     private final String displayName;

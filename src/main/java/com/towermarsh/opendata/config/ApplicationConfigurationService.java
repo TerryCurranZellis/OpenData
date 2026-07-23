@@ -24,10 +24,8 @@
 
 package com.towermarsh.opendata.config;
 
-import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
 import com.towermarsh.opendata.config.model.BootstrapConfig;
@@ -44,6 +42,11 @@ public final class ApplicationConfigurationService {
     private final BootstrapConfig bootstrapConfig;
     private final PluginDefinitionLoader pluginDefinitionLoader;
 
+    /**
+     * Configure the application service
+     * @param bootstrapConfig
+     * @param pluginDefinitionLoader 
+     */
     public ApplicationConfigurationService(
             final BootstrapConfig bootstrapConfig,
             final PluginDefinitionLoader pluginDefinitionLoader) {
@@ -67,11 +70,11 @@ public final class ApplicationConfigurationService {
             final CommandLineArguments arguments,
             final Map<String, String> runtimeOverrides) {
 
-        final String pluginId = arguments.pluginId()
+        final var pluginId = arguments.pluginId()
                 .orElseThrow(() -> new PluginDefinitionException(
                         "A plugin is required for an execution request."));
 
-        final PluginDefinition plugin = pluginDefinitionLoader.load(
+        final var plugin = pluginDefinitionLoader.load(
                 pluginId,
                 runtimeOverrides);
 
