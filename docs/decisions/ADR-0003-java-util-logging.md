@@ -1,19 +1,21 @@
-# ADR-0003: Standardise on java.util.logging
+# ADR-0003: Use java.util.logging
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-The project requires consistent logging and the user prefers the Java platform logging API.
+The project prefers the JDK logging framework.
 
 ## Decision
 
-All OpenData source code will use `java.util.logging`. Required dependencies that use another framework must be configured, bridged, or have unnecessary implementations excluded.
+Use JUL throughout application and plugin code; do not introduce another application logging API.
 
 ## Consequences
 
-- No project-level logging facade is required.
-- Logging configuration uses `logging.properties` and JUL handlers.
-- Care is required when integrating third-party libraries.
-- Architecture tests should prevent accidental adoption of another logging API.
+The dependency footprint is small; JUL conventions and third-party bridges must be managed.
+
+## Related documents
+
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)

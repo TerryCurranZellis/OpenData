@@ -1,56 +1,30 @@
 # Component Interactions
 
-**Document ID:** 010
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-010  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Describes subsystem collaboration.
 
-## Scope
+## Listing
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+`--list-plugins` parses arguments, creates the registry and prints descriptors.
+It does not load a dataset or create download clients.
 
-## Overview
+## Execution
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Component Interactions**.
+CLI creates arguments; registry verifies the plugin; bootstrap and plugin loaders
+construct `ApplicationConfig`; the plugin validates source settings; the
+pipeline executes; `Main` records status and duration.
 
-## Execution Sequence
+## Source-specific flows
 
-1. `CommandLineArgumentsProcessor` parses user arguments.
-2. `ServiceLoaderPluginRegistry` discovers installed plugins.
-3. Informational requests such as `--list-plugins` are completed without loading
-   dataset configuration.
-4. For an execution request, `PluginApplicationService` resolves the selected
-   plugin.
-5. `ConfigurationService` loads and validates `ApplicationConfig`.
-6. The plugin performs dataset-specific configuration validation.
-7. The plugin starts its pipeline.
-8. The application logs the `PluginExecutionResult`.
+Ofgem downloads an HTML page, discovers the current workbook, downloads XLSX and
+uses Apache POI. OpenMeteo constructs historical API query parameters and parses
+JSON with Jackson (or CSV when selected).
 
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
-|2.0|2026-07-23|Added execution sequence|
+See [plugin-execution-sequence.puml](../diagrams/plugin-execution-sequence.puml)
+and [configuration-loading-sequence.puml](../diagrams/configuration-loading-sequence.puml).

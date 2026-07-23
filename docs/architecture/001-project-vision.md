@@ -1,61 +1,45 @@
 # Project Vision
 
-**Document ID:** 001
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-001  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Defines the long-term vision and objectives of the OpenData Framework.
 
-## Scope
+## Vision
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+OpenData provides a reusable foundation for collecting public data from
+independent publishers without creating a separate application for every source.
+A new source should normally require a plugin definition and source-specific
+transformation, not changes throughout the framework.
 
-## Overview
+## Goals
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Project Vision**.
+- support APIs, direct files and HTML publication pages;
+- preserve original source artefacts for audit and reprocessing;
+- validate before persistence;
+- isolate dataset rules from reusable infrastructure;
+- provide repeatable command-line execution;
+- remain understandable to a small development team;
+- keep documentation beside the code.
 
-## Design Principles
+## Phase 1 scope
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
+CSV, JSON, XLS/XLSX, static HTML link discovery, SQL Server and manually invoked
+runs are in scope. Graphical administration, distributed services, browser
+automation, internal scheduling and database-managed plugin definitions are not.
 
-## Responsibilities
+## Principles
 
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
+Java 17 minimum; records for immutable values; configuration before custom code;
+interfaces at infrastructure boundaries; raw-data preservation; documentation as
+code.
 
-## Key Concepts
+## Success criteria
 
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+Ofgem and OpenMeteo execute through the same lifecycle, plugins can be added
+without modifying `Main`, and format differences are handled by reusable
+strategies and parsers.

@@ -1,81 +1,40 @@
 # System Overview
 
-**Document ID:** 002
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-002  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Describes the overall system and its major components.
 
-## Scope
+## Boundary
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+OpenData is a command-line application. It makes outbound HTTPS requests, stores
+work/archive/failure artefacts on the file system, and optionally loads accepted
+data into SQL Server.
 
-## Overview
+## External participants
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **System Overview**.
+| Participant | Interaction |
+|---|---|
+| Operator | Selects a plugin and supplies overrides |
+| Publisher | Provides API, file or HTML page |
+| Credential provider | Resolves secret references |
+| File system | Stores raw and intermediate artefacts |
+| SQL Server | Initial relational target |
+| Documentation toolchain | Publishes Markdown and PlantUML |
 
-## Design Principles
+## Capabilities and status
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-- Plugin Registry 
+CLI, logging and structured properties are implemented. Registry-driven listing,
+Commons CSV, JSoup discovery and Apache POI form the consolidated integration
+baseline. Validation, ETL and database services are foundations. Complete
+pipeline history and database plugin configuration are not complete.
 
-## Responsibilities
+## Constraint
 
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
+Dataset names, URLs and listing text must not be hard-coded in `Main`.
 
-## Component Responsibility
-
-The Plugin Registry discovers installed dataset plugins, validates unique plugin
-identifiers, supports plugin listing and resolves the plugin requested by the
-command line.
-
-## Interaction Summary
-
-```text
-Command Line
-    -> Plugin Registry
-    -> Configuration Service
-    -> Selected Plugin
-    -> Pipeline Engine
-```
-
-The framework core remains independent of dataset-specific implementations.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
-|2.0|2026-07-23|Updated components|
+See [system-context.puml](../diagrams/system-context.puml).

@@ -1,61 +1,26 @@
 # Database Architecture
 
-**Document ID:** 014
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-014  
+**Version:** 1.0  
+**Status:** Partial  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Database abstraction and SQL Server design.
 
-## Scope
+SQL Server is the first target. `DatabaseConnectionManager`, repository contracts,
+`SqlServerRepository` and `LoadService` isolate JDBC and transaction behaviour.
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+Framework metadata (runs, artefacts, checksums, validation summaries, counts and
+timings) is separated from plugin business tables.
 
-## Overview
+A logical load is transactional. Batch inserts must not leave an apparently
+successful partial run.
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Database Architecture**.
+Database-neutral contracts do not imply portable SQL. Additional databases use
+new implementations.
 
-## Design Principles
+A future normalised plugin-definition database returning JSON is shelved.
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+See [database-architecture.puml](../diagrams/database-architecture.puml).

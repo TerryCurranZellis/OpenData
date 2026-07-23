@@ -1,18 +1,21 @@
-# ADR-0006: Use package-info.java for package documentation
+# ADR-0006: Document every public package
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-The project requires package-level documentation. Keeping a separate README in every Java package would duplicate the package structure and risk becoming stale.
+Package ownership is central to the modular monolith.
 
 ## Decision
 
-Every production Java package will contain `package-info.java` with JavaDoc describing purpose, responsibilities, dependencies, and extension points. Markdown remains the format for repository-level documentation.
+Maintain package-info.java plus broader Markdown architecture.
 
 ## Consequences
 
-- Package documentation is generated with JavaDoc.
-- Documentation remains close to the code.
-- Package JavaDoc uses supported JavaDoc HTML and tags rather than assuming full Markdown support.
+Package changes require documentation review.
+
+## Related documents
+
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)

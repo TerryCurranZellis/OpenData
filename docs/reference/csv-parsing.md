@@ -1,18 +1,15 @@
 # CSV Parsing Reference
 
-`CsvDataParser` uses Apache Commons CSV.
+**Document ID:** REF-CSV-001  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-The default parser:
+---
 
-- reads UTF-8;
-- uses comma delimiters;
-- uses double-quote quoting;
-- obtains headers from the first record;
-- rejects duplicate and missing header names;
-- ignores empty lines;
-- preserves embedded line breaks and quoted delimiters.
 
-Custom behaviour is supplied through `CsvParserOptions`.
-
-The current return type remains `List<Map<String,String>>` for compatibility
-with the existing ETL code.
+Commons CSV defaults to UTF-8, comma, double-quote, first-record headings,
+duplicate headings disallowed and empty lines ignored. Quoted delimiters,
+embedded line breaks, escaped quotes and trailing blanks are supported.
+`String.split` is not used for general CSV.

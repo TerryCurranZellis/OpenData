@@ -1,0 +1,23 @@
+@startuml
+title Standard ETL Pipeline
+participant Pipeline
+participant CredentialProvider
+participant DownloadStrategy
+participant Archive
+participant Parser
+participant Validator
+participant Transformer
+participant Repository
+Pipeline -> CredentialProvider : optional resolve
+Pipeline -> DownloadStrategy : download
+DownloadStrategy --> Pipeline : ResolvedDownload
+Pipeline -> Archive : preserve raw
+Pipeline -> Parser : parse
+Parser --> Pipeline : rows
+Pipeline -> Validator : validate
+Validator --> Pipeline : result
+Pipeline -> Transformer : transform
+Transformer --> Pipeline : target rows
+Pipeline -> Repository : transactional load
+Repository --> Pipeline : ImportResult
+@enduml

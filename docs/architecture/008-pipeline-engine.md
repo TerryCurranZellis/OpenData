@@ -1,61 +1,27 @@
 # Pipeline Engine
 
-**Document ID:** 008
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-008  
+**Version:** 1.0  
+**Status:** Partial  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Describes ETL pipeline execution.
 
-## Scope
+## Standard stages
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+Resolve configuration; resolve credentials; select endpoint; download; archive;
+extract if needed; select parser; parse; validate; transform; load; verify; record
+statistics and outcome.
 
-## Overview
+`ExtractService`, `TransformService` and `LoadService` provide initial boundaries.
+Complete step sequencing, context, rollback and execution history remain partial.
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Pipeline Engine**.
+A future `PipelineContext` carries execution id, configuration, paths, endpoint,
+artefacts, parser output, validation results, statistics and timings.
 
-## Design Principles
+A failed stage stops later stages unless explicitly recoverable. Database loads
+are transactional and raw artefacts remain available for diagnosis.
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+See [pipeline-sequence.puml](../diagrams/pipeline-sequence.puml).

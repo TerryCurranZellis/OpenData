@@ -1,61 +1,27 @@
 # Layered Architecture
 
-**Document ID:** 006
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-006  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Defines architectural layers and boundaries.
 
-## Scope
+## Layers
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+1. **Entry:** `Main` and CLI translate process input and output.
+2. **Application:** coordinates use cases and object composition.
+3. **Plugin/domain:** represents datasets and source-specific rules.
+4. **Processing:** download, parse, validate, transform and load.
+5. **Infrastructure:** HTTP, file system, credentials and JDBC.
 
-## Overview
+Upper layers call lower layers through constructors and interfaces. Lower layers
+must not inspect CLI options or call `Main`.
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Layered Architecture**.
+Records cross boundaries; mutable third-party objects such as `Workbook`,
+`CSVParser`, `Connection` and `ResultSet` remain inside short resource scopes.
 
-## Design Principles
-
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+`List<Map<String,String>>` is a tolerated Phase 1 parser result; a typed
+`DataRecord`/`DataTable` model is future work.

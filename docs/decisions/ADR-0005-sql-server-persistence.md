@@ -1,19 +1,21 @@
-# ADR-0005: Use Microsoft SQL Server as the first persistence target
+# ADR-0005: Use SQL Server as the first persistence target
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-The initial OpenData implementation loads dataset records into SQL Server and existing project work already targets SQL Server.
+Initial datasets are loaded into SQL Server.
 
 ## Decision
 
-Build the first persistence adapter using the Microsoft JDBC driver and SQL Server data types, transactions, batching, and migration scripts.
+Hide JDBC behind connection/repository classes and keep source SQL out of plugins.
 
 ## Consequences
 
-- SQL Server-specific repository implementations are permitted.
-- Framework contracts should avoid unnecessary vendor-specific leakage.
-- A second database would require a new adapter and an ADR.
-- SQL Server credentials and permissions require explicit operational controls.
+SQL Server features may be used deliberately; future databases need implementations.
+
+## Related documents
+
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)

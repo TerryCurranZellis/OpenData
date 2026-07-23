@@ -1,29 +1,21 @@
 # ADR-0002: Use Apache Commons CLI
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-OpenData requires a predictable command-line interface. The user prefers Apache Commons CLI rather than environment-variable-driven configuration.
+Reliable option parsing, validation and generated help are required.
 
 ## Decision
 
-Use Apache Commons CLI for parsing global options including `--plugin`, optional `--file`, help, version, plugin listing, and dry run.
+Use Apache Commons CLI and retain parsed values in an immutable argument type.
 
 ## Consequences
 
-- Command syntax is explicit.
-- Help generation is centralised.
-- Plugins do not parse raw arguments.
-- Apache Commons CLI becomes a required dependency.
+CLI behaviour is consistent and Commons CLI is an approved dependency.
 
-## Alternatives considered
+## Related documents
 
-### Manual argument parsing
-
-Rejected because validation and help behaviour would be unnecessarily error-prone.
-
-### Environment variables
-
-Rejected as the primary configuration mechanism because explicit command and parameter-file selection is preferred.
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)

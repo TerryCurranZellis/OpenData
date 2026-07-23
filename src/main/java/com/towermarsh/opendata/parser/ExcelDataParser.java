@@ -1,18 +1,22 @@
+/*
+ * (c) Copyright 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.parser;
 
+import com.towermarsh.opendata.exception.ImportException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -21,199 +25,118 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import com.towermarsh.opendata.exception.ImportException;
-
 /**
- * XLS and XLSX parser implemented using Apache POI.
- *
- * <p>Cell values are returned using the workbook's formatted display values,
- * which preserves dates, percentages and calculated formula results more
- * faithfully than reading raw numeric values.</p>
+ * Parser for Excel `.xls` and `.xlsx` workbooks.
  */
 public final class ExcelDataParser implements DataParser {
 
     private final ExcelParserOptions options;
 
-    /**
-     * Creates a parser for the first visible worksheet.
-     */
     public ExcelDataParser() {
         this(ExcelParserOptions.defaults());
     }
 
-    /**
-     * Creates a configured workbook parser.
-     *
-     * @param options parser options
-     */
-    public ExcelDataParser(final ExcelParserOptions options) {
+    public ExcelDataParser(ExcelParserOptions options) {
         this.options = Objects.requireNonNull(options, "options");
     }
 
     @Override
-    public List<Map<String, String>> parse(final Path file)
-            throws ImportException {
-
+    public List<Map<String, String>> parse(Path file) throws ImportException {
         Objects.requireNonNull(file, "file");
-
         try (InputStream input = Files.newInputStream(file);
-             Workbook workbook = WorkbookFactory.create(input)) {
+                Workbook workbook = WorkbookFactory.create(input)) {
+            Sheet sheet = selectSheet(workbook);
+            Row headerRow = sheet.getRow(options.headerRowIndex());
+            if (headerRow == null) {
+                throw new ImportException(
+                        "Header row " + options.headerRowIndex()
+                        + " does not exist in sheet " + sheet.getSheetName());
+            }
 
-            final Sheet sheet = selectSheet(workbook);
-            final FormulaEvaluator evaluator =
-                    options.evaluateFormulas()
-                            ? workbook.getCreationHelper()
-                                    .createFormulaEvaluator()
-                            : null;
-            final DataFormatter formatter =
-                    new DataFormatter(Locale.UK);
-
-            final List<String> headers =
-                    readHeaders(sheet, formatter, evaluator);
-            final List<Map<String, String>> rows = new ArrayList<>();
+            DataFormatter formatter = new DataFormatter(Locale.UK);
+            FormulaEvaluator evaluator = options.evaluateFormulas()
+                    ? workbook.getCreationHelper().createFormulaEvaluator()
+                    : null;
+            List<String> headers = readHeaders(headerRow, formatter, evaluator);
+            List<Map<String, String>> records = new ArrayList<>();
 
             for (int rowIndex = options.firstDataRowIndex();
                     rowIndex <= sheet.getLastRowNum();
                     rowIndex++) {
-
-                final Row row = sheet.getRow(rowIndex);
-                if (row == null) {
-                    continue;
+                Row row = sheet.getRow(rowIndex);
+                Map<String, String> record = readRow(row, headers, formatter, evaluator);
+                boolean blank = record.values().stream().allMatch(String::isBlank);
+                if (!blank || !options.skipCompletelyBlankRows()) {
+                    records.add(record);
                 }
-                if (options.skipHiddenRows()
-                        && row.getZeroHeight()) {
-                    continue;
-                }
-
-                final Map<String, String> values =
-                        readRow(row, headers, formatter, evaluator);
-
-                if (options.ignoreBlankRows()
-                        && values.values().stream()
-                                .allMatch(String::isBlank)) {
-                    continue;
-                }
-
-                rows.add(Map.copyOf(values));
             }
-
-            return List.copyOf(rows);
-        } catch (IOException | IllegalArgumentException exception) {
-            throw new ImportException(
-                    "Unable to parse Excel workbook: " + file,
-                    exception);
+            return List.copyOf(records);
+        } catch (ImportException ex) {
+            throw ex;
+        } catch (IOException | RuntimeException ex) {
+            throw new ImportException("Unable to parse Excel file: " + file, ex);
         }
     }
 
-    private Sheet selectSheet(final Workbook workbook) {
-        if (options.sheetName().isPresent()) {
-            final String name = options.sheetName().orElseThrow();
-            final Sheet sheet = workbook.getSheet(name);
+    private Sheet selectSheet(Workbook workbook) throws ImportException {
+        if (!options.sheetName().isBlank()) {
+            Sheet sheet = workbook.getSheet(options.sheetName());
             if (sheet == null) {
-                throw new IllegalArgumentException(
-                        "Workbook does not contain sheet: " + name);
+                throw new ImportException(
+                        "Workbook does not contain sheet: " + options.sheetName());
             }
             return sheet;
         }
-
-        for (int index = 0;
-                index < workbook.getNumberOfSheets();
-                index++) {
-
-            if (!workbook.isSheetHidden(index)
-                    && !workbook.isSheetVeryHidden(index)) {
-                return workbook.getSheetAt(index);
-            }
+        if (options.sheetIndex() >= workbook.getNumberOfSheets()) {
+            throw new ImportException(
+                    "Workbook contains " + workbook.getNumberOfSheets()
+                    + " sheet(s); requested index " + options.sheetIndex());
         }
-
-        throw new IllegalArgumentException(
-                "Workbook contains no visible worksheets.");
+        return workbook.getSheetAt(options.sheetIndex());
     }
 
-    private List<String> readHeaders(
-            final Sheet sheet,
-            final DataFormatter formatter,
-            final FormulaEvaluator evaluator) {
-
-        final Row headerRow = sheet.getRow(options.headerRowIndex());
-        if (headerRow == null) {
-            throw new IllegalArgumentException(
-                    "Header row does not exist: "
-                            + options.headerRowIndex());
+    private static List<String> readHeaders(
+            Row headerRow,
+            DataFormatter formatter,
+            FormulaEvaluator evaluator) throws ImportException {
+        int columnCount = Math.max(0, headerRow.getLastCellNum());
+        if (columnCount == 0) {
+            throw new ImportException("Excel header row contains no cells");
         }
 
-        final int finalCell = headerRow.getLastCellNum();
-        if (finalCell <= 0) {
-            throw new IllegalArgumentException(
-                    "Header row is empty.");
+        List<String> headers = new ArrayList<>(columnCount);
+        Map<String, Integer> occurrences = new HashMap<>();
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+            String raw = format(headerRow.getCell(columnIndex), formatter, evaluator).trim();
+            String base = raw.isEmpty() ? "COLUMN_" + (columnIndex + 1) : raw;
+            int occurrence = occurrences.merge(base, 1, Integer::sum);
+            headers.add(occurrence == 1 ? base : base + "_" + occurrence);
         }
-
-        final List<String> headers = new ArrayList<>(finalCell);
-        final Set<String> uniqueHeaders = new HashSet<>();
-
-        for (int cellIndex = 0;
-                cellIndex < finalCell;
-                cellIndex++) {
-
-            final String header = format(
-                    headerRow.getCell(
-                            cellIndex,
-                            Row.MissingCellPolicy.RETURN_BLANK_AS_NULL),
-                    formatter,
-                    evaluator);
-
-            if (header.isBlank()) {
-                throw new IllegalArgumentException(
-                        "Blank column heading at column " + cellIndex);
-            }
-            if (!uniqueHeaders.add(header)) {
-                throw new IllegalArgumentException(
-                        "Duplicate column heading: " + header);
-            }
-
-            headers.add(header);
-        }
-
         return List.copyOf(headers);
     }
 
-    private Map<String, String> readRow(
-            final Row row,
-            final List<String> headers,
-            final DataFormatter formatter,
-            final FormulaEvaluator evaluator) {
-
-        final Map<String, String> values = new LinkedHashMap<>();
-
-        for (int cellIndex = 0;
-                cellIndex < headers.size();
-                cellIndex++) {
-
-            final Cell cell = row.getCell(
-                    cellIndex,
-                    Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-
-            values.put(
-                    headers.get(cellIndex),
-                    format(cell, formatter, evaluator));
+    private static Map<String, String> readRow(
+            Row row,
+            List<String> headers,
+            DataFormatter formatter,
+            FormulaEvaluator evaluator) {
+        Map<String, String> record = new LinkedHashMap<>();
+        for (int columnIndex = 0; columnIndex < headers.size(); columnIndex++) {
+            Cell cell = row == null ? null : row.getCell(columnIndex);
+            record.put(headers.get(columnIndex), format(cell, formatter, evaluator));
         }
-
-        return values;
+        return record;
     }
 
-    private String format(
-            final Cell cell,
-            final DataFormatter formatter,
-            final FormulaEvaluator evaluator) {
-
+    private static String format(
+            Cell cell,
+            DataFormatter formatter,
+            FormulaEvaluator evaluator) {
         if (cell == null) {
             return "";
         }
-
-        final String value = evaluator == null
+        return evaluator == null
                 ? formatter.formatCellValue(cell)
                 : formatter.formatCellValue(cell, evaluator);
-
-        return options.trimValues() ? value.trim() : value;
     }
 }

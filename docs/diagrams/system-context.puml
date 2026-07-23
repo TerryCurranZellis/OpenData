@@ -1,0 +1,15 @@
+@startuml
+title OpenData System Context
+left to right direction
+actor Operator
+rectangle "OpenData Framework" as App
+cloud "Dataset Publishers\nAPIs, files, HTML" as Publishers
+database "SQL Server" as DB
+folder "Work / Archive / Failed" as FS
+rectangle "Credential Provider" as Creds
+Operator --> App : CLI
+App --> Publishers : HTTPS
+App --> Creds : resolve reference
+App --> FS : artefacts
+App --> DB : JDBC
+@enduml

@@ -1,61 +1,37 @@
 # Package Structure
 
-**Document ID:** 004
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-004  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Describes package organisation and responsibilities.
 
-## Scope
+## Canonical ownership
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+| Package | Responsibility |
+|---|---|
+| root / `app` | Entry point, orchestration and run status |
+| `cli` | Commons CLI and immutable arguments |
+| `config`, `config.model` | Bootstrap/plugin loading and records |
+| `plugin`, `plugin.ofgem`, `plugin.openmeteo` | Contracts, registry and source behaviour |
+| `download`, `download.strategy` | Download contracts and implementations |
+| `parser` | CSV, JSON and Excel parsers |
+| `validation` | Validation contracts/results |
+| `etl` | Extract, transform and load coordination |
+| `database` | JDBC connection and repositories |
+| `model` | Framework artefact/result values |
+| `logging` | JUL setup |
+| `exception` | Framework exceptions |
 
-## Overview
+## Consolidation
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Package Structure**.
+The canonical command-line model is under `cli`; an older `app` copy should be
+removed after reference checks. The record-based configuration route is the
+target; earlier flat loader classes are transitional.
 
-## Design Principles
+Every public package retains `package-info.java`.
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+See [package-dependencies.puml](../diagrams/package-dependencies.puml).

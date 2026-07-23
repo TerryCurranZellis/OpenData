@@ -1,19 +1,21 @@
-# ADR-0007: Begin as a modular monolith
+# ADR-0007: Use a modular monolith
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-The application is a command-line batch tool with one operator, one selected plugin per run, shared infrastructure, and no demonstrated need for distributed services.
+Independent deployment and distributed transactions are not required.
 
 ## Decision
 
-Build one deployable Java process with strong internal package and module boundaries.
+Build one JVM application with explicit package boundaries.
 
 ## Consequences
 
-- Build, deployment, and debugging remain simple.
-- Calls between modules are ordinary Java calls.
-- Architecture rules are required to prevent boundary erosion.
-- Independent plugin packaging may be added later if justified.
+Deployment is simple; boundaries rely on review and future architecture tests.
+
+## Related documents
+
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)

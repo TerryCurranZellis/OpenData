@@ -1,19 +1,14 @@
 # Excel Parsing Reference
 
-`ExcelDataParser` uses Apache POI `WorkbookFactory`, allowing the same parser to
-open legacy XLS and modern XLSX files.
+**Document ID:** REF-EXCEL-001  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-Defaults:
+---
 
-- first visible worksheet;
-- row 0 as headings;
-- row 1 as first data row;
-- hidden rows skipped;
-- formulas evaluated;
-- blank rows ignored;
-- formatted values trimmed.
 
-A named worksheet and alternative row positions can be supplied through
-`ExcelParserOptions`.
-
-Raw source workbooks should be archived before parsing.
+Apache POI `WorkbookFactory` handles XLS/XLSX. Options cover worksheet, heading
+row, first data row, formulas, hidden rows, blank rows and trimming.
+`DataFormatter` supplies display values. Raw workbooks are archived first.

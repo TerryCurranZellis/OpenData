@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.towermarsh</groupId>
     <artifactId>opendata</artifactId>
     <version>1.0.0</version>
     <name>OpenData Processing Framework</name>
-    <description>
-        Java framework for downloading, validating and importing OpenData sources.
-    </description>
+    <description>Java framework for downloading, validating and importing OpenData sources.</description>
 
     <properties>
-        <!-- Java 17 is the minimum supported release and the bytecode target. -->
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
         <jackson.version>2.22.1</jackson.version>
         <commons.csv.version>1.14.1</commons.csv.version>
         <commons.cli.version>1.11.0</commons.cli.version>
         <jsoup.version>1.22.2</jsoup.version>
         <poi.version>5.5.1</poi.version>
-        <mssql.jdbc.version>13.5.0.jre11-preview</mssql.jdbc.version>
+        <log4j.version>2.24.3</log4j.version>
         <junit.version>5.11.4</junit.version>
     </properties>
 
@@ -60,10 +54,17 @@
             <version>${poi.version}</version>
         </dependency>
 
+        <!-- Route any Log4j API calls made by dependencies into java.util.logging. -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-jul</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>${mssql.jdbc.version}</version>
+            <version>13.5.0.jre11-preview</version>
         </dependency>
 
         <dependency>
@@ -81,11 +82,10 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.15.0</version>
                 <configuration>
-                    <release>17</release>
-                    <showWarnings>true</showWarnings>
+                    <release>${maven.compiler.release}</release>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

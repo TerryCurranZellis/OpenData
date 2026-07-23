@@ -13,7 +13,7 @@ import com.towermarsh.opendata.exception.DownloadException;
 class HtmlLinkResolverTest {
 
     @Test
-    void resolvesRelativeWorkbookLinkUsingTextAndHrefPatterns() {
+    void resolvesRelativeWorkbookLinkUsingTextAndHrefPatterns() throws DownloadException {
         final String html = """
                 <html><body>
                   <a href="/files/notes.pdf">Notes</a>

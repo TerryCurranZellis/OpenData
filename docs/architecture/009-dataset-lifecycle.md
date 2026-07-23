@@ -1,61 +1,26 @@
 # Dataset Lifecycle
 
-**Document ID:** 009
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-009  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Defines dataset processing lifecycle.
 
-## Scope
+## States
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+`REQUESTED`, `CONFIGURED`, `SOURCE_RESOLVED`, `DOWNLOADING`, `DOWNLOADED`,
+`ARCHIVED`, `PARSED`, `VALIDATED`, `TRANSFORMED`, `LOADED`, `VERIFIED`,
+`COMPLETED` and `FAILED`.
 
-## Overview
+Each stage produces an artefact or result: `ApplicationConfig`, resolved URI,
+raw file, archive copy, parsed rows, validation result, target rows, import result
+and final run summary.
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Dataset Lifecycle**.
+Archived inputs support reprocessing without another network request. Each run
+should record software and plugin configuration versions. Dataset-specific keys,
+release dates or checksums support idempotency.
 
-## Design Principles
-
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
-
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+See [dataset-lifecycle.puml](../diagrams/dataset-lifecycle.puml).

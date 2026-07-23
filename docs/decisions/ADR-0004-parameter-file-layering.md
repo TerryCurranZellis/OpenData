@@ -1,19 +1,21 @@
-# ADR-0004: Use plugin defaults plus optional override files
+# ADR-0004: Layer bootstrap, plugin and runtime configuration
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-Each dataset needs its own settings. A normal plugin run should work with packaged defaults, while a user may explicitly provide a machine- or run-specific override.
+Startup, reusable plugin settings and one-run overrides have different lifecycles.
 
 ## Decision
 
-Each plugin supplies a default properties resource. The CLI accepts an optional `--file` path. Values in that file override matching defaults. No override file is searched for implicitly.
+Separate bootstrap properties and plugin properties, then apply invocation overrides and construct immutable ApplicationConfig.
 
 ## Consequences
 
-- Behaviour is deterministic.
-- Defaults are version controlled.
-- Local settings can remain outside source control.
-- Configuration requires schema validation and secret redaction.
+Configuration is explicit; earlier flat loaders are transitional.
+
+## Related documents
+
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)

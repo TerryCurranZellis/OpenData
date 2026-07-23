@@ -1,0 +1,37 @@
+@startuml
+title Canonical Package Dependencies
+package app
+package cli
+package config
+package "config.model" as cm
+package plugin
+package "plugin.ofgem" as ofgem
+package "plugin.openmeteo" as om
+package etl
+package download
+package "download.strategy" as ds
+package parser
+package validation
+package database
+package model
+package logging
+package exception
+app --> cli
+app --> config
+app --> plugin
+app --> etl
+app --> logging
+config --> cm
+plugin --> cm
+ofgem --> plugin
+ofgem --> parser
+om --> plugin
+om --> parser
+etl --> download
+etl --> parser
+etl --> validation
+etl --> database
+ds --> download
+parser --> exception
+database --> model
+@enduml

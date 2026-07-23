@@ -1,103 +1,58 @@
-# OpenData Processing Framework
+# OpenData Framework
 
-OpenData is a Java 17 framework for downloading, parsing, validating, transforming, and loading public datasets.
+OpenData is a Java framework for acquiring, validating, transforming and loading
+public datasets. It is under active development and uses a modular monolith with
+properties-based plugin definitions.
 
-The current codebase provides the framework foundations and a working command-line/configuration bootstrap. The complete dataset plugin execution path is still under development.
+## Consolidated Phase 1 baseline
 
-## Current status
+- Java 17 is the minimum supported release and Maven API/bytecode target.
+- Apache Commons CLI handles command-line processing.
+- `java.util.logging` is the application logging framework.
+- Immutable Java records represent structured plugin configuration.
+- Each plugin has a properties file and is named in an explicit classpath index.
+- Ofgem and OpenMeteo are the reference plugins.
+- JDK HTTP supports direct downloads; JSoup resolves links from static HTML.
+- Apache Commons CSV, Jackson and Apache POI parse CSV, JSON and Excel.
+- Validation, ETL and SQL Server repository foundations are present.
+- Markdown, ADRs and PlantUML are maintained with the source code.
 
-**Version:** `1.0.0` in Maven metadata  
-**Runtime target:** Java 17  
-**Build:** Maven  
-**Primary database implementation:** Microsoft SQL Server  
-**Status:** Active development
+Some components remain foundations rather than completed production workflows.
+See [the architecture manual](docs/architecture/ARCHITECTURE.md).
 
-## Implemented foundations
+## Documentation
 
-- Apache Commons CLI command-line processing
-- layered properties-based configuration
-- immutable configuration and data models
-- configuration validation
-- JDK HTTP client download abstraction
-- CSV and JSON parser abstractions
-- validation contracts and results
-- ETL service interfaces
-- database repository abstraction
-- SQL Server repository implementation
-- `java.util.logging`
-- project-specific exception hierarchy
-- package-level Javadoc documentation
-- JUnit 5 test dependency
-
-## Current application behaviour
-
-`com.towermarsh.opendata.Main` currently:
-
-1. parses command-line arguments;
-2. handles help, version, and plugin-list requests;
-3. resolves and validates configuration;
-4. logs the selected plugin and dry-run state;
-5. leaves plugin registry and pipeline execution as the next integration step.
-
-The current plugin listing reports `ofgem`, but full plugin discovery and execution are not yet wired into `Main`.
+- [Documentation index](docs/README.md)
+- [Architecture manual](docs/architecture/ARCHITECTURE.md)
+- [ADR register](docs/decisions/ADR-REGISTER.md)
+- [Command-line reference](docs/reference/command-line-reference.md)
+- [Adding a plugin](docs/guides/adding-a-plugin.md)
 
 ## Build
 
-```bash
+```powershell
 mvn clean test
-mvn clean package
-```
-
-## Command-line examples
-
-```bash
-java -jar target/opendata-1.0.0.jar --help
-java -jar target/opendata-1.0.0.jar --version
+mvn package
 java -jar target/opendata-1.0.0.jar --list-plugins
-java -jar target/opendata-1.0.0.jar --plugin ofgem
-java -jar target/opendata-1.0.0.jar --plugin ofgem --file path/to/override.properties
 java -jar target/opendata-1.0.0.jar --plugin ofgem --dry-run
+java -jar target/opendata-1.0.0.jar --plugin openmeteo --dry-run
 ```
 
-Exact options should remain aligned with `CommandLineArgumentsProcessor`.
+Maven may run on a later JDK, but the compiler must use
+`maven.compiler.release=17`.
 
-## Core package structure
+## Configuration
 
 ```text
-com.towermarsh.opendata
-├── cli
-├── config
-├── database
-├── download
-├── etl
-├── exception
-├── logging
-├── model
-├── parser
-├── validation
-└── Main
+src/main/resources/config/application.properties
+src/main/resources/config/plugins/index.properties
+src/main/resources/config/plugins/<plugin-id>.properties
 ```
 
-Some earlier documents also describe broader application and plugin packages. Those represent intended architecture rather than all currently integrated runtime components.
-
-## Dependencies
-
-- Jackson Databind
-- Apache Commons CSV
-- Microsoft SQL Server JDBC
-- Apache Commons CLI
-- JUnit Jupiter
-
-The framework otherwise prefers Java standard-library facilities.
-
-## Architecture
-
-See `docs/architecture/ARCHITECTURE.md`.
-
-## Architecture decisions
-
-See `docs/decisions/ADR-REGISTER.md`.
+Secrets must not be committed. Plugin definitions contain credential references,
+not resolved credentials.
 
 ## Licence
 
-Apache License 2.0.
+The repository licence is Apache License 2.0. Source-file headers should be made
+consistent with the repository licence.

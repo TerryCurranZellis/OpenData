@@ -1,61 +1,32 @@
 # Dependency Rules
 
-**Document ID:** 005
-**Version:** 1.0
-**Status:** Draft
+**Document ID:** ARCH-005  
+**Version:** 1.0  
+**Status:** Baseline  
+**Baseline date:** 23 July 2026  
+**Minimum Java version:** 17
 
-## Purpose
+---
 
-Documents permitted package dependencies.
 
-## Scope
+## Permitted direction
 
-This document forms part of the OpenData Framework Software Architecture Manual and should be read alongside the related architecture documents.
+`app` may coordinate CLI, configuration, plugins and ETL. Source plugin packages
+may use framework contracts and parsers. ETL may call downloader, parser,
+validation and repository contracts. Infrastructure implementations depend on
+framework values, not the reverse.
 
-## Overview
+## Prohibited dependencies
 
-The OpenData Framework is an enterprise-grade, plugin-based Java 17 framework for acquiring, validating, transforming and loading Open Data into relational databases. This document describes the architectural aspects related to **Dependency Rules**.
+- `Main` must not depend on Ofgem or OpenMeteo implementation classes.
+- parsers must not depend on plugin packages;
+- repositories must not initiate downloads;
+- records must not open network/file/database resources;
+- plugins must not parse CLI options or log secrets;
+- validation must not silently mutate source rows.
 
-## Design Principles
+## Approved specialist libraries
 
-- Documentation-first development
-- Interface-driven design
-- Low coupling / high cohesion
-- Constructor injection
-- Immutable models where practical
-- Java 17
-- Maven build
-- SQL Server initial target
-- Plugin extensibility
+Commons CLI, Commons CSV, Jackson, JSoup, Apache POI and Microsoft JDBC.
 
-## Responsibilities
-
-- Define architectural responsibilities.
-- Describe design constraints.
-- Identify extension points.
-- Provide implementation guidance.
-
-## Key Concepts
-
-| Topic | Description |
-|-------|-------------|
-| Architecture | Enterprise layered design |
-| Documentation | Markdown source, Pandoc output |
-| UML | PlantUML source diagrams |
-| Testing | Unit testing and integration testing |
-
-## Related Documents
-
-- 001-project-vision.md
-- 003-high-level-architecture.md
-- 004-package-structure.md
-
-## Future Enhancements
-
-This document will be expanded as implementation progresses with UML diagrams, examples and detailed design decisions.
-
-## Revision History
-
-| Version | Date | Description |
-|---------|------|-------------|
-|1.0|2026-07-22|Initial draft|
+A future ArchUnit suite should enforce package rules.

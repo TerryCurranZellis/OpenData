@@ -1,54 +1,42 @@
+/*
+ * (c) Copyright 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.parser;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
- * Immutable options for XLS and XLSX parsing.
+ * Immutable Excel parser settings.
  *
- * @param sheetName specific worksheet name, empty for first visible sheet
+ * @param sheetName sheet name; blank means use {@code sheetIndex}
+ * @param sheetIndex zero-based fallback sheet index
  * @param headerRowIndex zero-based header row
  * @param firstDataRowIndex zero-based first data row
- * @param skipHiddenRows whether hidden rows are omitted
- * @param evaluateFormulas whether formula results are evaluated
- * @param ignoreBlankRows whether completely blank rows are omitted
- * @param trimValues whether formatted values are trimmed
+ * @param evaluateFormulas whether formula results should be evaluated
+ * @param skipCompletelyBlankRows whether fully blank rows are omitted
  */
 public record ExcelParserOptions(
-        Optional<String> sheetName,
+        String sheetName,
+        int sheetIndex,
         int headerRowIndex,
         int firstDataRowIndex,
-        boolean skipHiddenRows,
         boolean evaluateFormulas,
-        boolean ignoreBlankRows,
-        boolean trimValues) {
+        boolean skipCompletelyBlankRows) {
 
     public ExcelParserOptions {
-        sheetName = Objects.requireNonNull(sheetName, "sheetName");
-
-        if (headerRowIndex < 0) {
-            throw new IllegalArgumentException(
-                    "headerRowIndex must not be negative.");
+        sheetName = Objects.requireNonNullElse(sheetName, "").trim();
+        if (sheetIndex < 0 || headerRowIndex < 0 || firstDataRowIndex < 0) {
+            throw new IllegalArgumentException("Excel row and sheet indexes must not be negative");
         }
         if (firstDataRowIndex <= headerRowIndex) {
             throw new IllegalArgumentException(
-                    "firstDataRowIndex must be after headerRowIndex.");
+                    "firstDataRowIndex must be after headerRowIndex");
         }
     }
 
-    /**
-     * Default workbook layout: first visible sheet, row 0 headers, row 1 data.
-     *
-     * @return default options
-     */
     public static ExcelParserOptions defaults() {
-        return new ExcelParserOptions(
-                Optional.empty(),
-                0,
-                1,
-                true,
-                true,
-                true,
-                true);
+        return new ExcelParserOptions("", 0, 0, 1, true, true);
     }
 }

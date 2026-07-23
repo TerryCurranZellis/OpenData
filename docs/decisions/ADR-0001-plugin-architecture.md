@@ -1,37 +1,21 @@
-# ADR-0001: Use a dataset plugin architecture
+# ADR-0001: Use a plugin architecture
 
-- Status: Accepted
-- Date: 2026-07-21
+**Status:** Accepted  
+**Date:** 23 July 2026
 
 ## Context
 
-OpenData will support more than one public dataset. Dataset formats, validation rules, retrieval methods, and database tables differ, while command-line processing, logging, configuration, file handling, and run reporting are common.
+The framework must support unrelated datasets without embedding each source in the entry point.
 
 ## Decision
 
-Use a plugin architecture. The framework exposes a small `DatasetPlugin` contract. Concrete plugins, beginning with `ofgem`, implement dataset-specific acquisition, parsing, validation, transformation, and persistence.
+Represent dataset families as plugins that provide identity, configuration validation and source-specific transformation while reusing framework infrastructure.
 
 ## Consequences
 
-### Positive
+New datasets can be added independently; a stable contract and registry are required.
 
-- New datasets can be added without placing dataset conditions in the core.
-- Common infrastructure is reusable.
-- Plugin contract tests can enforce consistent behaviour.
-- Dataset documentation can remain grouped with its implementation.
+## Related documents
 
-### Negative or limiting
-
-- Interfaces and execution context require careful versioning.
-- Some apparent duplication between plugins may remain deliberately isolated.
-- Independently deployed plugin JARs are not part of the initial design.
-
-## Alternatives considered
-
-### One application per dataset
-
-Rejected because shared CLI, configuration, logging, and persistence support would be duplicated.
-
-### Large central ETL pipeline
-
-Rejected because source-specific behaviour would accumulate in central conditional logic.
+- [ADR register](ADR-REGISTER.md)
+- [Architecture manual](../architecture/ARCHITECTURE.md)
