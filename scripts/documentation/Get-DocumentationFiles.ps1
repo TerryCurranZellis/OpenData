@@ -1,26 +1,26 @@
 [CmdletBinding()]
 param(
-    [string]$ProjectRoot
+  [string]$ProjectRoot
 )
 
-. (Join-Path $PSScriptRoot 'Common.ps1')
+. (Join-Path -Path $PSScriptRoot -ChildPath 'Common.ps1')
 if ([string]::IsNullOrWhiteSpace($ProjectRoot)) { $ProjectRoot = Resolve-ProjectRoot }
 $config = Read-DocumentationConfig -ProjectRoot $ProjectRoot
-$docsRoot = Join-Path $ProjectRoot $config.sourceDirectory
+$docsRoot = Join-Path -Path $ProjectRoot -ChildPath $config.sourceDirectory
 
 $orderedDirectories = @('architecture','development','standards','guides','reference','roadmap','decisions')
-$files = New-Object System.Collections.Generic.List[System.IO.FileInfo]
+$files = New-Object -TypeName System.Collections.Generic.List[System.IO.FileInfo]
 
-$rootReadme = Join-Path $docsRoot 'README.md'
+$rootReadme = Join-Path -Path $docsRoot -ChildPath 'README.md'
 if (Test-Path -LiteralPath $rootReadme) { $files.Add((Get-Item -LiteralPath $rootReadme)) }
 
 foreach ($directory in $orderedDirectories) {
-    $path = Join-Path $docsRoot $directory
-    if (Test-Path -LiteralPath $path) {
-        Get-ChildItem -LiteralPath $path -File -Filter '*.md' |
-            Sort-Object Name |
-            ForEach-Object { $files.Add($_) }
-    }
+  $path = Join-Path -Path $docsRoot -ChildPath $directory
+  if (Test-Path -LiteralPath $path) {
+    Get-ChildItem -LiteralPath $path -File -Filter '*.md' |
+    Sort-Object -Property Name |
+    ForEach-Object { $files.Add($_) }
+  }
 }
 
 $files
