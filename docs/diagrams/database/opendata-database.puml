@@ -1,0 +1,76 @@
+@startuml
+hide methods
+hide stereotypes
+skinparam linetype ortho
+
+entity "core.dataset" as dataset {
+  * dataset_id : int <<PK>>
+  --
+  dataset_code : varchar <<UQ>>
+  plugin_code : varchar
+  dataset_name : nvarchar
+}
+
+entity "core.ingestion_run" as run {
+  * ingestion_run_id : bigint <<PK>>
+  --
+  * dataset_id : int <<FK>>
+  status : varchar
+  started_at : datetime2
+  finished_at : datetime2
+}
+
+entity "core.source_file" as file {
+  * source_file_id : bigint <<PK>>
+  --
+  * ingestion_run_id : bigint <<FK>>
+  source_uri : nvarchar
+  sha256 : char(64)
+}
+
+entity "core.ingestion_error" as error {
+  * ingestion_error_id : bigint <<PK>>
+  --
+  * ingestion_run_id : bigint <<FK>>
+  source_file_id : bigint <<FK>>
+  processing_stage : varchar
+}
+
+entity "ofgem.price_cap_period" as period {
+  * price_cap_period_id : bigint <<PK>>
+  --
+  * source_file_id : bigint <<FK>>
+  effective_from : date
+  effective_to : date
+  is_current : bit
+}
+
+entity "ofgem.price_cap_level" as level {
+  * price_cap_period_id : bigint <<PK,FK>>
+  * region_code : varchar <<PK,FK>>
+  * payment_method_code : varchar <<PK,FK>>
+  * tariff_type_code : varchar <<PK,FK>>
+  * consumption_basis_code : varchar <<PK,FK>>
+  * vat_included : bit <<PK>>
+  --
+  amount_gbp : decimal
+  ingestion_run_id : bigint <<FK>>
+}
+
+entity "ofgem.charge_restriction_region" as region
+entity "ofgem.payment_method" as payment
+entity "ofgem.tariff_type" as tariff
+entity "ofgem.consumption_basis" as consumption
+
+dataset ||--o{ run
+run ||--o{ file
+run ||--o{ error
+file |o--o{ error
+file ||--o{ period
+period ||--o{ level
+run ||--o{ level
+region ||--o{ level
+payment ||--o{ level
+tariff ||--o{ level
+consumption ||--o{ level
+@enduml

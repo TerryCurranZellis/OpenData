@@ -1,86 +1,70 @@
-# OpenMeto Plugin
+# OpenMeteo plugin
 
-## Purpose
+**Plugin id:** `openmeteo`  
+**Implementation:** `com.towermarsh.opendata.plugin.openmeteo.OpenMeteoPlugin`  
+**Configuration version:** 2
 
-The `openmeto` plugin downloads historical daily weather data from the
-Open-Meteo archive API.
+## Processing
 
-The project name requested for the plugin is **OpenMeto**. The external service
-is correctly named **Open-Meteo**.
+1. Resolve the effective date range in the configured timezone.
+2. Call the Open-Meteo archive API for daily minimum, maximum and mean 2 m temperature, sunrise, sunset, daylight duration and WMO weather code.
+3. Parse and validate aligned daily arrays.
+4. Convert the response into immutable `DailyWeatherRecord` values.
+5. In a dry run, report every record as read/skipped and perform no database access.
+6. In a normal run, persist all records in one SQL Server transaction.
+7. Before returning the physical SQL Server session to the pool, remove the local staging table and restore session-level `SET` state.
 
-## Data returned
+## Storage
 
-Each `DailyWeatherRecord` contains:
+- `openmeteo.Location` stores the stable `location-key`, display name, coordinates and timezone.
+- `openmeteo.DailyWeather` is keyed by location and observation date.
+- `LastRunId` links each inserted or changed daily row to `core.PluginRun`.
 
-- observation date;
-- configured location name;
-- latitude and longitude;
-- minimum temperature;
-- maximum temperature;
-- mean temperature;
-- sunrise;
-- sunset;
-- daylight duration in minutes;
-- WMO weather code;
-- weather description.
+Renaming `location-name` does not create a second location when `location-key` remains unchanged. Changing coordinates for the same key updates the location definition and future loads continue under the same key.
+
+## Idempotency
+
+Repeating an identical range produces zero inserted and zero updated rows. Rows whose weather values changed are updated; dates not already stored are inserted. Unchanged rows are reported as skipped.
 
 ## Configuration
 
-The default plugin definition is:
+| Property | Default | Meaning |
+|---|---:|---|
+| `location-key` | `home` | Stable database key |
+| `location-name` | `Home` | Display name |
+| `latitude` | `51.674304` | Decimal latitude |
+| `longitude` | `-0.785602` | Decimal longitude |
+| `timezone` | `Europe/London` | Open-Meteo timezone |
+| `start-date` | `2000-01-01` | Inclusive ISO date |
+| `end-date` | blank | Yesterday unless current date is enabled |
+| `default-start-days-ago` | `365` | Relative fallback |
+| `include-current-date` | `false` | Permit today as the end date |
+| `connect-timeout-seconds` | `30` | HTTP connection timeout |
+| `request-timeout-seconds` | `60` | Complete request timeout |
+| `database.target-schema` | `openmeteo` | Target schema |
+| `database.location-table` | `Location` | Location table |
+| `database.daily-table` | `DailyWeather` | Daily table |
+| `database.batch-size` | `500` | JDBC staging batch |
+| `database.lock-timeout-seconds` | `30` | Same-location lock wait |
+
+## Example
 
 ```text
-src/main/resources/config/plugins/openmeto.properties
+opendata --plugin openmeteo --file C:\OpenData\local.properties
 ```
-
-It includes all values that were previously hard-coded in
-`WeatherApiClient`, together with date-range and timeout behaviour.
-
-### Date selection
-
-When both date properties are blank:
-
-- the end date defaults to yesterday;
-- the start date defaults to 365 days before the end date.
-
-Set explicit ISO dates through an override file:
 
 ```properties
-property.start-date.value=2024-01-01
-property.end-date.value=2024-12-31
+application.database.password=...
+property.start-date.value=2025-01-01
+property.end-date.value=2025-12-31
 ```
 
-### Location override
+For a multi-plugin run, prefix the plugin values:
 
 ```properties
-property.location-name.value=Weather Station 03658
-property.latitude.value=51.6207
-property.longitude.value=-1.1098
-property.timezone.value=Europe/London
+plugin.openmeteo.property.start-date.value=2025-01-01
 ```
 
-## Invocation
+## Source API
 
-After the plugin registry/execution path is completed:
-
-```bash
-java -jar target/opendata-1.0.0.jar --plugin openmeto
-```
-
-With an override file:
-
-```bash
-java -jar target/opendata-1.0.0.jar \
-  --plugin openmeto \
-  --file config/openmeto-override.properties
-```
-
-## Integration status
-
-The current OpenData bootstrap still has plugin execution wiring to complete.
-`OpenMetoPlugin` is therefore supplied as a facade ready to be registered once
-the final framework plugin interface and orchestration process are concluded.
-
-## Dependency changes
-
-No new JSON dependency is required. The plugin uses Jackson Databind, already
-declared in the repository Maven build.
+Open-Meteo historical weather API: https://open-meteo.com/en/docs/historical-weather-api

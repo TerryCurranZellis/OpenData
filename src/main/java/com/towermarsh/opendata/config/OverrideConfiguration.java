@@ -1,0 +1,88 @@
+/*
+ * Filename: OverrideConfiguration.java
+ *
+ * (c) Copyright 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package com.towermarsh.opendata.config;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
+
+/** Parsed external override values, split into application and per-plugin scopes. */
+public final class OverrideConfiguration {
+    private final Map<String, String> values;
+
+    private OverrideConfiguration(final Map<String, String> values) {
+        this.values = Map.copyOf(values);
+    }
+
+    public static OverrideConfiguration load(final Optional<Path> file) {
+        Objects.requireNonNull(file, "file");
+        if (file.isEmpty()) {
+            return new OverrideConfiguration(Map.of());
+        }
+        final Path path = file.get().toAbsolutePath().normalize();
+        if (!Files.isRegularFile(path)) {
+            throw new OpenDataConfigurationException("Override file does not exist: " + path);
+        }
+        try (var input = Files.newInputStream(path);
+                var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+            final var properties = new Properties();
+            properties.load(reader);
+            final Map<String, String> result = new LinkedHashMap<>();
+            properties.stringPropertyNames().forEach(name -> result.put(normalise(name), properties.getProperty(name).trim()));
+            return new OverrideConfiguration(result);
+        } catch (IOException exception) {
+            throw new OpenDataConfigurationException("Unable to read override file: " + path, exception);
+        }
+    }
+
+    public Map<String, String> applicationValues() {
+        return scoped("application.");
+    }
+
+    public Map<String, String> pluginValues(final String pluginId, final boolean multiPluginRun) {
+        final String prefix = "plugin." + normalise(pluginId) + ".";
+        final Map<String, String> result = new LinkedHashMap<>(scoped(prefix));
+        if (!multiPluginRun) {
+            values.forEach((key, value) -> {
+                if (!key.startsWith("application.") && !key.startsWith("plugin.")) {
+                    result.put(key, value);
+                }
+            });
+        } else {
+            final boolean hasUnscoped = values.keySet().stream()
+                    .anyMatch(key -> !key.startsWith("application.") && !key.startsWith("plugin."));
+            if (hasUnscoped) {
+                throw new OpenDataConfigurationException(
+                        "A multi-plugin override file may only contain application.<key> and plugin.<id>.<key> entries.");
+            }
+        }
+        return Map.copyOf(result);
+    }
+
+    private Map<String, String> scoped(final String prefix) {
+        final Map<String, String> result = new LinkedHashMap<>();
+        values.forEach((key, value) -> {
+            if (key.startsWith(prefix)) {
+                result.put(key.substring(prefix.length()), value);
+            }
+        });
+        return result;
+    }
+
+    private static String normalise(final String value) {
+        return value.trim().toLowerCase(Locale.ROOT);
+    }
+}

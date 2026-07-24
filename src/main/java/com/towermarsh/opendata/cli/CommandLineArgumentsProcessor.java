@@ -4,30 +4,18 @@
  * (c) Copyright 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * The author may be contacted by email to the following address:
- *
- * terry.curran@towermarsh.co.uk
  */
-
 package com.towermarsh.opendata.cli;
 
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
-
+import java.util.Optional;
+import java.util.OptionalInt;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -35,157 +23,133 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-/**
- * Parses and validates the OpenData Framework command line using
- * Apache Commons CLI.
- *
- * @author Terry Curran
- * @version 21 Jul 2026
- */
+/** Parses and validates the OpenData command line. */
 public final class CommandLineArgumentsProcessor {
-
     private static final String APPLICATION_NAME = "opendata";
+    private final Options options = createOptions();
 
-    private final Options options;
-
-    public CommandLineArgumentsProcessor() {
-        this.options = createOptions();
-    }
-
-    /**
-     * Parses command-line arguments.
-     *
-     * @param arguments arguments passed to the Java application
-     * @return immutable parsed arguments
-     * @throws CommandLineProcessingException if parsing or validation fails
-     */
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
-
         try {
-            final CommandLine commandLine = new DefaultParser().parse(options, arguments);
-            return toArguments(commandLine);
-        } catch (ParseException | IllegalStateException exception) {
+            return toArguments(new DefaultParser().parse(options, arguments));
+        } catch (ParseException | IllegalArgumentException exception) {
             throw new CommandLineProcessingException(exception.getMessage(), exception);
         }
     }
 
-    /**
-     * Prints command-line help.
-     *
-     * @param writer destination writer
-     */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
-
-        final HelpFormatter formatter = new HelpFormatter();
-        formatter.setWidth(110);
+        final var formatter = new HelpFormatter();
+        formatter.setWidth(118);
         formatter.printHelp(
                 writer,
-                110,
-                APPLICATION_NAME + " --plugin <id> [--file <settings.properties>] [options]",
+                118,
+                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] [--file <settings>] [options]",
                 System.lineSeparator()
-                        + "Processes an OpenData dataset plugin. Plugin defaults are loaded first; "
-                        + "the optional file overrides those values."
-                        + System.lineSeparator()
-                        + System.lineSeparator()
-                        + "Examples:"
-                        + System.lineSeparator()
-                        + "  opendata --plugin ofgem"
-                        + System.lineSeparator()
-                        + "  opendata --plugin ofgem --file C:\\OpenData\\ofgem-local.properties"
-                        + System.lineSeparator(),
+                        + "Runs one or more OpenData plugins. Each selected plugin is submitted as an independent task."
+                        + System.lineSeparator() + System.lineSeparator()
+                        + "Examples:" + System.lineSeparator()
+                        + "  opendata --plugin openmeteo" + System.lineSeparator()
+                        + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
+                        + "  opendata --plugin openmeteo,ofgem" + System.lineSeparator()
+                        + "  opendata --plugin all" + System.lineSeparator()
+                        + "  opendata --plugin all --file C:\\OpenData\\run.properties" + System.lineSeparator(),
                 options,
                 2,
                 4,
                 System.lineSeparator()
-                        + "Configuration precedence:"
+                        + "For a multi-plugin run, plugin overrides in --file must use plugin.<id>.<property>."
                         + System.lineSeparator()
-                        + "  1. framework built-in defaults"
-                        + System.lineSeparator()
-                        + "  2. classpath config/application.properties"
-                        + System.lineSeparator()
-                        + "  3. classpath config/plugins/<plugin>.properties"
-                        + System.lineSeparator()
-                        + "  4. --file override properties"
+                        + "Application overrides use application.<property>. Password values are never logged."
                         + System.lineSeparator(),
                 true);
         writer.flush();
     }
 
     private static Options createOptions() {
-        final Options result = new Options();
-
+        final var result = new Options();
         result.addOption(Option.builder("p")
                 .longOpt("plugin")
                 .hasArg()
-                .argName("id")
-                .desc("Dataset plugin to execute, for example 'ofgem'.")
+                .argName("id|all")
+                .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
                 .build());
-
         result.addOption(Option.builder("f")
                 .longOpt("file")
                 .hasArg()
                 .argName("settings.properties")
-                .desc("Optional properties file overriding the selected plugin defaults.")
+                .desc("Optional application and plugin override properties file.")
                 .build());
-
-        result.addOption(Option.builder()
-                .longOpt("dry-run")
-                .desc("Validate and prepare processing without writing data.")
+        result.addOption(Option.builder("j")
+                .longOpt("parallelism")
+                .hasArg()
+                .argName("1-64")
+                .desc("Maximum plugins executing concurrently; defaults to application configuration.")
                 .build());
-
-        result.addOption(Option.builder("v")
-                .longOpt("verbose")
-                .desc("Enable more detailed application logging.")
-                .build());
-
-        result.addOption(Option.builder("h")
-                .longOpt("help")
-                .desc("Display command-line help.")
-                .build());
-
-        result.addOption(Option.builder()
-                .longOpt("version")
-                .desc("Display application version.")
-                .build());
-
-        result.addOption(Option.builder()
-                .longOpt("list-plugins")
-                .desc("List installed dataset plugins.")
-                .build());
-
+        result.addOption(Option.builder().longOpt("dry-run")
+                .desc("Download and validate without database writes or run-audit rows.").build());
+        result.addOption(Option.builder("v").longOpt("verbose")
+                .desc("Enable FINE java.util.logging output.").build());
+        result.addOption(Option.builder("h").longOpt("help").desc("Display help.").build());
+        result.addOption(Option.builder().longOpt("version").desc("Display version.").build());
+        result.addOption(Option.builder().longOpt("list-plugins").desc("List installed plugins.").build());
         return result;
     }
 
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
-        final boolean informational = commandLine.hasOption("help")
-                || commandLine.hasOption("version")
-                || commandLine.hasOption("list-plugins");
-
-        if (!informational && !commandLine.hasOption("plugin")) {
-            throw new IllegalStateException("Missing required option: --plugin <id>");
+        final boolean help = commandLine.hasOption("help");
+        final boolean version = commandLine.hasOption("version");
+        final boolean list = commandLine.hasOption("list-plugins");
+        final boolean informational = help || version || list;
+        final List<String> rawIds = new ArrayList<>();
+        final String[] optionValues = commandLine.getOptionValues("plugin");
+        if (optionValues != null) {
+            for (String optionValue : optionValues) {
+                for (String item : optionValue.split(",")) {
+                    if (!item.isBlank()) {
+                        rawIds.add(item.trim().toLowerCase(Locale.ROOT));
+                    }
+                }
+            }
         }
 
-        if (commandLine.hasOption("file") && !commandLine.hasOption("plugin")) {
-            throw new IllegalStateException("--file can only be used with --plugin.");
+        final boolean all = rawIds.stream().anyMatch("all"::equals);
+        if (all && rawIds.size() > 1) {
+            throw new IllegalArgumentException("--plugin all cannot be combined with another plugin id.");
+        }
+        final LinkedHashSet<String> uniqueIds = new LinkedHashSet<>(rawIds);
+        if (uniqueIds.size() != rawIds.size()) {
+            throw new IllegalArgumentException("A plugin was selected more than once.");
+        }
+        if (!informational && rawIds.isEmpty()) {
+            throw new IllegalArgumentException("Missing required option: --plugin <id|all>.");
+        }
+        if (commandLine.hasOption("file") && rawIds.isEmpty()) {
+            throw new IllegalArgumentException("--file requires --plugin.");
         }
 
-        final CommandLineArguments.Builder builder = CommandLineArguments.builder()
-                .helpRequested(commandLine.hasOption("help"))
-                .versionRequested(commandLine.hasOption("version"))
-                .listPluginsRequested(commandLine.hasOption("list-plugins"))
-                .dryRun(commandLine.hasOption("dry-run"))
-                .verbose(commandLine.hasOption("verbose"));
-
-        if (commandLine.hasOption("plugin")) {
-            builder.pluginId(commandLine.getOptionValue("plugin"));
+        OptionalInt parallelism = OptionalInt.empty();
+        if (commandLine.hasOption("parallelism")) {
+            try {
+                final int value = Integer.parseInt(commandLine.getOptionValue("parallelism"));
+                if (value < 1 || value > 64) {
+                    throw new IllegalArgumentException("--parallelism must be between 1 and 64.");
+                }
+                parallelism = OptionalInt.of(value);
+            } catch (NumberFormatException exception) {
+                throw new IllegalArgumentException("--parallelism must be an integer.", exception);
+            }
         }
 
-        if (commandLine.hasOption("file")) {
-            builder.overrideFile(Path.of(commandLine.getOptionValue("file")));
-        }
-
-        return builder.build();
+        return new CommandLineArguments(
+                all ? List.of() : List.copyOf(uniqueIds),
+                all,
+                Optional.ofNullable(commandLine.getOptionValue("file")).map(Path::of),
+                parallelism,
+                commandLine.hasOption("dry-run"),
+                commandLine.hasOption("verbose"),
+                help,
+                version,
+                list);
     }
 }

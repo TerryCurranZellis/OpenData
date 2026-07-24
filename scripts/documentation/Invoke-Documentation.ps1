@@ -367,11 +367,11 @@ function Merge-Documentation {
       Write-Output -InputObject ('Documentation preparation completed: {0}' -f $manual)
       return
     }
-    Assert-CommandAvailable -Name 'pandoc'
-    $pandoc = Join-Path -Path $env:LOCALAPPDATA -ChildPath 'pandoc\pandoc.exe'
-    if (-not (Test-Path -LiteralPath $pandoc)) {
-      throw ("Pandoc executable not found at '{0}'. Install Pandoc for Windows and re-run." -f $pandoc)
-    }
+    #Assert-CommandAvailable -Name 'pandoc'
+    $pandoc = 'pandoc'
+    #if (-not (Test-Path -LiteralPath $pandoc)) {
+    #  throw ("Pandoc executable not found at '{0}'. Install Pandoc for Windows and re-run." -f $pandoc)
+    #}
     $baseArgs = @(
       $manual,
       '--from=markdown+yaml_metadata_block+pipe_tables+fenced_divs',
@@ -451,4 +451,4 @@ function Merge-Documentation {
     }
   }
 }
-Invoke-Documentation -Action test -ProjectRoot 'C:\Powershell\Modules\OpenData' 
+Invoke-Documentation -Action build -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' 

@@ -1,0 +1,30 @@
+@startuml
+skinparam monochrome true
+entity "core.PluginRun" as run {
+  * RunId : uniqueidentifier
+  --
+  PluginId : nvarchar(100)
+  Status : varchar(20)
+  StartedAt : datetime2(3)
+  CompletedAt : datetime2(3)
+}
+entity "openmeteo.Location" as location {
+  * LocationId : bigint
+  --
+  LocationKey : nvarchar(100) <<UQ>>
+  LocationName : nvarchar(200)
+  Latitude : decimal(9,6)
+  Longitude : decimal(9,6)
+}
+entity "openmeteo.DailyWeather" as daily {
+  * LocationId : bigint <<FK>>
+  * ObservationDate : date
+  --
+  MinimumTemperatureC : decimal(6,2)
+  MaximumTemperatureC : decimal(6,2)
+  MeanTemperatureC : decimal(6,2)
+  LastRunId : uniqueidentifier <<FK>>
+}
+location ||--o{ daily
+run ||--o{ daily
+@enduml

@@ -1,0 +1,47 @@
+/*
+ * Filename: PluginSelectionResolverTest.java
+ *
+ * (c) Copyright 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package com.towermarsh.opendata.plugin;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.towermarsh.opendata.cli.CommandLineArguments;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
+import org.junit.jupiter.api.Test;
+
+class PluginSelectionResolverTest {
+    @Test
+    void allReturnsOnlyEnabledPluginsInRegistryOrder() {
+        final var enabled = descriptor("openmeteo", true);
+        final var disabled = descriptor("future", false);
+        final PluginRegistry registry = new PluginRegistry() {
+            @Override
+            public List<PluginDescriptor> list() {
+                return List.of(enabled, disabled);
+            }
+
+            @Override
+            public Optional<PluginDescriptor> find(final String pluginId) {
+                return list().stream().filter(item -> item.id().equals(pluginId)).findFirst();
+            }
+
+            @Override
+            public PluginDescriptor requireEnabled(final String pluginId) {
+                return find(pluginId).filter(PluginDescriptor::enabled).orElseThrow();
+            }
+        };
+        final var arguments = new CommandLineArguments(
+                List.of(), true, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
+        assertEquals(List.of(enabled), new PluginSelectionResolver().resolve(arguments, registry));
+    }
+
+    private static PluginDescriptor descriptor(final String id, final boolean enabled) {
+        return new PluginDescriptor(id, id, "", "example." + id, enabled, 1);
+    }
+}

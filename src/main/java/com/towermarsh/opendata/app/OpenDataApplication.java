@@ -4,90 +4,128 @@
  * (c) Copyright 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * The author may be contacted by email to the following address:
- *
- * terry.curran@towermarsh.co.uk
  */
 package com.towermarsh.opendata.app;
 
-
-import com.towermarsh.opendata.config.ApplicationConfig;
-import com.towermarsh.opendata.config.ConfigurationLoader;
-import com.towermarsh.opendata.exception.ConfigurationException;
-import com.towermarsh.opendata.logging.LoggingManager;
-import java.util.logging.Logger;
 import com.towermarsh.opendata.cli.CommandLineArguments;
+import com.towermarsh.opendata.cli.CommandLineArgumentsProcessor;
+import com.towermarsh.opendata.config.ApplicationRuntimeConfiguration;
+import com.towermarsh.opendata.config.OpenDataConfigurationException;
+import com.towermarsh.opendata.config.OverrideConfiguration;
+import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
+import com.towermarsh.opendata.database.DatabaseResourceManager;
+import com.towermarsh.opendata.database.SQLServerResource;
+import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
+import com.towermarsh.opendata.logging.LoggingManager;
+import com.towermarsh.opendata.plugin.ClasspathPluginRegistry;
+import com.towermarsh.opendata.plugin.JdbcPluginRunAudit;
+import com.towermarsh.opendata.plugin.NoOpPluginRunAudit;
+import com.towermarsh.opendata.plugin.PluginExecutionCoordinator;
+import com.towermarsh.opendata.plugin.PluginExecutionSummary;
+import com.towermarsh.opendata.plugin.PluginRunAudit;
+import com.towermarsh.opendata.plugin.PluginSelectionResolver;
+import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
+import com.towermarsh.opendata.plugin.ResolvedPlugin;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.Clock;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * Main application coordinator.
- *
- * <p>
- * This class is responsible for application startup and dependency
- * initialisation.</p>
- *
- * @author Terry Curran
- * @version 21 Jul 2026
- */
+/** Coordinates registry selection, configuration, pooled database access, and plugin execution. */
 public final class OpenDataApplication {
+    private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
-    @SuppressWarnings("NonConstantLogger")
-    private final Logger logger;
+    public ExecutionStatus start(
+            final CommandLineArguments arguments,
+            final CommandLineArgumentsProcessor processor) throws IOException, InterruptedException {
+        final var registry = new ClasspathPluginRegistry();
+        if (arguments.helpRequested()) {
+            processor.printHelp(new PrintWriter(System.out, true));
+            return ExecutionStatus.SUCCESS;
+        }
+        if (arguments.versionRequested()) {
+            final String version = OpenDataApplication.class.getPackage().getImplementationVersion();
+            System.out.println("OpenData " + (version == null ? "development" : version));
+            return ExecutionStatus.SUCCESS;
+        }
+        if (arguments.listPluginsRequested()) {
+            registry.list().forEach(plugin -> System.out.printf(
+                    "%s\t%s\t%s%n",
+                    plugin.id(),
+                    plugin.enabled() ? "enabled" : "disabled",
+                    plugin.displayName()));
+            return ExecutionStatus.SUCCESS;
+        }
 
-    /**
-     * Creates the application.
-     */
-    public OpenDataApplication() {
+        final var overrideConfiguration = OverrideConfiguration.load(arguments.overrideFile());
+        final var runtime = ApplicationRuntimeConfiguration.load(overrideConfiguration.applicationValues());
+        if (!arguments.dryRun() && runtime.database().password().isBlank()) {
+            throw new OpenDataConfigurationException(
+                    "application.database.password must be supplied for a database-writing run.");
+        }
+        LoggingManager.configure(runtime.logging(), arguments.verbose());
 
-        logger
-                = LoggingManager.getLogger();
+        final var selected = new PluginSelectionResolver().resolve(arguments, registry);
+        final boolean multiPluginRun = selected.size() > 1;
+        final var definitionLoader = new PropertiesPluginDefinitionLoader();
+        final List<ResolvedPlugin> plugins = selected.stream()
+                .map(descriptor -> new ResolvedPlugin(
+                        descriptor,
+                        definitionLoader.load(
+                                descriptor.id(),
+                                overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
+                .toList();
+
+        final int parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
+        LOGGER.log(Level.INFO,
+                "Selected {0} plugin(s); parallelism={1}; dryRun={2}",
+                new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), arguments.dryRun()});
+
+        DatabaseResourceManager database = null;
+        try {
+            final PluginRunAudit audit;
+            if (arguments.dryRun()) {
+                database = new UnavailableDatabaseResourceManager();
+                audit = new NoOpPluginRunAudit();
+            } else {
+                database = SQLServerResource.initialise(runtime.database());
+                audit = new JdbcPluginRunAudit(database);
+            }
+            final var coordinator = new PluginExecutionCoordinator(
+                    new ReflectionPluginFactory(),
+                    audit,
+                    database,
+                    Clock.systemUTC(),
+                    runtime.execution().shutdownTimeout());
+            final PluginExecutionSummary summary = coordinator.execute(
+                    plugins, parallelism, arguments.dryRun());
+            logSummary(summary);
+            return summary.allSuccessful() ? ExecutionStatus.SUCCESS : ExecutionStatus.PLUGIN_FAILURE;
+        } finally {
+            if (database != null) {
+                database.close();
+            }
+        }
     }
 
-    /**
-     * Starts the application.
-     *
-     * @param arguments command line arguments
-     * @throws ConfigurationException if configuration fails
-     */
-    public void start(
-            CommandLineArguments arguments)
-            throws ConfigurationException {
-
-        var config = new ConfigurationLoader().load(arguments);
-
-        logger.info(
-                "OpenData application started");
-
-        initialiseServices(config);
-
-        logger.info(
-                "Application initialisation complete");
-    }
-
-    private void initialiseServices(
-            ApplicationConfig config) {
-
-
-        /*
-         * Dependency wiring will be added here:
-         *
-         * Downloader
-         * Parser
-         * Repository
-         * ETL services
-         *
-         */
+    private static void logSummary(final PluginExecutionSummary summary) {
+        summary.results().forEach(result -> LOGGER.log(
+                result.successful() ? Level.INFO : Level.SEVERE,
+                "Plugin summary: id={0}, status={1}, durationMs={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
+                new Object[]{
+                    result.pluginId(),
+                    result.status().name(),
+                    result.duration().toMillis(),
+                    result.metrics().read(),
+                    result.metrics().inserted(),
+                    result.metrics().updated(),
+                    result.metrics().skipped(),
+                    result.errorMessage().orElse("")
+                }));
+        LOGGER.log(Level.INFO,
+                "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
+                new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
     }
 }

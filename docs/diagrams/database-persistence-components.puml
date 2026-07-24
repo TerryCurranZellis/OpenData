@@ -1,0 +1,44 @@
+@startuml
+skinparam componentStyle rectangle
+title OpenData database persistence components
+
+package "Application / services" {
+  [Plugin execution] as plugin
+  [OfgemPriceCapImportService] as service
+}
+
+package "Database abstraction" {
+  interface DatabaseResourceManager
+  [DatabaseConnectionManager] as manager
+  [SQLServerResource] as resource
+  [DatabasePoolConfig] as poolConfig
+  [DatabaseHealthCheck] as health
+}
+
+package "Repositories" {
+  interface IngestionAuditRepository
+  [SqlServerIngestionAuditRepository] as auditRepo
+  interface OfgemPriceCapRepository
+  [SqlServerOfgemPriceCapRepository] as ofgemRepo
+}
+
+package "Apache DBCP" {
+  [BasicDataSource] as dataSource
+}
+
+database "SQL Server\nOpenData" as sql
+
+plugin --> service
+plugin --> auditRepo
+service --> ofgemRepo
+auditRepo ..|> IngestionAuditRepository
+ofgemRepo ..|> OfgemPriceCapRepository
+auditRepo --> manager
+ofgemRepo --> manager
+health --> manager
+manager --> DatabaseResourceManager
+resource ..|> DatabaseResourceManager
+resource --> poolConfig
+resource --> dataSource
+dataSource --> sql : pooled JDBC
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+title Ingestion run status lifecycle
+[*] --> STARTED
+STARTED --> SUCCEEDED : all required work completed
+STARTED --> SUCCEEDED_WITH_REJECTIONS : completed under rejection policy
+STARTED --> FAILED : required stage fails
+STARTED --> CANCELLED : deliberate cancellation
+STARTED --> STARTED : process termination may leave abandoned row
+SUCCEEDED --> [*]
+SUCCEEDED_WITH_REJECTIONS --> [*]
+FAILED --> [*]
+CANCELLED --> [*]
+@enduml

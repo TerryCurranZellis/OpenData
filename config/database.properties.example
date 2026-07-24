@@ -1,0 +1,17 @@
+# Copy this file outside source control and set the password locally.
+# The Java code uses ApplicationConfig for URL, username and password.
+
+database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
+database.user=OpenData
+database.password=
+
+# Optional pool settings consumed by DatabasePoolConfig.from(Properties).
+database.pool.initial-size=1
+database.pool.min-idle=1
+database.pool.max-idle=4
+database.pool.max-total=12
+database.pool.max-wait-millis=30000
+database.pool.min-evictable-idle-millis=300000
+database.pool.validation-query=SELECT 1
+database.pool.validation-query-timeout-seconds=5
+database.pool.test-on-borrow=true

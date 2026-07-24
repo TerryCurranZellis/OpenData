@@ -1,8 +1,9 @@
-/**
- * Plugin discovery and registry metadata.
+/*
+ * Filename: package-info.java
  *
- * <p>Phase 1 uses classpath properties files and an explicit plugin index.
- * The registry interface is deliberately storage-neutral so it can later be
- * implemented using database-generated JSON.</p>
+ * (c) Copyright 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
  */
+/** Plugin contracts, selection, parallel execution, metrics, and run auditing. */
 package com.towermarsh.opendata.plugin;
