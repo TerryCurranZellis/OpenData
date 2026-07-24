@@ -1,0 +1,19 @@
+@startuml
+title Command-Line Flow
+start
+:Parse arguments;
+if (help?) then (yes)
+:Print help;
+elseif (version?) then (yes)
+:Print version;
+elseif (list plugins?) then (yes)
+:Query registry;
+:Print descriptors;
+else
+:Require plugin;
+:Load config;
+:Execute pipeline;
+endif
+:Record status and duration;
+stop
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+title Plugin Execution
+actor Operator
+participant Main
+participant Registry
+participant Config
+participant Plugin
+participant Pipeline
+participant Repository
+Operator -> Main : command
+Main -> Registry : require enabled
+Main -> Config : resolve
+Config --> Main : ApplicationConfig
+Main -> Plugin : validate
+Main -> Pipeline : execute
+Pipeline -> Plugin : hooks
+Pipeline -> Repository : load
+Repository --> Pipeline : ImportResult
+Pipeline --> Main : result
+Main --> Operator : status/duration
+@enduml

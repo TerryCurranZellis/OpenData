@@ -1,0 +1,17 @@
+@startuml
+title Configuration Loading
+actor Operator
+participant CLI
+participant PluginRegistry as Registry
+participant BootstrapConfigurationLoader as Bootstrap
+participant PropertiesPluginDefinitionLoader as Loader
+participant ApplicationConfigurationService as Service
+Operator -> CLI : --plugin id [--file]
+CLI --> Service : arguments
+Service -> Registry : requireEnabled(id)
+Service -> Bootstrap : load application.properties
+Bootstrap --> Service : BootstrapConfig
+Service -> Loader : plugin properties + overrides
+Loader --> Service : PluginDefinition
+Service --> Operator : ApplicationConfig via execution
+@enduml

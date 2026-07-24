@@ -48,7 +48,7 @@ function Invoke-Documentation {
     [ValidateSet('Build', 'Test', 'Clean')]
     [string] $Action,
     [Parameter(Mandatory)]
-	[string] $ProjectRoot,
+    [string] $ProjectRoot,
     [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
     [string] $Format = 'All',
     [AllowNull()]
@@ -156,7 +156,7 @@ function Invoke-Documentation {
       [AllowNull()]
       [string] $OutputPath
     )
-	# if outputpath is not passed then create it relative to the project
+    # if outputpath is not passed then create it relative to the project
     if ([string]::IsNullOrWhiteSpace($OutputPath)) {
       $OutputPath = Join-Path -Path $ProjectRoot -ChildPath 'docs\build\document-inventory.md'
     }
@@ -188,7 +188,7 @@ function Invoke-Documentation {
   # now removes file headers as they are not needed in the documentation
   # ---------------------------------------------------------------------------
 
-function Merge-Documentation {
+  function Merge-Documentation {
     [CmdletBinding()]
     param(
       [Parameter(Mandatory)]
@@ -256,11 +256,17 @@ function Merge-Documentation {
     }
     Assert-CommandAvailable -Name 'java'
     $diagramFiles = Get-ChildItem -LiteralPath $source -Filter '*.puml' -File -Recurse
-    foreach ($diagram in $diagramFiles) {
-      & "$env:JAVA_HOME\bin\java.exe" -jar $jar ('-t{0}' -f $Format) -charset UTF-8 -o $output $diagram.FullName
-      if ($LASTEXITCODE -ne 0) {
-        throw ('PlantUML failed for {0}.' -f $diagram.FullName)
+    try {
+      foreach ($diagram in $diagramFiles) {
+        & java -jar $jar ('-t{0}' -f $Format) -charset UTF-8 -o $output $diagram.FullName -
+        if ($LASTEXITCODE -ne 0) {
+          ##throw ('PlantUML failed for {0}.' -f $diagram.FullName)
+          Write-Warning -Message ('PlantUML failed for {0}.' -f $diagram.FullName)
+          continue
+        }
       }
+    } catch {
+    Write-Warning -Message ('PlantUML failed for {0}.' -f $diagram.FullName)
     }
     Write-Output -InputObject ('Rendered {0} diagram(s) to {1}' -f $diagramFiles.Count, $output)
   }
@@ -294,8 +300,8 @@ function Merge-Documentation {
       foreach ($match in $linkMatches) {
         $target = $match.Groups[1].Value
         if ($target -match '^(https?:|mailto:|#)') { 
-		    continue 
-		}
+          continue 
+        }
         $decoded = [uri]::UnescapeDataString($target)
         $linkPath = Join-Path -Path $file.DirectoryName -ChildPath ($decoded -replace '/', '\')
         if (-not (Test-Path -LiteralPath $linkPath)) {
@@ -368,7 +374,7 @@ function Merge-Documentation {
       return
     }
     #Assert-CommandAvailable -Name 'pandoc'
-    $pandoc = 'pandoc'
+    #$pandoc = 'pandoc'
     #if (-not (Test-Path -LiteralPath $pandoc)) {
     #  throw ("Pandoc executable not found at '{0}'. Install Pandoc for Windows and re-run." -f $pandoc)
     #}
@@ -379,39 +385,39 @@ function Merge-Documentation {
       '--toc',
       '--toc-depth=3',
       '--number-sections',
-      '--resource-path=' + (Join-Path -Path $ProjectRoot -ChildPath 'docs'),
       '--metadata', 'lang=en-GB'
     )
 
     $formats = if ($Format -eq 'All') { 
-		@('Html', 'Docx', 'Pdf') 
-	} else { 
-		@($Format) 
-	}
+      @('Html', 'Docx', 'Pdf') 
+    } else { 
+      @($Format) 
+    }
 
     foreach ($item in $formats) {
       $out = $null
       switch ($item) {
         'Html' {
           $out = Join-Path -Path $build -ChildPath 'OpenData-Technical-Documentation.html'
-          & $pandoc @baseArgs '--embed-resources' '--output' $out
+          & pandoc @baseArgs '--embed-resources' '--output' $out
         }
         'Docx' {
           $out = Join-Path -Path $build -ChildPath 'OpenData-Technical-Documentation.docx'
-          $docxArgs = @($baseArgs)
+          $docxArgs = @() + $baseArgs
           $effectiveReference = $ReferenceDoc
           if ([string]::IsNullOrWhiteSpace($effectiveReference)) {
             $candidate = Join-Path -Path $ProjectRoot -ChildPath $config.referenceDoc
-            if (Test-Path -LiteralPath $candidate) { $effectiveReference = $candidate }
+            if (Test-Path -LiteralPath $candidate -PathType Leaf) { $effectiveReference = $candidate }
           }
           if (-not [string]::IsNullOrWhiteSpace($effectiveReference)) {
             $docxArgs += '--reference-doc=' + (Resolve-Path -LiteralPath $effectiveReference).Path
           }
-          & $pandoc @docxArgs '--output' $out
+          $docxArgs += '--output', $out
+          & pandoc @docxArgs
         }
         'Pdf' {
           $out = Join-Path -Path $build -ChildPath 'OpenData-Technical-Documentation.pdf'
-          & $pandoc @baseArgs ('--pdf-engine=' + $config.pdfEngine) '--output' $out
+          & pandoc @baseArgs ('--pdf-engine=' + $config.pdfEngine) '--output' $out
         }
       }
       if ($LASTEXITCODE -ne 0) {
@@ -431,13 +437,13 @@ function Merge-Documentation {
 
   switch ($Action) {
     'Build' {
-	  $Parameters = @{
-		ProjectRoot    = $ProjectRoot
+      $Parameters = @{
+        ProjectRoot    = $ProjectRoot
         Format         = $Format
         ReferenceDoc   = $ReferenceDoc
         RenderDiagrams = $RenderDiagrams
         DiagramFormat  = $DiagramFormat
-	  }
+      }
       Build-Documentation @Parameters
 
     }
@@ -451,4 +457,4 @@ function Merge-Documentation {
     }
   }
 }
-Invoke-Documentation -Action build -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' 
+Invoke-Documentation -Action build -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -format all -RenderDiagrams -DiagramFormat svg -ReferenceDoc 'C:\Users\terry\Documents\NetBeansProjects\opendata\docs\_templates\template.docx'

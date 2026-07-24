@@ -1,0 +1,14 @@
+@startuml
+title Phase 1 Plugin Registry
+interface PluginRegistry
+class ClasspathPluginRegistry
+record PluginDescriptor
+file "index.properties" as Index
+file "ofgem.properties" as Ofgem
+file "openmeteo.properties" as OpenMeteo
+PluginRegistry <|.. ClasspathPluginRegistry
+ClasspathPluginRegistry --> Index
+ClasspathPluginRegistry --> Ofgem
+ClasspathPluginRegistry --> OpenMeteo
+ClasspathPluginRegistry --> PluginDescriptor
+@enduml

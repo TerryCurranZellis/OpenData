@@ -1,0 +1,20 @@
+@startuml
+title OpenData Component Architecture
+package Application { [Main] [CLI] [Application Service] }
+package Plugin { [Plugin Registry] [Plugin Definition] [Ofgem] [OpenMeteo] }
+package Processing { [Pipeline] [Download Strategies] [Parsers] [Validation] [Transformation] }
+package Infrastructure { [File System] [JDK HTTP] [SQL Repository] [Credential Provider] }
+[Main] --> [CLI]
+[Main] --> [Application Service]
+[Application Service] --> [Plugin Registry]
+[Application Service] --> [Plugin Definition]
+[Application Service] --> [Pipeline]
+[Pipeline] --> [Download Strategies]
+[Pipeline] --> [Parsers]
+[Pipeline] --> [Validation]
+[Pipeline] --> [Transformation]
+[Download Strategies] --> [JDK HTTP]
+[Download Strategies] --> [File System]
+[Pipeline] --> [SQL Repository]
+[Download Strategies] --> [Credential Provider]
+@enduml

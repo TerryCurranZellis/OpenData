@@ -1,0 +1,16 @@
+@startuml
+title Download Strategy Classes
+record PluginEndpointDefinition
+record LinkDiscoveryDefinition
+record ResolvedDownload
+class DirectHttpDownloadStrategy
+class HtmlLinkDiscoveryStrategy
+class HtmlLinkResolver
+class HttpClient
+PluginEndpointDefinition --> LinkDiscoveryDefinition : optional
+HtmlLinkDiscoveryStrategy --> HtmlLinkResolver
+HtmlLinkDiscoveryStrategy --> DirectHttpDownloadStrategy
+DirectHttpDownloadStrategy --> HttpClient
+DirectHttpDownloadStrategy --> ResolvedDownload
+HtmlLinkResolver --> LinkDiscoveryDefinition
+@enduml

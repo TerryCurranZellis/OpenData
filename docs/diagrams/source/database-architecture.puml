@@ -1,0 +1,10 @@
+@startuml
+title Database Architecture
+package Framework { [LoadService] interface DatabaseRepository [DatabaseConnectionManager] }
+package "SQL Server" { [SqlServerRepository] database "Framework Metadata" as Meta database "Plugin Business Tables" as Business }
+[LoadService] --> DatabaseRepository
+DatabaseRepository <|.. [SqlServerRepository]
+[SqlServerRepository] --> [DatabaseConnectionManager]
+[SqlServerRepository] --> Meta
+[SqlServerRepository] --> Business
+@enduml
