@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [ValidateSet('All','Html','Docx','Pdf','None')][string]$Format = 'All',
-    [string]$ProjectRoot,
+    [string]$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata',
     [string]$ReferenceDoc,
     [switch]$RenderDiagrams,
     [switch]$Validate,
