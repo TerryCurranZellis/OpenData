@@ -50,4 +50,4 @@ required to run the documentation pipeline.
 | `Clean-Documentation.ps1` | Removes generated output. |
 | `New-DocumentationStructure.ps1` | Standalone app — creates the standard folder structure. |
 
-All scripts are designed for Windows PowerShell 5.1 and PowerShell 7 unless otherwise noted.
+All scripts target **Windows PowerShell 5.1**.  `Invoke-Documentation.ps1` additionally requires Pandoc to be installed via its Windows installer so the executable is present at `%LOCALAPPDATA%\pandoc\pandoc.exe`.

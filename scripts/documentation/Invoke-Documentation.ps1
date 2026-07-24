@@ -1,3 +1,4 @@
+#Requires -Version 5.1
 <#
 .SYNOPSIS
     Unified documentation tooling for the OpenData project.
@@ -6,6 +7,10 @@
     Provides Build, Test and Clean actions for the OpenData technical documentation.
     All helper logic is contained in this single script so no dot-sourcing of
     sibling files is required.
+
+    Requires Windows PowerShell 5.1 (the latest release of the Windows PowerShell
+    5.x branch).  Pandoc must be installed via its Windows installer so that the
+    executable is present at %LOCALAPPDATA%\pandoc\pandoc.exe.
 
 .PARAMETER Action
     The action to perform.
@@ -400,6 +405,10 @@ function Build-Documentation {
     }
 
     Assert-CommandAvailable -Name 'pandoc'
+    $pandoc = Join-Path -Path $env:LOCALAPPDATA -ChildPath 'pandoc\pandoc.exe'
+    if (-not (Test-Path -LiteralPath $pandoc)) {
+        throw "Pandoc executable not found at '$pandoc'. Install Pandoc for Windows and re-run."
+    }
     $baseArgs = @(
         $manual,
         '--from=markdown+yaml_metadata_block+pipe_tables+fenced_divs',
@@ -414,10 +423,11 @@ function Build-Documentation {
     $formats = if ($Format -eq 'All') { @('Html', 'Docx', 'Pdf') } else { @($Format) }
 
     foreach ($item in $formats) {
+        $out = $null
         switch ($item) {
             'Html' {
                 $out = Join-Path -Path $build -ChildPath 'OpenData-Technical-Documentation.html'
-                & pandoc @baseArgs '--embed-resources' '--output' $out
+                & $pandoc @baseArgs '--embed-resources' '--output' $out
             }
             'Docx' {
                 $out = Join-Path -Path $build -ChildPath 'OpenData-Technical-Documentation.docx'
@@ -430,11 +440,11 @@ function Build-Documentation {
                 if (-not [string]::IsNullOrWhiteSpace($effectiveReference)) {
                     $docxArgs += '--reference-doc=' + (Resolve-Path -LiteralPath $effectiveReference).Path
                 }
-                & pandoc @docxArgs '--output' $out
+                & $pandoc @docxArgs '--output' $out
             }
             'Pdf' {
                 $out = Join-Path -Path $build -ChildPath 'OpenData-Technical-Documentation.pdf'
-                & pandoc @baseArgs ('--pdf-engine=' + $config.pdfEngine) '--output' $out
+                & $pandoc @baseArgs ('--pdf-engine=' + $config.pdfEngine) '--output' $out
             }
         }
         if ($LASTEXITCODE -ne 0) {
