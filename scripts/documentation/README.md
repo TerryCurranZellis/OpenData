@@ -43,7 +43,7 @@ required to run the documentation pipeline.
 |---|---|
 | `Build-Documentation.ps1` | Original orchestration command (superseded by `Invoke-Documentation.ps1`). |
 | `Merge-Documentation.ps1` | Combines ordered Markdown files into one manual source. |
-| `Render-PlantUml.ps1` | Legacy renderer; the unified script renders the flat `docs/diagrams/source` set into `docs/diagrams/generated`. |
+| `Render-PlantUml.ps1` | Renders `.puml` sources to SVG or PNG. |
 | `Test-Documentation.ps1` | Checks headings and relative links. |
 | `New-DocumentInventory.ps1` | Creates a generated document inventory. |
 | `Get-DocumentationFiles.ps1` | Returns documentation files in manual order. |
@@ -52,7 +52,3 @@ required to run the documentation pipeline.
 
 All scripts target **Windows PowerShell 5.1**.  `Invoke-Documentation.ps1` additionally requires Pandoc to be installed via its Windows installer 
 so the executable is present at `%LOCALAPPDATA%\pandoc\pandoc.exe`.
-
-## Diagram directory rule
-
-All `.puml` sources belong directly in `docs/diagrams/source`. Rendered files belong in `docs/diagrams/generated` and use the same basename. Markdown embeds generated SVG/PNG files, never PlantUML source files.

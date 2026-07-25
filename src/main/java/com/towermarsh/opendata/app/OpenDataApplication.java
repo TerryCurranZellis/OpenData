@@ -33,23 +33,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Coordinates registry selection, configuration, pooled database access, and
- * plugin execution.
- */
+/** Coordinates registry selection, configuration, pooled database access, and plugin execution. */
 public final class OpenDataApplication {
-
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
-    /**
-     * Start the plugin execution
-     *
-     * @param arguments command line
-     * @param processor which plugin to start
-     * @return Execution Status
-     * @throws IOException
-     * @throws InterruptedException
-     */
     public ExecutionStatus start(
             final CommandLineArguments arguments,
             final CommandLineArgumentsProcessor processor) throws IOException, InterruptedException {
@@ -81,19 +68,17 @@ public final class OpenDataApplication {
         LoggingManager.configure(runtime.logging(), arguments.verbose());
 
         final var selected = new PluginSelectionResolver().resolve(arguments, registry);
-        final var multiPluginRun = selected.size() > 1;
+        final boolean multiPluginRun = selected.size() > 1;
         final var definitionLoader = new PropertiesPluginDefinitionLoader();
-        final var plugins = selected.stream()
-                .map((var descriptor) -> {
-                    return new ResolvedPlugin(
-                            descriptor,
-                            definitionLoader.load(
-                                    descriptor.id(),
-                                    overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun)));
-                })
+        final List<ResolvedPlugin> plugins = selected.stream()
+                .map(descriptor -> new ResolvedPlugin(
+                        descriptor,
+                        definitionLoader.load(
+                                descriptor.id(),
+                                overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
                 .toList();
 
-        final var parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
+        final int parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
         LOGGER.log(Level.INFO,
                 "Selected {0} plugin(s); parallelism={1}; dryRun={2}",
                 new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), arguments.dryRun()});
@@ -114,7 +99,7 @@ public final class OpenDataApplication {
                     database,
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
-            final var summary = coordinator.execute(
+            final PluginExecutionSummary summary = coordinator.execute(
                     plugins, parallelism, arguments.dryRun());
             logSummary(summary);
             return summary.allSuccessful() ? ExecutionStatus.SUCCESS : ExecutionStatus.PLUGIN_FAILURE;
@@ -124,10 +109,7 @@ public final class OpenDataApplication {
             }
         }
     }
-/**
- * Log the summary results for each plugin
- * @param summary final execution summary
- */
+
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach(result -> LOGGER.log(
                 result.successful() ? Level.INFO : Level.SEVERE,

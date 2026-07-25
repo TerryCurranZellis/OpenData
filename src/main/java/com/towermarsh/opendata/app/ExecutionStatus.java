@@ -7,9 +7,7 @@
  */
 package com.towermarsh.opendata.app;
 
-/** 
- * Final status reported by one OpenData process invocation. 
- */
+/** Final status reported by one OpenData process invocation. */
 public enum ExecutionStatus {
     NOT_STARTED,
     SUCCESS,
@@ -17,6 +15,5 @@ public enum ExecutionStatus {
     COMMAND_LINE_ERROR,
     CONFIGURATION_ERROR,
     INTERRUPTED,
-    APPLICATION_FAILURE,
-    RUNTIME_ERROR
+    APPLICATION_FAILURE
 }

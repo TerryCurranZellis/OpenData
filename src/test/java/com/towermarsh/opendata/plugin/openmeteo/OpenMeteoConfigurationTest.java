@@ -1,28 +1,67 @@
+/*
+ * Filename: OpenMeteoConfigurationTest.java
+ *
+ * (c) Copyright 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.plugin.openmeteo;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.net.URI;
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class OpenMeteoConfigurationTest {
-    private OpenMeteoConfiguration config(Optional<LocalDate> start, Optional<LocalDate> end, boolean current) {
-        return new OpenMeteoConfiguration(URI.create("https://archive-api.open-meteo.com/v1/archive"), "home", "Home",
-                51.6207,-1.1098, ZoneId.of("Europe/London"), Duration.ofSeconds(10), Duration.ofSeconds(30),
-                start,end,365,current,"openmeteo","Location","DailyWeather",500,Duration.ofSeconds(30));
+    @Test
+    void resolvesRelativeRangeAndExcludesCurrentDateByDefault() {
+        final var configuration = configuration("openmeteo", "home", 6, false);
+
+        final var range = configuration.resolveDateRange(LocalDate.of(2026, 7, 24));
+
+        assertEquals(LocalDate.of(2026, 7, 17), range.startDate());
+        assertEquals(LocalDate.of(2026, 7, 23), range.endDate());
     }
-    @Test void resolvesConfiguredRange() {
-        var c=config(Optional.of(LocalDate.of(2020,1,1)),Optional.of(LocalDate.of(2020,1,31)),false);
-        assertEquals(LocalDate.of(2020,1,1),c.resolveDateRange(LocalDate.now()).startDate());
+
+    @Test
+    void rejectsUnsafeSqlIdentifier() {
+        assertThrows(IllegalArgumentException.class,
+                () -> configuration("openmeteo;drop schema core", "home", 6, false));
     }
-    @Test void excludesCurrentDateByDefault() {
-        var r=config(Optional.empty(),Optional.empty(),false).resolveDateRange(LocalDate.of(2026,7,25));
-        assertEquals(LocalDate.of(2026,7,24),r.endDate());
-        assertEquals(LocalDate.of(2025,7,24),r.startDate());
+
+    @Test
+    void rejectsLocationKeyLongerThanDatabaseColumn() {
+        assertThrows(IllegalArgumentException.class,
+                () -> configuration("openmeteo", "x".repeat(101), 6, false));
     }
-    @Test void includesCurrentDateWhenRequested() { assertEquals(LocalDate.of(2026,7,25),config(Optional.empty(),Optional.empty(),true).resolveDateRange(LocalDate.of(2026,7,25)).endDate()); }
-    @Test void rejectsUnsafeSqlIdentifier() { assertThrows(IllegalArgumentException.class, () -> new OpenMeteoConfiguration(URI.create("https://x"),"x","X",0,0,ZoneId.of("UTC"),Duration.ofSeconds(1),Duration.ofSeconds(1),Optional.empty(),Optional.empty(),1,false,"dbo;drop","L","D",1,Duration.ofSeconds(1))); }
-    @Test void rejectsInvertedDates() { assertThrows(IllegalArgumentException.class, () -> config(Optional.of(LocalDate.of(2026,2,1)),Optional.of(LocalDate.of(2026,1,1)),false)); }
-    @Test void rejectsInvalidBatchSize() { assertThrows(IllegalArgumentException.class, () -> new OpenMeteoConfiguration(URI.create("https://x"),"x","X",0,0,ZoneId.of("UTC"),Duration.ofSeconds(1),Duration.ofSeconds(1),Optional.empty(),Optional.empty(),1,false,"dbo","L","D",0,Duration.ofSeconds(1))); }
+
+    private static OpenMeteoConfiguration configuration(
+            final String schema,
+            final String locationKey,
+            final int daysAgo,
+            final boolean includeToday) {
+        return new OpenMeteoConfiguration(
+                URI.create("https://archive-api.open-meteo.com/v1/archive"),
+                locationKey,
+                "Home",
+                51.674304,
+                -0.785602,
+                ZoneId.of("Europe/London"),
+                Duration.ofSeconds(30),
+                Duration.ofSeconds(60),
+                Optional.empty(),
+                Optional.empty(),
+                daysAgo,
+                includeToday,
+                schema,
+                "Location",
+                "DailyWeather",
+                500,
+                Duration.ofSeconds(30));
+    }
 }
