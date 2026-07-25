@@ -11,7 +11,7 @@ The runtime accepts one or more plugin ids. Each selected plugin becomes one ind
 ## Selection rules
 
 - `--plugin openmeteo` selects one plugin.
-- Repeated options and comma-separated ids select several installed executable plugins. The uploaded baseline currently contains only one executable plugin class (`openmeteo`); the Ofgem descriptor points to a class that is not yet present.
+- `--plugin openmeteo --plugin ofgem` and `--plugin openmeteo,ofgem` select several plugins.
 - `--plugin all` selects every enabled descriptor in the classpath registry.
 - Duplicate ids are rejected before execution.
 - `all` cannot be combined with named ids.

@@ -26,6 +26,5 @@ Ofgem downloads an HTML page, discovers the current workbook, downloads XLSX and
 uses Apache POI. OpenMeteo constructs historical API query parameters and parses
 JSON with Jackson (or CSV when selected).
 
-![Parallel plugin execution sequence](../diagrams/generated/plugin-execution-sequence.svg)
-
-![Configuration loading sequence](../diagrams/generated/configuration-loading-sequence.svg)
+See [plugin-execution-sequence.puml](../diagrams/plugin-execution-sequence.puml)
+and [configuration-loading-sequence.puml](../diagrams/configuration-loading-sequence.puml).

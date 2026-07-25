@@ -5,8 +5,8 @@
 ```text
 opendata --list-plugins
 opendata --plugin openmeteo
-opendata --plugin openmeteo --parallelism 1
-# Multi-plugin syntax becomes usable when two or more executable plugin classes are installed.
+opendata --plugin openmeteo --plugin ofgem
+opendata --plugin openmeteo,ofgem --parallelism 2
 opendata --plugin all
 opendata --plugin all --dry-run
 ```
@@ -40,7 +40,3 @@ Unscoped plugin entries are rejected in a multi-plugin run to prevent a property
 ## Outcome
 
 The application does not call `System.exit`. The `finally` block logs an `ExecutionStatus` enum name and elapsed milliseconds. An individual plugin failure does not stop another selected plugin, but the aggregate status becomes `PLUGIN_FAILURE`.
-
-## Current plugin availability
-
-`openmeteo` is executable in this source baseline. The registry also contains an `ofgem` descriptor, but its configured `com.towermarsh.opendata.plugin.ofgem.OfgemPlugin` class is absent; selecting it will fail during reflective plugin creation until that implementation is added.

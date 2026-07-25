@@ -72,4 +72,4 @@ a privileged operator.
 
 See [database persistence and pooling](019-database-persistence-and-pooling.md),
 [security and credentials](017-security-and-credentials.md) and
-![OpenData database ER diagram](../diagrams/generated/opendata-database.svg).
+[the database ER diagram](../diagrams/database/opendata-database.puml).

@@ -34,4 +34,4 @@ target; earlier flat loader classes are transitional.
 
 Every public package retains `package-info.java`.
 
-![OpenData package dependencies](../diagrams/generated/package-dependencies.svg)
+See [package-dependencies.puml](../diagrams/package-dependencies.puml).

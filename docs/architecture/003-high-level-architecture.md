@@ -31,4 +31,4 @@ The application layer coordinates but does not parse formats or issue
 source-specific SQL. Plugins define source rules but reuse generic HTTP and
 format handling.
 
-![OpenData component architecture](../diagrams/generated/component-architecture.svg)
+See [component-architecture.puml](../diagrams/component-architecture.puml).

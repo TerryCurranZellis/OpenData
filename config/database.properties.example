@@ -3,7 +3,7 @@
 
 database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
 database.user=OpenData
-database.password=
+database.password=OpenData
 
 # Optional pool settings consumed by DatabasePoolConfig.from(Properties).
 database.pool.initial-size=1

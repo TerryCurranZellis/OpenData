@@ -24,4 +24,4 @@ artefacts, parser output, validation results, statistics and timings.
 A failed stage stops later stages unless explicitly recoverable. Database loads
 are transactional and raw artefacts remain available for diagnosis.
 
-![OpenData ingestion pipeline](../diagrams/generated/pipeline-sequence.svg)
+See [pipeline-sequence.puml](../diagrams/pipeline-sequence.puml).

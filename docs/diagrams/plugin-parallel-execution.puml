@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+actor Operator
+participant Main
+participant OpenDataApplication
+participant PluginExecutionCoordinator as Coordinator
+participant "Fixed Executor" as Executor
+participant "Plugin Task A" as A
+participant "Plugin Task B" as B
+database "DBCP Pool" as Pool
+database "SQL Server" as DB
+
+Operator -> Main : --plugin openmeteo --plugin ofgem
+Main -> OpenDataApplication : start(arguments)
+OpenDataApplication -> Coordinator : execute(resolved plugins)
+Coordinator -> Executor : invokeAll(tasks)
+par OpenMeteo
+  Executor -> A : execute()
+  A -> Pool : getConnection()
+  Pool -> DB : transaction A
+  A --> Pool : close/return connection
+else Ofgem
+  Executor -> B : execute()
+  B -> Pool : getConnection()
+  Pool -> DB : transaction B
+  B --> Pool : close/return connection
+end
+Executor --> Coordinator : ordered results
+Coordinator --> OpenDataApplication : summary
+OpenDataApplication --> Main : ExecutionStatus
+@enduml

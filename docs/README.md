@@ -18,7 +18,7 @@ plugin and diagram sources for OpenData.
 | [Reference](reference/) | Exact configuration, schemas, statuses and data dictionaries |
 | [Guides](guides/) | Task-oriented installation and operating instructions |
 | [Plugins](plugins/) | Dataset-specific design and mapping documentation |
-| [Diagrams](diagrams/README.md) | PlantUML sources and generated-image contract |
+| [Diagrams](diagrams/README.md) | Maintained PlantUML sources |
 | [Reviews](review/) | Completion, readiness and verification records |
 
 Status terms for architecture and delivery documents are **Implemented**,

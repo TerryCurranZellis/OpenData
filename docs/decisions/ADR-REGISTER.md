@@ -28,7 +28,7 @@
 | [ADR-0016](ADR-0016-exception-hierarchy-and-boundary-translation.md) | Translate exceptions at boundaries | Accepted | |
 | [ADR-0017](ADR-0017-documentation-as-code.md) | Maintain documentation as code | Accepted | |
 | [ADR-0018](ADR-0018-minimal-dependencies-standard-java-first.md) | Prefer standard Java but approve specialist libraries | Accepted | |
-| [ADR-0019](ADR-0019-ofgem-reference-plugin.md) | Use Ofgem as the HTML-to-Excel reference plugin | Accepted | Service/repository foundation exists; executable plugin class still outstanding |
+| [ADR-0019](ADR-0019-ofgem-reference-plugin.md) | Use Ofgem as the HTML-to-Excel reference plugin | Accepted | |
 | [ADR-0020](ADR-0020-internal-scheduling-deferred.md) | Defer internal scheduling | Deferred | External scheduling preferred |
 | [ADR-0021 CSV](ADR-0021-apache-commons-csv.md) | Use Apache Commons CSV | Accepted | Legacy duplicate number |
 | [ADR-0021 Config](ADR-0021-configuration-resolution-and-validation.md) | Separate configuration resolution and validation | Accepted | Legacy duplicate number |
@@ -43,7 +43,7 @@
 | [ADR-0026 OpenMeteo](ADR-0026-openmeteo-reference-plugin.md) | Use OpenMeteo as the API reference plugin | Accepted | Legacy duplicate number |
 | [ADR-0026 Octopus TX](ADR-0026-transactional-octopus-record-persistence.md) | Persist one Octopus bill atomically | Shelved | Legacy duplicate number; future work |
 | [ADR-0027](ADR-0027-idempotent-email-attachment-processing.md) | Make email attachment processing idempotent | Shelved | Future work |
-| [ADR-0028](ADR-0028-openmeteo-historical-weather-plugin.md) | Integrate historical OpenMeteo acquisition | Accepted | Runtime plugin and SQL schema implemented |
+| [ADR-0028](ADR-0028-openmeteo-historical-weather-plugin.md) | Integrate historical OpenMeteo acquisition | Proposed | Code prepared; runtime integration outstanding |
 | [ADR-0029](ADR-0029-web-file-discovery-and-tabular-parsing.md) | Use shared discovery and tabular parsing | Accepted | Implemented in Phase 2 |
 | [ADR-0030](ADR-0030-managed-database-connection-pool.md) | Use a managed Apache DBCP connection pool | Accepted | Implemented in Phase 3 |
 | [ADR-0031](ADR-0031-normalised-ofgem-price-cap-schema.md) | Store a dimensional annual Ofgem cap fact | Accepted | Implemented in Phase 3 |
