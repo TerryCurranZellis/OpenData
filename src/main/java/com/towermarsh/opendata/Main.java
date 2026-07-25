@@ -21,18 +21,24 @@ import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** OpenData application entry point. */
+/**
+ * OpenData application entry point.
+ */
 public final class Main {
+
     private Main() {
     }
 
-    /** Starts the application without terminating the JVM explicitly. */
+    /**
+     * Starts the application without terminating the JVM explicitly.
+     *
+     * @param args command line arguments
+     */
     public static void main(final String[] args) {
-        final Instant startedAt = Instant.now();
-        final CommandLineArgumentsProcessor processor = new CommandLineArgumentsProcessor();
-        ExecutionStatus status = ExecutionStatus.NOT_STARTED;
-        Logger logger = Logger.getLogger(Main.class.getName());
-
+        final var startedAt = Instant.now();
+        final var processor = new CommandLineArgumentsProcessor();
+        var status = ExecutionStatus.NOT_STARTED;
+        var logger = Logger.getLogger(Main.class.getName());
         try {
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
@@ -53,7 +59,7 @@ public final class Main {
             status = ExecutionStatus.APPLICATION_FAILURE;
             logger.log(Level.SEVERE, "Unable to initialise application logging.", exception);
         } catch (RuntimeException exception) {
-            status = ExecutionStatus.APPLICATION_FAILURE;
+            status = ExecutionStatus.RUNTIME_ERROR;
             logger.log(Level.SEVERE, "Unexpected application failure.", exception);
         } finally {
             final Duration duration = Duration.between(startedAt, Instant.now());
