@@ -79,9 +79,9 @@ public final class ConfigurationLoader {
     public ApplicationConfig load(final CommandLineArguments arguments) throws ConfigurationException {
         Objects.requireNonNull(arguments, "arguments");
 
-        final String pluginId = arguments.pluginId()
+        final String pluginId = arguments.pluginIds().stream().findFirst()
                 .orElseThrow(() -> new ConfigurationException(
-                        "A plugin is required before configuration can be loaded."));
+                        "A named plugin is required before configuration can be loaded."));
 
         final Map<String, ResolvedConfigurationValue> merged = new LinkedHashMap<>();
         merge(merged, builtInDefaults, ConfigurationSource.BUILT_IN_DEFAULT);

@@ -70,9 +70,9 @@ public final class ApplicationConfigurationService {
             final CommandLineArguments arguments,
             final Map<String, String> runtimeOverrides) {
 
-        final var pluginId = arguments.pluginId()
+        final var pluginId = arguments.pluginIds().stream().findFirst()
                 .orElseThrow(() -> new PluginDefinitionException(
-                        "A plugin is required for an execution request."));
+                        "A named plugin is required for an execution request."));
 
         final var plugin = pluginDefinitionLoader.load(
                 pluginId,

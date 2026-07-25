@@ -4,37 +4,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.towermarsh.opendata.config.ApplicationConfig;
+import com.towermarsh.opendata.config.DatabasePoolConfiguration;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 
 class SQLServerResourceTest {
 
     @Test
-    void exposesConfiguredPoolLimitWithoutOpeningAConnection() throws Exception {
-        ApplicationConfig applicationConfig = new ApplicationConfig(
-                null,
-                SQLServerResource.DEFAULT_JDBC_URL,
-                SQLServerResource.DEFAULT_USER,
-                "local-test-password");
-        DatabasePoolConfig poolConfig = new DatabasePoolConfig(
-                0,
-                0,
-                3,
+    void exposesConfiguredPoolLimitWithoutOpeningAConnection() {
+        DatabasePoolConfiguration configuration = new DatabasePoolConfiguration(
+                "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                "jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true",
+                "OpenData",
+                "local-test-password",
+                "OpenDataTestPool",
                 9,
+                3,
+                0,
                 Duration.ofSeconds(10),
-                Duration.ofMinutes(1),
-                true,
-                "SELECT 1",
-                5);
+                "SELECT 1");
 
-        SQLServerResource resource = new SQLServerResource(
-                applicationConfig,
-                poolConfig);
-        assertFalse(resource.isClosed());
+        SQLServerResource resource = SQLServerResource.initialise(configuration);
+        assertFalse(resource.getPoolSnapshot().closed());
         assertEquals(9, resource.getPoolSnapshot().maximumConnections());
 
         resource.close();
-        assertTrue(resource.isClosed());
+        assertTrue(resource.getPoolSnapshot().closed());
     }
 }

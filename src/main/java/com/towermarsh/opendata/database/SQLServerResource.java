@@ -144,6 +144,15 @@ public final class SQLServerResource implements DatabaseResourceManager {
         return connectionPool.getNumIdle();
     }
 
+    @Override
+    public DatabasePoolSnapshot getPoolSnapshot() {
+        return new DatabasePoolSnapshot(
+                activeConnections(),
+                idleConnections(),
+                connectionPool.getMaxTotal(),
+                closed.get());
+    }
+
 
     private static void closeAndLog(final AutoCloseable resource, final String description) {
         if (resource == null) {

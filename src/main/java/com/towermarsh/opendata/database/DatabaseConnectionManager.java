@@ -4,7 +4,7 @@
  */
 package com.towermarsh.opendata.database;
 
-import com.towermarsh.opendata.config.ApplicationConfig;
+import com.towermarsh.opendata.config.DatabasePoolConfiguration;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -17,24 +17,12 @@ public final class DatabaseConnectionManager implements AutoCloseable {
     private final DatabaseResourceManager resourceManager;
 
     /**
-     * Creates the default SQL Server pool.
+     * Creates a manager using the supplied SQL Server pool configuration.
      *
-     * @param config application database configuration
+     * @param configuration SQL Server and connection-pool configuration
      */
-    public DatabaseConnectionManager(ApplicationConfig config) {
-        this(new SQLServerResource(config));
-    }
-
-    /**
-     * Creates a SQL Server pool using explicit pool settings.
-     *
-     * @param config application database configuration
-     * @param poolConfig pool settings
-     */
-    public DatabaseConnectionManager(
-            ApplicationConfig config,
-            DatabasePoolConfig poolConfig) {
-        this(new SQLServerResource(config, poolConfig));
+    public DatabaseConnectionManager(DatabasePoolConfiguration configuration) {
+        this(SQLServerResource.initialise(configuration));
     }
 
     /**

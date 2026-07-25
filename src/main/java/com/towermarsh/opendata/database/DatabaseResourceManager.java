@@ -16,6 +16,16 @@ import java.sql.SQLException;
 public interface DatabaseResourceManager extends AutoCloseable {
     Connection getConnection() throws SQLException;
 
+
+    /**
+     * Returns current pool usage where the implementation exposes it.
+     *
+     * @return pool usage snapshot
+     */
+    default DatabasePoolSnapshot getPoolSnapshot() {
+        return new DatabasePoolSnapshot(0, 0, 0, false);
+    }
+
     default void close(final Connection connection) {
         closeQuietly(connection);
     }
