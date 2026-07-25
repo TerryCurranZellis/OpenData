@@ -1,37 +1,44 @@
 @startuml
-title Canonical Package Dependencies
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Java package dependency direction
 package app
 package cli
 package config
-package "config.model" as cm
 package plugin
-package "plugin.ofgem" as ofgem
-package "plugin.openmeteo" as om
-package etl
+package "plugin.openmeteo" as openmeteo
+package ofgem
+package database
+package "database.audit" as audit
+package discovery
 package download
-package "download.strategy" as ds
 package parser
 package validation
-package database
 package model
-package logging
 package exception
 app --> cli
 app --> config
 app --> plugin
-app --> etl
-app --> logging
-config --> cm
-plugin --> cm
-ofgem --> plugin
+app --> database
+plugin --> config
+plugin --> database
+openmeteo --> plugin
+openmeteo --> database
+ofgem --> database
+ofgem --> download
 ofgem --> parser
-om --> plugin
-om --> parser
-etl --> download
-etl --> parser
-etl --> validation
-etl --> database
-ds --> download
+audit --> database
+discovery --> exception
+download --> exception
 parser --> exception
-database --> model
+validation --> model
 @enduml

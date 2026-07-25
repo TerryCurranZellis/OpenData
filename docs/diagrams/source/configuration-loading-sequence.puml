@@ -1,17 +1,33 @@
 @startuml
-title Configuration Loading
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Configuration loading sequence
 actor Operator
-participant CLI
-participant PluginRegistry as Registry
+participant CommandLineArgumentsProcessor as CLI
+participant OpenDataApplication as App
 participant BootstrapConfigurationLoader as Bootstrap
+participant OverrideConfiguration as Override
+participant ClasspathPluginRegistry as Registry
 participant PropertiesPluginDefinitionLoader as Loader
-participant ApplicationConfigurationService as Service
-Operator -> CLI : --plugin id [--file]
-CLI --> Service : arguments
-Service -> Registry : requireEnabled(id)
-Service -> Bootstrap : load application.properties
-Bootstrap --> Service : BootstrapConfig
-Service -> Loader : plugin properties + overrides
-Loader --> Service : PluginDefinition
-Service --> Operator : ApplicationConfig via execution
+Operator -> CLI : arguments
+CLI --> App : CommandLineArguments
+App -> Bootstrap : load application.properties
+Bootstrap --> App : ApplicationRuntimeConfiguration
+App -> Override : load optional --file
+Override --> App : application and scoped plugin values
+App -> Registry : select named or all enabled plugins
+Registry --> App : PluginDescriptor list
+loop each selected plugin
+  App -> Loader : load descriptor definition + overrides
+  Loader --> App : immutable PluginDefinition
+end
 @enduml

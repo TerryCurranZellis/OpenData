@@ -34,4 +34,4 @@ reference.
 A database registry may later construct the same records from JSON, but that
 work is shelved.
 
-See [plugin-registry.puml](../diagrams/plugin-registry.puml).
+![OpenData plugin registry](../diagrams/generated/plugin-registry.svg)

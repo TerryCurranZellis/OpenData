@@ -23,4 +23,4 @@ and ZIP stages are planned.
 `DataFormatter` and optional formula evaluation. Raw files are archived before
 parsing.
 
-See [download-strategy-classes.puml](../diagrams/download-strategy-classes.puml).
+![Download and discovery classes](../diagrams/generated/download-strategy-classes.svg)

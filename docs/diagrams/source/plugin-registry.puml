@@ -1,14 +1,27 @@
 @startuml
-title Phase 1 Plugin Registry
-interface PluginRegistry
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Plugin registry and selection
 class ClasspathPluginRegistry
-record PluginDescriptor
-file "index.properties" as Index
-file "ofgem.properties" as Ofgem
-file "openmeteo.properties" as OpenMeteo
+interface PluginRegistry
+class PluginSelectionResolver
+class PluginDescriptor
+class PropertiesPluginDefinitionLoader
+class ReflectionPluginFactory
+interface OpenDataPlugin
 PluginRegistry <|.. ClasspathPluginRegistry
-ClasspathPluginRegistry --> Index
-ClasspathPluginRegistry --> Ofgem
-ClasspathPluginRegistry --> OpenMeteo
-ClasspathPluginRegistry --> PluginDescriptor
+ClasspathPluginRegistry "1" o-- "many" PluginDescriptor
+PluginSelectionResolver --> PluginRegistry
+PropertiesPluginDefinitionLoader --> PluginDescriptor
+ReflectionPluginFactory --> PluginDescriptor
+ReflectionPluginFactory ..> OpenDataPlugin : creates
 @enduml

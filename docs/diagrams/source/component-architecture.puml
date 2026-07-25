@@ -1,20 +1,35 @@
 @startuml
-title OpenData Component Architecture
-package Application { [Main] [CLI] [Application Service] }
-package Plugin { [Plugin Registry] [Plugin Definition] [Ofgem] [OpenMeteo] }
-package Processing { [Pipeline] [Download Strategies] [Parsers] [Validation] [Transformation] }
-package Infrastructure { [File System] [JDK HTTP] [SQL Repository] [Credential Provider] }
-[Main] --> [CLI]
-[Main] --> [Application Service]
-[Application Service] --> [Plugin Registry]
-[Application Service] --> [Plugin Definition]
-[Application Service] --> [Pipeline]
-[Pipeline] --> [Download Strategies]
-[Pipeline] --> [Parsers]
-[Pipeline] --> [Validation]
-[Pipeline] --> [Transformation]
-[Download Strategies] --> [JDK HTTP]
-[Download Strategies] --> [File System]
-[Pipeline] --> [SQL Repository]
-[Download Strategies] --> [Credential Provider]
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title OpenData component architecture
+package "Application boundary" { [Main] [OpenDataApplication] [CommandLineArgumentsProcessor] }
+package "Configuration" { [ApplicationConfiguration] [PluginDefinitionLoader] [OverrideConfiguration] }
+package "Plugin runtime" { [PluginRegistry] [PluginSelectionResolver] [PluginExecutionCoordinator] [PluginFactory] }
+package "Shared ingestion" { [Discovery] [Download] [Parsers] [Validation] }
+package "Plugins" { [OpenMeteoPlugin] [Ofgem import foundation] }
+package "Persistence" { [DatabaseResourceManager] [SQLServerResource] [JDBC repositories] }
+[Main] --> [CommandLineArgumentsProcessor]
+[Main] --> [OpenDataApplication]
+[OpenDataApplication] --> [ApplicationConfiguration]
+[OpenDataApplication] --> [PluginRegistry]
+[OpenDataApplication] --> [PluginSelectionResolver]
+[OpenDataApplication] --> [PluginExecutionCoordinator]
+[PluginExecutionCoordinator] --> [PluginFactory]
+[PluginFactory] --> [OpenMeteoPlugin]
+[PluginFactory] ..> [Ofgem import foundation] : implementation incomplete
+[OpenMeteoPlugin] --> [Download]
+[Ofgem import foundation] --> [Discovery]
+[Ofgem import foundation] --> [Parsers]
+[OpenMeteoPlugin] --> [JDBC repositories]
+[JDBC repositories] --> [DatabaseResourceManager]
+[DatabaseResourceManager] <|.. [SQLServerResource]
 @enduml

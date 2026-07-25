@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
     .SYNOPSIS
     Unified documentation tooling for the OpenData project.
@@ -249,24 +249,27 @@ function Invoke-Documentation {
     $jar    = Join-Path -Path $ProjectRoot -ChildPath $config.plantUmlJar
     Ensure-Directory -Path $output
     if ($Clean) {
-      Get-ChildItem -LiteralPath $output -File -ErrorAction SilentlyContinue | Remove-Item -Force
+      Get-ChildItem -LiteralPath $output -File -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force
     }
     if (-not (Test-Path -LiteralPath $jar)) {
       throw ("PlantUML JAR not found at '{0}'. Download plantuml.jar and place it in the tools folder." -f $jar)
     }
     Assert-CommandAvailable -Name 'java'
-    $diagramFiles = Get-ChildItem -LiteralPath $source -Filter '*.puml' -File -Recurse
+    $diagramFiles = Get-ChildItem -LiteralPath $source -Filter '*.puml' -File
+    if ($diagramFiles.Count -eq 0) {
+      Write-Warning -Message ('No PlantUML sources found in {0}.' -f $source)
+      return
+    }
     try {
       foreach ($diagram in $diagramFiles) {
-        & java -jar $jar ('-t{0}' -f $Format) -charset UTF-8 -o $output $diagram.FullName -
+        & java -jar $jar ('-t{0}' -f $Format) -charset UTF-8 -o $output $diagram.FullName
         if ($LASTEXITCODE -ne 0) {
-          ##throw ('PlantUML failed for {0}.' -f $diagram.FullName)
-          Write-Warning -Message ('PlantUML failed for {0}.' -f $diagram.FullName)
+          write-warning ('PlantUML failed for {0}.' -f $diagram.FullName)
           continue
         }
       }
-    } catch {
-    Write-Warning -Message ('PlantUML failed for {0}.' -f $diagram.FullName)
+    }catch {
+      write-warning ('PlantUML failed for {0}.' -f $diagram.FullName)
     }
     Write-Output -InputObject ('Rendered {0} diagram(s) to {1}' -f $diagramFiles.Count, $output)
   }
@@ -305,6 +308,17 @@ function Invoke-Documentation {
         $decoded = [uri]::UnescapeDataString($target)
         $linkPath = Join-Path -Path $file.DirectoryName -ChildPath ($decoded -replace '/', '\')
         if (-not (Test-Path -LiteralPath $linkPath)) {
+          $normalisedTarget = $target -replace '\\', '/'
+          if ($normalisedTarget -match '/diagrams/generated/([^/]+)\.(svg|png)$') {
+            $sourceName = $Matches[1] + '.puml'
+            $sourcePath = Join-Path -Path $ProjectRoot -ChildPath ('docs\diagrams\source\' + $sourceName)
+            if (Test-Path -LiteralPath $sourcePath) {
+              $issues.Add([pscustomobject]@{ Severity = 'Warning'
+                  File = $file.FullName
+              Message = ('Generated diagram is not present yet; render source {0}: {1}' -f $sourceName, $target) })
+              continue
+            }
+          }
           $issues.Add([pscustomobject]@{ Severity = 'Error'
               File = $file.FullName
           Message = ('Broken relative link: {0}' -f $target) })

@@ -1,44 +1,27 @@
 @startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
 skinparam componentStyle rectangle
-title OpenData database persistence components
-
-package "Application / services" {
-  [Plugin execution] as plugin
-  [OfgemPriceCapImportService] as service
-}
-
-package "Database abstraction" {
-  interface DatabaseResourceManager
-  [DatabaseConnectionManager] as manager
-  [SQLServerResource] as resource
-  [DatabasePoolConfig] as poolConfig
-  [DatabaseHealthCheck] as health
-}
-
-package "Repositories" {
-  interface IngestionAuditRepository
-  [SqlServerIngestionAuditRepository] as auditRepo
-  interface OfgemPriceCapRepository
-  [SqlServerOfgemPriceCapRepository] as ofgemRepo
-}
-
-package "Apache DBCP" {
-  [BasicDataSource] as dataSource
-}
-
-database "SQL Server\nOpenData" as sql
-
-plugin --> service
-plugin --> auditRepo
-service --> ofgemRepo
-auditRepo ..|> IngestionAuditRepository
-ofgemRepo ..|> OfgemPriceCapRepository
-auditRepo --> manager
-ofgemRepo --> manager
-health --> manager
-manager --> DatabaseResourceManager
-resource ..|> DatabaseResourceManager
-resource --> poolConfig
-resource --> dataSource
-dataSource --> sql : pooled JDBC
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Persistence component model
+interface DatabaseResourceManager
+class SQLServerResource
+class DatabaseConnectionManager
+class JdbcPluginRunAudit
+class OpenMeteoRepository
+class SqlServerIngestionAuditRepository
+class SqlServerOfgemPriceCapRepository
+DatabaseResourceManager <|.. SQLServerResource
+DatabaseConnectionManager --> DatabaseResourceManager
+JdbcPluginRunAudit --> DatabaseResourceManager
+OpenMeteoRepository --> DatabaseResourceManager
+SqlServerIngestionAuditRepository --> DatabaseConnectionManager
+SqlServerOfgemPriceCapRepository --> DatabaseConnectionManager
 @enduml

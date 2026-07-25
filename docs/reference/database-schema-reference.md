@@ -1,7 +1,8 @@
 # Database Schema Reference
 
 **Document ID:** REF-DB-SCHEMA-001  
-**Version:** 1.0  
+**Version:** 2.0  
+**Status:** Two coexisting schema foundations  
 **Baseline date:** 24 July 2026
 
 ## Database and principals
@@ -11,39 +12,35 @@
 | Database | `OpenData` |
 | SQL login | `OpenData` |
 | Database user | `OpenData` |
-| Application role | `opendata_app` |
+| Application role | `opendata_app` in the `sql/sqlserver` script set |
 
-## `core` schema
+## Current runtime audit schema
 
-| Table | Primary purpose |
+The current multi-plugin runtime uses the root ordered scripts:
+
+| Table | Purpose |
 |---|---|
-| `core.schema_version` | Installed logical migration versions |
-| `core.dataset` | Dataset/plugin registration |
-| `core.ingestion_run` | Run status, timing, counters and message |
-| `core.source_file` | Source URI, filename, size, media type and SHA-256 |
-| `core.ingestion_error` | Stage/row/field diagnostics |
+| `core.PluginRun` | One row per non-dry-run plugin task, keyed by the UUID logging correlation id |
+| `openmeteo.Location` | Stable configured location |
+| `openmeteo.DailyWeather` | Daily weather values and `LastRunId` lineage |
 
-## `ofgem` schema
+Apply `sql/001-core-plugin-run.sql` before `sql/002-openmeteo.sql`, then apply `sql/003-permissions.sql`.
 
-| Table | Primary purpose |
-|---|---|
-| `ofgem.charge_restriction_region` | Region and GB-average dimension |
-| `ofgem.payment_method` | Payment-method dimension |
-| `ofgem.tariff_type` | Fuel/tariff/metering dimension |
-| `ofgem.consumption_basis` | Nil or benchmark basis dimension |
-| `ofgem.price_cap_period` | Effective period and source file |
-| `ofgem.price_cap_level` | Annual cap-level fact |
-| `ofgem.price_cap_component` | Component reference data |
-| `ofgem.price_cap_component_value` | Reserved detailed component fact |
+## Earlier Phase 3 ingestion foundation
 
-## Natural and surrogate keys
+The separate `sql/sqlserver` script set defines:
 
-- datasets use a stable dataset code;
-- price-cap periods use a surrogate key with a unique effective date range;
-- dimension tables use stable short codes;
-- price-cap facts use a composite dimensional primary key;
-- audit records use identity keys;
-- source files carry a SHA-256 value for provenance and duplicate analysis.
+- `core.schema_version`, `core.dataset`, `core.ingestion_run`, `core.source_file` and `core.ingestion_error`;
+- Ofgem dimensions, period, level and component tables.
 
-See the [Ofgem data dictionary](ofgem-price-cap-data-dictionary.md) and
-[database ER diagram](../diagrams/database/opendata-database.puml).
+Those tables are used by `database.audit` and `ofgem.database` classes, but they are not the audit mechanism used by `PluginExecutionCoordinator`, which writes `core.PluginRun` through `JdbcPluginRunAudit`. The two models must not be described as one unified production schema until a consolidation decision and migration are implemented.
+
+## Keys and lineage
+
+- `core.PluginRun.RunId` is the plugin task correlation UUID.
+- `openmeteo.Location.LocationKey` is the stable natural key.
+- `openmeteo.DailyWeather` uses `(LocationId, ObservationDate)` as its primary key.
+- `openmeteo.DailyWeather.LastRunId` references the plugin run that last inserted or changed the row.
+- The earlier Ofgem model uses source-file and ingestion-run lineage.
+
+![OpenData database schemas](../diagrams/generated/opendata-database.svg)

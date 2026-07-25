@@ -1,21 +1,36 @@
 @startuml
-title Plugin Execution
-actor Operator
-participant Main
-participant Registry
-participant Config
-participant Plugin
-participant Pipeline
-participant Repository
-Operator -> Main : command
-Main -> Registry : require enabled
-Main -> Config : resolve
-Config --> Main : ApplicationConfig
-Main -> Plugin : validate
-Main -> Pipeline : execute
-Pipeline -> Plugin : hooks
-Pipeline -> Repository : load
-Repository --> Pipeline : ImportResult
-Pipeline --> Main : result
-Main --> Operator : status/duration
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Parallel plugin execution sequence
+participant OpenDataApplication as App
+participant PluginExecutionCoordinator as Coordinator
+participant PluginRunAudit as Audit
+participant ReflectionPluginFactory as Factory
+participant OpenDataPlugin as Plugin
+participant DatabaseResourceManager as Database
+App -> Coordinator : execute(resolved plugins, parallelism, dryRun)
+loop one task per plugin
+  Coordinator -> Factory : create(definition)
+  Factory --> Coordinator : fresh plugin instance
+  alt normal run
+    Coordinator -> Audit : started(runId, pluginId)
+  end
+  Coordinator -> Plugin : execute(context)
+  Plugin -> Database : borrow connection as required
+  Database --> Plugin : pooled connection
+  Plugin --> Coordinator : PluginMetrics
+  alt normal run
+    Coordinator -> Audit : completed(result)
+  end
+end
+Coordinator --> App : ordered PluginExecutionSummary
 @enduml

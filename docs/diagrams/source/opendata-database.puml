@@ -1,0 +1,96 @@
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+title OpenData SQL Server schemas
+
+entity "core.PluginRun" as PluginRun {
+  * RunId : uniqueidentifier <<PK>>
+  --
+  PluginId : nvarchar
+  Status : varchar
+  StartedAt : datetime2
+  CompletedAt : datetime2
+  RowsRead : bigint
+  RowsInserted : bigint
+  RowsUpdated : bigint
+  RowsSkipped : bigint
+}
+
+entity "openmeteo.Location" as Location {
+  * LocationId : bigint <<PK>>
+  --
+  LocationKey : nvarchar <<UQ>>
+  LocationName : nvarchar
+  Latitude : decimal
+  Longitude : decimal
+  TimeZone : nvarchar
+}
+
+entity "openmeteo.DailyWeather" as Weather {
+  * LocationId : bigint <<PK,FK>>
+  * ObservationDate : date <<PK>>
+  --
+  MinimumTemperatureC : decimal
+  MaximumTemperatureC : decimal
+  MeanTemperatureC : decimal
+  Sunrise : time
+  Sunset : time
+  DaylightMinutes : smallint
+  WeatherCode : smallint
+  LastRunId : uniqueidentifier <<FK>>
+}
+
+entity "core.dataset" as Dataset {
+  * dataset_id : int <<PK>>
+  --
+  dataset_code : varchar <<UQ>>
+  plugin_code : varchar
+}
+
+entity "core.ingestion_run" as IngestionRun {
+  * ingestion_run_id : bigint <<PK>>
+  --
+  dataset_id : int <<FK>>
+  status : varchar
+}
+
+entity "core.source_file" as SourceFile {
+  * source_file_id : bigint <<PK>>
+  --
+  ingestion_run_id : bigint <<FK>>
+  sha256 : char(64)
+}
+
+entity "ofgem.price_cap_period" as Period {
+  * price_cap_period_id : bigint <<PK>>
+  --
+  source_file_id : bigint <<FK>>
+  effective_from : date
+  effective_to : date
+}
+
+entity "ofgem.price_cap_level" as Level {
+  * price_cap_period_id : bigint <<PK,FK>>
+  * region_code : varchar <<PK>>
+  * payment_method_code : varchar <<PK>>
+  * tariff_type_code : varchar <<PK>>
+  * consumption_basis_code : varchar <<PK>>
+  * vat_included : bit <<PK>>
+  --
+  amount_gbp : decimal
+  ingestion_run_id : bigint <<FK>>
+}
+
+Location ||--o{ Weather
+PluginRun ||--o{ Weather : LastRunId
+Dataset ||--o{ IngestionRun
+IngestionRun ||--o{ SourceFile
+SourceFile ||--o{ Period
+Period ||--o{ Level
+IngestionRun ||--o{ Level
+@enduml

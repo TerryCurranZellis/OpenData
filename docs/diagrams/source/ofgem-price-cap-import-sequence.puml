@@ -1,36 +1,29 @@
 @startuml
-title Ofgem price-cap import
-actor Operator
-participant Main
-participant "Plugin orchestration" as plugin
-participant "HTML link discoverer" as discovery
-participant "HTTP downloader" as download
-participant "Ingestion audit repository" as audit
-participant "Ofgem workbook extractor" as extract
-participant "Ofgem import service" as service
-participant "Ofgem repository" as repo
-database "OpenData SQL Server" as db
-
-Operator -> Main : --plugin ofgem
-Main -> plugin : execute(config)
-plugin -> audit : startRun()
-audit -> db : INSERT core.ingestion_run
-plugin -> discovery : discover and select workbook
-discovery --> plugin : source URI
-plugin -> download : stream to staging
-plugin -> audit : record source file + SHA-256
-audit -> db : INSERT core.source_file
-plugin -> extract : extract(workbook)
-extract --> plugin : period + typed levels
-plugin -> service : importWorkbook(...)
-service -> repo : upsertPeriod(...)
-repo -> db : transactional period upsert
-service -> repo : replaceLevels(...)
-repo -> db : BEGIN; DELETE; batch INSERT; COMMIT
-repo --> service : written count
-service --> plugin : OfgemImportResult
-plugin -> audit : complete run
- audit -> db : UPDATE status/counters/finish
-plugin --> Main : run result
-Main --> Operator : status, duration, exit code
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Ofgem price-cap import foundation
+participant OfgemPriceCapImportService as Service
+participant HttpDataDownloader as Downloader
+participant OfgemPriceCapWorkbookExtractor as Extractor
+participant OfgemPriceCapRepository as Repository
+Service -> Downloader : obtain discovered workbook
+Downloader --> Service : DownloadResult
+Service -> Extractor : extract workbook
+Extractor --> Service : OfgemPriceCapWorkbookData
+Service -> Repository : upsert period and replace facts
+Repository --> Service : OfgemImportResult
+note over Service
+The service and repository exist, but the configured
+com.towermarsh.opendata.plugin.ofgem.OfgemPlugin
+implementation is not present in this source baseline.
+end note
 @enduml

@@ -1,21 +1,30 @@
 @startuml
-skinparam monochrome true
-participant OpenMeteoPlugin
-participant OpenMeteoApiClient
-participant OpenMeteoRepository
-database SQLServer
-
-OpenMeteoPlugin -> OpenMeteoApiClient : download(date range)
-OpenMeteoApiClient --> OpenMeteoPlugin : List<DailyWeatherRecord>
-OpenMeteoPlugin -> OpenMeteoRepository : save(records, runId)
-OpenMeteoRepository -> SQLServer : BEGIN TRANSACTION
-OpenMeteoRepository -> SQLServer : sp_getapplock(location key)
-OpenMeteoRepository -> SQLServer : upsert Location
-OpenMeteoRepository -> SQLServer : create/populate #OpenMeteoDaily
-OpenMeteoRepository -> SQLServer : update changed rows
-OpenMeteoRepository -> SQLServer : insert missing rows
-OpenMeteoRepository -> SQLServer : COMMIT data transaction
-OpenMeteoRepository -> SQLServer : DROP #OpenMeteoDaily / restore SET state
-OpenMeteoRepository -> SQLServer : COMMIT session cleanup
-OpenMeteoRepository --> OpenMeteoPlugin : inserted/updated/skipped
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title OpenMeteo persistence transaction
+participant OpenMeteoPlugin as Plugin
+participant OpenMeteoApiClient as API
+participant OpenMeteoRepository as Repository
+database "openmeteo.Location" as Location
+database "openmeteo.DailyWeather" as Daily
+Plugin -> API : fetch configured date range
+API --> Plugin : daily records
+alt dry run
+  Plugin --> Plugin : count as read/skipped
+else normal run
+  Plugin -> Repository : persist(configuration, records, runId)
+  Repository -> Location : insert or update stable location key
+  Repository -> Daily : stage and merge date rows
+  Daily --> Repository : inserted / updated / unchanged counts
+  Repository --> Plugin : OpenMeteoPersistenceResult
+end
 @enduml

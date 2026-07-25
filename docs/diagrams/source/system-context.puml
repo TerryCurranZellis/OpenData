@@ -1,15 +1,25 @@
 @startuml
-title OpenData System Context
-left to right direction
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title OpenData system context
 actor Operator
-rectangle "OpenData Framework" as App
-cloud "Dataset Publishers\nAPIs, files, HTML" as Publishers
-database "SQL Server" as DB
-folder "Work / Archive / Failed" as FS
-rectangle "Credential Provider" as Creds
-Operator --> App : CLI
-App --> Publishers : HTTPS
-App --> Creds : resolve reference
-App --> FS : artefacts
-App --> DB : JDBC
+rectangle "OpenData command-line application" as OpenData
+cloud "Public data publishers" as Publishers
+database "SQL Server\nOpenData database" as Database
+folder "Configuration and override files" as Config
+folder "Logs, work and archive files" as Files
+Operator --> OpenData : commands and overrides
+OpenData --> Publishers : HTTPS requests
+OpenData --> Database : pooled JDBC transactions
+OpenData --> Config : reads
+OpenData --> Files : writes
 @enduml

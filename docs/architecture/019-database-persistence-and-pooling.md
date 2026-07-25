@@ -1,65 +1,52 @@
 # Database Persistence and Connection Pooling
 
 **Document ID:** ARCH-019  
-**Version:** 1.0  
-**Status:** Implemented  
+**Version:** 2.0  
+**Status:** Implemented for the current plugin runtime  
 **Baseline date:** 24 July 2026
-
----
 
 ## Purpose
 
-The database layer supports the current command-line application and future
-parallel plugin work without opening a new physical SQL Server connection for
-every statement.
+The database layer supports concurrent plugin tasks while bounding physical SQL Server sessions. Every repository operation borrows its own logical JDBC connection and returns it using try-with-resources.
 
-## Components
+## Active components
 
 | Component | Responsibility |
 |---|---|
-| `DatabasePoolConfig` | Immutable validated pool limits and timeouts |
-| `SQLServerResource` | Creates, configures and closes `BasicDataSource` |
-| `DatabaseConnectionManager` | Stable facade supplied to repositories |
-| `DatabasePoolSnapshot` | Reports active, idle and configured capacity |
-| `DatabaseHealthCheck` | Executes a low-cost connectivity check |
-| repository implementations | Own prepared SQL and transaction boundaries |
+| `DatabasePoolConfiguration` | Immutable driver, URL, credentials, pool size, wait and validation settings |
+| `SQLServerResource` | Process-level Apache Commons DBCP pool and `DatabaseResourceManager` implementation |
+| `DatabaseConnectionManager` | Compatibility facade used by the older repository foundation |
+| `DatabaseHealthCheck` | Low-cost connectivity check |
+| JDBC repository implementations | Prepared SQL, transaction ownership and result counters |
 
-## Pool defaults
+`DatabasePoolConfig` and `DatabasePoolSnapshot` remain in the source tree as earlier abstractions; they are not the configuration objects used by `OpenDataApplication` in the current runtime.
 
-| Setting | Default | Purpose |
-|---|---:|---|
-| initial size | 1 | Establish one connection at startup/use |
-| minimum idle | 1 | Keep one reusable connection available |
-| maximum idle | 4 | Bound retained idle sessions |
-| maximum total | 12 | Bound concurrent borrowed connections |
-| maximum wait | 30 seconds | Fail rather than wait indefinitely |
-| minimum evictable idle | 5 minutes | Reclaim long-idle physical connections |
-| validation query | `SELECT 1` | Verify a borrowed SQL Server connection |
-| validation timeout | 5 seconds | Bound health validation |
+## Configured defaults
 
-These are conservative application defaults, not universal production values.
-Pool sizing must account for plugin concurrency, SQL Server capacity and the
-number of application processes.
+The maintained values are in `src/main/resources/config/application.properties`:
 
-## Lifecycle
+| Setting | Default |
+|---|---:|
+| `database.pool.max-total` | 8 |
+| `database.pool.max-idle` | 8 |
+| `database.pool.min-idle` | 1 |
+| `database.pool.max-wait-seconds` | 30 |
+| `database.pool.validation-query` | `SELECT 1` |
+| `execution.max-parallel-plugins` | 4 |
 
-1. configuration is resolved and validated;
-2. one `DatabaseConnectionManager` is created for the process;
-3. repositories borrow logical connections;
-4. try-with-resources returns each connection to the pool;
-5. application shutdown closes the manager and pool once;
-6. shutdown records the final run status and duration before resources disappear.
+The pool is prepared during a normal database-writing run. A dry run uses `UnavailableDatabaseResourceManager` and does not create the SQL Server pool.
 
-The pool is intentionally not a global singleton. Tests and later deployments
-can create separate pools for different databases or workloads.
+## Lifecycle and transaction rules
 
-## Failure behaviour
+1. Resolve and validate runtime configuration.
+2. Initialise one `SQLServerResource` for the process.
+3. Give each plugin task access to the shared thread-safe resource manager.
+4. Borrow one connection per repository transaction; never share a `Connection`, `Statement` or `ResultSet` between plugin threads.
+5. Commit or roll back in the repository that owns the transaction.
+6. Close the resource manager once application execution completes.
 
-- invalid pool values fail during configuration construction;
-- exhaustion fails after `max-wait-millis` rather than blocking forever;
-- validation failure prevents a bad connection being handed to a repository;
-- repository SQL exceptions are translated at the service boundary;
-- closing an individual borrowed connection must not close the pool;
-- closing the pool makes later borrows fail clearly.
+Increasing plugin parallelism without increasing database capacity can cause pool waits. As an operating guideline, configure at least the expected concurrent database transactions plus a small allowance for audit operations.
 
-See [database-persistence-components.puml](../diagrams/database-persistence-components.puml).
+![Database persistence components](../diagrams/generated/database-persistence-components.svg)
+
+![Repository transaction and connection-pool sequence](../diagrams/generated/database-persistence-sequence.svg)

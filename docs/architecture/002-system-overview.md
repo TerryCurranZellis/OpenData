@@ -37,4 +37,4 @@ pipeline history and database plugin configuration are not complete.
 
 Dataset names, URLs and listing text must not be hard-coded in `Main`.
 
-See [system-context.puml](../diagrams/system-context.puml).
+![OpenData system context](../diagrams/generated/system-context.svg)

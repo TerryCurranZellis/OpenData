@@ -1,23 +1,34 @@
 @startuml
-title Standard ETL Pipeline
-participant Pipeline
-participant CredentialProvider
-participant DownloadStrategy
-participant Archive
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Shared staged ingestion pipeline
+participant Plugin
+participant Discovery
+participant Downloader
 participant Parser
 participant Validator
-participant Transformer
 participant Repository
-Pipeline -> CredentialProvider : optional resolve
-Pipeline -> DownloadStrategy : download
-DownloadStrategy --> Pipeline : ResolvedDownload
-Pipeline -> Archive : preserve raw
-Pipeline -> Parser : parse
-Parser --> Pipeline : rows
-Pipeline -> Validator : validate
-Validator --> Pipeline : result
-Pipeline -> Transformer : transform
-Transformer --> Pipeline : target rows
-Pipeline -> Repository : transactional load
-Repository --> Pipeline : ImportResult
+Plugin -> Discovery : locate source when required
+Discovery --> Plugin : source URI
+Plugin -> Downloader : download source
+Downloader --> Plugin : DownloadResult
+Plugin -> Parser : parse bytes/file
+Parser --> Plugin : typed or tabular data
+Plugin -> Validator : validate
+Validator --> Plugin : validation result
+alt dry run
+  Plugin --> Plugin : report metrics only
+else database run
+  Plugin -> Repository : persist in transaction
+  Repository --> Plugin : insert/update/skip counts
+end
 @enduml

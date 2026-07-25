@@ -1,28 +1,32 @@
 @startuml
-title Dataset Lifecycle
-[*] --> REQUESTED
-REQUESTED --> CONFIGURED
-CONFIGURED --> SOURCE_RESOLVED
-SOURCE_RESOLVED --> DOWNLOADING
-DOWNLOADING --> DOWNLOADED
-DOWNLOADED --> ARCHIVED
-ARCHIVED --> PARSED
-PARSED --> VALIDATED
-VALIDATED --> TRANSFORMED
-TRANSFORMED --> LOADED
-LOADED --> VERIFIED
-VERIFIED --> COMPLETED
-REQUESTED --> FAILED
-CONFIGURED --> FAILED
-SOURCE_RESOLVED --> FAILED
-DOWNLOADING --> FAILED
-DOWNLOADED --> FAILED
-ARCHIVED --> FAILED
-PARSED --> FAILED
-VALIDATED --> FAILED
-TRANSFORMED --> FAILED
-LOADED --> FAILED
-VERIFIED --> FAILED
-COMPLETED --> [*]
-FAILED --> [*]
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Dataset execution lifecycle
+[*] --> Selected
+Selected --> Configured : resolve definition and overrides
+Configured --> Running : submit plugin task
+Running --> Downloaded : source acquired
+Downloaded --> Parsed : response parsed
+Parsed --> Validated : validation passes
+Validated --> Persisted : normal run
+Validated --> DryRunComplete : dry run
+Persisted --> Successful
+DryRunComplete --> Successful
+Running --> Failed : exception
+Downloaded --> Failed : exception
+Parsed --> Failed : validation or parsing failure
+Persisted --> Failed : transaction failure
+Running --> Cancelled : interruption
+Failed --> [*]
+Cancelled --> [*]
+Successful --> [*]
 @enduml

@@ -1,26 +1,36 @@
 @startuml
-title OpenData deployment topology
-node "Execution host" {
-  artifact "OpenData Java 17 JAR" as app
-  folder "External configuration" as config
-  folder "Staging / archive" as files
-  folder "Application logs" as logs
-  component "Apache DBCP pool" as pool
-  app --> config
-  app --> files
-  app --> logs
-  app --> pool
-}
-cloud "Public data publishers" as internet
-database "SQL Server\nDatabase: OpenData" as sql
-actor "External scheduler / operator" as scheduler
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title SQL Server deployment
 
-scheduler --> app : command-line invocation
-app --> internet : HTTPS discovery/download
-pool --> sql : encrypted JDBC
-note right of sql
-Login/user: OpenData
-Role: opendata_app
-Schemas: core, ofgem
-end note
+node "OpenData host" {
+  component "Java 17 application" as App
+  component "Apache DBCP pool" as Pool
+  folder "config / logs / data" as Files
+  App --> Pool
+  App --> Files
+}
+
+node "SQL Server instance" {
+  database "OpenData" as DB
+  rectangle "core schema" as Core
+  rectangle "openmeteo schema" as Meteo
+  rectangle "ofgem schema" as Ofgem
+  DB -- Core
+  DB -- Meteo
+  DB -- Ofgem
+}
+
+Pool --> DB : Microsoft JDBC driver
+actor "Database administrator" as DBA
+DBA --> DB : ordered SQL scripts
 @enduml

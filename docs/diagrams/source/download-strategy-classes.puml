@@ -1,16 +1,33 @@
 @startuml
-title Download Strategy Classes
-record PluginEndpointDefinition
-record LinkDiscoveryDefinition
-record ResolvedDownload
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Download and discovery classes
+interface DataDownloader
+class HttpDataDownloader
+class HttpDownloadOptions
+class DownloadResult
 class DirectHttpDownloadStrategy
 class HtmlLinkDiscoveryStrategy
-class HtmlLinkResolver
-class HttpClient
-PluginEndpointDefinition --> LinkDiscoveryDefinition : optional
-HtmlLinkDiscoveryStrategy --> HtmlLinkResolver
-HtmlLinkDiscoveryStrategy --> DirectHttpDownloadStrategy
-DirectHttpDownloadStrategy --> HttpClient
-DirectHttpDownloadStrategy --> ResolvedDownload
-HtmlLinkResolver --> LinkDiscoveryDefinition
+interface HtmlLinkDiscoverer
+class JsoupHtmlLinkDiscoverer
+interface DiscoveredLinkSelector
+class HighestScoringLinkSelector
+DataDownloader <|.. HttpDataDownloader
+HttpDataDownloader --> HttpDownloadOptions
+HttpDataDownloader --> DownloadResult
+DirectHttpDownloadStrategy --> DataDownloader
+HtmlLinkDiscoveryStrategy --> HtmlLinkDiscoverer
+HtmlLinkDiscoveryStrategy --> DiscoveredLinkSelector
+HtmlLinkDiscoveryStrategy --> DataDownloader
+HtmlLinkDiscoverer <|.. JsoupHtmlLinkDiscoverer
+DiscoveredLinkSelector <|.. HighestScoringLinkSelector
 @enduml

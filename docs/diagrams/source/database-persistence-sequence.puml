@@ -1,25 +1,32 @@
 @startuml
-title Borrow, use and return a pooled SQL Server connection
-actor "Repository" as repo
-participant DatabaseConnectionManager as manager
-participant SQLServerResource as resource
-participant BasicDataSource as pool
-database "SQL Server" as sql
-
-repo -> manager : getConnection()
-manager -> resource : getConnection()
-resource -> pool : getConnection()
-pool -> sql : validate/borrow physical session
-sql --> pool : session ready
-pool --> resource : logical Connection
-resource --> manager : Connection
-manager --> repo : Connection
-repo -> sql : prepared statements / transaction
-sql --> repo : results
-repo -> pool : Connection.close()
-note right of pool
-close returns the logical connection
-to the pool; it does not normally
-close the physical SQL session.
-end note
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Repository transaction and pool sequence
+participant Plugin
+participant Repository
+participant DatabaseResourceManager as Pool
+database "SQL Server" as SQL
+Plugin -> Repository : persist(records)
+Repository -> Pool : getConnection()
+Pool -> SQL : borrow physical session
+SQL --> Repository : logical Connection
+Repository -> SQL : setAutoCommit(false)
+Repository -> SQL : prepared statements / batches
+alt success
+  Repository -> SQL : commit
+else failure
+  Repository -> SQL : rollback
+end
+Repository -> Pool : Connection.close()
+Pool --> Repository : session returned
+Repository --> Plugin : persistence metrics or exception
 @enduml

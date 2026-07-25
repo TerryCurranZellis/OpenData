@@ -11,11 +11,11 @@ properties-based plugin definitions.
 - `java.util.logging` is the application logging framework.
 - Immutable Java records represent structured plugin configuration.
 - Each plugin has a properties file and is named in an explicit classpath index.
-- Ofgem and OpenMeteo are the reference plugins.
+- OpenMeteo is the implemented API/JSON reference plugin. Ofgem discovery, extraction, repository and SQL foundations exist, but the configured executable `OfgemPlugin` class is not yet present.
 - JDK HTTP supports direct downloads; JSoup resolves links from static HTML.
 - Apache Commons CSV, Jackson and Apache POI parse CSV, JSON and Excel.
 - Validation, ETL and SQL Server repository foundations are present.
-- Markdown, ADRs and PlantUML are maintained with the source code.
+- Markdown and ADRs are maintained with PlantUML sources in `docs/diagrams/source`; rendered SVG files are written to `docs/diagrams/generated`.
 
 Some components remain foundations rather than completed production workflows.
 See [the architecture manual](docs/architecture/ARCHITECTURE.md).
@@ -34,7 +34,6 @@ See [the architecture manual](docs/architecture/ARCHITECTURE.md).
 mvn clean test
 mvn package
 java -jar target/opendata-1.0.0.jar --list-plugins
-java -jar target/opendata-1.0.0.jar --plugin ofgem --dry-run
 java -jar target/opendata-1.0.0.jar --plugin openmeteo --dry-run
 ```
 

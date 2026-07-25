@@ -1,6 +1,6 @@
 # ADR-0028: Introduce the OpenMeteo historical weather plugin
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-07-23
 - **Decision owners:** OpenData maintainers
 
@@ -33,6 +33,4 @@ the public archive endpoint.
 
 ## Implementation notes
 
-Code preparation exists, but final integration and persistence verification are
-outstanding. Retain Proposed until the plugin executes through the common
-pipeline and writes an agreed SQL Server schema.
+The plugin now executes through the common plugin coordinator and has an agreed SQL Server schema in `sql/002-openmeteo.sql`. End-to-end verification against a configured SQL Server environment remains an operational test rather than an architectural decision blocker.

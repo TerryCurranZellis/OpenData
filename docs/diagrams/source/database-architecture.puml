@@ -1,10 +1,29 @@
 @startuml
-title Database Architecture
-package Framework { [LoadService] interface DatabaseRepository [DatabaseConnectionManager] }
-package "SQL Server" { [SqlServerRepository] database "Framework Metadata" as Meta database "Plugin Business Tables" as Business }
-[LoadService] --> DatabaseRepository
-DatabaseRepository <|.. [SqlServerRepository]
-[SqlServerRepository] --> [DatabaseConnectionManager]
-[SqlServerRepository] --> Meta
-[SqlServerRepository] --> Business
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Database architecture
+component "Plugin task" as Plugin
+component "JDBC repository" as Repository
+component "DatabaseResourceManager" as Manager
+component "SQLServerResource" as Resource
+component "Apache Commons DBCP pool" as Pool
+database "SQL Server: OpenData" as SQL
+Plugin --> Repository
+Repository --> Manager : getConnection()
+Manager <|.. Resource
+Resource --> Pool
+Pool --> SQL : physical JDBC sessions
+note right of Repository
+One borrowed connection per transaction.
+Closing returns it to the pool.
+end note
 @enduml

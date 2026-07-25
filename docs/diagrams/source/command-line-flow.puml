@@ -1,19 +1,35 @@
 @startuml
-title Command-Line Flow
+!pragma layout smetana
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam packageStyle rectangle
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam ArrowColor #4A5568
+skinparam BorderColor #4A5568
+skinparam BackgroundColor white
+skinparam NoteBackgroundColor #FFF8DC
+skinparam NoteBorderColor #A67C00
+title Command-line processing flow
 start
 :Parse arguments;
-if (help?) then (yes)
-:Print help;
-elseif (version?) then (yes)
-:Print version;
-elseif (list plugins?) then (yes)
-:Query registry;
-:Print descriptors;
-else
-:Require plugin;
-:Load config;
-:Execute pipeline;
+if (Informational command?) then (yes)
+  :Show help, version or plugin list;
+  stop
 endif
-:Record status and duration;
+if (Plugin selection valid?) then (no)
+  :Return command-line failure status;
+  stop
+endif
+:Load application configuration;
+:Resolve plugin descriptors and overrides;
+if (Dry run?) then (yes)
+  :Run without database pool or audit rows;
+else (no)
+  :Initialise SQL Server pool and audit;
+endif
+:Execute selected plugins with bounded parallelism;
+:Aggregate execution status;
+:Log status and elapsed time in finally;
 stop
 @enduml
