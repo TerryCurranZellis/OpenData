@@ -1,9 +1,9 @@
 # Database Architecture
 
 **Document ID:** ARCH-014  
-**Version:** 1.1  
+**Version:** 1.2  
 **Status:** Implemented  
-**Baseline date:** 24 July 2026  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
@@ -23,8 +23,9 @@ The `OpenData` database is divided by responsibility:
   files, errors and schema-version history;
 - `ofgem` contains Ofgem-owned dimensions, price-cap periods, annual price-cap
   facts and reserved component facts;
-- later plugins receive their own schemas rather than adding unrelated columns
-  to `core` tables.
+- `openmeteo` contains locations and daily weather facts;
+- later plugins should receive their own schemas rather than adding unrelated
+  columns to `core` tables.
 
 This implements ADR-0014. Framework operational metadata can therefore evolve
 without forcing all plugin business models into one generic table.
@@ -33,8 +34,11 @@ without forcing all plugin business models into one generic table.
 
 - `DatabaseResourceManager` supplies pooled `Connection` objects and owns the
   physical resource lifecycle.
-- `SQLServerResource` configures and owns Apache DBCP `BasicDataSource`.
-- `DatabaseConnectionManager` is the compatibility facade used by repositories.
+- `SQLServerResource` configures and owns an Apache DBCP generic object pool and
+  pooling driver.
+- current plugin repositories use `DatabaseResourceManager`;
+- `DatabaseConnectionManager` and its older repositories remain compatibility
+  code and are not the active plugin persistence path;
 - repository interfaces express dataset persistence operations;
 - SQL Server repository classes own SQL text, parameter binding and transaction
   handling;
@@ -45,19 +49,21 @@ pool; it does not normally close the physical SQL Server session.
 
 ## Transaction boundaries
 
-One logical dataset replacement is atomic. For Ofgem, all rows for one
-price-cap period are deleted and reinserted within one transaction. Failure
-causes rollback and leaves the previously committed period intact.
+One logical dataset replacement is atomic. For Ofgem, dataset lookup, domain
+ingestion/source-file creation, current-period flag updates, period upsert, fact
+replacement and domain-audit completion use one repository transaction. Failure
+causes rollback and leaves the previously committed state intact.
 
-The period metadata upsert is also transactional. A future refinement may join
-period upsert and fact replacement into one repository transaction if the
-orchestration requires strict all-or-nothing behaviour across both operations.
+OpenMeteo uses one transaction for its location update and daily staging/update/
+insert sequence, protected by a location-scoped SQL Server application lock.
 
 ## Schema management
 
-Numbered SQL scripts are executed in order. Scripts check for existing schemas,
-tables, roles or version rows so that an interrupted installation can be safely
-re-run. `core.schema_version` records successful logical migration steps.
+Numbered SQL scripts are designed for ordered, repeatable execution.
+`core.schema_version` records the older Ofgem migration steps. The current
+scripts are split between `sql/` and `sql/sqlserver/`; use the documented
+combined order until one manifest replaces them. Live repeat-install acceptance
+is outstanding.
 
 The initial approach deliberately avoids adding Flyway or Liquibase. A migration
 tool can be adopted later if branching, rollback or multi-environment deployment
@@ -72,4 +78,4 @@ a privileged operator.
 
 See [database persistence and pooling](019-database-persistence-and-pooling.md),
 [security and credentials](017-security-and-credentials.md) and
-[the database ER diagram](../diagrams/database/opendata-database.puml).
+![OpenData database schemas](../diagrams/generated/opendata-database.svg){width=16cm}

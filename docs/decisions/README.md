@@ -1,9 +1,9 @@
 # Architecture Decisions
 
 **Document ID:** ADR-INDEX-001  
-**Version:** 1.1  
+**Version:** 1.2  
 **Status:** Baseline  
-**Baseline date:** 24 July 2026
+**Baseline date:** 26 July 2026
 
 ---
 
@@ -15,6 +15,10 @@ The repository contains several legacy parallel ADRs that reused numbers
 ADR-0021 through ADR-0026. They are retained to avoid breaking links. The full
 filename is therefore authoritative for those records. New ADRs use the next
 unused number and must never reuse an existing filename or number.
+
+Conflicting ADR-0030 through ADR-0033 files introduced by a later merge are
+retained as superseded aliases. Their canonical replacements are ADR-0038
+through ADR-0041; see the [legacy addendum](ADR-REGISTER-ADDENDUM.md).
 
 An accepted ADR is not rewritten to hide a later change. A replacement decision
 must create a new ADR and mark the earlier record Superseded.

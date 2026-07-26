@@ -1,9 +1,9 @@
 # Operational Failure and Recovery
 
 **Document ID:** ARCH-023  
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Implemented foundation  
-**Baseline date:** 24 July 2026
+**Baseline date:** 26 July 2026
 
 ---
 
@@ -12,8 +12,8 @@
 | Domain | Examples | Recovery principle |
 |---|---|---|
 | configuration | missing password, invalid pool limits | fail before network/database work |
-| discovery | no link, ambiguous links, page changed | preserve run error; no load |
-| download | timeout, non-success status, size limit | remove partial file; retry safely |
+| discovery | no matching link, changed page or overly broad match rules | preserve run error; no load |
+| download | timeout, non-success status or partial file | remove partial file; retry safely |
 | parsing | invalid workbook, missing labels | retain source metadata; no replace |
 | validation | unexpected dimensions or counts | reject load before transaction |
 | persistence | constraint, timeout, lost connection | rollback period replacement |

@@ -1,21 +1,32 @@
 @startuml
 skinparam monochrome true
-participant OpenMeteoPlugin
-participant OpenMeteoApiClient
-participant OpenMeteoRepository
+title OpenMeteo Plugin Pipeline and Persistence
+participant OpenMeteoPlugin as Plugin
+participant OpenMeteoDownloader as Download
+participant OpenMeteoResponseExtractor as Extract
+participant OpenMeteoResponseValidator as Validate
+participant OpenMeteoTransformer as Transform
+participant "load.OpenMeteoRepository" as Load
 database SQLServer
 
-OpenMeteoPlugin -> OpenMeteoApiClient : download(date range)
-OpenMeteoApiClient --> OpenMeteoPlugin : List<DailyWeatherRecord>
-OpenMeteoPlugin -> OpenMeteoRepository : save(records, runId)
-OpenMeteoRepository -> SQLServer : BEGIN TRANSACTION
-OpenMeteoRepository -> SQLServer : sp_getapplock(location key)
-OpenMeteoRepository -> SQLServer : upsert Location
-OpenMeteoRepository -> SQLServer : create/populate #OpenMeteoDaily
-OpenMeteoRepository -> SQLServer : update changed rows
-OpenMeteoRepository -> SQLServer : insert missing rows
-OpenMeteoRepository -> SQLServer : COMMIT data transaction
-OpenMeteoRepository -> SQLServer : DROP #OpenMeteoDaily / restore SET state
-OpenMeteoRepository -> SQLServer : COMMIT session cleanup
-OpenMeteoRepository --> OpenMeteoPlugin : inserted/updated/skipped
+Plugin -> Download : download(date range)
+Download --> Plugin : raw JSON
+Plugin -> Extract : extract(JSON)
+Extract --> Plugin : OpenMeteoResponse
+Plugin -> Validate : validate(response)
+Validate --> Plugin : validated response
+Plugin -> Transform : transform(response)
+Transform --> Plugin : List<DailyWeatherRecord>
+alt dry run
+  Plugin --> Plugin : read/skipped metrics
+else write run
+  Plugin -> Load : save(records, runId)
+  Load -> SQLServer : BEGIN TRANSACTION
+  Load -> SQLServer : sp_getapplock(location key)
+  Load -> SQLServer : upsert Location
+  Load -> SQLServer : stage, update and insert daily rows
+  Load -> SQLServer : COMMIT data transaction
+  Load -> SQLServer : remove temporary/session state
+  Load --> Plugin : inserted/updated/skipped
+end
 @enduml

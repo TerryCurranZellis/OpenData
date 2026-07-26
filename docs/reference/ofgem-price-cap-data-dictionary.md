@@ -1,8 +1,12 @@
 # Ofgem Price-Cap Data Dictionary
 
 **Document ID:** REF-OFGEM-DATA-001  
-**Version:** 1.0  
-**Baseline date:** 24 July 2026
+**Version:** 1.1  
+**Status:** Baseline  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
 
 ## `ofgem.price_cap_period`
 

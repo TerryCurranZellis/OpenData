@@ -1,34 +1,20 @@
-# PlantUML Diagram Index
+# PlantUML Source Directory
 
-**Document ID:** DIAG-INDEX-001  
-**Version:** 1.1  
+**Document ID:** DIAG-SOURCE-001  
+**Version:** 1.0  
 **Status:** Baseline  
-**Baseline date:** 24 July 2026
+**Baseline date:** 26 July 2026
 
 ---
 
-## Existing baseline diagrams
+This is the only canonical location for OpenData PlantUML source. Keep sources
+flat so every generated filename is stable and unique. Generated SVG or PNG
+files are written to `../generated`.
 
-- `system-context.puml`
-- `component-architecture.puml`
-- `package-dependencies.puml`
-- `plugin-registry.puml`
-- `command-line-flow.puml`
-- `configuration-loading-sequence.puml`
-- `plugin-execution-sequence.puml`
-- `pipeline-sequence.puml`
-- `dataset-lifecycle.puml`
-- `download-strategy-classes.puml`
-- `database-architecture.puml`
+Every source must:
 
-## Phase 3 diagrams
-
-- `database-persistence-components.puml`
-- `database-persistence-sequence.puml`
-- `ofgem-price-cap-import-sequence.puml`
-- `sql-server-deployment.puml`
-- `ingestion-run-state.puml`
-- `database/opendata-database.puml`
-
-Render using PlantUML without committing generated images unless the project
-chooses to maintain rendered outputs alongside sources.
+- contain one `@startuml`/`@enduml` document;
+- render without remote includes;
+- use a unique filename;
+- describe current or clearly labelled future behaviour;
+- have a corresponding entry in the [diagram index](../README.md).

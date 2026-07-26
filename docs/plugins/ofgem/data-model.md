@@ -1,7 +1,7 @@
 # Ofgem Price-Cap Data Model
 
 **Document ID:** PLUGIN-OFGEM-MODEL-001  
-**Version:** 1.0  
+**Version:** 1.1  
 **Baseline date:** 24 July 2026
 
 ## Java records
@@ -11,13 +11,14 @@
 | `OfgemPriceCapPeriod` | Effective period and source-column metadata |
 | `OfgemPriceCapLevel` | One dimensional annual amount and lineage |
 | `OfgemPriceCapWorkbookData` | Complete immutable extraction result |
-| `OfgemImportResult` | Persisted period and row-count summary |
+| `OfgemPersistenceResult` | Inserted, updated and skipped load counts |
 
 ## Repository boundary
 
-`OfgemPriceCapRepository` exposes period upsert and fact replacement.
-`SqlServerOfgemPriceCapRepository` implements those operations with prepared JDBC
-statements and explicit transactions.
+`plugin.ofgem.load.OfgemPersistenceRepository` owns provenance, period upsert,
+fact replacement and the explicit transaction. It is the only current Ofgem
+repository; the earlier disconnected repository interface/implementation pair
+has been removed.
 
 ## Keys
 

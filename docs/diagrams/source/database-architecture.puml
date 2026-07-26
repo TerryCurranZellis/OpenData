@@ -1,18 +1,30 @@
 @startuml
+!pragma layout smetana
 title Database Architecture
-package Framework {
-  [LoadService]
-  interface DatabaseRepository
-  [DatabaseConnectionManager]
+skinparam componentStyle rectangle
+
+package "Application" {
+  [PluginExecutionCoordinator] as Coordinator
+  [OfgemPlugin] as Ofgem
+  [OpenMeteoPlugin] as Meteo
 }
-package "SQL Server" {
-  [SqlServerRepository]
-  database "Framework Metadata" as Meta
-  database "Plugin Business Tables" as Business
+
+package "JDBC Infrastructure" {
+  [JdbcPluginRunAudit] as Audit
+  [SQLServerResource] as Resource
+  [Apache DBCP Pool] as Pool
 }
-[LoadService] --> DatabaseRepository
-DatabaseRepository <|.. [SqlServerRepository]
-[SqlServerRepository] --> [DatabaseConnectionManager]
-[SqlServerRepository] --> Meta
-[SqlServerRepository] --> Business
+
+database "core schema" as Core
+database "ofgem schema" as OfgemSchema
+database "openmeteo schema" as MeteoSchema
+
+Coordinator --> Audit
+Ofgem --> Resource
+Meteo --> Resource
+Audit --> Resource
+Resource --> Pool
+Pool --> Core
+Pool --> OfgemSchema
+Pool --> MeteoSchema
 @enduml

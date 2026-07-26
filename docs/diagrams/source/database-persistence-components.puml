@@ -1,44 +1,38 @@
 @startuml
+!pragma layout smetana
+title Database Persistence Components
 skinparam componentStyle rectangle
-title OpenData database persistence components
 
-package "Application / services" {
-  [Plugin execution] as plugin
-  [OfgemPriceCapImportService] as service
+package "Runtime audit" {
+  [JdbcPluginRunAudit] as PluginAudit
 }
 
-package "Database abstraction" {
+package "Ofgem" {
+  [OfgemPlugin] as OfgemPlugin
+  [load.OfgemPersistenceRepository] as OfgemRepository
+}
+
+package "OpenMeteo" {
+  [OpenMeteoPlugin] as MeteoPlugin
+  [load.OpenMeteoRepository] as MeteoRepository
+}
+
+package "Database access" {
   interface DatabaseResourceManager
-  [DatabaseConnectionManager] as manager
-  [SQLServerResource] as resource
-  [DatabasePoolConfig] as poolConfig
-  [DatabaseHealthCheck] as health
+  [SQLServerResource] as Resource
+  [DBCP PoolingDriver] as Driver
+  [GenericObjectPool] as Pool
 }
 
-package "Repositories" {
-  interface IngestionAuditRepository
-  [SqlServerIngestionAuditRepository] as auditRepo
-  interface OfgemPriceCapRepository
-  [SqlServerOfgemPriceCapRepository] as ofgemRepo
-}
+database "OpenData SQL Server" as Database
 
-package "Apache DBCP" {
-  [BasicDataSource] as dataSource
-}
-
-database "SQL Server\nOpenData" as sql
-
-plugin --> service
-plugin --> auditRepo
-service --> ofgemRepo
-auditRepo ..|> IngestionAuditRepository
-ofgemRepo ..|> OfgemPriceCapRepository
-auditRepo --> manager
-ofgemRepo --> manager
-health --> manager
-manager --> DatabaseResourceManager
-resource ..|> DatabaseResourceManager
-resource --> poolConfig
-resource --> dataSource
-dataSource --> sql : pooled JDBC
+OfgemPlugin --> OfgemRepository
+MeteoPlugin --> MeteoRepository
+PluginAudit --> DatabaseResourceManager
+OfgemRepository --> DatabaseResourceManager
+MeteoRepository --> DatabaseResourceManager
+Resource ..|> DatabaseResourceManager
+Resource --> Driver
+Driver --> Pool
+Pool --> Database
 @enduml

@@ -1,60 +1,28 @@
-# OpenData Documentation Automation
+# OpenData Automation Scripts
 
-This package provides a PowerShell 5.1-compatible documentation toolchain for the OpenData Framework.
+The maintained documentation commands target Windows PowerShell 5.1.
 
-## Capabilities
+## Entry points
 
-- validates Markdown links and required document metadata;
-- generates a combined Markdown manual;
-- renders PlantUML diagrams;
-- builds HTML, DOCX and PDF outputs with Pandoc;
-- supports an optional corporate Word reference document;
-- creates a generated table of contents and document inventory;
-- cleans generated output;
-- provides one orchestration command for local use and CI.
-
-## Prerequisites
-
-Required:
-
-- PowerShell 5.1 or later;
-- Pandoc available on `PATH`.
-
-Optional:
-
-- Java 17 or later and `plantuml.jar` for diagram rendering;
-- a Pandoc-compatible PDF engine such as MiKTeX, TeX Live or wkhtmltopdf;
-- a Word reference document for corporate DOCX styling.
-
-## Quick start
+| Script | Purpose |
+|---|---|
+| `documentation/Invoke-Documentation.ps1` | Validate, build or clean the technical manual and user guide |
+| `documentation/Render-PlantUml.ps1` | Convert canonical PlantUML sources to SVG without building documentation |
 
 ```powershell
-.\scripts\documentation\Build-Documentation.ps1 -Format All
+# Validate, refresh SVGs, then build HTML, DOCX and PDF manuals
+.\scripts\documentation\Invoke-Documentation.ps1 `
+    -Action Build -Document All -Format All -RenderDiagrams
+
+# Refresh SVGs only
+.\scripts\documentation\Render-PlantUml.ps1 -Format svg -Clean
 ```
 
-Build only HTML:
+The detailed prerequisites, parameters and A4 orientation rules are in the
+[documentation script reference](documentation/README.md). Scripts under
+`documentation/OldScripts` are retained only as historical helpers and are not
+maintained entry points.
 
-```powershell
-.\scripts\documentation\Build-Documentation.ps1 -Format Html
-```
-
-Use a Word reference document:
-
-```powershell
-.\scripts\documentation\Build-Documentation.ps1 `
-    -Format Docx `
-    -ReferenceDoc .\config\OpenData-Reference.docx
-```
-
-Render diagrams and validate without producing manuals:
-
-```powershell
-.\scripts\documentation\Build-Documentation.ps1 `
-    -Format None `
-    -RenderDiagrams `
-    -Validate
-```
-
-## Generated output
-
-Generated files are written below `docs/build/` and `docs/diagrams/generated/`. These folders should normally be excluded from source control except for `.gitkeep` files.
+Generated manuals and PDF vector intermediates are ignored. Generated SVGs are
+committed documentation assets and must remain synchronized one-to-one with
+`docs/diagrams/source`.

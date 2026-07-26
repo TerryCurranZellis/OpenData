@@ -1,40 +1,46 @@
 @startuml
+!pragma layout smetana
 title OpenData Component Architecture
-package Application {
-  [Main]
-  [CLI]
-  [Application Service]
+skinparam componentStyle rectangle
+
+package "Application" {
+  [Main] as Main
+  [CommandLineArgumentsProcessor] as CLI
+  [OpenDataApplication] as AppService
 }
-package Plugin {
-  [Plugin Registry]
-  [Plugin Definition]
-  [Ofgem]
-  [OpenMeteo]
+
+package "Plugin Runtime" {
+  [ClasspathPluginRegistry] as Registry
+  [PropertiesPluginDefinitionLoader] as Definitions
+  [ReflectionPluginFactory] as Factory
+  [PluginExecutionCoordinator] as Coordinator
 }
-package Processing {
-  [Pipeline]
-  [Download Strategies]
-  [Parsers]
-  [Validation]
-  [Transformation]
+
+package "Plugins" {
+  [OfgemPlugin] as Ofgem
+  [OpenMeteoPlugin] as Meteo
 }
-package Infrastructure {
-  [File System]
-  [JDK HTTP]
-  [SQL Repository]
-  [Credential Provider]
+
+package "Infrastructure" {
+  [LoggingManager] as Logging
+  [JdbcPluginRunAudit] as Audit
+  [SQLServerResource] as Pool
+  database "SQL Server" as Database
 }
-[Main] --> [CLI]
-[Main] --> [Application Service]
-[Application Service] --> [Plugin Registry]
-[Application Service] --> [Plugin Definition]
-[Application Service] --> [Pipeline]
-[Pipeline] --> [Download Strategies]
-[Pipeline] --> [Parsers]
-[Pipeline] --> [Validation]
-[Pipeline] --> [Transformation]
-[Download Strategies] --> [JDK HTTP]
-[Download Strategies] --> [File System]
-[Pipeline] --> [SQL Repository]
-[Download Strategies] --> [Credential Provider]
+
+Main --> CLI
+Main --> AppService
+AppService --> Registry
+AppService --> Definitions
+AppService --> Coordinator
+Coordinator --> Factory
+Factory --> Ofgem
+Factory --> Meteo
+AppService --> Logging
+Coordinator --> Audit
+AppService --> Pool
+Audit --> Pool
+Ofgem --> Pool
+Meteo --> Pool
+Pool --> Database
 @enduml

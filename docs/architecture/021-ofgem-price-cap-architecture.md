@@ -1,9 +1,9 @@
 # Ofgem Price-Cap Architecture
 
 **Document ID:** ARCH-021  
-**Version:** 1.0  
-**Status:** Components implemented; runtime orchestration pending  
-**Baseline date:** 24 July 2026
+**Version:** 1.2  
+**Status:** Runtime flow implemented; live write acceptance pending  
+**Baseline date:** 26 July 2026
 
 ---
 
@@ -13,20 +13,23 @@ The initial Ofgem implementation imports the primary levelised default-tariff-ca
 output from the Annex 9 workbook worksheet `1a Levelised DTC`. It does not yet
 import every component or historical worksheet.
 
-## Target flow
+## Implemented flow
 
-The Phase 2 and Phase 3 components support the following flow. Final wiring of
-these steps into the registered Ofgem CLI plugin remains an integration task.
+The registered `OfgemPlugin` implements the following flow:
 
-1. discover the preferred workbook link on the Ofgem landing page;
-2. download to a controlled staging path and calculate SHA-256;
-3. create or update audit records;
-4. open the workbook with Apache POI;
-5. locate the period, source-column reference and payment sections by labels;
-6. map region rows and output columns into typed immutable records;
-7. upsert the period;
-8. replace all facts for that period in one transaction;
-9. complete the ingestion run with counts and status.
+1. `download.OfgemWorkbookDownloader` discovers the preferred workbook link and
+   downloads it to a controlled working path;
+2. `extract.OfgemPriceCapWorkbookExtractor` opens and extracts the workbook with
+   Apache POI;
+3. `transform.validate.OfgemWorkbookDataValidator` rejects duplicate source
+   cells and duplicate business keys;
+4. return metrics immediately in a dry run;
+5. optionally archive the workbook;
+6. `load.OfgemPersistenceRepository` resolves the seeded dataset and creates
+   ingestion/source-file provenance,
+   including SHA-256;
+7. upsert the period and replace all facts for it in one transaction;
+8. complete domain ingestion and plugin-run audit records.
 
 ## Domain model
 
@@ -40,8 +43,9 @@ column and current flag. `OfgemPriceCapLevel` represents one annual amount by:
 - VAT inclusion flag;
 - source worksheet and source cell.
 
-`OfgemPriceCapWorkbookData` is the immutable extraction boundary and
-`OfgemImportResult` reports the persisted period and row count.
+`OfgemPriceCapWorkbookData` is the immutable extraction boundary.
+`OfgemPersistenceResult` reports inserted, updated and skipped counts to the
+plugin facade.
 
 ## Persistence model
 
@@ -57,13 +61,16 @@ fixed row number. Nevertheless, a publisher layout change can still invalidate
 mappings. Tests should use a representative workbook fixture and assert expected
 sections, regions, values and source cells.
 
-## Outstanding integration
+## Current integration limits
 
-The current package does not add the complete plugin orchestration that creates
-the audit run, performs discovery/download, invokes the extractor/service,
-completes the run and maps the final result into the application run-status enum.
-That wiring should be the next implementation phase and should reuse these
-components without moving SQL into the plugin class.
+The CLI/runtime flow is present and dry-run execution has been demonstrated.
+Before production acceptance:
+
+- complete a live SQL Server write and rollback test;
+- unify the coordinator `core.PluginRun` row with the Ofgem
+  `core.ingestion_run`/`core.source_file` provenance chain;
+- verify workbook extraction against each newly published layout;
+- configure executable packaging and operational exit codes.
 
 ## Deferred scope
 

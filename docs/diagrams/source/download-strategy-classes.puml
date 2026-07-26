@@ -1,4 +1,5 @@
 @startuml
+!pragma layout smetana
 title Download Strategy Classes
 class PluginEndpointDefinition
 class LinkDiscoveryDefinition

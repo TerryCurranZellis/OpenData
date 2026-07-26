@@ -1,9 +1,9 @@
 # Ingestion Audit and Provenance
 
 **Document ID:** ARCH-020  
-**Version:** 1.0  
-**Status:** Implemented foundation  
-**Baseline date:** 24 July 2026
+**Version:** 1.1  
+**Status:** Implemented transitional models  
+**Baseline date:** 26 July 2026
 
 ---
 
@@ -14,16 +14,27 @@ it ran, what was loaded, what failed and whether a retry is safe.
 
 ## Core records
 
+- `core.PluginRun` records coordinator status, worker, UUID and
+  read/insert/update/skip metrics;
 - `core.dataset` identifies the logical dataset and plugin;
 - `core.ingestion_run` records start, finish, status, counters and duration;
 - `core.source_file` records source URI, local name, size, media type and SHA-256;
 - `core.ingestion_error` records stage, row, field and diagnostic details;
 - `core.schema_version` records installed database changes.
 
+The runtime therefore has two related audit models. Every write-mode plugin task
+uses `core.PluginRun`. Ofgem also creates `core.ingestion_run` and
+`core.source_file` records inside its domain transaction. OpenMeteo uses the
+`core.PluginRun` UUID as `DailyWeather.LastRunId`; Ofgem facts use the separate
+ingestion identity. This is a transitional implementation and unification is a
+critical gap.
+
 ## Status lifecycle
 
-The terminal statuses are `SUCCEEDED`, `SUCCEEDED_WITH_REJECTIONS`, `FAILED`
-and `CANCELLED`. `STARTED` is the only non-terminal persisted state.
+`core.ingestion_run` uses terminal statuses `SUCCEEDED`,
+`SUCCEEDED_WITH_REJECTIONS`, `FAILED` and `CANCELLED`; `STARTED` is
+non-terminal. `core.PluginRun` uses `SUCCESS`, `DRY_RUN`, `FAILED` and
+`CANCELLED`; `RUNNING` is non-terminal. Dry runs currently create neither model.
 
 A process that terminates unexpectedly can leave a run in `STARTED`. Recovery
 reporting should classify old `STARTED` rows as abandoned, but must not rewrite
@@ -37,6 +48,13 @@ core.dataset
         -> core.source_file
         -> core.ingestion_error
         -> ofgem.price_cap_level
+```
+
+The coordinator audit is currently parallel to this chain:
+
+```text
+core.PluginRun
+    -> openmeteo.DailyWeather.LastRunId
 ```
 
 Each Ofgem fact row stores the ingestion run plus its workbook worksheet and cell.

@@ -39,5 +39,11 @@ name clashes and hidden process state.
 
 ## Implementation notes
 
-Implemented by `SQLServerResource`, `DatabasePoolConfig`,
-`DatabasePoolSnapshot` and `DatabaseConnectionManager`.
+The current runtime uses `DatabasePoolConfiguration`, `SQLServerResource`,
+`DatabasePoolSnapshot` and `DatabaseResourceManager`.
+
+**Implementation variance, 26 July 2026:** `SQLServerResource` currently uses a
+process-global singleton, DBCP `PoolingDriver` and `GenericObjectPool`, which
+conflicts with the rejected singleton/registered-driver alternative above.
+Either the implementation must return to the accepted `BasicDataSource`
+ownership model or a superseding ADR must accept the current lifecycle.

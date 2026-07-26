@@ -1,5 +1,13 @@
 # OpenMeteo SQL Server schema reference
 
+**Document ID:** REF-OPENMETEO-SCHEMA-001  
+**Version:** 1.1  
+**Status:** Baseline  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
+
 ## `core.PluginRun`
 
 One row per plugin task. `RunId` is also the correlation id used in logging. A task starts as `RUNNING` and ends as `SUCCESS`, `FAILED` or `CANCELLED`. Dry runs do not create audit rows.

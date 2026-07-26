@@ -1,6 +1,6 @@
 # ADR-0032: Store OpenMeteo data in dedicated relational tables
 
-**Status:** Accepted  
+**Status:** Superseded by [ADR-0040](ADR-0040-openmeteo-relational-storage.md)  
 **Date:** 24 July 2026
 
 ## Context

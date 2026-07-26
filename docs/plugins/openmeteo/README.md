@@ -7,12 +7,16 @@
 ## Processing
 
 1. Resolve the effective date range in the configured timezone.
-2. Call the Open-Meteo archive API for daily minimum, maximum and mean 2 m temperature, sunrise, sunset, daylight duration and WMO weather code.
-3. Parse and validate aligned daily arrays.
-4. Convert the response into immutable `DailyWeatherRecord` values.
-5. In a dry run, report every record as read/skipped and perform no database access.
-6. In a normal run, persist all records in one SQL Server transaction.
-7. Before returning the physical SQL Server session to the pool, remove the local staging table and restore session-level `SET` state.
+2. `download.OpenMeteoDownloader` calls the Open-Meteo archive API and returns
+   raw JSON.
+3. `extract.OpenMeteoResponseExtractor` parses the response model.
+4. `transform.validate.OpenMeteoResponseValidator` validates aligned daily
+   arrays.
+5. `transform.OpenMeteoTransformer` converts the response into immutable
+   `transform.model.DailyWeatherRecord` values.
+6. In a dry run, report every record as read/skipped and perform no database access.
+7. In a normal run, `load.OpenMeteoRepository` persists all records in one SQL Server transaction.
+8. Before returning the physical SQL Server session to the pool, remove the local staging table and restore session-level `SET` state.
 
 ## Storage
 

@@ -10,7 +10,8 @@ This document describes the development standards and processes used throughout 
 
 # Project Philosophy
 
-The OpenData Framework is designed as an enterprise-grade Java framework for downloading, validating, transforming and importing Open Data into relational databases.
+The OpenData Framework is an actively developed Java command-line framework for
+downloading, validating, transforming and importing public data into SQL Server.
 
 The project is built around the following principles:
 
@@ -50,11 +51,12 @@ The recommended development environment is:
 | Component | Version |
 |-----------|---------|
 | Java | 17 (LTS) |
-| Maven | Latest Stable |
+| Maven | 3.9 or later |
 | IDE | Apache NetBeans (recommended) |
 | Database | Microsoft SQL Server |
 | Git | Latest Stable |
-| PowerShell | 5.2 or later |
+| Windows PowerShell | 5.1 |
+| Pandoc | Current supported release |
 
 The project should compile on any operating system supporting Java 17.
 
@@ -111,7 +113,8 @@ Use UTF-8 encoding.
 
 Maximum line length should normally be 120 characters.
 
-Opening braces should appear on the following line for classes and methods where this matches the established project style.
+Opening braces should remain on the declaration line, matching the current
+source style.
 
 ---
 
@@ -153,17 +156,15 @@ Examples include:
 - DataParser
 - Validator
 - DatabaseRepository
-- PipelineStep
+- OpenDataPlugin
 
 ---
 
 ## Dependency Injection
 
-Constructor injection should be used throughout the project.
-
-Avoid creating dependencies using "new" inside business logic.
-
-Dependencies should be supplied by the application context.
+Use constructor injection for replaceable or testable collaborations.
+Application entry points and composition boundaries may create concrete
+implementations explicitly; no dependency-injection framework is used.
 
 ---
 
@@ -187,7 +188,9 @@ Wrap low-level exceptions in framework-specific exceptions where appropriate.
 
 ## Logging
 
-Do not use System.out.println().
+Business and infrastructure code should use `java.util.logging`. The CLI
+boundary may use standard output for help, version and registry-listing
+responses.
 
 Use the framework logging infrastructure.
 
@@ -251,7 +254,9 @@ Any significant code change should include updates to the relevant documentation
 
 Documentation should be written in Markdown.
 
-Architecture diagrams should be maintained using PlantUML.
+Architecture diagrams should be maintained as canonical PlantUML under
+`docs/diagrams/source`; documents embed the committed SVGs under
+`docs/diagrams/generated`.
 
 Do not allow documentation to become out of date.
 
@@ -277,6 +282,13 @@ All new functionality should include unit tests where practical.
 Bug fixes should include regression tests whenever possible.
 
 The project should always build successfully before a Pull Request is submitted.
+
+Documentation changes should also pass:
+
+```powershell
+.\scripts\documentation\Invoke-Documentation.ps1 -Action Test -FailOnWarning
+.\scripts\documentation\Render-PlantUml.ps1 -Format svg -Clean
+```
 
 ---
 

@@ -1,4 +1,5 @@
 @startuml
+!pragma layout smetana
 title Phase 1 Plugin Registry
 [PluginRegistry]
 [ClasspathPluginRegistry]

@@ -1,4 +1,9 @@
-# Logging and connection-pool operations
+# Logging and Connection-Pool Operations
+
+**Document ID:** OPS-LOG-POOL-001  
+**Version:** 1.1  
+**Status:** Baseline  
+**Baseline date:** 26 July 2026
 
 ## Logging
 

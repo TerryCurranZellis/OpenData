@@ -1,15 +1,17 @@
 @startuml
+!pragma layout smetana
 title OpenData System Context
 left to right direction
 actor Operator
-rectangle "OpenData Framework" as App
-cloud "Dataset Publishers\nAPIs, files, HTML" as Publishers
-database "SQL Server" as DB
-folder "Work / Archive / Failed" as FS
-rectangle "Credential Provider" as Creds
-Operator --> App : CLI
+rectangle "OpenData Java Application" as App
+file "External Override File" as Config
+cloud "Ofgem and Open-Meteo" as Publishers
+database "SQL Server" as Database
+folder "Work, Archive and Logs" as Files
+
+Operator --> App : command
+App --> Config : read
 App --> Publishers : HTTPS
-App --> Creds : resolve reference
-App --> FS : artefacts
-App --> DB : JDBC
+App --> Database : pooled JDBC
+App --> Files : read and write
 @enduml

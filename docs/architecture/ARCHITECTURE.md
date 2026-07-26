@@ -1,15 +1,19 @@
 # OpenData Architecture Manual
 
 **Document ID:** ARCH-INDEX-001  
-**Version:** 1.1  
+**Version:** 1.2  
 **Status:** Baseline  
-**Baseline date:** 24 July 2026  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
 
-The numbered documents describe the current modular-monolith architecture and
-explicitly distinguish implemented, proposed, deferred and shelved work.
+The numbered documents describe the current modular-monolith architecture.
+Concrete Ofgem and OpenMeteo flows execute through a bounded plugin coordinator;
+documents distinguish that implementation from reusable framework contracts and
+deferred work.
+
+::: {.docx-linear-table}
 
 | Document | Subject |
 |---|---|
@@ -38,4 +42,8 @@ explicitly distinguish implemented, proposed, deferred and shelved work.
 | [023](023-operational-failure-and-recovery.md) | Operational Failure and Recovery |
 | [024](024-architecture-traceability.md) | Architecture Traceability |
 
+:::
+
 Principal diagrams are indexed in [the diagram directory](../diagrams/README.md).
+Known implementation mismatches are recorded in the
+[current gap analysis](../review/DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md).

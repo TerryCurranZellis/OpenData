@@ -1,6 +1,6 @@
 # ADR-0028: Introduce the OpenMeteo historical weather plugin
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-07-23
 - **Decision owners:** OpenData maintainers
 
@@ -29,10 +29,12 @@ the public archive endpoint.
 
 - large ranges may require batching;
 - upstream historical data can be revised;
-- the weather persistence schema and complete runtime orchestration remain open.
+- large date ranges can put pressure on the remote service and transaction size.
 
 ## Implementation notes
 
-Code preparation exists, but final integration and persistence verification are
-outstanding. Retain Proposed until the plugin executes through the common
-pipeline and writes an agreed SQL Server schema.
+Implemented by the registered `OpenMeteoPlugin`, provider-local
+`OpenMeteoDownloader`, response extractor/validator/transformer,
+`load.OpenMeteoRepository`, `openmeteo.Location` and
+`openmeteo.DailyWeather`.
+Production acceptance still requires a live write and idempotency test.

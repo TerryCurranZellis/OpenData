@@ -23,4 +23,4 @@ Archived inputs support reprocessing without another network request. Each run
 should record software and plugin configuration versions. Dataset-specific keys,
 release dates or checksums support idempotency.
 
-See [dataset-lifecycle.puml](../diagrams/dataset-lifecycle.puml).
+![Dataset lifecycle](../diagrams/generated/dataset-lifecycle.svg){width=16cm}

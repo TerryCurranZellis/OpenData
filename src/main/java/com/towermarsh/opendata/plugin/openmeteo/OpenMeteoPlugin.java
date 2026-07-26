@@ -11,6 +11,14 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.plugin.OpenDataPlugin;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
+import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
+import com.towermarsh.opendata.plugin.openmeteo.download.OpenMeteoDownloader;
+import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
+import com.towermarsh.opendata.plugin.openmeteo.extract.OpenMeteoResponseExtractor;
+import com.towermarsh.opendata.plugin.openmeteo.load.OpenMeteoRepository;
+import com.towermarsh.opendata.plugin.openmeteo.transform.OpenMeteoTransformer;
+import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;
+import com.towermarsh.opendata.plugin.openmeteo.transform.validate.OpenMeteoResponseValidator;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -22,27 +30,41 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
     private static final Logger LOGGER = Logger.getLogger(OpenMeteoPlugin.class.getName());
 
     private final OpenMeteoConfiguration configuration;
-    private final OpenMeteoApiClient apiClient;
+    private final OpenMeteoDownloader downloader;
+    private final OpenMeteoResponseExtractor extractor;
+    private final OpenMeteoResponseValidator validator;
+    private final OpenMeteoTransformer transformer;
 
     public OpenMeteoPlugin(final PluginDefinition definition) {
         this(OpenMeteoConfiguration.from(definition));
     }
 
     public OpenMeteoPlugin(final OpenMeteoConfiguration configuration) {
-        this(configuration, new OpenMeteoApiClient(configuration));
+        this(
+                configuration,
+                new OpenMeteoDownloader(configuration),
+                new OpenMeteoResponseExtractor(),
+                new OpenMeteoResponseValidator(),
+                new OpenMeteoTransformer());
     }
 
     OpenMeteoPlugin(
             final OpenMeteoConfiguration configuration,
-            final OpenMeteoApiClient apiClient) {
+            final OpenMeteoDownloader downloader,
+            final OpenMeteoResponseExtractor extractor,
+            final OpenMeteoResponseValidator validator,
+            final OpenMeteoTransformer transformer) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
-        this.apiClient = Objects.requireNonNull(apiClient, "apiClient");
+        this.downloader = Objects.requireNonNull(downloader, "downloader");
+        this.extractor = Objects.requireNonNull(extractor, "extractor");
+        this.validator = Objects.requireNonNull(validator, "validator");
+        this.transformer = Objects.requireNonNull(transformer, "transformer");
     }
 
     @Override
     public PluginMetrics execute(final PluginExecutionContext context) throws OpenMeteoException {
         Objects.requireNonNull(context, "context");
-        final List<DailyWeatherRecord> records = apiClient.download();
+        final List<DailyWeatherRecord> records = execute();
         LOGGER.info(() -> "OpenMeteo produced %d daily records".formatted(records.size()));
         if (context.dryRun()) {
             return new PluginMetrics(records.size(), 0, 0, records.size());
@@ -56,15 +78,20 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
                 persistence.skipped());
     }
 
-    /** Legacy download-only entry point retained for focused tests and callers. */
+    /** Runs the download, extract, validate, and transform stages without loading. */
     public List<DailyWeatherRecord> execute() throws OpenMeteoException {
-        return apiClient.download();
+        return process(downloader.download());
     }
 
     public List<DailyWeatherRecord> execute(
             final LocalDate startDate,
             final LocalDate endDate) throws OpenMeteoException {
-        return apiClient.download(startDate, endDate);
+        return process(downloader.download(startDate, endDate));
+    }
+
+    private List<DailyWeatherRecord> process(final String json) throws OpenMeteoException {
+        final var response = validator.validate(extractor.extract(json));
+        return transformer.transform(response, configuration);
     }
 
     public OpenMeteoConfiguration configuration() {

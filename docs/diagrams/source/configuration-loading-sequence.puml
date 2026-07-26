@@ -1,17 +1,23 @@
 @startuml
 title Configuration Loading
 actor Operator
-participant CLI
-participant PluginRegistry as Registry
-participant BootstrapConfigurationLoader as Bootstrap
+participant CommandLineArgumentsProcessor as CLI
+participant OverrideConfiguration as Override
+participant ApplicationRuntimeConfiguration as Runtime
+participant ClasspathPluginRegistry as Registry
 participant PropertiesPluginDefinitionLoader as Loader
-participant ApplicationConfigurationService as Service
-Operator -> CLI : --plugin id [--file]
-CLI --> Service : arguments
-Service -> Registry : requireEnabled(id)
-Service -> Bootstrap : load application.properties
-Bootstrap --> Service : BootstrapConfig
-Service -> Loader : plugin properties + overrides
-Loader --> Service : PluginDefinition
-Service --> Operator : ApplicationConfig via execution
+participant OpenDataApplication as Application
+
+Operator -> CLI : --plugin id [--file settings]
+CLI --> Application : CommandLineArguments
+Application -> Override : load(optional file)
+Override --> Application : application and plugin scopes
+Application -> Runtime : load(application overrides)
+Runtime --> Application : database, execution, logging
+Application -> Registry : resolve enabled descriptors
+Registry --> Application : selected descriptors
+loop each selected plugin
+  Application -> Loader : classpath properties + scoped overrides
+  Loader --> Application : validated PluginDefinition
+end
 @enduml

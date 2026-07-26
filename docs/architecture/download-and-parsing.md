@@ -1,9 +1,12 @@
 # Download and Parsing Architecture
 
 **Document ID:** ARCH-DOWNLOAD-001  
-**Version:** 1.0  
-**Status:** Draft  
-**Last Updated:** 23 July 2026
+**Version:** 1.1  
+**Status:** Implemented shared components; extension gaps identified  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
 
 ## Purpose
 
@@ -15,10 +18,11 @@ HTML landing-page, CSV and Excel sources.
 ```text
 PluginEndpointDefinition
     -> download strategy
-    -> archived raw resource
-    -> parser selected by DatasetFormat
+    -> working resource
+    -> parser selected from the file extension by DataParserFactory
     -> List<Map<String,String>> (current transitional model)
     -> validation and transformation
+    -> optional plugin-owned archive/persistence
 ```
 
 ## Download Strategies
@@ -54,13 +58,19 @@ Relative URLs are resolved against the landing-page URI.
 `ExcelDataParser` uses Apache POI and supports XLS and XLSX through
 `WorkbookFactory`. Parser behaviour is represented by `ExcelParserOptions`.
 
+### JSON
+
+`JsonDataParser` uses Jackson. The OpenMeteo live path uses the provider-local
+`OpenMeteoResponseExtractor`, `OpenMeteoResponseValidator` and
+`OpenMeteoTransformer` because its parallel-array response needs typed,
+cross-field validation.
+
 ## Transitional Result Model
 
 The existing `DataParser` interface returns `List<Map<String,String>>`. This
 overlay deliberately retains that contract to minimise integration risk.
 
-A later refactor should introduce `DataRecord` and `DataTable`, after the
-download and plugin execution paths are stable.
+A typed `DataRecord`/`DataTable` replacement remains an open extension decision.
 
 ## Error Handling
 
@@ -74,7 +84,7 @@ Interrupted HTTP requests restore the thread interrupt flag.
 
 - API-key and OAuth authentication decorators;
 - ZIP extraction;
-- JSON streaming;
+- streaming JSON for very large responses;
 - HTML table parsing;
 - browser automation as a last resort;
 - checksum validation;

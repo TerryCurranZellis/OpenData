@@ -10,12 +10,15 @@ control. Normal runtime access is granted through role `opendata_app`.
 2. `010-create-core-schema.sql`
 3. `020-create-ofgem-schema.sql`
 4. `030-seed-reference-data.sql`
-5. `090-grant-application-permissions.sql`
+5. `../001-core-plugin-run.sql`
+6. `../002-openmeteo.sql`
+7. `090-grant-application-permissions.sql`
+8. `../003-permissions.sql`
 
 Run script 001 with a privileged server identity and a SQLCMD variable for the
-local password. Run the remaining scripts against database `OpenData` in numeric
-order. The scripts are designed to be safely rerunnable and record logical
-versions in `core.schema_version`.
+local password. Run the remaining scripts against database `OpenData` in the
+combined order above. The split between folders is transitional and tracked as
+a migration-manifest gap.
 
 ## Security
 

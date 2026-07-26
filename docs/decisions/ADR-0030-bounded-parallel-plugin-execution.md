@@ -1,6 +1,6 @@
 # ADR-0030: Use bounded parallel plugin execution
 
-**Status:** Accepted  
+**Status:** Superseded by [ADR-0038](ADR-0038-bounded-parallel-plugin-execution.md)  
 **Date:** 24 July 2026
 
 ## Context

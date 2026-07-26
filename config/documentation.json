@@ -1,6 +1,9 @@
 {
   "projectTitle": "OpenData Framework",
   "manualTitle": "OpenData Framework Technical Documentation",
+  "userGuideTitle": "OpenData Framework User Guide",
+  "technicalOutputBaseName": "OpenData-Technical-Documentation",
+  "userOutputBaseName": "OpenData-User-Guide",
   "author": "OpenData Framework Project",
   "language": "en-GB",
   "dateFormat": "dd MMMM yyyy",
@@ -9,22 +12,12 @@
   "diagramSourceDirectory": "docs/diagrams/source",
   "diagramOutputDirectory": "docs/diagrams/generated",
   "plantUmlJar": "tools/plantuml.jar",
-  "referenceDoc": "config/OpenData-Reference.docx",
+  "referenceDoc": "docs/_templates/template.docx",
+  "landscapeFilter": "docs/_filters/landscape.lua",
+  "latexLandscapeHeader": "docs/_includes/landscape.tex",
   "pdfEngine": "xelatex",
-  "includePatterns": [
-    "README.md",
-    "architecture/*.md",
-    "development/*.md",
-    "standards/*.md",
-    "guides/*.md",
-    "reference/*.md",
-    "roadmap/*.md",
-    "decisions/*.md"
-  ],
-  "excludePatterns": [
-    "_templates/**",
-    "_includes/**",
-    "build/**",
-    "diagrams/**"
-  ]
+  "portraitImageWidthCm": 16,
+  "portraitImageHeightCm": 24,
+  "landscapeImageWidthCm": 22.5,
+  "landscapeImageHeightCm": 14.5
 }

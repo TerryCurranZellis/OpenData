@@ -15,7 +15,7 @@ explicit SQL and transaction control.
 
 Define repository interfaces at dataset boundaries and implement them with JDBC,
 prepared statements and explicit SQL Server SQL. Service and parser layers must
-not contain SQL. Repository constructors receive `DatabaseConnectionManager`.
+not contain SQL. Repository constructors receive a database resource abstraction.
 
 ## Consequences
 
@@ -36,3 +36,9 @@ not contain SQL. Repository constructors receive `DatabaseConnectionManager`.
 
 JPA/Hibernate and Spring Data were rejected for the initial modular monolith.
 They may be reconsidered only if domain complexity outweighs explicit JDBC.
+
+## Implementation note
+
+Active plugin repositories receive `DatabaseResourceManager`. Older repositories
+still receive `DatabaseConnectionManager`; consolidating the two abstractions is
+tracked as cleanup and does not change the explicit-JDBC decision.

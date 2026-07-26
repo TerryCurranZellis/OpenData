@@ -1,9 +1,9 @@
 # System Overview
 
 **Document ID:** ARCH-002  
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Baseline  
-**Baseline date:** 23 July 2026  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
@@ -21,20 +21,24 @@ data into SQL Server.
 |---|---|
 | Operator | Selects a plugin and supplies overrides |
 | Publisher | Provides API, file or HTML page |
-| Credential provider | Resolves secret references |
+| External override file | Supplies application and per-plugin overrides |
 | File system | Stores raw and intermediate artefacts |
 | SQL Server | Initial relational target |
-| Documentation toolchain | Publishes Markdown and PlantUML |
+| Documentation toolchain | Renders PlantUML and publishes Markdown, HTML, DOCX or PDF |
 
 ## Capabilities and status
 
-CLI, logging and structured properties are implemented. Registry-driven listing,
-Commons CSV, JSoup discovery and Apache POI form the consolidated integration
-baseline. Validation, ETL and database services are foundations. Complete
-pipeline history and database plugin configuration are not complete.
+CLI, structured configuration, classpath plugin registration, reflection-based
+plugin construction, bounded execution, contextual logging and pooled database
+access are implemented. Ofgem and OpenMeteo are executable reference plugins.
+The reusable ETL interfaces remain contracts rather than a generic runtime
+pipeline. Database-backed plugin configuration, internal scheduling and a
+production secret provider are not implemented.
 
 ## Constraint
 
 Dataset names, URLs and listing text must not be hard-coded in `Main`.
 
-See [system-context.puml](../diagrams/system-context.puml).
+::: {.landscape}
+![OpenData system context](../diagrams/generated/system-context.svg){width=22.5cm}
+:::

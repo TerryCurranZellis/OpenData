@@ -1,9 +1,9 @@
 # Logging Architecture
 
 **Document ID:** ARCH-012  
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Baseline  
-**Baseline date:** 23 July 2026  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
@@ -12,13 +12,18 @@
 OpenData uses `java.util.logging`; framework code does not require SLF4J or
 Log4j.
 
+One console handler and one rotating file handler are shared. The formatter
+includes timestamp, level, worker thread, plugin id, run UUID, logger and
+message. A `ThreadLocal` `PluginLogContext` is opened and closed by the
+coordinator because executor threads are reused.
+
 `INFO` records lifecycle milestones, `WARNING` recoverable anomalies, `SEVERE`
-run failures and `FINE` diagnostics. Startup, selected plugin/configuration
-version, download counts, parser statistics, validation results, transaction
-outcome, status and duration are logged.
+run failures and `FINE` diagnostics. `--verbose` enables `FINE`.
 
 API keys, passwords, tokens, secret files and credential-bearing URLs are never
 logged. Headers/query parameters are redacted before diagnostics.
 
-The entry point logs final status and elapsed duration in `finally`. A future run
-identifier should correlate log and database records.
+The entry point logs final status and elapsed duration in `finally`. Each plugin
+task has a UUID shared by contextual logs and `core.PluginRun`. The Ofgem domain
+ingestion row currently uses a separate identity; this is a documented audit
+model gap.

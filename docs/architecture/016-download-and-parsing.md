@@ -20,7 +20,10 @@ CSV uses Commons CSV, JSON uses Jackson and XLS/XLSX uses Apache POI. HTML-table
 and ZIP stages are planned.
 
 `String.split` is prohibited for general CSV. Excel formatting uses
-`DataFormatter` and optional formula evaluation. Raw files are archived before
-parsing.
+`DataFormatter` and optional formula evaluation. Source retention is
+plugin-specific: Ofgem optionally archives after successful extraction in write
+mode; the generic parsers and OpenMeteo path do not archive automatically.
 
-See [download-strategy-classes.puml](../diagrams/download-strategy-classes.puml).
+::: {.landscape}
+![Download strategy classes](../diagrams/generated/download-strategy-classes.svg){width=22.5cm}
+:::

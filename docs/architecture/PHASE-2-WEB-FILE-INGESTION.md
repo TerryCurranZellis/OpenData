@@ -1,13 +1,21 @@
 # Phase 2: Web File Ingestion
 
+**Document ID:** ARCH-PHASE-2-001  
+**Version:** 1.1  
+**Status:** Historical phase design; discovery and parsing subsequently implemented  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
+
 ## Purpose
 
 Many public-data publishers do not expose a permanent dataset URL. Instead,
 they publish a landing page whose links change when a new workbook or CSV file
-is released. The framework therefore needs a reusable discovery stage before
-the existing download and parse stages.
+is released. This historical phase introduced the reusable discovery stage that
+now precedes download and parsing for Ofgem.
 
-## Pipeline
+## Historical target pipeline
 
 ```text
 Landing page
@@ -21,9 +29,9 @@ HighestScoringLinkSelector
 HttpDataDownloader
     ↓
 DataParserFactory
-    ├── CsvDataParser (Apache Commons CSV)
-    ├── ExcelDataParser (Apache POI)
-    └── JsonDataParser (existing)
+    CsvDataParser (Apache Commons CSV)
+    ExcelDataParser (Apache POI)
+    JsonDataParser (Jackson)
 ```
 
 ## Safety decisions
@@ -40,21 +48,20 @@ DataParserFactory
 9. Excel parsing supports both `.xls` and `.xlsx`, named sheets, displaced
    header rows and formula evaluation.
 
-## Plugin configuration planned for the next batch
+## Subsequent implementation
 
-The Ofgem plugin should expose properties similar to:
+The implemented Ofgem definition is
+`src/main/resources/config/plugins/ofgem.properties`. It uses the stable Ofgem
+publication page, `html-link-discovery`, an XLSX href pattern and the link text
+for the final levelised cap rates model. Download timeouts, working/archive
+directories and formula evaluation are typed plugin properties.
 
-```properties
-source.page-uri=https://www.ofgem.gov.uk/...
-source.allowed-extensions=xlsx,xls,csv
-source.required-terms=price cap
-source.excluded-terms=archive,methodology
-source.preferred-terms=annex,levelisation
-parser.sheet-name=
-parser.sheet-index=0
-parser.header-row=0
-parser.first-data-row=1
-```
+Workbook extraction is plugin-specific: `OfgemPriceCapWorkbookExtractor`
+locates the `1a Levelised DTC` worksheet and interprets its structural labels.
+Shared discovery and parser classes remain source-agnostic.
 
-The exact values must be based on the current Ofgem publication page and the
-selected workbook structure, rather than hard-coded in the shared framework.
+The current Ofgem runtime uses `HtmlLinkDiscoveryStrategy` and
+`HtmlLinkResolver`, applying the configured CSS selector and regular
+expressions before choosing the first or last match. The separate
+`JsoupHtmlLinkDiscoverer` and `HighestScoringLinkSelector` remain reusable
+contracts but are not the Ofgem execution path.

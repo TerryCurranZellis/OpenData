@@ -1,26 +1,24 @@
 @startuml
-title OpenData deployment topology
-node "Execution host" {
-  artifact "OpenData Java 17 JAR" as app
-  folder "External configuration" as config
-  folder "Staging / archive" as files
-  folder "Application logs" as logs
-  component "Apache DBCP pool" as pool
-  app --> config
-  app --> files
-  app --> logs
-  app --> pool
-}
-cloud "Public data publishers" as internet
-database "SQL Server\nDatabase: OpenData" as sql
-actor "External scheduler / operator" as scheduler
+!pragma layout smetana
+title OpenData Deployment Topology
 
-scheduler --> app : command-line invocation
-app --> internet : HTTPS discovery/download
-pool --> sql : encrypted JDBC
-note right of sql
-Login/user: OpenData
-Role: opendata_app
-Schemas: core, ofgem
-end note
+actor "Operator or External Scheduler" as Operator
+node "Execution Host" {
+  artifact "OpenData Java 17 classes and dependencies" as Application
+  file "External override properties" as Config
+  folder "Work and archive" as Files
+  folder "JUL logs" as Logs
+  component "Apache DBCP pool" as Pool
+}
+
+cloud "Public data providers" as Providers
+database "SQL Server: OpenData\ncore, ofgem, openmeteo" as Database
+
+Operator --> Application : command-line launch
+Application --> Config : read
+Application --> Files
+Application --> Logs
+Application --> Providers : HTTPS
+Application --> Pool
+Pool --> Database : encrypted JDBC
 @enduml

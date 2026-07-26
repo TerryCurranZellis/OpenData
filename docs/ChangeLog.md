@@ -4,10 +4,29 @@ All notable changes to the OpenData project are documented here.
 
 The format is based on Keep a Changelog. The project is under active development.
 
-## [Unreleased] - 2026-07-22
+## [Unreleased] - 2026-07-26
 
 ### Added
 
+- Executable Ofgem and OpenMeteo plugins.
+- Repeated, comma-separated and `all` plugin selection.
+- Bounded parallel plugin execution and aggregate result reporting.
+- `--parallelism`, `--dry-run` and multi-plugin override scoping.
+- Contextual `java.util.logging` output with worker, plugin and run identifiers.
+- Apache DBCP connection pooling and SQL Server pool health information.
+- Generic `core.PluginRun` runtime audit records.
+- OpenMeteo location and daily-weather persistence with idempotent upserts.
+- SQL Server application locks for same-location OpenMeteo concurrency.
+- Complete user-guide, operations, development, standards and roadmap sections.
+- Separate technical and user-documentation build targets.
+- Standalone PlantUML-to-SVG rendering command.
+- A4 portrait/landscape filters for DOCX and PDF figures.
+- ADR-0038 through ADR-0042 for the current execution and persistence decisions.
+- ADR-0043 for plugin-local pipeline package ownership.
+- Current documentation gap analysis and verification matrix.
+- Separate unresolved toolchain and specification hand-off summary.
+- Java package templates for new plugin config, download, extract, transform,
+  model, validation and load stages.
 - Dedicated `cli` package for command-line concerns.
 - Immutable command-line argument model.
 - Apache Commons CLI argument processor.
@@ -37,33 +56,69 @@ The format is based on Keep a Changelog. The project is under active development
 
 ### Changed
 
+- The plugin registry now creates executable plugins by reflection from the
+  implementation class recorded in each descriptor.
+- Ofgem and OpenMeteo provider code now lives entirely below its plugin id in
+  distinct `config`, `download`, `extract`, `transform` and `load` packages.
+- Root provider classes now contain workflow ordering rather than source,
+  transformation or persistence implementation.
+- The application entry point now coordinates configuration, database lifecycle,
+  audit and plugin execution.
+- Ofgem now performs discovery, download, extraction, optional archiving and
+  transactional persistence through the registered CLI plugin.
+- OpenMeteo ADR-0028 is now Accepted.
+- Diagram sources are canonical under `docs/diagrams/source`; Markdown embeds
+  committed rendered SVG files from `docs/diagrams/generated`.
+- Historical duplicate ADRs for concurrency and OpenMeteo storage are mapped to
+  unique canonical records ADR-0038 through ADR-0041.
 - Confirmed Java 17 as the Maven compiler source and target.
 - Maven project version is now `1.0.0`.
 - Architecture documentation now distinguishes implemented, partial, deferred, and shelved capabilities.
 - SQL Server is described as the current database implementation behind an abstraction rather than complete database independence.
-- Plugin architecture is described as accepted design with runtime registry and pipeline wiring still pending.
+- Plugin architecture is described as implemented for the registered Ofgem and
+  OpenMeteo plugins; the generic stage-contract pipeline remains a framework
+  boundary rather than the runtime orchestrator.
 - Internal scheduling is explicitly documented as deferred.
 - Configuration remains properties-file based while database-hosted plugin settings remain shelved.
-- Application bootstrap now resolves and validates configuration before future plugin execution.
+- Application bootstrap resolves and validates configuration before executable
+  plugin selection and execution.
 - Failure handling now separates command-line, configuration, and unexpected runtime failures.
 - Dependency documentation now includes Jackson, Commons CSV, SQL Server JDBC, Commons CLI, and JUnit 5.
 
 ### Fixed
 
+- Removed unused `app.CommandLineArguments` and `ApplicationRunStatus`.
+- Added operator-facing descriptions to `ExecutionStatus` and final status logs.
+- Removed the disconnected legacy Ofgem import service and repository stack.
+- Corrected the OpenMeteo HTTP user-agent spelling.
+- Moved affected JUnit tests with the production package structure and added
+  validator/status coverage.
+- Removed stale claims that Ofgem orchestration, run identifiers, parallel plugin
+  execution and OpenMeteo persistence were still pending.
+- Replaced Markdown links to PlantUML source files with rendered SVG references.
+- Corrected documentation that implied the Maven artifact was already an
+  executable fat JAR.
+- Corrected version documentation: `--version` now reads the package
+  implementation version and otherwise reports `development`.
 - Documentation no longer describes the current application as production-ready.
 - Documentation no longer claims that the full ETL pipeline is executed by `Main`.
 - Documentation now includes the `cli` package.
-- Documentation now records the difference between Maven version `1.0.0` and the current `--version` banner `0.1.0-SNAPSHOT`.
+- Database configuration examples now use the runtime property names and
+  external-override prefix.
+- SQL Server setup now gives the combined transitional order for Ofgem,
+  `PluginRun` and OpenMeteo scripts.
+- Security and persistence documents now record the tracked-password,
+  unbounded-download and ADR-0030 lifecycle variances.
 
 ### Deferred
 
-- Complete plugin registry and discovery.
-- End-to-end Ofgem plugin execution.
-- Pipeline coordinator integration into `Main`.
-- Framework metadata and run-history persistence.
 - Internal scheduling.
 - Database-backed plugin configuration.
 - Additional database implementations.
+- Executable/fat-JAR packaging and reliable process exit-code mapping.
+- Unification of `core.PluginRun` and `core.ingestion_run`.
+- Production secret-provider integration and removal of classpath passwords.
+- Detailed Ofgem component-value import and historical backfill.
 
 ## [0.1.0] - Initial framework design
 

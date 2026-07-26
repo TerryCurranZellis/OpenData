@@ -42,6 +42,7 @@ entity "openmeteo.DailyWeather" as Weather {
   Sunset : time
   DaylightMinutes : smallint
   WeatherCode : smallint
+  WeatherDescription : nvarchar
   LastRunId : uniqueidentifier <<FK>>
 }
 
@@ -64,6 +65,14 @@ entity "core.source_file" as SourceFile {
   --
   ingestion_run_id : bigint <<FK>>
   sha256 : char(64)
+}
+
+entity "core.ingestion_error" as IngestionError {
+  * ingestion_error_id : bigint <<PK>>
+  --
+  ingestion_run_id : bigint <<FK>>
+  source_file_id : bigint <<FK>>
+  processing_stage : varchar
 }
 
 entity "ofgem.price_cap_period" as Period {
@@ -90,6 +99,8 @@ Location ||--o{ Weather
 PluginRun ||--o{ Weather : LastRunId
 Dataset ||--o{ IngestionRun
 IngestionRun ||--o{ SourceFile
+IngestionRun ||--o{ IngestionError
+SourceFile |o--o{ IngestionError
 SourceFile ||--o{ Period
 Period ||--o{ Level
 IngestionRun ||--o{ Level

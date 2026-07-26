@@ -1,10 +1,27 @@
 # Ingestion Audit Reference
 
 **Document ID:** REF-AUDIT-001  
-**Version:** 1.0  
-**Baseline date:** 24 July 2026
+**Version:** 1.1  
+**Status:** Baseline  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
 
-## Statuses
+---
+
+## Plugin-run statuses
+
+| Status | Terminal | Meaning |
+|---|---|---|
+| `RUNNING` | no | Coordinator task has begun |
+| `SUCCESS` | yes | Plugin completed successfully |
+| `DRY_RUN` | yes | Reserved status; dry runs currently do not persist audit rows |
+| `FAILED` | yes | Plugin or audit completion failed |
+| `CANCELLED` | yes | Task was interrupted or cancelled |
+
+`core.PluginRun` records `RunId`, plugin, timestamps, thread/host, read,
+inserted, updated and skipped counts, plus a truncated error message.
+
+## Domain-ingestion statuses
 
 | Status | Terminal | Meaning |
 |---|---|---|
@@ -36,3 +53,9 @@ are possible future schema additions, not current columns.
 `duration_ms` is calculated from run start and finish timestamps in SQL Server.
 The application should also log monotonic elapsed time for diagnostics, but the
 database record remains the durable operational value.
+
+## Transitional relationship
+
+Ofgem writes a `core.PluginRun` row for the coordinator and a separate
+`core.ingestion_run` row for workbook provenance. OpenMeteo rows link directly
+to `core.PluginRun.RunId`. No current column links the two Ofgem audit records.

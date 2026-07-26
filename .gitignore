@@ -40,6 +40,7 @@ docs/build/*
 !docs/build/.gitkeep
 docs/diagrams/generated/*
 !docs/diagrams/generated/.gitkeep
+!docs/diagrams/generated/*.svg
 
 # Optional local tools and templates
 tools/plantuml.jar

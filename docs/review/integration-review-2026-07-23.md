@@ -66,15 +66,15 @@ loader types.
 
 ### Duplicate command-line model
 
-The repository contains both:
+At the time of this review the repository contained both:
 
 ```text
 com.towermarsh.opendata.app.CommandLineArguments
 com.towermarsh.opendata.cli.CommandLineArguments
 ```
 
-`Main` and the current processor use the `cli` package. The `app` version should
-be checked for references and removed if unused.
+`Main` and the current processor used the `cli` package. The unused `app`
+version was removed in the 26 July 2026 consolidation.
 
 ### CSV parsing
 
@@ -103,9 +103,9 @@ landing page. `HtmlLinkDiscoveryStrategy` then downloads the selected file.
 XLSX. It formats cell values, optionally evaluates formulas, skips hidden and
 blank rows, and preserves column order.
 
-## Files to Review for Removal
+## Files Reviewed for Removal
 
-After confirming no references remain:
+Removed after confirming no references remained:
 
 ```text
 src/main/java/com/towermarsh/opendata/app/CommandLineArguments.java

@@ -1,9 +1,9 @@
 # Project Vision
 
 **Document ID:** ARCH-001  
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Baseline  
-**Baseline date:** 23 July 2026  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
@@ -26,11 +26,16 @@ transformation, not changes throughout the framework.
 - remain understandable to a small development team;
 - keep documentation beside the code.
 
-## Phase 1 scope
+## Current baseline
 
 CSV, JSON, XLS/XLSX, static HTML link discovery, SQL Server and manually invoked
-runs are in scope. Graphical administration, distributed services, browser
-automation, internal scheduling and database-managed plugin definitions are not.
+runs are implemented foundations. Ofgem and OpenMeteo are the installed plugins.
+Graphical administration, distributed services, browser automation, internal
+scheduling and database-managed plugin definitions are deferred or shelved.
+
+Ofgem can retain its source workbook when write-mode archiving is enabled.
+OpenMeteo does not currently archive the raw JSON response, so raw-data
+preservation remains plugin-specific rather than universal.
 
 ## Principles
 

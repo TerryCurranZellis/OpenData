@@ -1,6 +1,6 @@
 # ADR-0033: Add thread and plugin context to java.util.logging
 
-**Status:** Accepted  
+**Status:** Superseded by [ADR-0041](ADR-0041-contextual-jul-for-concurrent-plugins.md)  
 **Date:** 24 July 2026
 
 ## Context

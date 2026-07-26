@@ -2,8 +2,8 @@
 
 **Document ID:** ARCH-PHASE-3-001  
 **Version:** 1.1  
-**Status:** Component implementation complete; runtime integration pending  
-**Baseline date:** 24 July 2026
+**Status:** Historical phase design; runtime integration subsequently implemented  
+**Baseline date:** 26 July 2026
 
 ## Delivered components
 
@@ -24,12 +24,13 @@ Framework metadata is separated from plugin business data, borrowed JDBC
 connections are returned to a managed pool, and Ofgem values retain source-file
 and source-cell lineage.
 
-## Remaining integration
+## Subsequent integration
 
-The package does not yet provide the final Ofgem plugin orchestration that joins
-Phase 2 discovery/download to Phase 3 audit/extract/load and reports one final
-application run status. That should be implemented next using constructor
-injection and the existing service/repository boundaries.
+The original Phase 3 package did not provide final Ofgem orchestration. That
+orchestration is now implemented by
+`com.towermarsh.opendata.plugin.ofgem.OfgemPlugin`. The remaining audit and
+acceptance issues are recorded in
+[the gap analysis](../review/DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md).
 
 ## Detailed documents
 

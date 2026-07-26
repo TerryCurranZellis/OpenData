@@ -1,5 +1,13 @@
 # Database concurrency and idempotency
 
+**Document ID:** ARCH-DB-CONCURRENCY-001  
+**Version:** 1.0  
+**Status:** Implemented for OpenMeteo; live acceptance pending  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
+
 ## Connection ownership
 
 `SQLServerResource` owns one Apache Commons DBCP pool. The pool is shared; JDBC connections are not. Each plugin repository borrows a connection, starts and completes its own transaction, then closes the connection so it returns to the pool.

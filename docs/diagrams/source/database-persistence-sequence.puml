@@ -1,19 +1,19 @@
 @startuml
 title Borrow, use and return a pooled SQL Server connection
 actor "Repository" as repo
-participant DatabaseConnectionManager as manager
 participant SQLServerResource as resource
-participant BasicDataSource as pool
+participant "DBCP PoolingDriver" as driver
+participant GenericObjectPool as pool
 database "SQL Server" as sql
 
-repo -> manager : getConnection()
-manager -> resource : getConnection()
-resource -> pool : getConnection()
+repo -> resource : getConnection()
+resource -> driver : DriverManager.getConnection(pool URL)
+driver -> pool : borrowObject()
 pool -> sql : validate/borrow physical session
 sql --> pool : session ready
-pool --> resource : logical Connection
-resource --> manager : Connection
-manager --> repo : Connection
+pool --> driver : pooled Connection
+driver --> resource : logical Connection
+resource --> repo : Connection
 repo -> sql : prepared statements / transaction
 sql --> repo : results
 repo -> pool : Connection.close()

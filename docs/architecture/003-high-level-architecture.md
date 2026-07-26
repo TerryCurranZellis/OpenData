@@ -1,9 +1,9 @@
 # High-Level Architecture
 
 **Document ID:** ARCH-003  
-**Version:** 1.0  
+**Version:** 1.1  
 **Status:** Baseline  
-**Baseline date:** 23 July 2026  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
@@ -16,19 +16,21 @@ package boundaries.
 
 ## Components
 
-Application entry point, CLI, plugin registry, configuration service, plugin
-implementation, download strategies, parsers, validation, ETL services,
-repository and logging.
+Application entry point, CLI, runtime configuration, plugin registry, plugin
+factory, execution coordinator, plugin implementations, shared acquisition and
+parsing services, audit, pooled repositories and logging.
 
 ## Control flow
 
 ```text
-Main -> CLI -> PluginRegistry -> ConfigurationService -> Plugin
-     -> DownloadStrategy -> Parser -> Validator/Transformer -> Repository
+Main -> CLI -> Application -> PluginRegistry -> Configuration
+     -> PluginExecutionCoordinator -> OpenDataPlugin
+     -> Download/API -> Parse/Transform -> Repository
 ```
 
-The application layer coordinates but does not parse formats or issue
-source-specific SQL. Plugins define source rules but reuse generic HTTP and
-format handling.
+The application layer owns selection, parallelism, database lifecycle and
+aggregate status. Each plugin owns its concrete dataset flow and reuses shared
+acquisition or parsing components where appropriate. JDBC repositories own SQL
+and transaction boundaries.
 
-See [component-architecture.puml](../diagrams/component-architecture.puml).
+![OpenData component architecture](../diagrams/generated/component-architecture.svg){width=16cm}

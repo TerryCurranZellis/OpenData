@@ -1,8 +1,12 @@
 # Database Schema Reference
 
 **Document ID:** REF-DB-SCHEMA-001  
-**Version:** 1.0  
-**Baseline date:** 24 July 2026
+**Version:** 1.1  
+**Status:** Baseline  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
 
 ## Database and principals
 
@@ -17,6 +21,7 @@
 
 | Table | Primary purpose |
 |---|---|
+| `core.PluginRun` | UUID runtime task status and read/write metrics |
 | `core.schema_version` | Installed logical migration versions |
 | `core.dataset` | Dataset/plugin registration |
 | `core.ingestion_run` | Run status, timing, counters and message |
@@ -36,14 +41,25 @@
 | `ofgem.price_cap_component` | Component reference data |
 | `ofgem.price_cap_component_value` | Reserved detailed component fact |
 
+## `openmeteo` schema
+
+| Table | Primary purpose |
+|---|---|
+| `openmeteo.Location` | Stable location key, name, coordinates and timezone |
+| `openmeteo.DailyWeather` | Daily temperature, daylight and weather-code facts |
+
 ## Natural and surrogate keys
 
 - datasets use a stable dataset code;
 - price-cap periods use a surrogate key with a unique effective date range;
 - dimension tables use stable short codes;
 - price-cap facts use a composite dimensional primary key;
-- audit records use identity keys;
+- `core.PluginRun` uses a UUID; ingestion provenance uses identity keys;
 - source files carry a SHA-256 value for provenance and duplicate analysis.
 
-See the [Ofgem data dictionary](ofgem-price-cap-data-dictionary.md) and
-[database ER diagram](../diagrams/database/opendata-database.puml).
+See the [Ofgem data dictionary](ofgem-price-cap-data-dictionary.md).
+
+![OpenData database schemas](../diagrams/generated/opendata-database.svg){width=16cm}
+
+The coexistence of `core.PluginRun` and `core.ingestion_run` is transitional and
+must not be interpreted as the permanent target model.

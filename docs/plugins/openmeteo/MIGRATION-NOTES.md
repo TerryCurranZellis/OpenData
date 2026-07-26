@@ -1,10 +1,18 @@
-# Migration from `WeatherApiClient`
+# Historical Migration from `WeatherApiClient`
+
+**Document ID:** PLUGIN-OPENMETEO-MIGRATION-001  
+**Version:** 1.2  
+**Status:** Historical; migration completed  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
 
 ## Changes
 
-| Existing code | OpenMeto plugin |
+| Earlier code | Current OpenMeteo plugin |
 |---|---|
-| `com.towermarsh.energy.weather` | `com.towermarsh.opendata.plugin.openmeto` |
+| `com.towermarsh.energy.weather` | `com.towermarsh.opendata.plugin.openmeteo` |
 | Hard-coded endpoint | Typed endpoint property |
 | Hard-coded coordinates | Plugin properties |
 | Hard-coded timezone | Plugin property |
@@ -15,13 +23,18 @@
 | `IOException` and `InterruptedException` leak | Plugin-specific checked exception |
 | No response-array validation | Array lengths checked |
 | Request string concatenation | Encoded URI query |
-| No plugin facade | `OpenMetoPlugin` |
+| No plugin facade | `OpenMeteoPlugin` |
 
-## Existing model
+## Result
 
-The supplied code referred to `DailyTemperatureRecord`, but that record was not
-included in the request. The package therefore supplies `DailyWeatherRecord`
-with all fields visible in the constructor call plus coordinates.
+The implemented `DailyWeatherRecord` contains the observation date, configured
+location name and coordinates, temperatures, sunrise/sunset, daylight duration,
+WMO code and description. `OpenMeteoPlugin` is registered and persists those
+records through `load.OpenMeteoRepository`.
 
-If the repository already contains a preferred weather record, either replace
-`DailyWeatherRecord` or add a mapper at the plugin boundary.
+The current implementation also separates raw download, JSON extraction,
+cross-array validation, transformation/model and transactional load into
+provider-local packages.
+
+This file remains only to explain the origin of the current package; it is not
+an implementation plan.

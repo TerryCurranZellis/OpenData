@@ -1,19 +1,20 @@
 @startuml
 title Command-Line Flow
 start
-:Parse arguments;
-if (help?) then (yes)
-:Print help;
-elseif (version?) then (yes)
-:Print version;
-elseif (list plugins?) then (yes)
-:Query registry;
-:Print descriptors;
-else
-:Require plugin;
-:Load config;
-:Execute pipeline;
+:Parse and validate arguments;
+if (Informational command?) then (yes)
+  :Print help, version or plugin list;
+else (no)
+  :Resolve selected enabled plugins;
+  :Load runtime and plugin configuration;
+  if (Dry run?) then (yes)
+    :Use no-op audit and unavailable database;
+  else (no)
+    :Initialise DBCP pool and JDBC audit;
+  endif
+  :Execute selected plugins with bounded parallelism;
+  :Log ordered plugin summaries;
 endif
-:Record status and duration;
+:Log final status and duration;
 stop
 @enduml

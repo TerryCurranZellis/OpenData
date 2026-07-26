@@ -2,20 +2,22 @@
 title Plugin Execution
 actor Operator
 participant Main
-participant Registry
-participant Config
-participant Plugin
-participant Pipeline
-participant Repository
+participant OpenDataApplication as Application
+participant ClasspathPluginRegistry as Registry
+participant PluginExecutionCoordinator as Coordinator
+participant ReflectionPluginFactory as Factory
+participant OpenDataPlugin as Plugin
+
 Operator -> Main : command
-Main -> Registry : require enabled
-Main -> Config : resolve
-Config --> Main : ApplicationConfig
-Main -> Plugin : validate
-Main -> Pipeline : execute
-Pipeline -> Plugin : hooks
-Pipeline -> Repository : load
-Repository --> Pipeline : ImportResult
-Pipeline --> Main : result
-Main --> Operator : status/duration
+Main -> Application : start(arguments)
+Application -> Registry : resolve selected descriptors
+Registry --> Application : enabled descriptors
+Application -> Coordinator : execute(resolved plugins, parallelism, dryRun)
+Coordinator -> Factory : create(resolved plugin)
+Factory --> Coordinator : plugin
+Coordinator -> Plugin : execute(context)
+Plugin --> Coordinator : PluginMetrics
+Coordinator --> Application : PluginExecutionSummary
+Application --> Main : ExecutionStatus
+Main --> Operator : logged status and duration
 @enduml

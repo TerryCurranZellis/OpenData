@@ -1,23 +1,25 @@
 # Security and Credentials
 
 **Document ID:** ARCH-017  
-**Version:** 1.1  
-**Status:** Implemented with production hardening required  
-**Baseline date:** 24 July 2026  
+**Version:** 1.2  
+**Status:** Partial; critical credential remediation required  
+**Baseline date:** 26 July 2026  
 **Minimum Java version:** 17
 
 ---
 
 ## Credential rule
 
-Secrets are never committed to Git, copied into example files, written to logs
-or stored in execution snapshots. Configuration files in the repository contain
-only empty values or credential references.
+The target rule is that secrets are never committed to Git, copied into example
+files, written to logs or stored in execution snapshots. The current
+`config/application.properties` violates that rule by containing a development
+database password. The unused `src/main/resources/application.properties` also
+contains obsolete credential material.
 
-The database password is resolved externally and supplied to
-`ApplicationConfig`. The initial practical provider may be a protected local
-properties file outside the repository. Later providers can include Windows
-Credential Manager, an environment-specific secret store or a vault.
+`OverrideConfiguration` can supply
+`application.database.password` from a protected external properties file.
+There is no environment-variable or secret-provider integration. The
+credential-reference model is not resolved at runtime.
 
 ## SQL Server identity and permissions
 
@@ -26,9 +28,10 @@ Credential Manager, an environment-specific secret store or a vault.
 - application role: `opendata_app`;
 - database: `OpenData`.
 
-The application role receives only the DML and execute permissions required for
-normal imports. It does not receive `db_owner`, `ALTER ANY SCHEMA`, login
-management or database creation permissions.
+SQL scripts create the intended least-privilege role. The split permission
+scripts have not been accepted against a live SQL Server in this baseline, and
+the broader `GRANT ... ON SCHEMA::core` in `sql/003-permissions.sql` should be
+reviewed when the SQL manifests are consolidated.
 
 ## Transport security
 
@@ -45,15 +48,17 @@ provider payloads are prohibited at every log level.
 
 ## Files and provenance
 
-Downloaded files are size-limited and stored in controlled directories. SHA-256
-is used for provenance and duplicate detection; it is not a malware check.
-Source workbook names and cell references are retained as non-secret lineage
-metadata.
+The reusable `HttpDataDownloader` enforces a size limit, but the active Ofgem
+`DirectHttpDownloadStrategy` and OpenMeteo response path do not. Ofgem stores
+SHA-256 source provenance; it is not a malware check. Source workbook names and
+cell references are retained as non-secret lineage metadata.
 
 ## Required production hardening
 
 - protected credential provider;
+- removal and rotation of tracked credential values;
 - trusted SQL Server certificate;
+- bounded downloads on active plugin paths;
 - restricted network path to SQL Server;
 - operating-system permissions on configuration and staging directories;
 - database backup and restore testing;

@@ -59,7 +59,7 @@ public final class Main {
             final Duration duration = Duration.between(startedAt, Instant.now());
             logger.log(Level.INFO,
                     "OpenData finished with status {0}; duration {1} ms",
-                    new Object[]{status.name(), duration.toMillis()});
+                    new Object[]{status.displayName(), duration.toMillis()});
             LoggingManager.shutdown();
         }
     }

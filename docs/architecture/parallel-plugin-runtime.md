@@ -1,8 +1,12 @@
 # Parallel plugin runtime
 
+**Document ID:** ARCH-PARALLEL-RUNTIME-001  
+**Version:** 1.0  
 **Status:** Implemented  
-**Date:** 24 July 2026  
-**Minimum Java:** 17
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
 
 ## Purpose
 

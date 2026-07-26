@@ -1,4 +1,5 @@
 @startuml
+!pragma layout smetana
 title Ingestion run status lifecycle
 [*] --> STARTED
 STARTED --> SUCCEEDED : all required work completed

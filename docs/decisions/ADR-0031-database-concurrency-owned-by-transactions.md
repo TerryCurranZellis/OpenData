@@ -1,6 +1,6 @@
 # ADR-0031: Coordinate concurrent loads in SQL Server transactions
 
-**Status:** Accepted  
+**Status:** Superseded by [ADR-0039](ADR-0039-database-concurrency-owned-by-transactions.md)  
 **Date:** 24 July 2026
 
 ## Context

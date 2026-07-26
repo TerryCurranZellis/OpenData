@@ -1,37 +1,56 @@
 @startuml
-title Canonical Package Dependencies
+!pragma layout smetana
+title Principal Package Dependencies
+top to bottom direction
+
 package app
 package cli
 package config
-package "config.model" as cm
-package plugin
-package "plugin.ofgem" as ofgem
-package "plugin.openmeteo" as om
-package etl
+package "plugin (shared runtime)" as Plugin
+
+package "plugin.<id> (provider)" as Provider {
+  [workflow facade] as Facade
+  [config] as ProviderConfig
+  [download] as ProviderDownload
+  [extract] as ProviderExtract
+  [transform] as ProviderTransform
+  [transform.model] as ProviderModel
+  [transform.validate] as ProviderValidate
+  [load] as ProviderLoad
+}
+
+package discovery
 package download
-package "download.strategy" as ds
 package parser
 package validation
 package database
-package model
 package logging
 package exception
+
 app --> cli
 app --> config
-app --> plugin
-app --> etl
+app --> Plugin
+app --> database
 app --> logging
-config --> cm
-plugin --> cm
-ofgem --> plugin
-ofgem --> parser
-om --> plugin
-om --> parser
-etl --> download
-etl --> parser
-etl --> validation
-etl --> database
-ds --> download
+Plugin --> config
+Plugin --> database
+Plugin --> logging
+Facade --> Plugin
+Facade --> ProviderConfig
+Facade --> ProviderDownload
+Facade --> ProviderExtract
+Facade --> ProviderTransform
+Facade --> ProviderValidate
+Facade --> ProviderLoad
+ProviderDownload --> download
+ProviderDownload --> discovery
+ProviderExtract --> parser
+ProviderTransform --> ProviderModel
+ProviderValidate --> ProviderModel
+ProviderLoad --> ProviderModel
+ProviderLoad --> database
+discovery --> exception
+download --> exception
 parser --> exception
-database --> model
+validation --> exception
 @enduml

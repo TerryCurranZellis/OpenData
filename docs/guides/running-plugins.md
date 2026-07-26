@@ -1,5 +1,13 @@
 # Running plugins
 
+**Document ID:** GUIDE-PLUGIN-RUN-001  
+**Version:** 1.1  
+**Status:** Baseline  
+**Baseline date:** 26 July 2026  
+**Minimum Java version:** 17
+
+---
+
 ## Commands
 
 ```text
@@ -11,7 +19,8 @@ opendata --plugin all
 opendata --plugin all --dry-run
 ```
 
-`--parallelism` accepts 1 to 64. The actual worker count never exceeds the number of selected plugins.
+`--parallelism` accepts 1 to 64. The actual worker count never exceeds the
+number of selected plugins.
 
 ## Override files
 
@@ -31,12 +40,19 @@ plugin.openmeteo.property.start-date.value=2024-01-01
 plugin.ofgem.property.download.request-timeout.value=PT180S
 ```
 
-Unscoped plugin entries are rejected in a multi-plugin run to prevent a property intended for one plugin being applied to every plugin. A database-writing run also rejects a blank `application.database.password`; `--dry-run` may omit it because the pool is not initialised.
+Unscoped plugin entries are rejected in a multi-plugin run to prevent a property
+intended for one plugin being applied to every plugin. A database-writing run
+also rejects a blank `application.database.password`; `--dry-run` may omit it
+because the pool is not initialised.
 
 ## Dry run
 
-`--dry-run` allows API and parsing validation but does not initialise the database pool, create `core.PluginRun` rows or write plugin tables.
+`--dry-run` allows API and parsing validation but does not initialise the
+database pool, create `core.PluginRun` rows or write plugin tables.
 
 ## Outcome
 
-The application does not call `System.exit`. The `finally` block logs an `ExecutionStatus` enum name and elapsed milliseconds. An individual plugin failure does not stop another selected plugin, but the aggregate status becomes `PLUGIN_FAILURE`.
+The application does not call `System.exit`. The `finally` block logs an
+operator-facing `ExecutionStatus.displayName()` and elapsed milliseconds. An individual plugin
+failure does not stop another selected plugin, but the aggregate status becomes
+`PLUGIN_FAILURE`.
