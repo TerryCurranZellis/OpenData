@@ -1,8 +1,8 @@
 @startuml
 title Download Strategy Classes
-record PluginEndpointDefinition
-record LinkDiscoveryDefinition
-record ResolvedDownload
+class PluginEndpointDefinition
+class LinkDiscoveryDefinition
+class ResolvedDownload
 class DirectHttpDownloadStrategy
 class HtmlLinkDiscoveryStrategy
 class HtmlLinkResolver
