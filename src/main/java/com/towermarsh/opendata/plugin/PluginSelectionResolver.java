@@ -8,7 +8,9 @@
 package com.towermarsh.opendata.plugin;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /** Resolves named plugins or every enabled plugin from the registry. */
@@ -27,6 +29,20 @@ public final class PluginSelectionResolver {
             }
             return enabled;
         }
-        return arguments.pluginIds().stream().map(registry::requireEnabled).toList();
+        final List<String> requested = arguments.pluginIds().stream()
+                .map(PluginSelectionResolver::canonicalId)
+                .toList();
+        if (new LinkedHashSet<>(requested).size() != requested.size()) {
+            throw new PluginRegistryException("A plugin was selected more than once.");
+        }
+        return requested.stream().map(registry::requireEnabled).toList();
+    }
+
+    private static String canonicalId(final String pluginId) {
+        final String normalised = pluginId.trim().toLowerCase(Locale.ROOT);
+        return switch (normalised) {
+            case "offgem" -> "ofgem";
+            default -> normalised;
+        };
     }
 }
