@@ -57,9 +57,8 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
     }
 
     private static int score(DiscoveredLink link, List<String> terms) {
-        String fileName = link.fileName().toLowerCase(Locale.ROOT);
-        String descriptive = (link.linkText() + " " + link.title())
-                .toLowerCase(Locale.ROOT);
+        String fileName = normalizeText(link.fileName());
+        String descriptive = normalizeText(link.linkText() + " " + link.title());
         int score = "https".equalsIgnoreCase(link.targetUri().getScheme()) ? 1 : 0;
         for (String term : terms) {
             if (fileName.contains(term)) {
@@ -78,11 +77,17 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
         }
         return terms.stream()
                 .filter(Objects::nonNull)
+                .map(HighestScoringLinkSelector::normalizeText)
                 .map(String::trim)
                 .filter(term -> !term.isEmpty())
-                .map(term -> term.toLowerCase(Locale.ROOT))
                 .distinct()
                 .toList();
+    }
+
+    private static String normalizeText(final String value) {
+        return value.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", " ")
+                .trim();
     }
 
     private record ScoredLink(DiscoveredLink link, int score) {

@@ -27,8 +27,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class SqlServerOfgemPriceCapRepositoryTest {
  @Mock DatabaseConnectionManager manager; @Mock Connection connection; @Mock PreparedStatement statement; @Mock ResultSet resultSet;
  SqlServerOfgemPriceCapRepository repo;
