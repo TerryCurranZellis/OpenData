@@ -104,12 +104,22 @@ public record OpenMeteoConfiguration(
                 Duration.ofSeconds(integer(definition, "database.lock-timeout-seconds", 30)));
     }
 
-    public DateRange resolveDateRange(final LocalDate today) {
-        Objects.requireNonNull(today, "today");
-        final LocalDate effectiveEnd = endDate.orElse(includeCurrentDate ? today : today.minusDays(1));
-        final LocalDate effectiveStart = startDate.orElse(effectiveEnd.minusDays(defaultStartDaysAgo));
-        return new DateRange(effectiveStart, effectiveEnd);
-    }
+    //public DateRange resolveDateRange(final LocalDate today) {
+    //    Objects.requireNonNull(today, "today");
+    //    final LocalDate effectiveEnd = endDate.orElse(includeCurrentDate ? today : today.minusDays(1));
+    //    final LocalDate effectiveStart = startDate.orElse(effectiveEnd.minusDays(defaultStartDaysAgo));
+    //    return new DateRange(effectiveStart, effectiveEnd);
+    //}
+	
+	public DateRange resolveDateRange(final LocalDate today) {
+		Objects.requireNonNull(today, "today");
+		final LocalDate defaultStart = LocalDate.of(2000, 1, 1);
+		final LocalDate defaultEnd   = today.minusDays(1);
+		final LocalDate effectiveEnd = endDate.orElse(defaultEnd);
+		final LocalDate effectiveStart = startDate.orElse(defaultStart);
+    return new DateRange(effectiveStart, effectiveEnd);
+}
+
 
     private static String required(final PluginDefinition definition, final String name) {
         return definition.requireProperty(name);
