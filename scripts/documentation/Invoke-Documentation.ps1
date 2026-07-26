@@ -1,25 +1,26 @@
 #Requires -Version 5.1
-<#
-.SYNOPSIS
-Builds, validates or cleans OpenData documentation.
+function Invoke-Documentation {
+  <#
+      .SYNOPSIS
+      Builds, validates or cleans OpenData documentation.
 
-.DESCRIPTION
-Builds separate technical documentation and user-guide outputs, validates all
-Markdown links, and renders canonical PlantUML sources from
-docs\diagrams\source into docs\diagrams\generated.
+      .DESCRIPTION
+      Builds separate technical documentation and user-guide outputs, validates all
+      Markdown links, and renders canonical PlantUML sources from
+      docs\diagrams\source into docs\diagrams\generated.
 
-.EXAMPLE
-.\Invoke-Documentation.ps1 -Action Test
+      .EXAMPLE
+      .\Invoke-Documentation.ps1 -Action Test
 
-.EXAMPLE
-.\Invoke-Documentation.ps1 -Action Build -Document All -Format Docx -RenderDiagrams
-#>
-[CmdletBinding(SupportsShouldProcess)]
-param(
+      .EXAMPLE
+      .\Invoke-Documentation.ps1 -Action Build -Document All -Format Docx -RenderDiagrams
+  #>
+  [CmdletBinding(SupportsShouldProcess)]
+  param(
     [ValidateSet('Build', 'Test', 'Clean')]
     [string] $Action = 'Build',
 
-    [string] $ProjectRoot,
+    [Parameter(Mandatory=$true)][string] $ProjectRoot,
 
     [ValidateSet('Technical', 'User', 'All')]
     [string] $Document = 'All',
@@ -27,17 +28,18 @@ param(
     [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
     [string] $Format = 'All',
 
+    [AllowNull()]
     [string] $ReferenceDoc,
 
     [switch] $RenderDiagrams,
 
     [switch] $FailOnWarning
-)
+  )
 
-$ErrorActionPreference = 'Stop'
-Set-StrictMode -Version 2.0
+  $ErrorActionPreference = 'Stop'
+  ##Set-StrictMode -Version 2.0
 
-function Resolve-ProjectRoot {
+  function Resolve-ProjectRoot {
     param([string] $StartPath = $PSScriptRoot)
 
     $current = Get-Item -LiteralPath (Resolve-Path -LiteralPath $StartPath)
@@ -49,9 +51,9 @@ function Resolve-ProjectRoot {
         $current = $current.Parent
     }
     throw 'Unable to locate a project root containing config\documentation.json.'
-}
+  }
 
-function Read-DocumentationConfig {
+  function Read-DocumentationConfig {
     param([Parameter(Mandatory)][string] $Root)
 
     $path = Join-Path -Path $Root -ChildPath 'config\documentation.json'
@@ -59,25 +61,25 @@ function Read-DocumentationConfig {
         throw "Documentation configuration was not found: $path"
     }
     Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
-}
+  }
 
-function Ensure-Directory {
+  function Ensure-Directory {
     param([Parameter(Mandatory)][string] $Path)
 
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
         $null = New-Item -ItemType Directory -Path $Path -Force
     }
-}
+  }
 
-function Assert-Command {
+  function Assert-Command {
     param([Parameter(Mandatory)][string] $Name)
 
     if (-not (Get-Command -Name $Name -ErrorAction SilentlyContinue)) {
         throw "Required command '$Name' was not found."
     }
-}
+  }
 
-function Add-MarkdownDirectory {
+  function Add-MarkdownDirectory {
     param(
         [Parameter(Mandatory)]
         [System.Collections.Generic.List[System.IO.FileInfo]] $List,
@@ -109,9 +111,9 @@ function Add-MarkdownDirectory {
         } |
         Sort-Object -Property FullName |
         ForEach-Object { $List.Add($_) }
-}
+  }
 
-function Get-DocumentationFiles {
+  function Get-DocumentationFiles {
     param(
         [Parameter(Mandatory)][string] $Root,
         [Parameter(Mandatory)]
@@ -154,30 +156,30 @@ function Get-DocumentationFiles {
         }
     }
     return $files
-}
+  }
 
-function Remove-DocumentHeader {
+  function Remove-DocumentHeader {
     param([Parameter(Mandatory)][string] $Content)
 
     $result = $Content -replace '(?ms)^---\s*\r?\n.*?\r?\n---\s*\r?\n', ''
     $result = $result -replace '(?ms)^\*\*Document ID:\*\*.*?\r?\n---\s*\r?\n', ''
     return $result.Trim()
-}
+  }
 
-function ConvertTo-YamlSingleQuotedString {
-    param([AllowEmptyString()][string] $Value)
+  function ConvertTo-YamlSingleQuotedString {
+    param([Parameter(Mandatory=$true)][AllowEmptyString()][string] $Value)
 
     return "'" + $Value.Replace("'", "''") + "'"
-}
+  }
 
-function Test-TrailingLandscapeBlock {
+  function Test-TrailingLandscapeBlock {
     param([Parameter(Mandatory)][string] $Content)
 
     return $Content -match
         '(?ms):::\s*\{\.landscape\}.*?:::\s*$'
-}
+  }
 
-function New-DocumentInventory {
+  function New-DocumentInventory {
     param(
         [Parameter(Mandatory)][string] $Root,
         [Parameter(Mandatory)]
@@ -210,9 +212,9 @@ function New-DocumentInventory {
     }
     $lines | Set-Content -LiteralPath $output -Encoding UTF8
     return $output
-}
+  }
 
-function Merge-Documentation {
+  function Merge-Documentation {
     param(
         [Parameter(Mandatory)][string] $Root,
         [Parameter(Mandatory)]
@@ -282,12 +284,12 @@ function Merge-Documentation {
         $writer.Dispose()
     }
     return $output
-}
+  }
 
-function Invoke-PlantUmlRender {
+  function Invoke-PlantUmlRender {
     param(
         [Parameter(Mandatory)][string] $Root,
-        [ValidateSet('svg', 'png')][string] $OutputFormat
+        [Parameter(Mandatory=$true)][ValidateSet('svg', 'png')][string] $OutputFormat
     )
 
     $renderer = Join-Path $Root 'scripts\documentation\Render-PlantUml.ps1'
@@ -298,9 +300,9 @@ function Invoke-PlantUmlRender {
     if (-not $?) {
         throw 'PlantUML rendering failed.'
     }
-}
+  }
 
-function Test-Documentation {
+  function Test-Documentation {
     param(
         [Parameter(Mandatory)][string] $Root,
         [switch] $WarningsAreErrors
@@ -371,9 +373,9 @@ function Test-Documentation {
     if ($errors -gt 0 -or ($WarningsAreErrors -and $warnings -gt 0)) {
         throw 'Documentation validation failed.'
     }
-}
+  }
 
-function Convert-SvgAssetsForPdf {
+  function Convert-SvgAssetsForPdf {
     param([Parameter(Mandatory)][string] $Root)
 
     $config = Read-DocumentationConfig -Root $Root
@@ -408,9 +410,9 @@ function Convert-SvgAssetsForPdf {
             throw "Unable to create the PDF diagram asset: $pdf"
         }
     }
-}
+  }
 
-function Set-DocxPageLayout {
+  function Set-DocxPageLayout {
     param(
         [Parameter(Mandatory)][string] $Path,
         [Parameter(Mandatory)][double] $PortraitWidthCm,
@@ -572,9 +574,9 @@ function Set-DocxPageLayout {
     }
 
     Write-Output "Sized $resized DOCX image(s) to fit their A4 section."
-}
+  }
 
-function Build-DocumentSet {
+  function Build-DocumentSet {
     param(
         [Parameter(Mandatory)][string] $Root,
         [Parameter(Mandatory)]
@@ -583,6 +585,7 @@ function Build-DocumentSet {
         [Parameter(Mandatory)]
         [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
         [string] $OutputFormat,
+        [AllowNull()]
         [string] $DocxReference
     )
 
@@ -660,15 +663,15 @@ function Build-DocumentSet {
         }
         Write-Output "Created $output"
     }
-}
+  }
 
-if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
+  if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
     $ProjectRoot = Resolve-ProjectRoot
-} else {
+  } else {
     $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
-}
+  }
 
-switch ($Action) {
+  switch ($Action) {
     'Test' {
         Test-Documentation -Root $ProjectRoot -WarningsAreErrors:$FailOnWarning
     }
@@ -706,4 +709,6 @@ switch ($Action) {
                 -OutputFormat $Format -DocxReference $ReferenceDoc
         }
     }
+  }
 }
+Invoke-Documentation -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -Action Build -Document user -Format Docx 
