@@ -39,10 +39,6 @@ public final class PluginSelectionResolver {
     }
 
     private static String canonicalId(final String pluginId) {
-        final String normalised = pluginId.trim().toLowerCase(Locale.ROOT);
-        return switch (normalised) {
-            case "offgem" -> "ofgem";
-            default -> normalised;
-        };
+        return pluginId.trim().toLowerCase(Locale.ROOT);
     }
 }

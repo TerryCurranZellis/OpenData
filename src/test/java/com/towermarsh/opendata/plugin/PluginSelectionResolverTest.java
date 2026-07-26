@@ -43,19 +43,19 @@ class PluginSelectionResolverTest {
     }
 
     @Test
-    void selectedAliasOffgemResolvesToOfgem() {
+    void selectedPluginResolvesById() {
         final var ofgem = descriptor("ofgem", true);
         final PluginRegistry registry = registry(ofgem);
         final var arguments = new CommandLineArguments(
-                List.of("offgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
+                List.of("ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
         assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(arguments, registry));
     }
 
     @Test
-    void selectedAliasesThatCanonicaliseToSamePluginAreRejected() {
+    void selectedDuplicatePluginIdsAreRejected() {
         final PluginRegistry registry = registry(descriptor("ofgem", true));
         final var arguments = new CommandLineArguments(
-                List.of("ofgem", "offgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
+                List.of("ofgem", "ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
         assertThrows(PluginRegistryException.class, () -> new PluginSelectionResolver().resolve(arguments, registry));
     }
 
