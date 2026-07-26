@@ -24,7 +24,9 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** Downloads, validates and persists the current Ofgem price-cap workbook. */
+/** 
+ * Downloads, validates and persists the current Ofgem price-cap workbook. 
+ */
 public final class OfgemPlugin implements OpenDataPlugin {
     public static final String PLUGIN_ID = "ofgem";
     private static final Logger LOGGER = Logger.getLogger(OfgemPlugin.class.getName());

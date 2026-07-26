@@ -47,7 +47,8 @@ final class OfgemPersistenceRepository {
             final boolean oldAutoCommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
             try {
-                final long datasetId = requireDatasetId(connection, definition.datasetId());
+                final long datasetId = requireDatasetId(
+                        connection, definition.datasetId(), definition.id());
                 final long ingestionRunId = insertRun(connection, datasetId, download);
                 final long sourceFileId = insertSourceFile(connection, ingestionRunId, download);
                 clearCurrentFlag(connection);
@@ -81,15 +82,38 @@ final class OfgemPersistenceRepository {
         }
     }
 
-    private static long requireDatasetId(final Connection c, final String datasetCode) throws SQLException {
-        try (PreparedStatement s = c.prepareStatement(
-                "SELECT dataset_id FROM core.dataset WHERE dataset_code = ?")) {
-            s.setString(1, datasetCode);
-            try (ResultSet r = s.executeQuery()) {
-                if (!r.next()) {
-                    throw new SQLException("Dataset is not seeded in core.dataset: " + datasetCode);
+    private static long requireDatasetId(
+            final Connection connection,
+            final String datasetCode,
+            final String pluginCode) throws SQLException {
+        final String sql = """
+                SELECT TOP (2) dataset_id
+                FROM core.dataset
+                WHERE dataset_code = ?
+                   OR (plugin_code = ? AND is_active = 1)
+                ORDER BY CASE WHEN dataset_code = ? THEN 0 ELSE 1 END,
+                         dataset_id
+                """;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, datasetCode);
+            statement.setString(2, pluginCode);
+            statement.setString(3, datasetCode);
+
+            try (ResultSet results = statement.executeQuery()) {
+                if (!results.next()) {
+                    throw new SQLException(
+                            "Dataset is not seeded in core.dataset: " + datasetCode
+                                    + " (plugin " + pluginCode + ")");
                 }
-                return r.getLong(1);
+
+                final long datasetId = results.getLong(1);
+                if (results.next()) {
+                    throw new SQLException(
+                            "More than one active dataset is configured for plugin: "
+                                    + pluginCode);
+                }
+                return datasetId;
             }
         }
     }
