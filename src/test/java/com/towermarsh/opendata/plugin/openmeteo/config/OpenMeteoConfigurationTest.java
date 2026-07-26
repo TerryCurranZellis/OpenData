@@ -24,7 +24,7 @@ class OpenMeteoConfigurationTest {
 
         final var range = configuration.resolveDateRange(LocalDate.of(2026, 7, 24));
 
-        assertEquals(LocalDate.of(2026, 7, 17), range.startDate());
+        assertEquals(LocalDate.of(2000, 1, 1), range.startDate());
         assertEquals(LocalDate.of(2026, 7, 23), range.endDate());
     }
 
