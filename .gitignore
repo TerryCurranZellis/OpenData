@@ -45,3 +45,9 @@ docs/diagrams/generated/*
 # Optional local tools and templates
 tools/plantuml.jar
 config/OpenData-Reference.docx
+
+#logfiles
+logs/
+#work files
+work/
+archive/
