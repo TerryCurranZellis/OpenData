@@ -10,10 +10,10 @@ function Invoke-Documentation {
       docs\diagrams\source into docs\diagrams\generated.
 
       .EXAMPLE
-      .\Invoke-Documentation.ps1 -Action Test
+      Invoke-Documentation -Action Test
 
       .EXAMPLE
-      .\Invoke-Documentation.ps1 -Action Build -Document All -Format Docx -RenderDiagrams
+      Invoke-Documentation -Action Build -Document All -Format Docx -RenderDiagrams
   #>
   [CmdletBinding(SupportsShouldProcess)]
   param(
@@ -37,7 +37,6 @@ function Invoke-Documentation {
   )
 
   $ErrorActionPreference = 'Stop'
-  ##Set-StrictMode -Version 2.0
 
   function Resolve-ProjectRoot {
     param([string] $StartPath = $PSScriptRoot)
@@ -711,4 +710,9 @@ function Invoke-Documentation {
     }
   }
 }
-Invoke-Documentation -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -Action Build -Document user -Format Docx 
+$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
+$ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath '\docs\_templates\template.docx'
+
+Invoke-Documentation -ProjectRoot $ProjectRoot -Action Clean
+
+Invoke-Documentation -ProjectRoot $ProjectRoot -Action Build -Document user -Format Docx -ReferenceDoc $ReferenceDoc -RenderDiagrams 

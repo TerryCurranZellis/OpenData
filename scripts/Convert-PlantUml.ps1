@@ -1,14 +1,14 @@
 #Requires -Version 5.1
-function Get-PlantUml {
+function Convert-PlantUml {
   <#
       .SYNOPSIS
       Renders OpenData PlantUML sources without building the documentation.
 
       .EXAMPLE
-      .\Render-PlantUml.ps1
+      Convert-PlantUml
 
       .EXAMPLE
-      .\Render-PlantUml.ps1 -Format svg -Clean
+      Convert-PlantUml -Format svg -Clean
   #>
 
   [CmdletBinding(SupportsShouldProcess)]
@@ -22,7 +22,6 @@ function Get-PlantUml {
   )
 
   $ErrorActionPreference = 'Stop'
-  ##Set-StrictMode -Version 2.0
 
   function Resolve-ProjectRoot {
     [CmdletBinding(SupportsShouldProcess)]
@@ -62,9 +61,8 @@ function Get-PlantUml {
     $null = New-Item -ItemType Directory -Path $output -Force
   }
 
-  $legacySources = @(Get-ChildItem -LiteralPath (Join-Path -Path $ProjectRoot -ChildPath 'docs\diagrams') `
-    -File -Recurse -Filter '*.puml' |
-  Where-Object { $_.DirectoryName -ne $source })
+  $legacySources = @(Get-ChildItem -LiteralPath (Join-Path -Path $ProjectRoot -ChildPath 'docs\diagrams') -File -Recurse -Filter '*.puml' |
+	Where-Object { $_.DirectoryName -ne $source })
   if ($legacySources.Count -gt 0) {
     $paths = $legacySources.FullName -join [Environment]::NewLine
     throw ("PlantUML sources exist outside the canonical source folder:`n{0}" -f $paths)
@@ -76,7 +74,7 @@ function Get-PlantUml {
   }
 
   $diagrams = @(Get-ChildItem -LiteralPath $source -File -Filter '*.puml' |
-  Sort-Object -Property Name)
+	Sort-Object -Property Name)
   if ($diagrams.Count -eq 0) {
     throw ('No PlantUML sources were found in {0}' -f $source)
   }
@@ -99,5 +97,6 @@ function Get-PlantUml {
 
   Write-Output -InputObject ('Rendered {0} diagram(s) to {1}' -f $diagrams.Count, $output)
 }
+$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
 
-Get-PlantUml -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata'
+Convert-PlantUml -ProjectRoot $ProjectRoot

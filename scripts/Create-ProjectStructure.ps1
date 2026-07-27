@@ -1,3 +1,4 @@
+function New-ProjectStructure {
 <#
 .SYNOPSIS
     Creates the OpenData project folder structure.
@@ -100,5 +101,5 @@ foreach ($folder in $folders)
     }
 }
 
-Write-Output -InputObject ''
 Write-Output -InputObject 'OpenData project structure complete.'
+}
