@@ -20,7 +20,7 @@ import java.util.logging.LogRecord;
 * @version 17 July 2026
 */
 public final class ContextualLogFormatter extends Formatter {
-    private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             .withZone(ZoneId.systemDefault());
 
     /**
@@ -31,12 +31,12 @@ public final class ContextualLogFormatter extends Formatter {
     @Override
     public String format(final LogRecord record) {
         final var builder = new StringBuilder(256)
-                .append(TIMESTAMP.format(Instant.ofEpochMilli(record.getMillis())))
-                .append(" [").append(record.getLevel().getName()).append(']')
-                .append(" [thread=").append(Thread.currentThread().getName()).append(']');
+                .append("[").append(TIMESTAMP.format(Instant.ofEpochMilli(record.getMillis())))
+                .append("]:[").append(record.getLevel().getName())
+                .append("]:[thread:").append(Thread.currentThread().getName()).append(']');
         PluginLogContext.current().ifPresent(context -> builder
-                .append(" [plugin=").append(context.pluginId()).append(']')
-                .append(" [run=").append(context.runId()).append(']'));
+                .append(" [plugin:").append(context.pluginId()).append(']')
+                .append(":[run:").append(context.runId()).append(']'));
         builder.append(' ').append(record.getLoggerName()).append(" - ")
                 .append(formatMessage(record)).append(System.lineSeparator());
         if (record.getThrown() != null) {

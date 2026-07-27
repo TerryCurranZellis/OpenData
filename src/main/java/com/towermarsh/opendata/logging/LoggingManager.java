@@ -61,11 +61,11 @@ public final class LoggingManager {
     public static void configure(final LoggingConfiguration configuration, final boolean verbose) throws IOException {
         synchronized (LOCK) {
             Files.createDirectories(configuration.directory());
-            for (Handler handler : ROOT.getHandlers()) {
+            for (var handler : ROOT.getHandlers()) {
                 ROOT.removeHandler(handler);
                 handler.close();
             }
-            final Level level = verbose ? Level.FINE : Level.INFO;
+            final var level = verbose ? Level.FINE : Level.INFO;
             ROOT.setLevel(level);
 
             final var formatter = new ContextualLogFormatter();
@@ -74,7 +74,7 @@ public final class LoggingManager {
             console.setFormatter(formatter);
             ROOT.addHandler(console);
 
-            final String pattern = configuration.directory().resolve("opendata-%g.log").toString();
+            final var pattern = configuration.directory().resolve("opendata-%g.log").toString();
             final var file = new FileHandler(
                     pattern,
                     configuration.fileLimitBytes(),

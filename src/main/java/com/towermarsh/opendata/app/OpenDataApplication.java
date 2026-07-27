@@ -29,19 +29,21 @@ import com.towermarsh.opendata.plugin.ResolvedPlugin;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Clock;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Coordinates registry selection, configuration, pooled database access, and
  * plugin execution.
-  *
+ *
  * @author Terry Curran
  * @version 17 July 2026
  */
 public final class OpenDataApplication {
 
+    /**
+     * set the logger
+     */
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
     /**
@@ -52,7 +54,7 @@ public final class OpenDataApplication {
      * @return execution status
      * @throws IOException if console or logging output cannot be written
      * @throws InterruptedException if plugin execution is interrupted
-
+     *
      */
     public ExecutionStatus start(
             final CommandLineArguments arguments,
@@ -87,15 +89,17 @@ public final class OpenDataApplication {
         final var selected = new PluginSelectionResolver().resolve(arguments, registry);
         final boolean multiPluginRun = selected.size() > 1;
         final var definitionLoader = new PropertiesPluginDefinitionLoader();
-        final List<ResolvedPlugin> plugins = selected.stream()
-                .map(descriptor -> new ResolvedPlugin(
-                descriptor,
-                definitionLoader.load(
-                        descriptor.id(),
-                        overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
+        final var plugins = selected.stream()
+                .map((var descriptor) -> {
+                    return new ResolvedPlugin(
+                            descriptor,
+                            definitionLoader.load(
+                                    descriptor.id(),
+                                    overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun)));
+                })
                 .toList();
 
-        final int parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
+        final var parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
         LOGGER.log(Level.INFO,
                 "Selected {0} plugin(s); parallelism={1}; dryRun={2}",
                 new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), arguments.dryRun()});
@@ -116,7 +120,7 @@ public final class OpenDataApplication {
                     database,
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
-            final PluginExecutionSummary summary = coordinator.execute(
+            final var summary = coordinator.execute(
                     plugins, parallelism, arguments.dryRun());
             logSummary(summary);
             return summary.allSuccessful() ? ExecutionStatus.SUCCESS : ExecutionStatus.PLUGIN_FAILURE;
