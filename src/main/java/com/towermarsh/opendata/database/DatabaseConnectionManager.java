@@ -38,10 +38,15 @@ public final class DatabaseConnectionManager implements AutoCloseable {
      * Borrows a connection from the pool.
      *
      * @return pooled connection
-     * @throws SQLException if no connection is available
+     * @throws DatabaseException if there are database issues
      */
-    public Connection getConnection() throws SQLException {
-        return resourceManager.getConnection();
+    public Connection getConnection() throws DatabaseException {
+        try {
+            return resourceManager.getConnection();
+        } catch (SQLException exception) {
+            throw new DatabaseException(
+                    "Unable to initialise the SQL Server connection pool.", exception);
+        }
     }
 
     /**
@@ -53,8 +58,13 @@ public final class DatabaseConnectionManager implements AutoCloseable {
         return resourceManager.getPoolSnapshot();
     }
 
+    /**
+     *
+     * @throws DatabaseException
+     */
     @Override
-    public void close() throws SQLException {
+    public void close() throws DatabaseException {
         resourceManager.close();
+
     }
 }

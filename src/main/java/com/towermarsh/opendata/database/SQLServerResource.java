@@ -28,11 +28,13 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 /**
  * Singleton SQL Server resource backed by Apache Commons DBCP.
  *
- * <p>The pool is thread-safe. Each repository obtains a connection for its own
- * transaction and returns it with try-with-resources. A JDBC connection is never
- * shared between plugin threads.</p>
+ * <p>
+ * The pool is thread-safe. Each repository obtains a connection for its own
+ * transaction and returns it with try-with-resources. A JDBC connection is
+ * never shared between plugin threads.</p>
  */
 public final class SQLServerResource implements DatabaseResourceManager {
+
     private static final Logger LOGGER = Logger.getLogger(SQLServerResource.class.getName());
     private static final String POOL_URL_PREFIX = "jdbc:apache:commons:dbcp:";
     private static SQLServerResource instance;
@@ -96,11 +98,17 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws DatabaseException {
         if (closed.get()) {
-            throw new SQLException("SQL Server connection pool is closed.");
+            throw new DatabaseException("SQL Server connection pool is closed.");
         }
-        return DriverManager.getConnection(poolUrl);
+        try {
+            return DriverManager.getConnection(poolUrl);
+
+        } catch (SQLException exception) {
+            throw new DatabaseException("Unable to initialise the SQL Server connection pool.", exception);
+
+        }
     }
 
     @Override
@@ -128,7 +136,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
             poolingDriver.closePool(poolName);
             LOGGER.log(Level.INFO, "SQL Server pool {0} closed.", poolName);
         } catch (SQLException exception) {
-            LOGGER.log(Level.WARNING, "Unable to close SQL Server pool " + poolName, exception);
+            throw new DatabaseException("Unable to close SQL Server pool " + poolName, exception);
         } finally {
             synchronized (SQLServerResource.class) {
                 instance = null;
@@ -153,7 +161,6 @@ public final class SQLServerResource implements DatabaseResourceManager {
                 closed.get());
     }
 
-
     private static void closeAndLog(final AutoCloseable resource, final String description) {
         if (resource == null) {
             return;
@@ -161,7 +168,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
         try {
             resource.close();
         } catch (Exception exception) {
-            LOGGER.log(Level.WARNING, "Unable to close JDBC " + description + '.', exception);
+            throw new DatabaseException("Unable to close JDBC " + description + '.', exception);
         }
     }
 }

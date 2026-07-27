@@ -8,13 +8,16 @@
 package com.towermarsh.opendata.database;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
-/** Database marker used by a dry run; any attempted write is treated as a defect. */
+/**
+ * Database marker used by a dry run; any attempted write is treated as a
+ * defect.
+ */
 public final class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
+
     @Override
-    public Connection getConnection() throws SQLException {
-        throw new SQLException("Database access is disabled during --dry-run.");
+    public Connection getConnection() throws DatabaseException {
+        throw new DatabaseException("Database access is disabled during --dry-run.");
     }
 
     @Override

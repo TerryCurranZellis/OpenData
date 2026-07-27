@@ -45,119 +45,84 @@ public final class SqlServerRepository
      *
      * @param connectionManager database connection manager
      */
-    public SqlServerRepository(
-            DatabaseConnectionManager connectionManager) {
-
-        this.connectionManager
-                = connectionManager;
+    public SqlServerRepository(DatabaseConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
+    /**
+     * Insert data into the database table
+     *
+     * @param tableName database table name
+     * @param records list of records to insert
+     * @return number of records inserted
+     * @throws ImportException
+     */
     @Override
-    public long insert(
-            String tableName,
-            List<Map<String, String>> records)
-            throws ImportException {
-
+    public long insert(String tableName, List<Map<String, String>> records) throws ImportException {
         if (records.isEmpty()) {
             return 0;
         }
-
-        String sql
-                = buildInsertStatement(
-                        tableName,
-                        records.get(0));
-
-        long inserted = 0;
-
-        try (Connection connection
-                = connectionManager.getConnection(); PreparedStatement statement
+        var sql = buildInsertStatement(tableName, records.get(0));
+        var inserted = 0L;
+        try (var connection
+                = connectionManager.getConnection(); var statement
                 = connection.prepareStatement(sql)) {
-
-            for (Map<String, String> record : records) {
-
-                int index = 1;
-
-                for (String column
-                        : record.keySet()) {
-
-                    statement.setString(
-                            index++,
-                            record.get(column));
+            for (var record : records) {
+                var index = 1;
+                for (var column : record.keySet()) {
+                    statement.setString(index++, record.get(column));
                 }
-
                 statement.addBatch();
             }
-
-            int[] results
-                    = statement.executeBatch();
-
-            for (int result : results) {
-
+            var results = statement.executeBatch();
+            for (var result : results) {
                 inserted += result;
             }
-
             return inserted;
-
         } catch (SQLException ex) {
-
-            throw new ImportException(
-                    "Database insert failed",
-                    ex);
+            throw new ImportException("Database insert failed", ex);
         }
     }
 
+    /**
+     * Check if the database table exists
+     *
+     * @param tableName name of table
+     * @return true or false
+     * @throws ImportException
+     */
     @Override
-    public boolean tableExists(
-            String tableName)
-            throws ImportException {
-
-        String sql
-                = """
+    public boolean tableExists(String tableName) throws ImportException {
+        var sql = """
             SELECT COUNT(*)
             FROM INFORMATION_SCHEMA.TABLES
             WHERE TABLE_NAME = ?
             """;
-
-        try (Connection connection
-                = connectionManager.getConnection(); PreparedStatement statement
+        try (var connection
+                = connectionManager.getConnection(); var statement
                 = connection.prepareStatement(sql)) {
-
-            statement.setString(
-                    1,
-                    tableName);
-
-            ResultSet result
-                    = statement.executeQuery();
-
+            statement.setString(1, tableName);
+            var result = statement.executeQuery();
             result.next();
-
             return result.getInt(1) > 0;
-
         } catch (SQLException ex) {
-
-            throw new ImportException(
-                    "Unable to check table",
-                    ex);
+            throw new ImportException("Unable to check table", ex);
         }
     }
 
-    private String buildInsertStatement(
-            String tableName,
-            Map<String, String> record) {
-
-        String columns
-                = String.join(
-                        ",",
-                        record.keySet());
-
-        String values
-                = String.join(
-                        ",",
-                        record.keySet()
-                                .stream()
-                                .map(c -> "?")
-                                .toList());
-
+    /**
+     * Build the insert statement
+     *
+     * @param tableName name of table
+     * @param record list of records
+     * @return
+     */
+    private String buildInsertStatement(String tableName, Map<String, String> record) {
+        var columns = String.join(",", record.keySet());
+        var values = String.join(",", record.keySet()
+                .stream()
+                .map(c -> "?")
+                .toList());
         return "INSERT INTO "
                 + tableName
                 + " ("

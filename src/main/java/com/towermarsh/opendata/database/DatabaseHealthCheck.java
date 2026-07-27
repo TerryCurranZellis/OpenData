@@ -4,9 +4,6 @@
  */
 package com.towermarsh.opendata.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Objects;
@@ -27,18 +24,25 @@ public final class DatabaseHealthCheck {
                 connectionManager, "connectionManager");
     }
 
-    public Result check() throws SQLException {
-        try (Connection connection = connectionManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(SQL);
-                ResultSet resultSet = statement.executeQuery()) {
+    /**
+     * check database access
+     * @return return if database ok
+     * @throws DatabaseException
+     */
+    public Result check() throws DatabaseException {
+        try (var connection = connectionManager.getConnection(); 
+             var statement = connection.prepareStatement(SQL); 
+             var resultSet = statement.executeQuery()) {
             if (!resultSet.next()) {
-                throw new SQLException("SQL Server health check returned no row");
+                throw new DatabaseException("SQL Server health check returned no row");
             }
             return new Result(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
                     Instant.now());
+        } catch (SQLException ex) {
+            throw new DatabaseException("SQL Server health check returned no row");
         }
     }
 
@@ -47,5 +51,6 @@ public final class DatabaseHealthCheck {
             String loginName,
             String databaseUser,
             Instant checkedAt) {
+
     }
 }

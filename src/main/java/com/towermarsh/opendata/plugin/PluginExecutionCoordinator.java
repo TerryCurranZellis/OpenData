@@ -124,13 +124,32 @@ public final class PluginExecutionCoordinator {
             error = Optional.of("Plugin execution was interrupted.");
             LOGGER.log(Level.WARNING, "Plugin execution was interrupted: " + pluginId, exception);
         } catch (Exception exception) {
-            final boolean interrupted = Thread.currentThread().isInterrupted();
-            status = interrupted ? PluginRunStatus.CANCELLED : PluginRunStatus.FAILED;
-            error = Optional.ofNullable(exception.getMessage()).or(() -> Optional.of(exception.toString()));
-            LOGGER.log(interrupted ? Level.WARNING : Level.SEVERE,
-                    (interrupted ? "Plugin execution was cancelled: " : "Plugin execution failed: ") + pluginId,
-                    exception);
-        }
+    final boolean interrupted =
+            Thread.currentThread().isInterrupted();
+
+    status = interrupted
+            ? PluginRunStatus.CANCELLED
+            : PluginRunStatus.FAILED;
+
+    final String failureMessage = messageFor(exception);
+    error = Optional.of(failureMessage);
+
+    LOGGER.log(
+            interrupted ? Level.WARNING : Level.SEVERE,
+            "{0}: plugin={1}, error={2}",
+            new Object[]{
+                interrupted
+                        ? "Plugin execution was cancelled"
+                        : "Plugin execution failed",
+                pluginId,
+                failureMessage
+            });
+
+    LOGGER.log(
+            Level.FINE,
+            "Plugin execution failure details: " + pluginId,
+            exception);
+}
 
         PluginRunResult result = new PluginRunResult(
                 pluginId, runId, status, startedAt, clock.instant(), metrics, error);
@@ -154,4 +173,18 @@ public final class PluginExecutionCoordinator {
         }
         return result;
     }
+    private static String messageFor(final Throwable exception) {
+    Throwable current = exception;
+
+    while (current.getCause() != null
+            && current.getCause() != current) {
+        current = current.getCause();
+    }
+
+    final String message = current.getMessage();
+
+    return message == null || message.isBlank()
+            ? current.getClass().getSimpleName()
+            : message;
+}
 }

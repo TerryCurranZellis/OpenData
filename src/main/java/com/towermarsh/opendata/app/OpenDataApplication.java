@@ -33,8 +33,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Coordinates registry selection, configuration, pooled database access, and plugin execution. */
+/**
+ * Coordinates registry selection, configuration, pooled database access, and
+ * plugin execution.
+ */
 public final class OpenDataApplication {
+
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
     public ExecutionStatus start(
@@ -72,10 +76,10 @@ public final class OpenDataApplication {
         final var definitionLoader = new PropertiesPluginDefinitionLoader();
         final List<ResolvedPlugin> plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(
-                        descriptor,
-                        definitionLoader.load(
-                                descriptor.id(),
-                                overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
+                descriptor,
+                definitionLoader.load(
+                        descriptor.id(),
+                        overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
                 .toList();
 
         final int parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
@@ -104,26 +108,56 @@ public final class OpenDataApplication {
             logSummary(summary);
             return summary.allSuccessful() ? ExecutionStatus.SUCCESS : ExecutionStatus.PLUGIN_FAILURE;
         } finally {
-            if (database != null) {
-                database.close();
-            }
+            closeDatabase(database);
         }
     }
 
+    /**
+     * Closes the database resource without allowing a shutdown failure to
+     * replace the application's calculated execution status.
+     *
+     * @param database database resource, possibly null
+     */
+    private static void closeDatabase(
+            final DatabaseResourceManager database) {
+        if (database == null) {
+            return;
+        }
+        try {
+            database.close();
+        } catch (RuntimeException exception) {
+            LOGGER.log(Level.SEVERE, "Database shutdown failed: {0}", messageFor(exception));
+            LOGGER.log(Level.FINE, "Database shutdown failure details.", exception);
+        }
+    }
+
+    private static String messageFor(final Throwable exception) {
+        var current = exception;
+        while (current.getCause() != null && current.getCause() != current) {
+            current = current.getCause();
+        }
+        final var message = current.getMessage();
+        return message == null || message.isBlank()
+                ? current.getClass().getSimpleName()
+                : message;
+    }
+
     private static void logSummary(final PluginExecutionSummary summary) {
-        summary.results().forEach(result -> LOGGER.log(
-                result.successful() ? Level.INFO : Level.SEVERE,
-                "Plugin summary: id={0}, status={1}, durationMs={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
-                new Object[]{
-                    result.pluginId(),
-                    result.status().name(),
-                    result.duration().toMillis(),
-                    result.metrics().read(),
-                    result.metrics().inserted(),
-                    result.metrics().updated(),
-                    result.metrics().skipped(),
-                    result.errorMessage().orElse("")
-                }));
+        summary.results().forEach((var result) -> {
+            LOGGER.log(
+                    result.successful() ? Level.INFO : Level.SEVERE,
+                    "Plugin summary: id={0}, status={1}, durationMs={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
+                    new Object[]{
+                        result.pluginId(),
+                        result.status().name(),
+                        result.duration().toMillis(),
+                        result.metrics().read(),
+                        result.metrics().inserted(),
+                        result.metrics().updated(),
+                        result.metrics().skipped(),
+                        result.errorMessage().orElse("")
+                    });
+        });
         LOGGER.log(Level.INFO,
                 "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
                 new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
