@@ -37,20 +37,26 @@ import com.towermarsh.opendata.cli.CommandLineArguments;
  */
 public final class ConfigurationService {
 
+    /**
+     * class loader
+     */
     private final ConfigurationLoader loader;
+    /**
+     * list of valid configuratiosn
+     */
     private final List<ConfigurationValidator> validators;
 
     /**
-     *
+     * instantiate service
      */
     public ConfigurationService() {
         this(new ConfigurationLoader(), List.of(new StandardConfigurationValidator()));
     }
 
     /**
-     *
-     * @param loader
-     * @param validators
+     * set up the service
+     * @param loader loaders for service config
+     * @param validators validators for service config
      */
     public ConfigurationService(
             final ConfigurationLoader loader,

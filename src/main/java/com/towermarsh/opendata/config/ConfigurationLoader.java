@@ -51,10 +51,23 @@ import com.towermarsh.opendata.exception.ConfigurationException;
  */
 public final class ConfigurationLoader {
 
+    /**
+     * Application resources file 
+     */
     private static final String APPLICATION_RESOURCE = "config/application.properties";
+    
+    /**
+     * plugin loaded locations
+     */
     private static final String PLUGIN_RESOURCE_PATTERN = "config/plugins/%s.properties";
 
+    /**
+     * load classes
+     */
     private final ClassLoader classLoader;
+    /**
+     * create a list of default settings
+     */
     private final Map<String, String> builtInDefaults;
 
     /**
@@ -64,6 +77,11 @@ public final class ConfigurationLoader {
         this(Thread.currentThread().getContextClassLoader(), standardDefaults());
     }
 
+    /**
+     * Creates the configuration settings and load
+     * @param classLoader
+     * @param builtInDefaults 
+     */
     ConfigurationLoader(
             final ClassLoader classLoader,
             final Map<String, String> builtInDefaults) {
@@ -77,7 +95,7 @@ public final class ConfigurationLoader {
      *
      * @param arguments parsed command-line arguments
      * @return immutable resolved configuration
-     * @throws com.towermarsh.opendata.exception.ConfigurationException
+     * @throws com.towermarsh.opendata.exception.ConfigurationException if the resource cannot be loaded
      */
     public ApplicationConfig load(final CommandLineArguments arguments) throws ConfigurationException {
         Objects.requireNonNull(arguments, "arguments");

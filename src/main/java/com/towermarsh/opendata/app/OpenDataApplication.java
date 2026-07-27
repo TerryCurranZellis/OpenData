@@ -45,14 +45,6 @@ public final class OpenDataApplication {
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
     /**
-<<<<<<< HEAD
-     *
-     * @param arguments
-     * @param processor
-     * @return
-     * @throws IOException
-     * @throws InterruptedException
-=======
      * Starts the OpenData application for one parsed command line.
      *
      * @param arguments parsed command-line arguments
@@ -60,7 +52,7 @@ public final class OpenDataApplication {
      * @return execution status
      * @throws IOException if console or logging output cannot be written
      * @throws InterruptedException if plugin execution is interrupted
->>>>>>> origin/copilot/finish-java-source-documentation
+
      */
     public ExecutionStatus start(
             final CommandLineArguments arguments,

@@ -37,6 +37,13 @@ public final class CommandLineArgumentsProcessor {
     private final Options options = createOptions();
 
     /**
+     * instantiate CommandLineArgumentsProcessor
+     */
+    public CommandLineArgumentsProcessor() {
+
+    }
+
+    /**
      * Parses and validates the supplied command-line arguments.
      *
      * @param arguments raw command-line arguments
