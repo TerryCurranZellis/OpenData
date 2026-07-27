@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** Complete Open-Meteo download and SQL Server persistence plugin. */
+/** Complete Open-Meteo download and SQL Server persistence plugin.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OpenMeteoPlugin implements OpenDataPlugin {
     public static final String PLUGIN_ID = "openmeteo";
     private static final Logger LOGGER = Logger.getLogger(OpenMeteoPlugin.class.getName());

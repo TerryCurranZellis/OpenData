@@ -7,7 +7,10 @@
  */
 package com.towermarsh.opendata.config;
 
-/** Raised when application, database, execution, or override configuration is invalid. */
+/** Raised when application, database, execution, or override configuration is invalid.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OpenDataConfigurationException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 

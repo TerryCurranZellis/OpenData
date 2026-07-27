@@ -46,7 +46,7 @@ import java.util.Optional;
  * @param linkDiscovery optional HTML link-discovery rules
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public record PluginEndpointDefinition(
         String name,

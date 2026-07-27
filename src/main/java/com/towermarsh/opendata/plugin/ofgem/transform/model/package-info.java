@@ -10,5 +10,8 @@
  * <li>{@link OfgemPriceCapPeriod}</li>
  * <li>{@link OfgemPriceCapWorkbookData}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.plugin.ofgem.transform.model;

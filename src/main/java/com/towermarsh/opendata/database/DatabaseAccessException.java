@@ -7,7 +7,10 @@
  */
 package com.towermarsh.opendata.database;
 
-/** Unchecked wrapper for database bootstrap and persistence failures. */
+/** Unchecked wrapper for database bootstrap and persistence failures.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class DatabaseAccessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 

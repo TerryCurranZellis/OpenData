@@ -29,5 +29,8 @@
  * <li>{@link ResolvedConfigurationValue}</li>
  * <li>{@link StandardConfigurationValidator}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.config;

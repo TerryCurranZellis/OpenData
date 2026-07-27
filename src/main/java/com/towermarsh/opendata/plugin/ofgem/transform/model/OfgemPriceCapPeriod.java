@@ -14,6 +14,9 @@ import java.util.Objects;
  * @param effectiveTo period end date
  * @param sourceColumnReference source workbook column reference
  * @param current whether the period is marked as current
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemPriceCapPeriod(
         String periodName,

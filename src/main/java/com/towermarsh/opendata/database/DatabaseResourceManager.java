@@ -12,7 +12,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/** Provides pooled JDBC resources to repositories. */
+/** Provides pooled JDBC resources to repositories.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public interface DatabaseResourceManager extends AutoCloseable {
     /**
      * Borrows a database connection from the underlying resource.

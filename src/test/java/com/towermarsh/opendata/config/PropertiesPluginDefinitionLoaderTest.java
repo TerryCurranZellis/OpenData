@@ -34,6 +34,10 @@ import org.junit.jupiter.api.Test;
 import com.towermarsh.opendata.config.model.DatasetFormat;
 import com.towermarsh.opendata.config.model.DownloadStrategyType;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class PropertiesPluginDefinitionLoaderTest {
 
     @Test

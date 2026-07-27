@@ -30,7 +30,7 @@ import java.util.Map;
  * Defines a data validation operation.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public interface Validator {
 

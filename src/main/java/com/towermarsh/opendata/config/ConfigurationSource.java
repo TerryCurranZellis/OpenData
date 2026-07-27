@@ -28,7 +28,7 @@ package com.towermarsh.opendata.config;
  * Records where a resolved property value originated.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public enum ConfigurationSource {
     BUILT_IN_DEFAULT,

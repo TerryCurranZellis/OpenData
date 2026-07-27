@@ -11,6 +11,9 @@ import java.util.Objects;
  * Typed result extracted from one Ofgem price-cap workbook.
  * @param period effective Ofgem price-cap period
  * @param levels extracted price-cap level records
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemPriceCapWorkbookData(
         OfgemPriceCapPeriod period,

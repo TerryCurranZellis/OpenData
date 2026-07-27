@@ -27,7 +27,7 @@ package com.towermarsh.opendata.plugin;
  * Indicates invalid or missing plugin registry metadata.
   *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class PluginRegistryException extends RuntimeException {
 

@@ -11,5 +11,8 @@
  * <ul>
  * <li>{@link OpenMeteoPlugin}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.plugin.openmeteo;

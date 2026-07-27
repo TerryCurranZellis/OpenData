@@ -10,6 +10,9 @@ package com.towermarsh.opendata.plugin.ofgem.load;
  * @param inserted number of inserted rows
  * @param updated number of updated rows
  * @param skipped number of skipped rows
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemPersistenceResult(long inserted, long updated, long skipped) {
     /** Validates and normalises record components. */

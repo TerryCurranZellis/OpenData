@@ -17,6 +17,9 @@ import java.util.Objects;
  * @param sizeBytes downloaded file size in bytes
  * @param sha256 SHA-256 digest of the downloaded file
  * @param downloadedAt time when the file was downloaded
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record SourceFileMetadata(
         URI sourceUri,

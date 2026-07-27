@@ -12,6 +12,9 @@ import java.sql.Connection;
 /**
  * Database marker used by a dry run; any attempted write is treated as a
  * defect.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 

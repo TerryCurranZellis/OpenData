@@ -29,7 +29,7 @@ package com.towermarsh.opendata.config;
  * structured plugin definition.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class PluginDefinitionException extends RuntimeException {
 

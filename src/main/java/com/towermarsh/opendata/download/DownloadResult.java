@@ -29,7 +29,7 @@ import com.towermarsh.opendata.model.DataFile;
  * Represents the result of a download operation.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class DownloadResult {
 

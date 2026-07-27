@@ -42,7 +42,7 @@ import com.towermarsh.opendata.exception.DownloadException;
  * matching can be tested deterministically.</p>
   *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class HtmlLinkResolver {
 

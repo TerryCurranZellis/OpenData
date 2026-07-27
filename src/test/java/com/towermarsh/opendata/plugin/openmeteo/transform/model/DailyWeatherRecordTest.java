@@ -27,6 +27,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.*;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class DailyWeatherRecordTest {
     private DailyWeatherRecord valid() {
         return new DailyWeatherRecord(LocalDate.of(2026,7,24), "Home", 51.6207, -1.1098,

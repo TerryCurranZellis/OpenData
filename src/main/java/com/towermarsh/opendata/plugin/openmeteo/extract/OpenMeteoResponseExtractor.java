@@ -11,7 +11,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
 import java.util.Objects;
 
-/** Parses raw Open-Meteo JSON into the API response model. */
+/** Parses raw Open-Meteo JSON into the API response model.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OpenMeteoResponseExtractor {
     private final ObjectMapper objectMapper;
 

@@ -9,5 +9,8 @@
  * <li>{@link OpenMeteoPersistenceResult}</li>
  * <li>{@link OpenMeteoRepository}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.plugin.openmeteo.load;

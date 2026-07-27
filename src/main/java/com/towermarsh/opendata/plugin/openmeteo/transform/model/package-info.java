@@ -9,5 +9,8 @@
  * <li>{@link DailyWeatherRecord}</li>
  * <li>{@link WmoWeatherCode}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.plugin.openmeteo.transform.model;

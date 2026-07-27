@@ -21,5 +21,8 @@
  * <li>{@link SqlServerRepository}</li>
  * <li>{@link UnavailableDatabaseResourceManager}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.database;

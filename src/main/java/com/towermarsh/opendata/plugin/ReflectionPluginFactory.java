@@ -10,7 +10,10 @@ package com.towermarsh.opendata.plugin;
 import com.towermarsh.opendata.config.model.PluginDefinition;
 import java.lang.reflect.InvocationTargetException;
 
-/** Creates configured plugin classes named in plugin properties. */
+/** Creates configured plugin classes named in plugin properties.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class ReflectionPluginFactory implements PluginFactory {
     @Override
     public OpenDataPlugin create(final ResolvedPlugin plugin) {

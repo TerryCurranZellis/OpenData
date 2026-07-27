@@ -30,6 +30,9 @@
  * <li>{@link DatasetDefinition}</li>
  * <li>{@link ImportResult}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.model;
 

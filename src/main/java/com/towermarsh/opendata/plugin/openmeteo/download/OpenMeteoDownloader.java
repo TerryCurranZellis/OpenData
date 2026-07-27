@@ -19,7 +19,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** Downloads raw JSON from the Open-Meteo archive API. */
+/** Downloads raw JSON from the Open-Meteo archive API.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OpenMeteoDownloader {
     private static final Logger LOGGER =
             Logger.getLogger(OpenMeteoDownloader.class.getName());

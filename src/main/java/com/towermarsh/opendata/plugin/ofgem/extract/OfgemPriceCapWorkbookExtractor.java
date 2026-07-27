@@ -38,6 +38,9 @@ import org.apache.poi.ss.util.CellReference;
  *
  * <p>The extractor locates structural labels instead of relying solely on fixed
  * row numbers, while retaining the known C:J output-column meanings.</p>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class OfgemPriceCapWorkbookExtractor {
 

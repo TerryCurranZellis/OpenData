@@ -31,6 +31,10 @@ import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class OpenMeteoResponseValidatorTest {
     private final OpenMeteoResponseValidator validator = new OpenMeteoResponseValidator();
 

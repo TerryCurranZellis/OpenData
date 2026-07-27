@@ -45,7 +45,7 @@ import java.util.Properties;
  * JAR. The index resource is {@code config/plugins/index.properties}.</p>
   *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class ClasspathPluginRegistry implements PluginRegistry {
 

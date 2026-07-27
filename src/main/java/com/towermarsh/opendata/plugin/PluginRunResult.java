@@ -21,6 +21,9 @@ import java.util.UUID;
  * @param completedAt time when plugin execution completed
  * @param metrics row-level metrics returned by the plugin
  * @param errorMessage optional error message recorded for the run
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record PluginRunResult(
         String pluginId,

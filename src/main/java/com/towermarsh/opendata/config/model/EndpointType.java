@@ -28,7 +28,7 @@ package com.towermarsh.opendata.config.model;
  * Purpose and retrieval behaviour of a configured endpoint.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public enum EndpointType {
     API,

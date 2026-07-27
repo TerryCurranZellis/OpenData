@@ -33,6 +33,10 @@ import org.junit.jupiter.api.Test;
 import com.towermarsh.opendata.config.model.LinkDiscoveryDefinition;
 import com.towermarsh.opendata.exception.DownloadException;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class HtmlLinkResolverTest {
 
     @Test

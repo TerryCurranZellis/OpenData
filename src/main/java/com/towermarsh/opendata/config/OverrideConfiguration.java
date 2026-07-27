@@ -19,7 +19,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
-/** Parsed external override values, split into application and per-plugin scopes. */
+/** Parsed external override values, split into application and per-plugin scopes.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OverrideConfiguration {
     private final Map<String, String> values;
 

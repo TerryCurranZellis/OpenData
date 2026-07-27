@@ -10,7 +10,10 @@ package com.towermarsh.opendata.plugin;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/** Names non-daemon plugin worker threads for logs and diagnostics. */
+/** Names non-daemon plugin worker threads for logs and diagnostics.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class PluginThreadFactory implements ThreadFactory {
     private final AtomicInteger sequence = new AtomicInteger();
 

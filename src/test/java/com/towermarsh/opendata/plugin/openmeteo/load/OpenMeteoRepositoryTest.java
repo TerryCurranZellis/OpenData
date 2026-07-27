@@ -40,7 +40,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension./**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
+class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class OpenMeteoRepositoryTest {
  @Mock DatabaseResourceManager database; @Mock Connection connection; @Mock PreparedStatement statement; @Mock ResultSet resultSet; @Mock Statement sqlStatement;

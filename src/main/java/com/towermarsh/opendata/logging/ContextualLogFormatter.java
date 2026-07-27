@@ -15,7 +15,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-/** Thread-safe JUL formatter containing thread, plugin, and run context. */
+/** Thread-safe JUL formatter containing thread, plugin, and run context.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class ContextualLogFormatter extends Formatter {
     private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ISO_OFFSET_DATE_TIME
             .withZone(ZoneId.systemDefault());

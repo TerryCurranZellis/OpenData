@@ -15,6 +15,9 @@ import java.util.Objects;
  * @param rowsRejected number of rejected rows
  * @param finishedAt time when ingestion finished
  * @param message completion detail message
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record IngestionRunCompletion(
         IngestionStatus status,

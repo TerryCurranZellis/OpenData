@@ -23,6 +23,9 @@ import java.util.Properties;
  * @param database database connection and pool settings
  * @param execution plugin execution settings
  * @param logging logging settings
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record ApplicationRuntimeConfiguration(
         DatabasePoolConfiguration database,

@@ -9,5 +9,8 @@
  * <li>{@link OpenMeteoResponse}</li>
  * <li>{@link OpenMeteoResponseExtractor}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.plugin.openmeteo.extract;

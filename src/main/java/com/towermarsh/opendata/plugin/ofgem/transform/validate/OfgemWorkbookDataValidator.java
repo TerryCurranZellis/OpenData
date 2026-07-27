@@ -12,7 +12,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-/** Validates invariants that span multiple extracted Ofgem price-cap rows. */
+/** Validates invariants that span multiple extracted Ofgem price-cap rows.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OfgemWorkbookDataValidator {
 
     public OfgemPriceCapWorkbookData validate(final OfgemPriceCapWorkbookData data)

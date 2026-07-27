@@ -21,6 +21,9 @@ import java.util.Objects;
  * @param minIdle minimum number of idle pooled connections
  * @param maxWait maximum time to wait for a pooled connection
  * @param validationQuery SQL query used to validate pooled connections
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record DatabasePoolConfiguration(
         String driverClass,

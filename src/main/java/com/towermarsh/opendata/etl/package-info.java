@@ -29,5 +29,8 @@
  * <li>{@link LoadService}</li>
  * <li>{@link TransformService}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.etl;

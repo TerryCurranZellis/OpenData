@@ -15,6 +15,9 @@ import java.util.Objects;
  * Aggregate result of one multi-plugin invocation.
  *
  * @param results completed results for the selected plugins
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record PluginExecutionSummary(List<PluginRunResult> results) {
     /** Validates and normalises record components. */

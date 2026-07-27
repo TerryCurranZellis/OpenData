@@ -31,7 +31,10 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 
-/** Transactional SQL Server persistence for one Ofgem workbook. */
+/** Transactional SQL Server persistence for one Ofgem workbook.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OfgemPersistenceRepository {
     private final DatabaseResourceManager database;
 

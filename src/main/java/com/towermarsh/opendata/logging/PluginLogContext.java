@@ -11,7 +11,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-/** Per-thread plugin and run identifiers added to every log line. */
+/** Per-thread plugin and run identifiers added to every log line.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class PluginLogContext {
     private static final ThreadLocal<Entry> CURRENT = new ThreadLocal<>();
 

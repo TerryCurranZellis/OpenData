@@ -9,6 +9,9 @@ import java.sql.SQLException;
 
 /**
  * Persists the shared ingestion audit trail.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public interface IngestionAuditRepository {
 

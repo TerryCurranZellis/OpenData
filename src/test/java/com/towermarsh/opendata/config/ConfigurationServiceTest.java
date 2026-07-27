@@ -31,6 +31,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class ConfigurationServiceTest {
 
     @TempDir

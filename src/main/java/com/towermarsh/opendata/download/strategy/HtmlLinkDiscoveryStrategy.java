@@ -41,7 +41,7 @@ import com.towermarsh.opendata.exception.DownloadException;
  * the resolved resource to disk.
   *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class HtmlLinkDiscoveryStrategy {
 

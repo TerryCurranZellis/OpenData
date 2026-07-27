@@ -29,7 +29,7 @@ import java.util.Objects;
  * Defines an OpenData source.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class DataSourceDefinition {
 

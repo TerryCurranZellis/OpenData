@@ -13,5 +13,8 @@
  * <li>{@link LoggingManager}</li>
  * <li>{@link PluginLogContext}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.logging;

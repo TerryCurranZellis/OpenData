@@ -10,6 +10,9 @@ package com.towermarsh.opendata.database;
  * @param idleConnections number of idle pooled connections
  * @param maximumConnections maximum configured pooled connections
  * @param closed whether the pool has been closed
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record DatabasePoolSnapshot(
         int activeConnections,

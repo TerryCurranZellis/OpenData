@@ -7,7 +7,10 @@
  */
 package com.towermarsh.opendata.cli;
 
-/** Raised when command-line arguments are invalid. */
+/** Raised when command-line arguments are invalid.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class CommandLineProcessingException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 

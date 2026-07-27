@@ -18,7 +18,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** Ofgem-specific discovery, download, and optional source-file archiving. */
+/** Ofgem-specific discovery, download, and optional source-file archiving.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OfgemWorkbookDownloader {
     private static final Logger LOGGER =
             Logger.getLogger(OfgemWorkbookDownloader.class.getName());

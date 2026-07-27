@@ -24,7 +24,10 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-/** Parses and validates the OpenData command line. */
+/** Parses and validates the OpenData command line.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class CommandLineArgumentsProcessor {
     private static final String APPLICATION_NAME = "opendata";
     private final Options options = createOptions();

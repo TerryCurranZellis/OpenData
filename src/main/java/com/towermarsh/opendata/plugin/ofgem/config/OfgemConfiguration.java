@@ -20,6 +20,9 @@ import java.util.Objects;
  * @param archiveOriginalFile whether the downloaded workbook is archived after a write run
  * @param workingDirectory directory used for the active download
  * @param archiveDirectory directory containing archived workbooks
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemConfiguration(
         PluginEndpointDefinition publicationEndpoint,

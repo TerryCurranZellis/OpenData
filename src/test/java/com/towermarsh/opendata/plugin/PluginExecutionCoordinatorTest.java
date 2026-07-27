@@ -38,7 +38,11 @@ class PluginExecutionCoordinatorTest {
         };
         final DatabaseResourceManager database = new DatabaseResourceManager() {
             @Override
-            public Connection getConnection() throws SQLException {
+            /**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
+public Connection getConnection() throws SQLException {
                 throw new SQLException("not used");
             }
 

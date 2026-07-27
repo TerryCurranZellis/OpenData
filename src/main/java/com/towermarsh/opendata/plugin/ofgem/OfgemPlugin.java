@@ -26,6 +26,9 @@ import java.util.logging.Logger;
 
 /** 
  * Downloads, validates and persists the current Ofgem price-cap workbook. 
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class OfgemPlugin implements OpenDataPlugin {
     public static final String PLUGIN_ID = "ofgem";

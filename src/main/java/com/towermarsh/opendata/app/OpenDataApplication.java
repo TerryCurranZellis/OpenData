@@ -36,6 +36,9 @@ import java.util.logging.Logger;
 /**
  * Coordinates registry selection, configuration, pooled database access, and
  * plugin execution.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class OpenDataApplication {
 

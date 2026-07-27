@@ -17,7 +17,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Central java.util.logging configuration. */
+/** Central java.util.logging configuration.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class LoggingManager {
     private static final String LOGGER_NAME = "com.towermarsh.opendata";
     private static final Logger ROOT = Logger.getLogger("");

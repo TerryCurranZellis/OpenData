@@ -28,7 +28,7 @@ package com.towermarsh.opendata.config.model;
  * Location in which a credential is applied to a request.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public enum CredentialLocation {
     HEADER,

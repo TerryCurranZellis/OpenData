@@ -28,6 +28,10 @@ import java.time.*;
 import java.util.*;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class PluginValueObjectsTest {
  @Test void metricsRejectNegativeCounts() { assertThrows(IllegalArgumentException.class,()->new PluginMetrics(-1,0,0,0)); }
  @Test void summaryCountsSuccessAndFailure() {

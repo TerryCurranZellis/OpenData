@@ -29,5 +29,8 @@
  * <li>{@link ReflectionPluginFactory}</li>
  * <li>{@link ResolvedPlugin}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.plugin;

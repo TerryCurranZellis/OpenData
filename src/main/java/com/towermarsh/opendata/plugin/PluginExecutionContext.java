@@ -22,6 +22,9 @@ import java.util.UUID;
  * @param database database resource manager available to the plugin
  * @param clock clock used for time-based operations
  * @param dryRun whether the plugin is executing in dry-run mode
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record PluginExecutionContext(
         UUID runId,

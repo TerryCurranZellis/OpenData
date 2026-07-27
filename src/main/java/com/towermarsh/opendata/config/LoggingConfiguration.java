@@ -15,6 +15,9 @@ import java.util.Objects;
  * @param fileLimitBytes maximum size of each log file in bytes
  * @param fileCount number of rotating log files to retain
  * @param append whether existing log files are appended to
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record LoggingConfiguration(Path directory, int fileLimitBytes, int fileCount, boolean append) {
     /** Validates and normalises record components. */

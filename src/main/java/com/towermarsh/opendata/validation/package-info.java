@@ -29,5 +29,8 @@
  * <li>{@link ValidationResult}</li>
  * <li>{@link Validator}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.validation;

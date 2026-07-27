@@ -30,6 +30,10 @@ import java.time.Duration;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class DatabasePoolConfigTest {
 
     @Test

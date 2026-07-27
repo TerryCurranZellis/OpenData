@@ -27,7 +27,7 @@ package com.towermarsh.opendata.plugin.openmeteo.exception;
  * Indicates that OpenMeteo download or response processing failed.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class OpenMeteoException extends Exception {
 

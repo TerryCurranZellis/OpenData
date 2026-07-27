@@ -35,6 +35,10 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class OfgemWorkbookDataValidatorTest {
     private final OfgemWorkbookDataValidator validator = new OfgemWorkbookDataValidator();
 

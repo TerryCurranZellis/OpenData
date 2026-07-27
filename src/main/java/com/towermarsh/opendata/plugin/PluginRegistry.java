@@ -33,7 +33,7 @@ import java.util.Optional;
  * A later database-backed implementation can implement the same interface.</p>
   *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public interface PluginRegistry {
 

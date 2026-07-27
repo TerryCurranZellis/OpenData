@@ -30,5 +30,8 @@
  * <li>{@link HtmlLinkResolver}</li>
  * <li>{@link ResolvedDownload}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.download.strategy;

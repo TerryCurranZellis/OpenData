@@ -32,6 +32,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * The pool is thread-safe. Each repository obtains a connection for its own
  * transaction and returns it with try-with-resources. A JDBC connection is
  * never shared between plugin threads.</p>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class SQLServerResource implements DatabaseResourceManager {
 

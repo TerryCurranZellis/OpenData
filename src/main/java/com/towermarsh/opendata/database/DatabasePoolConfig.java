@@ -19,6 +19,9 @@ import java.util.Properties;
  * @param testOnBorrow whether connections are validated when borrowed
  * @param validationQuery SQL validation query
  * @param validationQueryTimeoutSeconds timeout for the validation query in seconds
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record DatabasePoolConfig(
         int initialSize,

@@ -40,5 +40,8 @@
  * <li>{@link PluginPropertyDefinition}</li>
  * <li>{@link PluginPropertyType}</li>
  * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.config.model;

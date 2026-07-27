@@ -17,6 +17,9 @@ import java.util.Objects;
  * @param vatIncluded whether the amount includes VAT
  * @param sourceSheet source worksheet name
  * @param sourceCell source cell reference
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemPriceCapLevel(
         String regionCode,

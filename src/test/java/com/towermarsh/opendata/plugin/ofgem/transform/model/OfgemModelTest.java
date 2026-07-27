@@ -28,6 +28,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class OfgemModelTest {
  @Test void periodTrimsName() { var p=new OfgemPriceCapPeriod(" Jul-Sep 2026 ",LocalDate.of(2026,7,1),LocalDate.of(2026,9,30),12,true); assertEquals("Jul-Sep 2026",p.periodName()); }
  @Test void periodRejectsReverseDates() { assertThrows(IllegalArgumentException.class,()->new OfgemPriceCapPeriod("x",LocalDate.of(2026,2,1),LocalDate.of(2026,1,1),1,false)); }
