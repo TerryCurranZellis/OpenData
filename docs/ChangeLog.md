@@ -131,3 +131,9 @@ The format is based on Keep a Changelog. The project is under active development
 - Properties-based plugin configuration direction.
 - SQL Server-first persistence direction.
 - Ofgem reference-plugin direction.
+
+## 2026-07-27
+
+- Corrected command-line parsing when an IDE or wrapper passes the complete argument line as one `String[]` element.
+- Added regression tests for `--plugin all --dry-run`, quoted override-file paths, and unmatched quotes.
+- Added a copyable `example` plugin implementation and properties templates under `docs/examples/example-plugin`.

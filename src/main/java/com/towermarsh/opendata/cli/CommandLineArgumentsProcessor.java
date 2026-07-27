@@ -10,6 +10,7 @@ package com.towermarsh.opendata.cli;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -31,9 +32,68 @@ public final class CommandLineArgumentsProcessor {
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
         try {
-            return toArguments(new DefaultParser().parse(options, arguments));
+            final String[] normalisedArguments = normaliseArguments(arguments);
+            return toArguments(new DefaultParser().parse(options, normalisedArguments));
         } catch (ParseException | IllegalArgumentException exception) {
             throw new CommandLineProcessingException(exception.getMessage(), exception);
+        }
+    }
+
+    /**
+     * Normalises launcher input before Commons CLI parsing.
+     *
+     * <p>A normal Java process receives one array element per command-line token. Some IDE and
+     * wrapper configurations incorrectly pass the complete command line as one quoted argument,
+     * for example {@code {"--plugin all --dry-run"}}. Commons CLI then treats that value as an
+     * unrecognised token and no plugin selection is available. This method safely expands only
+     * that single-element form; correctly tokenised command lines are left unchanged.</p>
+     */
+    static String[] normaliseArguments(final String[] arguments) {
+        if (arguments.length != 1) {
+            return Arrays.copyOf(arguments, arguments.length);
+        }
+
+        final String commandLine = arguments[0];
+        if (commandLine == null || commandLine.isBlank() || !containsWhitespace(commandLine)) {
+            return Arrays.copyOf(arguments, arguments.length);
+        }
+
+        final List<String> tokens = new ArrayList<>();
+        final StringBuilder token = new StringBuilder();
+        char quote = 0;
+
+        for (int index = 0; index < commandLine.length(); index++) {
+            final char current = commandLine.charAt(index);
+            if ((current == '\'' || current == '"')) {
+                if (quote == 0) {
+                    quote = current;
+                } else if (quote == current) {
+                    quote = 0;
+                } else {
+                    token.append(current);
+                }
+            } else if (Character.isWhitespace(current) && quote == 0) {
+                addToken(tokens, token);
+            } else {
+                token.append(current);
+            }
+        }
+
+        if (quote != 0) {
+            throw new IllegalArgumentException("Unterminated quoted command-line value.");
+        }
+        addToken(tokens, token);
+        return tokens.toArray(String[]::new);
+    }
+
+    private static boolean containsWhitespace(final String value) {
+        return value.chars().anyMatch(Character::isWhitespace);
+    }
+
+    private static void addToken(final List<String> tokens, final StringBuilder token) {
+        if (!token.isEmpty()) {
+            tokens.add(token.toString());
+            token.setLength(0);
         }
     }
 

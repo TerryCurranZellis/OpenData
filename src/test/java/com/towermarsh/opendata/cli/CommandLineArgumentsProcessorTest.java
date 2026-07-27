@@ -34,6 +34,31 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
+    void acceptsCompleteCommandLinePassedAsOneLauncherArgument() {
+        final var arguments = processor.parse(new String[]{"--plugin all --dry-run"});
+
+        assertTrue(arguments.allPluginsRequested());
+        assertTrue(arguments.dryRun());
+    }
+
+    @Test
+    void preservesQuotedFilePathWhenLauncherPassesOneArgument() {
+        final var arguments = processor.parse(new String[]{
+            "--plugin example --file \"C:\\OpenData Files\\example.properties\" --dry-run"
+        });
+
+        assertEquals(java.nio.file.Path.of("C:\\OpenData Files\\example.properties"),
+                arguments.overrideFile().orElseThrow());
+        assertTrue(arguments.dryRun());
+    }
+
+    @Test
+    void rejectsUnterminatedQuotedLauncherArgument() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin example --file \"C:\\OpenData Files"}));
+    }
+
+    @Test
     void rejectsDuplicatePlugins() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--plugin", "openmeteo", "--plugin", "openmeteo"}));

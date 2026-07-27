@@ -53,3 +53,13 @@ The process logs one of `SUCCESS`, `PLUGIN_FAILURE`, `COMMAND_LINE_ERROR`,
 `CONFIGURATION_ERROR`, `INTERRUPTED` or `APPLICATION_FAILURE`. Lower layers do
 not call `System.exit`, and the current `main` method does not map these values
 to operating-system exit codes.
+
+## IDE and wrapper argument handling
+
+A normal Java launcher passes each token as a separate `String[]` element. OpenData also accepts an IDE or wrapper that supplies the complete argument line as one element, for example `"--plugin all --dry-run"`. Quoted values are preserved, so a setting such as `--file "C:\OpenData Files\run.properties"` remains one path.
+
+For NetBeans, enter the application arguments without adding quotes around the complete line:
+
+```text
+--plugin all --dry-run
+```

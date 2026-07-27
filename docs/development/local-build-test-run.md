@@ -56,3 +56,13 @@ packaging are implemented and tested.
 Do not commit passwords, local override files, logs, working downloads, database
 backups or generated manuals unless repository policy explicitly identifies an
 output as maintained.
+
+### NetBeans command-line arguments
+
+In **Project Properties > Run > Arguments**, enter the arguments directly:
+
+```text
+--plugin all --dry-run
+```
+
+Do not wrap the complete line in an additional pair of quotes. The parser now tolerates wrappers that nevertheless deliver the whole line as one Java argument, including quoted file paths containing spaces.
