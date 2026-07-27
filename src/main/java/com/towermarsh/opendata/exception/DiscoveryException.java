@@ -10,10 +10,21 @@ package com.towermarsh.opendata.exception;
  */
 public class DiscoveryException extends OpenDataException {
 
+    /**
+     * Creates a new discovery exception.
+     *
+     * @param message the detail message
+     */
     public DiscoveryException(String message) {
         super(message);
     }
 
+    /**
+     * Creates a new discovery exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
+     */
     public DiscoveryException(String message, Throwable cause) {
         super(message, cause);
     }

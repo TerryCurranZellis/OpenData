@@ -32,10 +32,18 @@ public final class ExcelDataParser implements DataParser {
 
     private final ExcelParserOptions options;
 
+    /**
+     * Creates an Excel parser using default options.
+     */
     public ExcelDataParser() {
         this(ExcelParserOptions.defaults());
     }
 
+    /**
+     * Creates an Excel parser using the supplied options.
+     *
+     * @param options Excel parser options
+     */
     public ExcelDataParser(ExcelParserOptions options) {
         this.options = Objects.requireNonNull(options, "options");
     }
@@ -78,6 +86,13 @@ public final class ExcelDataParser implements DataParser {
         }
     }
 
+    /**
+     * Selects the workbook sheet configured for parsing.
+     *
+     * @param workbook workbook being parsed
+     * @return selected sheet
+     * @throws ImportException if the configured sheet cannot be resolved
+     */
     private Sheet selectSheet(Workbook workbook) throws ImportException {
         if (!options.sheetName().isBlank()) {
             Sheet sheet = workbook.getSheet(options.sheetName());
@@ -95,6 +110,15 @@ public final class ExcelDataParser implements DataParser {
         return workbook.getSheetAt(options.sheetIndex());
     }
 
+    /**
+     * Reads and normalises the header row.
+     *
+     * @param headerRow header row
+     * @param formatter cell formatter
+     * @param evaluator optional formula evaluator
+     * @return parsed header names
+     * @throws ImportException if the header row contains no cells
+     */
     private static List<String> readHeaders(
             Row headerRow,
             DataFormatter formatter,
@@ -115,6 +139,15 @@ public final class ExcelDataParser implements DataParser {
         return List.copyOf(headers);
     }
 
+    /**
+     * Reads one worksheet row into a name-value map.
+     *
+     * @param row worksheet row, possibly {@code null}
+     * @param headers column headers
+     * @param formatter cell formatter
+     * @param evaluator optional formula evaluator
+     * @return row values keyed by header
+     */
     private static Map<String, String> readRow(
             Row row,
             List<String> headers,
@@ -128,6 +161,14 @@ public final class ExcelDataParser implements DataParser {
         return record;
     }
 
+    /**
+     * Formats a workbook cell as text.
+     *
+     * @param cell source cell
+     * @param formatter cell formatter
+     * @param evaluator optional formula evaluator
+     * @return formatted cell value
+     */
     private static String format(
             Cell cell,
             DataFormatter formatter,

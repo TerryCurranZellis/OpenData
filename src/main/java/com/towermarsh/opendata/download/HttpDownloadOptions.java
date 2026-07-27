@@ -24,6 +24,8 @@ public record HttpDownloadOptions(
         boolean overwrite,
         long maximumBytes) {
 
+    /** Validates and normalises record components. */
+
     public HttpDownloadOptions {
         Objects.requireNonNull(connectTimeout, "connectTimeout");
         Objects.requireNonNull(requestTimeout, "requestTimeout");

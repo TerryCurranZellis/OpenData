@@ -47,6 +47,8 @@ public record CredentialReference(
         CredentialLocation location,
         String parameterName) {
 
+    /** Validates and normalises record components. */
+
     public CredentialReference {
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(authenticationType, "authenticationType");

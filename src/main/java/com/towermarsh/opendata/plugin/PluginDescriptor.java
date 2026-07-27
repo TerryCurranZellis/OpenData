@@ -20,6 +20,7 @@ public record PluginDescriptor(
         boolean enabled,
         int configurationVersion) {
 
+    /** Validates and normalises record components. */
     public PluginDescriptor {
         id = requireText(id, "id");
         displayName = requireText(displayName, "displayName");
@@ -34,6 +35,13 @@ public record PluginDescriptor(
         }
     }
 
+    /**
+     * Returns a required non-blank text value.
+     *
+     * @param value value to validate
+     * @param fieldName field name for error reporting
+     * @return trimmed text value
+     */
     private static String requireText(
             final String value,
             final String fieldName) {

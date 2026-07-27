@@ -27,6 +27,8 @@ public record DiscoveredLink(
         String fileName,
         String extension) {
 
+    /** Validates and normalises record components. */
+
     public DiscoveredLink {
         Objects.requireNonNull(pageUri, "pageUri");
         Objects.requireNonNull(targetUri, "targetUri");

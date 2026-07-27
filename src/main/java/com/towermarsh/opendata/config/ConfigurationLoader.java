@@ -57,6 +57,9 @@ public final class ConfigurationLoader {
     private final ClassLoader classLoader;
     private final Map<String, String> builtInDefaults;
 
+    /**
+     * Creates a configuration loader using the thread context class loader.
+     */
     public ConfigurationLoader() {
         this(Thread.currentThread().getContextClassLoader(), standardDefaults());
     }
@@ -110,6 +113,12 @@ public final class ConfigurationLoader {
                 arguments.verbose());
     }
 
+    /**
+     * Builds bootstrap configuration from merged key-value pairs.
+     *
+     * @param values merged configuration values
+     * @return bootstrap configuration
+     */
     private static BootstrapConfig buildBootstrapConfig(final Map<String, String> values) {
         return new BootstrapConfig(
                 values.getOrDefault("application.name", "OpenData"),
@@ -120,6 +129,13 @@ public final class ConfigurationLoader {
                 values);
     }
 
+    /**
+     * Loads an optional classpath properties resource.
+     *
+     * @param resourceName classpath resource name
+     * @return loaded properties or an empty map when the resource is absent
+     * @throws ConfigurationException if the resource cannot be closed after reading
+     */
     private Map<String, String> loadOptionalClasspathProperties(final String resourceName) throws ConfigurationException {
         try (InputStream input = classLoader.getResourceAsStream(resourceName)) {
             if (input == null) {
@@ -133,6 +149,13 @@ public final class ConfigurationLoader {
         }
     }
 
+    /**
+     * Loads a required classpath properties resource.
+     *
+     * @param resourceName classpath resource name
+     * @return loaded properties
+     * @throws ConfigurationException if the resource is missing or cannot be closed
+     */
     private Map<String, String> loadRequiredClasspathProperties(final String resourceName) throws ConfigurationException {
         try (InputStream input = classLoader.getResourceAsStream(resourceName)) {
             if (input == null) {
@@ -147,6 +170,13 @@ public final class ConfigurationLoader {
         }
     }
 
+    /**
+     * Loads a required external properties file.
+     *
+     * @param path path to the override file
+     * @return loaded properties
+     * @throws ConfigurationException if the file is missing, unreadable, or invalid
+     */
     private Map<String, String> loadRequiredFileProperties(final Path path) throws ConfigurationException {
         final Path normalised = path.toAbsolutePath().normalize();
 
@@ -169,6 +199,14 @@ public final class ConfigurationLoader {
         }
     }
 
+    /**
+     * Reads UTF-8 Java properties into a normalised string map.
+     *
+     * @param input source input stream
+     * @param sourceDescription source description for error reporting
+     * @return normalised properties
+     * @throws ConfigurationException if the properties cannot be parsed
+     */
     private static Map<String, String> readProperties(
             final InputStream input,
             final String sourceDescription) throws ConfigurationException {
@@ -197,6 +235,13 @@ public final class ConfigurationLoader {
         return result;
     }
 
+    /**
+     * Merges configuration values into the resolved map using the supplied source tag.
+     *
+     * @param target merge target keyed by normalised property name
+     * @param source raw source values
+     * @param sourceType source type recorded for each merged value
+     */
     private static void merge(
             final Map<String, ResolvedConfigurationValue> target,
             final Map<String, String> source,
@@ -206,6 +251,13 @@ public final class ConfigurationLoader {
                 target.put(normaliseKey(key), new ResolvedConfigurationValue(value, sourceType)));
     }
 
+    /**
+     * Normalises a configuration property name for case-insensitive lookup.
+     *
+     * @param key property name to normalise
+     * @return trimmed lower-case property name
+     * @throws ConfigurationException if the property name is blank
+     */
     private static String normaliseKey(final String key) throws ConfigurationException {
         Objects.requireNonNull(key, "key");
         final String normalised = key.trim().toLowerCase(Locale.ROOT);
@@ -215,6 +267,11 @@ public final class ConfigurationLoader {
         return normalised;
     }
 
+    /**
+     * Returns built-in fallback configuration values.
+     *
+     * @return default configuration values
+     */
     private static Map<String, String> standardDefaults() {
         final Map<String, String> defaults = new LinkedHashMap<>();
         defaults.put("application.working-directory", "data/work");

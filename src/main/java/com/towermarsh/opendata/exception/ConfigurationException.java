@@ -33,10 +33,21 @@ package com.towermarsh.opendata.exception;
  */
 public final class ConfigurationException extends RuntimeException {
 
+    /**
+     * Creates a new configuration exception.
+     *
+     * @param message the detail message
+     */
     public ConfigurationException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates a new configuration exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
+     */
     public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
     }

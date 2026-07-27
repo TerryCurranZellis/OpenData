@@ -66,18 +66,38 @@ public final class ValidationResult {
                 = Collections.unmodifiableList(errors);
     }
 
+    /**
+     * Indicates whether validation succeeded.
+     *
+     * @return {@code true} when validation succeeded
+     */
     public boolean isValid() {
         return valid;
     }
 
+    /**
+     * Returns the number of checked records.
+     *
+     * @return checked record count
+     */
     public long getRecordsChecked() {
         return recordsChecked;
     }
 
+    /**
+     * Returns the number of rejected records.
+     *
+     * @return rejected record count
+     */
     public long getRecordsRejected() {
         return recordsRejected;
     }
 
+    /**
+     * Returns validation error messages.
+     *
+     * @return immutable validation error messages
+     */
     public List<String> getErrors() {
         return errors;
     }

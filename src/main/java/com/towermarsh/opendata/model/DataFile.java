@@ -64,14 +64,29 @@ public final class DataFile {
                         "downloadedAt");
     }
 
+    /**
+     * Returns the downloaded file path.
+     *
+     * @return file path
+     */
     public Path getFilePath() {
         return filePath;
     }
 
+    /**
+     * Returns the downloaded file size in bytes.
+     *
+     * @return file size in bytes
+     */
     public long getSize() {
         return size;
     }
 
+    /**
+     * Returns the download timestamp.
+     *
+     * @return download timestamp
+     */
     public LocalDateTime getDownloadedAt() {
         return downloadedAt;
     }

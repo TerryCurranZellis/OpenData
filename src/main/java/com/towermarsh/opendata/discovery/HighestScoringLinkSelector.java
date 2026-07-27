@@ -22,15 +22,31 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
 
     private final boolean failOnTie;
 
+    /**
+     * Creates a selector that fails when more than one candidate shares the best score.
+     */
     public HighestScoringLinkSelector() {
         this(true);
     }
 
+    /**
+     * Creates a selector with configurable tie handling.
+     *
+     * @param failOnTie whether equal best scores should be rejected
+     */
     public HighestScoringLinkSelector(boolean failOnTie) {
         this.failOnTie = failOnTie;
     }
 
     @Override
+    /**
+     * Selects the highest-scoring discovered link.
+     *
+     * @param candidates discovered links to score
+     * @param preferredTerms preferred terms used during scoring
+     * @return selected discovered link
+     * @throws DiscoveryException if no candidates are available or the best score is tied
+     */
     public DiscoveredLink select(
             List<DiscoveredLink> candidates,
             List<String> preferredTerms) throws DiscoveryException {
@@ -56,6 +72,13 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
         return best.link();
     }
 
+    /**
+     * Computes a score for one discovered link.
+     *
+     * @param link discovered link to score
+     * @param terms preferred search terms
+     * @return computed score
+     */
     private static int score(DiscoveredLink link, List<String> terms) {
         String fileName = normalizeText(link.fileName());
         String descriptive = normalizeText(link.linkText() + " " + link.title());
@@ -71,6 +94,12 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
         return score;
     }
 
+    /**
+     * Normalises preferred search terms for case-insensitive matching.
+     *
+     * @param terms raw preferred terms
+     * @return normalised terms
+     */
     private static List<String> normalize(List<String> terms) {
         if (terms == null) {
             return List.of();
@@ -84,6 +113,12 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
                 .toList();
     }
 
+    /**
+     * Normalises link text for token-based matching.
+     *
+     * @param value text to normalise
+     * @return normalised text
+     */
     private static String normalizeText(final String value) {
         return value.toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", " ")

@@ -97,6 +97,13 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
         }
     }
 
+    /**
+     * Extracts matching file links from a parsed HTML document.
+     *
+     * @param document parsed HTML document
+     * @param request discovery request
+     * @return matching discovered links
+     */
     private List<DiscoveredLink> discoverDocument(
             Document document,
             LinkDiscoveryRequest request) {
@@ -136,12 +143,24 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
         return results;
     }
 
+    /**
+     * Extracts a file name from a target URI path.
+     *
+     * @param uri target URI
+     * @return trailing path segment or an empty string
+     */
     private static String fileName(URI uri) {
         String path = Objects.requireNonNullElse(uri.getPath(), "");
         int slash = path.lastIndexOf('/');
         return slash >= 0 ? path.substring(slash + 1) : path;
     }
 
+    /**
+     * Extracts a lower-case extension from a file name.
+     *
+     * @param fileName file name to inspect
+     * @return lower-case extension without the dot, or an empty string
+     */
     private static String extension(String fileName) {
         int dot = fileName.lastIndexOf('.');
         if (dot < 0 || dot == fileName.length() - 1) {

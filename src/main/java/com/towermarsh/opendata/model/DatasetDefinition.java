@@ -66,14 +66,29 @@ public final class DatasetDefinition {
                         "source");
     }
 
+    /**
+     * Returns the dataset identifier.
+     *
+     * @return dataset identifier
+     */
     public String getDatasetId() {
         return datasetId;
     }
 
+    /**
+     * Returns the dataset name.
+     *
+     * @return dataset name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the owning data source definition.
+     *
+     * @return owning data source definition
+     */
     public DataSourceDefinition getSource() {
         return source;
     }

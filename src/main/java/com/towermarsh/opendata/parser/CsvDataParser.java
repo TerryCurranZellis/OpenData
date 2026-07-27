@@ -30,10 +30,18 @@ public final class CsvDataParser implements DataParser {
 
     private final CsvParserOptions options;
 
+    /**
+     * Creates a CSV parser using default options.
+     */
     public CsvDataParser() {
         this(CsvParserOptions.defaults());
     }
 
+    /**
+     * Creates a CSV parser using the supplied options.
+     *
+     * @param options CSV parser options
+     */
     public CsvDataParser(CsvParserOptions options) {
         this.options = Objects.requireNonNull(options, "options");
     }

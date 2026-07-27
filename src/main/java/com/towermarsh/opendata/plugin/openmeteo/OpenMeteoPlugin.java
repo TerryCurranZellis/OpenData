@@ -35,10 +35,20 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
     private final OpenMeteoResponseValidator validator;
     private final OpenMeteoTransformer transformer;
 
+    /**
+     * Creates the Open-Meteo plugin from a resolved plugin definition.
+     *
+     * @param definition resolved plugin definition
+     */
     public OpenMeteoPlugin(final PluginDefinition definition) {
         this(OpenMeteoConfiguration.from(definition));
     }
 
+    /**
+     * Creates the Open-Meteo plugin from typed configuration.
+     *
+     * @param configuration typed Open-Meteo configuration
+     */
     public OpenMeteoPlugin(final OpenMeteoConfiguration configuration) {
         this(
                 configuration,
@@ -62,6 +72,13 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
     }
 
     @Override
+    /**
+     * Executes the complete Open-Meteo pipeline for one plugin task.
+     *
+     * @param context plugin execution context
+     * @return plugin metrics
+     * @throws OpenMeteoException if the pipeline fails
+     */
     public PluginMetrics execute(final PluginExecutionContext context) throws OpenMeteoException {
         Objects.requireNonNull(context, "context");
         final List<DailyWeatherRecord> records = execute();
@@ -83,17 +100,37 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
         return process(downloader.download());
     }
 
+    /**
+     * Runs the download, extract, validate, and transform stages for an explicit date range.
+     *
+     * @param startDate inclusive start date
+     * @param endDate inclusive end date
+     * @return transformed daily weather records
+     * @throws OpenMeteoException if processing fails
+     */
     public List<DailyWeatherRecord> execute(
             final LocalDate startDate,
             final LocalDate endDate) throws OpenMeteoException {
         return process(downloader.download(startDate, endDate));
     }
 
+    /**
+     * Validates and transforms raw Open-Meteo JSON.
+     *
+     * @param json raw JSON payload
+     * @return transformed daily weather records
+     * @throws OpenMeteoException if extraction or validation fails
+     */
     private List<DailyWeatherRecord> process(final String json) throws OpenMeteoException {
         final var response = validator.validate(extractor.extract(json));
         return transformer.transform(response, configuration);
     }
 
+    /**
+     * Returns the typed Open-Meteo configuration.
+     *
+     * @return typed Open-Meteo configuration
+     */
     public OpenMeteoConfiguration configuration() {
         return configuration;
     }

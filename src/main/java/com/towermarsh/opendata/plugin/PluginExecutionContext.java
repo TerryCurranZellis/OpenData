@@ -13,7 +13,16 @@ import java.time.Clock;
 import java.util.Objects;
 import java.util.UUID;
 
-/** Isolated dependencies and configuration for one plugin task. */
+/**
+ * Isolated dependencies and configuration for one plugin task.
+ *
+ * @param runId plugin run identifier
+ * @param descriptor installed plugin descriptor
+ * @param definition resolved plugin definition for this execution
+ * @param database database resource manager available to the plugin
+ * @param clock clock used for time-based operations
+ * @param dryRun whether the plugin is executing in dry-run mode
+ */
 public record PluginExecutionContext(
         UUID runId,
         PluginDescriptor descriptor,
@@ -22,6 +31,7 @@ public record PluginExecutionContext(
         Clock clock,
         boolean dryRun) {
 
+    /** Validates and normalises record components. */
     public PluginExecutionContext {
         Objects.requireNonNull(runId, "runId");
         Objects.requireNonNull(descriptor, "descriptor");

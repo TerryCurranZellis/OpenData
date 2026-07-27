@@ -43,9 +43,10 @@ public final class ApplicationConfigurationService {
     private final PluginDefinitionLoader pluginDefinitionLoader;
 
     /**
-     * Configure the application service
-     * @param bootstrapConfig
-     * @param pluginDefinitionLoader 
+     * Creates a service that resolves application configuration for one invocation.
+     *
+     * @param bootstrapConfig loaded bootstrap configuration
+     * @param pluginDefinitionLoader loader used to resolve plugin definitions
      */
     public ApplicationConfigurationService(
             final BootstrapConfig bootstrapConfig,

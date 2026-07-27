@@ -44,6 +44,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
     private final GenericObjectPool<PoolableConnection> connectionPool;
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
+    /**
+     * Creates and prepares the singleton SQL Server resource.
+     *
+     * @param configuration database pool configuration
+     */
     private SQLServerResource(final DatabasePoolConfiguration configuration) {
         Objects.requireNonNull(configuration, "configuration");
         poolName = configuration.poolName();
@@ -82,6 +87,12 @@ public final class SQLServerResource implements DatabaseResourceManager {
         }
     }
 
+    /**
+     * Initialises the singleton SQL Server resource when required.
+     *
+     * @param configuration database pool configuration
+     * @return initialised singleton resource
+     */
     public static synchronized SQLServerResource initialise(final DatabasePoolConfiguration configuration) {
         if (instance != null && !instance.closed.get()) {
             return instance;
@@ -90,6 +101,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
         return instance;
     }
 
+    /**
+     * Returns the already-initialised singleton SQL Server resource.
+     *
+     * @return singleton SQL Server resource
+     */
     public static synchronized SQLServerResource getInstance() {
         if (instance == null || instance.closed.get()) {
             throw new IllegalStateException("SQLServerResource has not been initialised.");
@@ -98,6 +114,12 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     @Override
+    /**
+     * Borrows a connection from the registered DBCP pool.
+     *
+     * @return pooled SQL Server connection
+     * @throws DatabaseException if the pool is closed or a connection cannot be obtained
+     */
     public Connection getConnection() throws DatabaseException {
         if (closed.get()) {
             throw new DatabaseException("SQL Server connection pool is closed.");
@@ -112,21 +134,39 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     @Override
+    /**
+     * Closes a borrowed JDBC connection.
+     *
+     * @param connection connection to close
+     */
     public void close(final Connection connection) {
         closeAndLog(connection, "connection");
     }
 
     @Override
+    /**
+     * Closes a prepared statement.
+     *
+     * @param statement statement to close
+     */
     public void close(final PreparedStatement statement) {
         closeAndLog(statement, "prepared statement");
     }
 
     @Override
+    /**
+     * Closes a result set.
+     *
+     * @param resultSet result set to close
+     */
     public void close(final ResultSet resultSet) {
         closeAndLog(resultSet, "result set");
     }
 
     @Override
+    /**
+     * Closes the registered SQL Server connection pool.
+     */
     public void close() {
         if (!closed.compareAndSet(false, true)) {
             return;
@@ -144,10 +184,20 @@ public final class SQLServerResource implements DatabaseResourceManager {
         }
     }
 
+    /**
+     * Returns the number of active pooled connections.
+     *
+     * @return active connection count
+     */
     public int activeConnections() {
         return connectionPool.getNumActive();
     }
 
+    /**
+     * Returns the number of idle pooled connections.
+     *
+     * @return idle connection count
+     */
     public int idleConnections() {
         return connectionPool.getNumIdle();
     }
@@ -161,6 +211,12 @@ public final class SQLServerResource implements DatabaseResourceManager {
                 closed.get());
     }
 
+    /**
+     * Closes a JDBC resource and reports close failures consistently.
+     *
+     * @param resource resource to close
+     * @param description resource description for error reporting
+     */
     private static void closeAndLog(final AutoCloseable resource, final String description) {
         if (resource == null) {
             return;

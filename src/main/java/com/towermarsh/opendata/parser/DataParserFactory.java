@@ -14,6 +14,9 @@ import java.util.Objects;
  */
 public final class DataParserFactory {
 
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private DataParserFactory() {
     }
 

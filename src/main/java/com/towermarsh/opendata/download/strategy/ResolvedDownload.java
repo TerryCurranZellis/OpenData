@@ -24,6 +24,8 @@ public record ResolvedDownload(
         Optional<String> contentType,
         Instant completedAtUtc) {
 
+    /** Validates and normalises record components. */
+
     public ResolvedDownload {
         Objects.requireNonNull(requestedUri, "requestedUri");
         Objects.requireNonNull(resolvedUri, "resolvedUri");

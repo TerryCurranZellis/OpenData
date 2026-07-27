@@ -1,8 +1,11 @@
 /**
- * Reusable download strategies.
+ * Download strategy coordination for direct and HTML-discovered files.
  *
- * <p>The initial implementations support direct streamed HTTP downloads and
- * HTML landing-page link discovery. Authentication decorators and browser
- * automation may be added later without changing parser code.</p>
+ * <ul>
+ * <li>{@link DirectHttpDownloadStrategy}</li>
+ * <li>{@link HtmlLinkDiscoveryStrategy}</li>
+ * <li>{@link HtmlLinkResolver}</li>
+ * <li>{@link ResolvedDownload}</li>
+ * </ul>
  */
 package com.towermarsh.opendata.download.strategy;

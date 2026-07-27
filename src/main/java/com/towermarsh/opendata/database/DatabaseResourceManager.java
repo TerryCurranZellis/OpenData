@@ -14,6 +14,12 @@ import java.sql.SQLException;
 
 /** Provides pooled JDBC resources to repositories. */
 public interface DatabaseResourceManager extends AutoCloseable {
+    /**
+     * Borrows a database connection from the underlying resource.
+     *
+     * @return borrowed connection
+     * @throws SQLException if a connection cannot be obtained
+     */
     Connection getConnection() throws SQLException;
 
 
@@ -26,18 +32,38 @@ public interface DatabaseResourceManager extends AutoCloseable {
         return new DatabasePoolSnapshot(0, 0, 0, false);
     }
 
+    /**
+     * Closes a borrowed JDBC connection.
+     *
+     * @param connection connection to close
+     */
     default void close(final Connection connection) {
         closeQuietly(connection);
     }
 
+    /**
+     * Closes a prepared statement.
+     *
+     * @param statement statement to close
+     */
     default void close(final PreparedStatement statement) {
         closeQuietly(statement);
     }
 
+    /**
+     * Closes a result set.
+     *
+     * @param resultSet result set to close
+     */
     default void close(final ResultSet resultSet) {
         closeQuietly(resultSet);
     }
 
+    /**
+     * Closes a resource while suppressing any secondary close failure.
+     *
+     * @param resource resource to close
+     */
     private static void closeQuietly(final AutoCloseable resource) {
         if (resource == null) {
             return;
@@ -49,6 +75,9 @@ public interface DatabaseResourceManager extends AutoCloseable {
         }
     }
 
+    /**
+     * Closes the underlying database resource.
+     */
     @Override
     void close();
 }

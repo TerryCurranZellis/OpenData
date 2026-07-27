@@ -27,17 +27,26 @@
 package com.towermarsh.opendata.database;
 
 /**
- * provide database exceptions
- * @author terry
- * @version 27 Jul 2026
+ * Unchecked exception signalling an irrecoverable database operation failure.
  */
 
 public class DatabaseException extends RuntimeException {
 
+    /**
+     * Creates a new database exception.
+     *
+     * @param message the detail message
+     */
     public DatabaseException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates a new database exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
+     */
     public DatabaseException(
             final String message,
             final Throwable cause) {

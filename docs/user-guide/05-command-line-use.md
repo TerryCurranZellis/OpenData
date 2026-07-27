@@ -1,9 +1,9 @@
 # 5. Command-Line Use
 
 **Document ID:** USER-005  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 1.1  
+**Status:** Updated  
+**Baseline date:** 27 July 2026
 
 ---
 
@@ -30,5 +30,7 @@ opendata --plugin openmeteo --file C:\OpenData\weather.properties
 | `--dry-run` | Acquisition and validation without persistent writes |
 | `-v`, `--verbose` | Detailed `FINE` logging |
 
-The final log records an application status. The current program does not map
-that status to the shell exit code, so check the log and per-plugin summaries.
+`ExecutionStatus` defines numeric status codes internally, but `Main` currently
+logs the final status instead of calling `System.exit(...)`. The shell therefore
+does not yet receive those application-specific exit codes; inspect the final
+application status and per-plugin summaries.

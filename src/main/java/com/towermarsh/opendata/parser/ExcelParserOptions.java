@@ -25,6 +25,7 @@ public record ExcelParserOptions(
         boolean evaluateFormulas,
         boolean skipCompletelyBlankRows) {
 
+    /** Validates and normalises record components. */
     public ExcelParserOptions {
         sheetName = Objects.requireNonNullElse(sheetName, "").trim();
         if (sheetIndex < 0 || headerRowIndex < 0 || firstDataRowIndex < 0) {
@@ -36,6 +37,11 @@ public record ExcelParserOptions(
         }
     }
 
+    /**
+     * Returns the default Excel parser options.
+     *
+     * @return default Excel parser options
+     */
     public static ExcelParserOptions defaults() {
         return new ExcelParserOptions("", 0, 0, 1, true, true);
     }

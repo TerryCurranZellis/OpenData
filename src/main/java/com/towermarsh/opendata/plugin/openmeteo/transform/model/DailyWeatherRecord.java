@@ -62,6 +62,8 @@ public record DailyWeatherRecord(
         int weatherCode,
         String weatherDescription) {
 
+    /** Validates and normalises record components. */
+
     public DailyWeatherRecord {
         Objects.requireNonNull(observationDate, "observationDate");
         Objects.requireNonNull(locationName, "locationName");

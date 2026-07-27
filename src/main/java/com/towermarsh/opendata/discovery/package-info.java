@@ -4,11 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Reusable discovery and selection of dataset file links published on HTML
- * pages.
+ * HTML link discovery models and selection strategies.
  *
- * <p>Plugins define filtering terms and extensions, while the framework handles
- * HTML parsing, relative-link resolution, duplicate removal and deterministic
- * selection.</p>
+ * <ul>
+ * <li>{@link DiscoveredLink}</li>
+ * <li>{@link DiscoveredLinkSelector}</li>
+ * <li>{@link HighestScoringLinkSelector}</li>
+ * <li>{@link HtmlLinkDiscoverer}</li>
+ * <li>{@link JsoupHtmlLinkDiscoverer}</li>
+ * <li>{@link LinkDiscoveryRequest}</li>
+ * </ul>
  */
 package com.towermarsh.opendata.discovery;

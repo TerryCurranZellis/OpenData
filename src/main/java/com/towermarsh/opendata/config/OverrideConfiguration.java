@@ -23,10 +23,21 @@ import java.util.Properties;
 public final class OverrideConfiguration {
     private final Map<String, String> values;
 
+    /**
+     * Creates an immutable override configuration.
+     *
+     * @param values raw normalised override values
+     */
     private OverrideConfiguration(final Map<String, String> values) {
         this.values = Map.copyOf(values);
     }
 
+    /**
+     * Loads external override properties when a file was supplied.
+     *
+     * @param file optional path to the override file
+     * @return parsed override configuration
+     */
     public static OverrideConfiguration load(final Optional<Path> file) {
         Objects.requireNonNull(file, "file");
         if (file.isEmpty()) {
@@ -48,10 +59,22 @@ public final class OverrideConfiguration {
         }
     }
 
+    /**
+     * Returns application-level override values without the `application.` prefix.
+     *
+     * @return application override values
+     */
     public Map<String, String> applicationValues() {
         return scoped("application.");
     }
 
+    /**
+     * Returns override values for a selected plugin.
+     *
+     * @param pluginId selected plugin identifier
+     * @param multiPluginRun whether more than one plugin is executing
+     * @return plugin override values without the `plugin.<id>.` prefix
+     */
     public Map<String, String> pluginValues(final String pluginId, final boolean multiPluginRun) {
         final String prefix = "plugin." + normalise(pluginId) + ".";
         final Map<String, String> result = new LinkedHashMap<>(scoped(prefix));
@@ -72,6 +95,12 @@ public final class OverrideConfiguration {
         return Map.copyOf(result);
     }
 
+    /**
+     * Returns override values whose keys begin with the supplied prefix.
+     *
+     * @param prefix key prefix to match
+     * @return matching values with the prefix removed
+     */
     private Map<String, String> scoped(final String prefix) {
         final Map<String, String> result = new LinkedHashMap<>();
         values.forEach((key, value) -> {
@@ -82,6 +111,12 @@ public final class OverrideConfiguration {
         return result;
     }
 
+    /**
+     * Normalises override keys for case-insensitive lookup.
+     *
+     * @param value key to normalise
+     * @return trimmed lower-case key
+     */
     private static String normalise(final String value) {
         return value.trim().toLowerCase(Locale.ROOT);
     }

@@ -23,11 +23,22 @@
  */
 
 /**
- * Immutable Java record types and enums representing structured application and
- * plugin configuration.
+ * Immutable Java record types and enums representing structured application and plugin configuration.
  *
- * <p>These records form the storage-independent configuration contract. Phase 1
- * populates them from properties files. A later implementation may populate the
- * same records from database-generated JSON.</p>
+ * <ul>
+ * <li>{@link AuthenticationType}</li>
+ * <li>{@link BootstrapConfig}</li>
+ * <li>{@link CredentialLocation}</li>
+ * <li>{@link CredentialReference}</li>
+ * <li>{@link DatasetFormat}</li>
+ * <li>{@link DownloadStrategyType}</li>
+ * <li>{@link EndpointType}</li>
+ * <li>{@link HttpMethod}</li>
+ * <li>{@link LinkDiscoveryDefinition}</li>
+ * <li>{@link PluginDefinition}</li>
+ * <li>{@link PluginEndpointDefinition}</li>
+ * <li>{@link PluginPropertyDefinition}</li>
+ * <li>{@link PluginPropertyType}</li>
+ * </ul>
  */
 package com.towermarsh.opendata.config.model;

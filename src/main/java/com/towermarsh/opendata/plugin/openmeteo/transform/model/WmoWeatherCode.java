@@ -33,6 +33,9 @@ package com.towermarsh.opendata.plugin.openmeteo.transform.model;
  */
 public final class WmoWeatherCode {
 
+    /**
+     * Prevents instantiation of this utility class.
+     */
     private WmoWeatherCode() {
     }
 

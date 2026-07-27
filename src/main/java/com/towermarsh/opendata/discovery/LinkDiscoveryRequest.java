@@ -31,6 +31,8 @@ public record LinkDiscoveryRequest(
         Pattern hrefPattern,
         Pattern textPattern) {
 
+    /** Validates and normalises record components. */
+
     public LinkDiscoveryRequest {
         Objects.requireNonNull(pageUri, "pageUri");
         allowedExtensions = normalizeExtensions(allowedExtensions);

@@ -49,14 +49,27 @@ public final class BootstrapConfigurationLoader {
 
     private final ClassLoader classLoader;
 
+    /**
+     * Creates a loader that uses the thread context class loader.
+     */
     public BootstrapConfigurationLoader() {
         this(Thread.currentThread().getContextClassLoader());
     }
 
+    /**
+     * Creates a loader using the supplied class loader.
+     *
+     * @param classLoader class loader containing the bootstrap resource
+     */
     public BootstrapConfigurationLoader(final ClassLoader classLoader) {
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
     }
 
+    /**
+     * Loads bootstrap configuration from the packaged application properties resource.
+     *
+     * @return bootstrap configuration
+     */
     public BootstrapConfig load() {
         try (InputStream input = classLoader.getResourceAsStream(RESOURCE)) {
             if (input == null) {
@@ -87,6 +100,13 @@ public final class BootstrapConfigurationLoader {
         }
     }
 
+    /**
+     * Returns a required bootstrap property.
+     *
+     * @param values bootstrap property values
+     * @param key property key to resolve
+     * @return trimmed property value
+     */
     private static String require(
             final Map<String, String> values,
             final String key) {

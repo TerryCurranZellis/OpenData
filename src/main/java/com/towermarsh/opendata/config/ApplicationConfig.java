@@ -57,16 +57,7 @@ public record ApplicationConfig(
         boolean dryRun,
         boolean verbose) {
 
-    /**
-     * validation for ApplicationConfig record
-     *
-     * @param bootstrap application bootstrap configuration
-     * @param plugin structured selected plugin definition
-     * @param runtimeOverrides invocation-only override values
-     * @param overrideFile optional properties override file
-     * @param dryRun whether persistent pipeline changes are disabled
-     * @param verbose whether verbose logging is requested
-     */
+    /** Validates and normalises record components. */
     public ApplicationConfig {
         Objects.requireNonNull(bootstrap, "bootstrap");
         Objects.requireNonNull(plugin, "plugin");
@@ -74,10 +65,11 @@ public record ApplicationConfig(
                 Objects.requireNonNull(runtimeOverrides, "runtimeOverrides"));
         overrideFile = overrideFile == null ? Optional.empty() : overrideFile;
     }
-/**
- * get the plugin id
- * @return return the plugin id
- */
+    /**
+     * Returns the configured plugin identifier for this execution.
+     *
+     * @return selected plugin identifier
+     */
     public String pluginId() {
         return plugin.id();
     }

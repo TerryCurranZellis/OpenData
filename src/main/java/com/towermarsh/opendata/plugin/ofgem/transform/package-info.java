@@ -2,5 +2,9 @@
  * (c) Copyright 2026 Terry Curran
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Ofgem transformation contracts and domain output. */
+/**
+ * Transformation support for Ofgem price-cap datasets.
+ *
+ * <p>This package currently declares no top-level types.</p>
+ */
 package com.towermarsh.opendata.plugin.ofgem.transform;

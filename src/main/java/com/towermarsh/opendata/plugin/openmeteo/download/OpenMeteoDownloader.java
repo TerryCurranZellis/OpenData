@@ -35,6 +35,11 @@ public final class OpenMeteoDownloader {
     private final OpenMeteoConfiguration configuration;
     private final HttpClient httpClient;
 
+    /**
+     * Creates a downloader using a default HTTP client.
+     *
+     * @param configuration typed Open-Meteo configuration
+     */
     public OpenMeteoDownloader(final OpenMeteoConfiguration configuration) {
         this(
                 configuration,
@@ -50,12 +55,26 @@ public final class OpenMeteoDownloader {
         this.httpClient = Objects.requireNonNull(httpClient, "httpClient");
     }
 
+    /**
+     * Downloads weather history for the configured default date range.
+     *
+     * @return raw JSON response
+     * @throws OpenMeteoException if the API call fails
+     */
     public String download() throws OpenMeteoException {
         final var today = LocalDate.now(configuration.timezone());
         final var range = configuration.resolveDateRange(today);
         return download(range.startDate(), range.endDate());
     }
 
+    /**
+     * Downloads weather history for an explicit date range.
+     *
+     * @param startDate inclusive start date
+     * @param endDate inclusive end date
+     * @return raw JSON response
+     * @throws OpenMeteoException if the API call fails
+     */
     public String download(final LocalDate startDate, final LocalDate endDate)
             throws OpenMeteoException {
         Objects.requireNonNull(startDate, "startDate");
@@ -90,6 +109,13 @@ public final class OpenMeteoDownloader {
         return response.body();
     }
 
+    /**
+     * Builds the HTTP request for one Open-Meteo query.
+     *
+     * @param startDate inclusive start date
+     * @param endDate inclusive end date
+     * @return configured HTTP request
+     */
     HttpRequest buildRequest(final LocalDate startDate, final LocalDate endDate) {
         return HttpRequest.newBuilder()
                 .uri(buildUri(startDate, endDate))
@@ -100,6 +126,13 @@ public final class OpenMeteoDownloader {
                 .build();
     }
 
+    /**
+     * Builds the query URI for one Open-Meteo request.
+     *
+     * @param startDate inclusive start date
+     * @param endDate inclusive end date
+     * @return request URI
+     */
     URI buildUri(final LocalDate startDate, final LocalDate endDate) {
         final String separator = configuration.endpoint().toString().contains("?") ? "&" : "?";
         final String query = "latitude=" + configuration.latitude()
@@ -111,10 +144,22 @@ public final class OpenMeteoDownloader {
         return URI.create(configuration.endpoint() + separator + query);
     }
 
+    /**
+     * URL-encodes a query parameter value.
+     *
+     * @param value value to encode
+     * @return encoded query parameter value
+     */
     private static String encode(final String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
     }
 
+    /**
+     * Abbreviates response text for concise error reporting.
+     *
+     * @param value text to abbreviate
+     * @return abbreviated text
+     */
     private static String abbreviated(final String value) {
         if (value == null) {
             return "";

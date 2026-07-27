@@ -62,6 +62,8 @@ public record PluginEndpointDefinition(
         Map<String, String> queryParameters,
         Optional<LinkDiscoveryDefinition> linkDiscovery) {
 
+    /** Validates and normalises record components. */
+
     public PluginEndpointDefinition {
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(type, "type");

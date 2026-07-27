@@ -29,6 +29,13 @@ public final class CommandLineArgumentsProcessor {
     private static final String APPLICATION_NAME = "opendata";
     private final Options options = createOptions();
 
+    /**
+     * Parses and validates the supplied command-line arguments.
+     *
+     * @param arguments raw command-line arguments
+     * @return parsed arguments
+     * @throws CommandLineProcessingException if the command line is invalid
+     */
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
         try {
@@ -86,10 +93,22 @@ public final class CommandLineArgumentsProcessor {
         return tokens.toArray(String[]::new);
     }
 
+    /**
+     * Determines whether a value contains any whitespace characters.
+     *
+     * @param value value to inspect
+     * @return {@code true} when the value contains whitespace
+     */
     private static boolean containsWhitespace(final String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
+    /**
+     * Adds the current token to the token list when it is non-empty.
+     *
+     * @param tokens collected command-line tokens
+     * @param token token buffer to flush
+     */
     private static void addToken(final List<String> tokens, final StringBuilder token) {
         if (!token.isEmpty()) {
             tokens.add(token.toString());
@@ -97,6 +116,11 @@ public final class CommandLineArgumentsProcessor {
         }
     }
 
+    /**
+     * Prints command-line help to the supplied writer.
+     *
+     * @param writer destination for help output
+     */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
         final var formatter = new HelpFormatter();
@@ -126,6 +150,11 @@ public final class CommandLineArgumentsProcessor {
         writer.flush();
     }
 
+    /**
+     * Builds the supported command-line option set.
+     *
+     * @return configured options
+     */
     private static Options createOptions() {
         final var result = new Options();
         result.addOption(Option.builder("p")
@@ -156,6 +185,12 @@ public final class CommandLineArgumentsProcessor {
         return result;
     }
 
+    /**
+     * Converts a parsed Commons CLI command line into immutable invocation arguments.
+     *
+     * @param commandLine parsed command line
+     * @return immutable invocation arguments
+     */
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
         final boolean help = commandLine.hasOption("help");
         final boolean version = commandLine.hasOption("version");

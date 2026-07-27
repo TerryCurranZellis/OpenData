@@ -43,6 +43,9 @@ public final class JsonDataParser
 
     private final ObjectMapper mapper;
 
+    /**
+     * Creates a JSON parser backed by a default Jackson object mapper.
+     */
     public JsonDataParser() {
 
         mapper

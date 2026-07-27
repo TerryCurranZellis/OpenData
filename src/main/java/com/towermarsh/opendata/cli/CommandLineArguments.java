@@ -13,7 +13,19 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-/** Immutable command-line arguments for one invocation. */
+/**
+ * Immutable command-line arguments for one invocation.
+ *
+ * @param pluginIds selected plugin identifiers
+ * @param allPluginsRequested whether all installed plugins were requested
+ * @param overrideFile optional external override properties file
+ * @param parallelism optional plugin parallelism override
+ * @param dryRun whether database writes and audit rows are disabled
+ * @param verbose whether verbose logging is requested
+ * @param helpRequested whether help output was requested
+ * @param versionRequested whether version output was requested
+ * @param listPluginsRequested whether installed plugin listing was requested
+ */
 public record CommandLineArguments(
         List<String> pluginIds,
         boolean allPluginsRequested,
@@ -25,6 +37,8 @@ public record CommandLineArguments(
         boolean versionRequested,
         boolean listPluginsRequested) {
 
+    /** Validates record components. */
+    /** Validates and normalises record components. */
     public CommandLineArguments {
         pluginIds = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
         overrideFile = overrideFile == null ? Optional.empty() : overrideFile;
@@ -39,6 +53,11 @@ public record CommandLineArguments(
         });
     }
 
+    /**
+     * Indicates whether the invocation only requests informational output.
+     *
+     * @return {@code true} when help, version, or plugin listing output was requested
+     */
     public boolean informationalRequest() {
         return helpRequested || versionRequested || listPluginsRequested;
     }

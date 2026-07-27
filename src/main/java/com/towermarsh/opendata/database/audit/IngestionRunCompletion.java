@@ -9,6 +9,12 @@ import java.util.Objects;
 
 /**
  * Final counters and status for an ingestion run.
+ * @param status final ingestion status
+ * @param rowsExtracted number of extracted source rows
+ * @param rowsLoaded number of rows loaded into the target tables
+ * @param rowsRejected number of rejected rows
+ * @param finishedAt time when ingestion finished
+ * @param message completion detail message
  */
 public record IngestionRunCompletion(
         IngestionStatus status,
@@ -17,6 +23,8 @@ public record IngestionRunCompletion(
         long rowsRejected,
         Instant finishedAt,
         String message) {
+
+    /** Validates and normalises record components. */
 
     public IngestionRunCompletion {
         Objects.requireNonNull(status, "status");

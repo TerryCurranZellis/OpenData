@@ -22,10 +22,15 @@
  * terry.curran@towermarsh.co.uk
  */
 /**
- * Application exceptions
+ * Application exception hierarchy.
  *
- * <p>
- * Contains all the execption code.
- * </p>
+ * <ul>
+ * <li>{@link ConfigurationException}</li>
+ * <li>{@link DiscoveryException}</li>
+ * <li>{@link DownloadException}</li>
+ * <li>{@link ImportException}</li>
+ * <li>{@link OpenDataException}</li>
+ * <li>{@link ValidationException}</li>
+ * </ul>
  */
 package com.towermarsh.opendata.exception;

@@ -5,5 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Application bootstrap and aggregate execution status. */
+/**
+ * Application bootstrap and aggregate execution status.
+ *
+ * <ul>
+ * <li>{@link ExecutionStatus}</li>
+ * <li>{@link OpenDataApplication}</li>
+ * </ul>
+ */
 package com.towermarsh.opendata.app;

@@ -11,10 +11,21 @@ package com.towermarsh.opendata.config;
 public final class OpenDataConfigurationException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new configuration exception.
+     *
+     * @param message the detail message
+     */
     public OpenDataConfigurationException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates a new configuration exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
+     */
     public OpenDataConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
     }

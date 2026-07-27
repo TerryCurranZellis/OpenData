@@ -59,8 +59,9 @@ public final class DatabaseConnectionManager implements AutoCloseable {
     }
 
     /**
+     * Closes the underlying database resource manager.
      *
-     * @throws DatabaseException
+     * @throws DatabaseException if the database resource cannot be closed
      */
     @Override
     public void close() throws DatabaseException {

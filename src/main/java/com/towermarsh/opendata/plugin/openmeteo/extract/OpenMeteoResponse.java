@@ -46,6 +46,18 @@ public record OpenMeteoResponse(
         String timezone,
         Daily daily) {
 
+    /**
+     * Daily weather arrays returned by the Open-Meteo archive API.
+     *
+     * @param time observation dates
+     * @param maximumTemperatures daily maximum temperatures in degrees Celsius
+     * @param minimumTemperatures daily minimum temperatures in degrees Celsius
+     * @param meanTemperatures daily mean temperatures in degrees Celsius
+     * @param sunrise sunrise times
+     * @param sunset sunset times
+     * @param daylightDurationSeconds daylight duration values in seconds
+     * @param weatherCodes WMO weather interpretation codes
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Daily(
             List<String> time,

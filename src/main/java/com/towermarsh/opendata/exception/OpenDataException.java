@@ -37,6 +37,11 @@ public class OpenDataException extends Exception {
      *
      * @param message error description
      */
+    /**
+     * Creates a new OpenData exception.
+     *
+     * @param message the detail message
+     */
     public OpenDataException(String message) {
         super(message);
     }
@@ -46,6 +51,12 @@ public class OpenDataException extends Exception {
      *
      * @param message error description
      * @param cause underlying exception
+     */
+    /**
+     * Creates a new OpenData exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
      */
     public OpenDataException(
             String message,

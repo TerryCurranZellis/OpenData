@@ -43,6 +43,8 @@ public record LinkDiscoveryDefinition(
         String textPattern,
         boolean selectLastMatchingLink) {
 
+    /** Validates and normalises record components. */
+
     public LinkDiscoveryDefinition {
         Objects.requireNonNull(cssSelector, "cssSelector");
         Objects.requireNonNull(hrefPattern, "hrefPattern");

@@ -36,10 +36,20 @@ public final class OfgemPlugin implements OpenDataPlugin {
     private final OfgemPriceCapWorkbookExtractor extractor;
     private final OfgemWorkbookDataValidator validator;
 
+    /**
+     * Creates the Ofgem plugin from a resolved plugin definition.
+     *
+     * @param definition resolved plugin definition
+     */
     public OfgemPlugin(final PluginDefinition definition) {
         this(OfgemConfiguration.from(definition));
     }
 
+    /**
+     * Creates the Ofgem plugin from typed configuration.
+     *
+     * @param configuration typed Ofgem configuration
+     */
     public OfgemPlugin(final OfgemConfiguration configuration) {
         this(
                 configuration,
@@ -90,6 +100,11 @@ public final class OfgemPlugin implements OpenDataPlugin {
                 result.skipped());
     }
 
+    /**
+     * Returns the typed Ofgem configuration.
+     *
+     * @return typed Ofgem configuration
+     */
     public OfgemConfiguration configuration() {
         return configuration;
     }

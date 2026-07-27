@@ -2,5 +2,13 @@
  * (c) Copyright 2026 Terry Curran
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Typed Ofgem price-cap domain records. */
+/**
+ * Ofgem price-cap transformation models.
+ *
+ * <ul>
+ * <li>{@link OfgemPriceCapLevel}</li>
+ * <li>{@link OfgemPriceCapPeriod}</li>
+ * <li>{@link OfgemPriceCapWorkbookData}</li>
+ * </ul>
+ */
 package com.towermarsh.opendata.plugin.ofgem.transform.model;

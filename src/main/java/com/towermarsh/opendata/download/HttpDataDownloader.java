@@ -39,10 +39,18 @@ public final class HttpDataDownloader implements DataDownloader {
     private final HttpClient client;
     private final HttpDownloadOptions options;
 
+    /**
+     * Creates a downloader using default HTTP download options.
+     */
     public HttpDataDownloader() {
         this(HttpDownloadOptions.defaults());
     }
 
+    /**
+     * Creates a downloader using the supplied HTTP options.
+     *
+     * @param options HTTP download options
+     */
     public HttpDataDownloader(HttpDownloadOptions options) {
         this.options = Objects.requireNonNull(options, "options");
         this.client = HttpClient.newBuilder()
@@ -126,6 +134,13 @@ public final class HttpDataDownloader implements DataDownloader {
         }
     }
 
+    /**
+     * Validates the declared remote content length against the configured maximum.
+     *
+     * @param contentLength declared remote content length
+     * @param sourceUri source URI being downloaded
+     * @throws DownloadException if the declared length exceeds the configured maximum
+     */
     private void enforceMaximum(long contentLength, URI sourceUri)
             throws DownloadException {
         if (options.maximumBytes() > 0
@@ -136,6 +151,16 @@ public final class HttpDataDownloader implements DataDownloader {
         }
     }
 
+    /**
+     * Copies a response stream while enforcing the configured maximum size.
+     *
+     * @param input source input stream
+     * @param output destination output stream
+     * @param maximumBytes maximum permitted size in bytes, or {@code 0} for no limit
+     * @return copied byte count
+     * @throws IOException if stream copying fails
+     * @throws DownloadException if the download exceeds the configured maximum
+     */
     private static long copyWithLimit(
             InputStream input,
             OutputStream output,
@@ -155,6 +180,13 @@ public final class HttpDataDownloader implements DataDownloader {
         return total;
     }
 
+    /**
+     * Moves a completed temporary file into its final destination.
+     *
+     * @param source temporary source file
+     * @param destination final destination file
+     * @throws IOException if the move fails
+     */
     private static void moveIntoPlace(Path source, Path destination)
             throws IOException {
         try {
@@ -166,6 +198,11 @@ public final class HttpDataDownloader implements DataDownloader {
         }
     }
 
+    /**
+     * Deletes a temporary file without masking the primary failure.
+     *
+     * @param path temporary file path
+     */
     private static void deleteQuietly(Path path) {
         try {
             Files.deleteIfExists(path);

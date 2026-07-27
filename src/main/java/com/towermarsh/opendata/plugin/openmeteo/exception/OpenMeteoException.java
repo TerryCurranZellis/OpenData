@@ -33,10 +33,21 @@ package com.towermarsh.opendata.plugin.openmeteo.exception;
  */
 public final class OpenMeteoException extends Exception {
 
+    /**
+     * Creates a new Open-Meteo exception.
+     *
+     * @param message the detail message
+     */
     public OpenMeteoException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates a new Open-Meteo exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
+     */
     public OpenMeteoException(
             final String message,
             final Throwable cause) {

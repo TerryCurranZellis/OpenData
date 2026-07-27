@@ -15,6 +15,9 @@ import java.util.Objects;
 public final class OpenMeteoResponseExtractor {
     private final ObjectMapper objectMapper;
 
+    /**
+     * Creates an extractor backed by a default Jackson object mapper.
+     */
     public OpenMeteoResponseExtractor() {
         this(new ObjectMapper());
     }
@@ -23,6 +26,13 @@ public final class OpenMeteoResponseExtractor {
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper");
     }
 
+    /**
+     * Parses a raw Open-Meteo JSON payload.
+     *
+     * @param json raw JSON payload
+     * @return parsed API response
+     * @throws OpenMeteoException if the payload cannot be parsed
+     */
     public OpenMeteoResponse extract(final String json) throws OpenMeteoException {
         Objects.requireNonNull(json, "json");
         try {

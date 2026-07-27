@@ -56,18 +56,38 @@ public final class ImportResult {
         this.successful = successful;
     }
 
+    /**
+     * Returns the dataset identifier.
+     *
+     * @return dataset identifier
+     */
     public String getDatasetId() {
         return datasetId;
     }
 
+    /**
+     * Returns the number of processed records.
+     *
+     * @return processed record count
+     */
     public long getRecordsProcessed() {
         return recordsProcessed;
     }
 
+    /**
+     * Returns the number of failed records.
+     *
+     * @return failed record count
+     */
     public long getRecordsFailed() {
         return recordsFailed;
     }
 
+    /**
+     * Indicates whether the import succeeded.
+     *
+     * @return {@code true} when the import succeeded
+     */
     public boolean isSuccessful() {
         return successful;
     }
