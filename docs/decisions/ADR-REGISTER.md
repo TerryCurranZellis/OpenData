@@ -45,8 +45,8 @@
 | [ADR-0025 Config DB](ADR-0025-database-plugin-configuration-json.md) | Move plugin definitions to database JSON later | Shelved | Legacy duplicate number |
 | [ADR-0025 Octopus](ADR-0025-octopus-email-bill-plugin.md) | Introduce the Octopus email bill plugin | Shelved | Legacy duplicate number; future work |
 | [ADR-0026 OpenMeteo](ADR-0026-openmeteo-reference-plugin.md) | Use OpenMeteo as the API reference plugin | Accepted | Legacy duplicate number |
-| [ADR-0026 Octopus TX](ADR-0026-transactional-octopus-record-persistence.md) | Persist one Octopus bill atomically | Shelved | Legacy duplicate number; future work |
-| [ADR-0027](ADR-0027-idempotent-email-attachment-processing.md) | Make email attachment processing idempotent | Shelved | Future work |
+| [ADR-0026 Octopus TX](ADR-0026-transactional-octopus-record-persistence.md) | Persist one Octopus bill atomically | Accepted | Legacy duplicate number; future work |
+| [ADR-0027](ADR-0027-idempotent-email-attachment-processing.md) | Make email attachment processing idempotent | Accepted | Future work |
 | [ADR-0028](ADR-0028-openmeteo-historical-weather-plugin.md) | Integrate historical OpenMeteo acquisition | Accepted | Runtime and persistence implemented |
 | [ADR-0029](ADR-0029-web-file-discovery-and-tabular-parsing.md) | Use shared discovery and tabular parsing | Accepted | Implemented in Phase 2 |
 | [ADR-0030](ADR-0030-managed-database-connection-pool.md) | Use a managed Apache DBCP connection pool | Accepted | Implemented in Phase 3 |
@@ -63,14 +63,7 @@
 | [ADR-0041](ADR-0041-contextual-jul-for-concurrent-plugins.md) | Add task context to `java.util.logging` | Accepted | Implemented |
 | [ADR-0042](ADR-0042-side-effect-free-dry-run.md) | Keep dry runs free of persistent side effects | Accepted | Implemented |
 | [ADR-0043](ADR-0043-plugin-local-pipeline-packages.md) | Organise provider code as plugin-local pipeline packages | Accepted | Implemented |
-
+| [ADR-0044](ADR-0044-octopus-energy-implement.md) | Implement octopus enery plugin | Accepted | Inprocess |
+|  
 :::
 
-## Numbering note
-
-Duplicate ADR numbers ADR-0021 through ADR-0026 are historical and retained to
-avoid breaking links. A later merge also created conflicting ADR-0030 through
-ADR-0033 filenames; those aliases are mapped in
-[ADR-REGISTER-ADDENDUM.md](ADR-REGISTER-ADDENDUM.md) to canonical ADR-0038
-through ADR-0041. New records continue after ADR-0043 and must not reuse a
-number.
