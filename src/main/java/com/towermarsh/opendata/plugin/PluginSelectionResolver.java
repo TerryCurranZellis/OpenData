@@ -15,6 +15,13 @@ import java.util.Objects;
 
 /** Resolves named plugins or every enabled plugin from the registry. */
 public final class PluginSelectionResolver {
+
+    /**
+     *
+     * @param arguments
+     * @param registry
+     * @return
+     */
     public List<PluginDescriptor> resolve(
             final CommandLineArguments arguments,
             final PluginRegistry registry) {

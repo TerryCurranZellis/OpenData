@@ -31,11 +31,39 @@ package com.towermarsh.opendata.config.model;
  * @version 21 Jul 2026
  */
 public enum AuthenticationType {
+
+    /**
+     *
+     */
     NONE,
+
+    /**
+     *
+     */
     API_KEY,
+
+    /**
+     *
+     */
     BASIC,
+
+    /**
+     *
+     */
     BEARER_TOKEN,
+
+    /**
+     *
+     */
     OAUTH2_CLIENT_CREDENTIALS,
+
+    /**
+     *
+     */
     FORM_LOGIN,
+
+    /**
+     *
+     */
     COOKIE
 }

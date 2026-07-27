@@ -32,10 +32,19 @@ package com.towermarsh.opendata.exception;
 public class ValidationException
         extends OpenDataException {
 
+    /**
+     *
+     * @param message
+     */
     public ValidationException(String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public ValidationException(
             String message,
             Throwable cause) {

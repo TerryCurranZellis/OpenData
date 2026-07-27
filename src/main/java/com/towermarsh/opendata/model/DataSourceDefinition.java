@@ -65,14 +65,26 @@ public final class DataSourceDefinition {
                         "url");
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUrl() {
         return url;
     }

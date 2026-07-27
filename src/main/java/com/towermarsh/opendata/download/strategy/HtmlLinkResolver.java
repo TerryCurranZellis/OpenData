@@ -27,6 +27,7 @@ public final class HtmlLinkResolver {
      * @param html HTML document
      * @param definition configured discovery rules
      * @return absolute downloadable URI
+     * @throws com.towermarsh.opendata.exception.DownloadException
      */
     public URI resolve(
             final URI landingPageUri,

@@ -12,15 +12,47 @@ import java.sql.SQLException;
  */
 public interface IngestionAuditRepository {
 
+    /**
+     *
+     * @param datasetCode
+     * @param sourcePageUri
+     * @param applicationVersion
+     * @return
+     * @throws SQLException
+     */
     long startRun(String datasetCode, URI sourcePageUri, String applicationVersion)
             throws SQLException;
 
+    /**
+     *
+     * @param ingestionRunId
+     * @param metadata
+     * @return
+     * @throws SQLException
+     */
     long registerSourceFile(long ingestionRunId, SourceFileMetadata metadata)
             throws SQLException;
 
+    /**
+     *
+     * @param ingestionRunId
+     * @param completion
+     * @throws SQLException
+     */
     void completeRun(long ingestionRunId, IngestionRunCompletion completion)
             throws SQLException;
 
+    /**
+     *
+     * @param ingestionRunId
+     * @param sourceFileId
+     * @param sourceRowNumber
+     * @param stage
+     * @param errorCode
+     * @param message
+     * @param rawPayload
+     * @throws SQLException
+     */
     void recordError(
             long ingestionRunId,
             Long sourceFileId,

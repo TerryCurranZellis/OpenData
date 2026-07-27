@@ -56,18 +56,34 @@ public final class ImportResult {
         this.successful = successful;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDatasetId() {
         return datasetId;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getRecordsProcessed() {
         return recordsProcessed;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getRecordsFailed() {
         return recordsFailed;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isSuccessful() {
         return successful;
     }

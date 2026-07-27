@@ -27,10 +27,21 @@ public final class LoggingManager {
     private LoggingManager() {
     }
 
+    /**
+     *
+     * @param logDirectory
+     * @throws IOException
+     */
     public static void initialise(final Path logDirectory) throws IOException {
         configure(new LoggingConfiguration(logDirectory, 10_485_760, 10, true), false);
     }
 
+    /**
+     *
+     * @param configuration
+     * @param verbose
+     * @throws IOException
+     */
     public static void configure(final LoggingConfiguration configuration, final boolean verbose) throws IOException {
         synchronized (LOCK) {
             Files.createDirectories(configuration.directory());
@@ -60,10 +71,17 @@ public final class LoggingManager {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static Logger getLogger() {
         return LOGGER;
     }
 
+    /**
+     *
+     */
     public static void shutdown() {
         synchronized (LOCK) {
             for (Handler handler : ROOT.getHandlers()) {

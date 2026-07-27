@@ -43,6 +43,9 @@ public final class JsonDataParser
 
     private final ObjectMapper mapper;
 
+    /**
+     *
+     */
     public JsonDataParser() {
 
         mapper

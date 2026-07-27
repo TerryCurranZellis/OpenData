@@ -22,10 +22,17 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
 
     private final boolean failOnTie;
 
+    /**
+     *
+     */
     public HighestScoringLinkSelector() {
         this(true);
     }
 
+    /**
+     *
+     * @param failOnTie
+     */
     public HighestScoringLinkSelector(boolean failOnTie) {
         this.failOnTie = failOnTie;
     }

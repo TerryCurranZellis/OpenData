@@ -25,10 +25,19 @@ public final class OfgemWorkbookDownloader {
 
     private final OfgemConfiguration configuration;
 
+    /**
+     *
+     * @param configuration
+     */
     public OfgemWorkbookDownloader(final OfgemConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
     }
 
+    /**
+     *
+     * @return
+     * @throws DownloadException
+     */
     public ResolvedDownload download() throws DownloadException {
         final var endpoint = configuration.publicationEndpoint();
         final var discovery = endpoint.linkDiscovery().orElseThrow(() ->
@@ -42,6 +51,12 @@ public final class OfgemWorkbookDownloader {
                 discovery);
     }
 
+    /**
+     *
+     * @param downloadedFile
+     * @param effectiveFrom
+     * @throws IOException
+     */
     public void archive(final Path downloadedFile, final LocalDate effectiveFrom)
             throws IOException {
         Objects.requireNonNull(downloadedFile, "downloadedFile");

@@ -33,10 +33,19 @@ package com.towermarsh.opendata.config;
  */
 public final class PluginDefinitionException extends RuntimeException {
 
+    /**
+     *
+     * @param message
+     */
     public PluginDefinitionException(final String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public PluginDefinitionException(final String message, final Throwable cause) {
         super(message, cause);
     }

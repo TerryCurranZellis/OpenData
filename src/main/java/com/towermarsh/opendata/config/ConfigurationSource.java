@@ -31,8 +31,24 @@ package com.towermarsh.opendata.config;
  * @version 21 Jul 2026
  */
 public enum ConfigurationSource {
+
+    /**
+     *
+     */
     BUILT_IN_DEFAULT,
+
+    /**
+     *
+     */
     APPLICATION_CLASSPATH,
+
+    /**
+     *
+     */
     PLUGIN_CLASSPATH,
+
+    /**
+     *
+     */
     OVERRIDE_FILE
 }

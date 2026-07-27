@@ -31,12 +31,44 @@ package com.towermarsh.opendata.config.model;
  * @version 21 Jul 2026
  */
 public enum PluginPropertyType {
+
+    /**
+     *
+     */
     STRING,
+
+    /**
+     *
+     */
     INTEGER,
+
+    /**
+     *
+     */
     LONG,
+
+    /**
+     *
+     */
     BOOLEAN,
+
+    /**
+     *
+     */
     DECIMAL,
+
+    /**
+     *
+     */
     DURATION,
+
+    /**
+     *
+     */
     PATH,
+
+    /**
+     *
+     */
     URI
 }

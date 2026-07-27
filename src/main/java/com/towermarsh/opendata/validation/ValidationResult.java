@@ -66,18 +66,34 @@ public final class ValidationResult {
                 = Collections.unmodifiableList(errors);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isValid() {
         return valid;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getRecordsChecked() {
         return recordsChecked;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getRecordsRejected() {
         return recordsRejected;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<String> getErrors() {
         return errors;
     }

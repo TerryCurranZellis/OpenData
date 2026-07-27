@@ -14,6 +14,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class PluginThreadFactory implements ThreadFactory {
     private final AtomicInteger sequence = new AtomicInteger();
 
+    /**
+     *
+     * @param task
+     * @return
+     */
     @Override
     public Thread newThread(final Runnable task) {
         final Thread thread = new Thread(task, "opendata-plugin-" + sequence.incrementAndGet());

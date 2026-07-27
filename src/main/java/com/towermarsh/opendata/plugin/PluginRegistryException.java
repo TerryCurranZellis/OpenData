@@ -5,10 +5,19 @@ package com.towermarsh.opendata.plugin;
  */
 public final class PluginRegistryException extends RuntimeException {
 
+    /**
+     *
+     * @param message
+     */
     public PluginRegistryException(final String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public PluginRegistryException(
             final String message,
             final Throwable cause) {

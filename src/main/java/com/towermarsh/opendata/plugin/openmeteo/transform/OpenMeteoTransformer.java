@@ -22,6 +22,13 @@ import java.util.Objects;
 /** Converts a validated Open-Meteo API response into domain records. */
 public final class OpenMeteoTransformer {
 
+    /**
+     *
+     * @param response
+     * @param configuration
+     * @return
+     * @throws OpenMeteoException
+     */
     public List<DailyWeatherRecord> transform(
             final OpenMeteoResponse response,
             final OpenMeteoConfiguration configuration) throws OpenMeteoException {

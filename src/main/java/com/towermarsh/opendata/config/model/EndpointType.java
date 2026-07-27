@@ -31,10 +31,34 @@ package com.towermarsh.opendata.config.model;
  * @version 21 Jul 2026
  */
 public enum EndpointType {
+
+    /**
+     *
+     */
     API,
+
+    /**
+     *
+     */
     FILE,
+
+    /**
+     *
+     */
     LANDING_PAGE,
+
+    /**
+     *
+     */
     HTML_TABLE,
+
+    /**
+     *
+     */
     METADATA,
+
+    /**
+     *
+     */
     AUTHENTICATION
 }

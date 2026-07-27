@@ -41,6 +41,9 @@ import org.apache.poi.ss.util.CellReference;
  */
 public final class OfgemPriceCapWorkbookExtractor {
 
+    /**
+     *
+     */
     public static final String OUTPUT_SHEET = "1a Levelised DTC";
 
     private static final DateTimeFormatter MONTH_YEAR =

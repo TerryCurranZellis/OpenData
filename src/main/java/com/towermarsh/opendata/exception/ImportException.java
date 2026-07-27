@@ -33,10 +33,19 @@ package com.towermarsh.opendata.exception;
 public class ImportException
         extends OpenDataException {
 
+    /**
+     *
+     * @param message
+     */
     public ImportException(String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public ImportException(
             String message,
             Throwable cause) {

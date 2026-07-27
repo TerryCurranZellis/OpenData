@@ -31,14 +31,50 @@ package com.towermarsh.opendata.config.model;
  * @version 21 Jul 2026
  */
 public enum DatasetFormat {
+
+    /**
+     *
+     */
     CSV,
+
+    /**
+     *
+     */
     JSON,
+
+    /**
+     *
+     */
     XML,
+
+    /**
+     *
+     */
     XLS,
+
+    /**
+     *
+     */
     XLSX,
+
+    /**
+     *
+     */
     HTML,
+
+    /**
+     *
+     */
     ZIP,
+
+    /**
+     *
+     */
     TEXT,
+
+    /**
+     *
+     */
     BINARY;
 
     /**

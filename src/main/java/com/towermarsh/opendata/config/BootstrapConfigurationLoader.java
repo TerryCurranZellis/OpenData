@@ -49,14 +49,25 @@ public final class BootstrapConfigurationLoader {
 
     private final ClassLoader classLoader;
 
+    /**
+     *
+     */
     public BootstrapConfigurationLoader() {
         this(Thread.currentThread().getContextClassLoader());
     }
 
+    /**
+     *
+     * @param classLoader
+     */
     public BootstrapConfigurationLoader(final ClassLoader classLoader) {
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
     }
 
+    /**
+     *
+     * @return
+     */
     public BootstrapConfig load() {
         try (InputStream input = classLoader.getResourceAsStream(RESOURCE)) {
             if (input == null) {

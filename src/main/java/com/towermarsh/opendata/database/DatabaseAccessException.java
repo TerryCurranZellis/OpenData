@@ -11,10 +11,19 @@ package com.towermarsh.opendata.database;
 public final class DatabaseAccessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     *
+     * @param message
+     */
     public DatabaseAccessException(final String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public DatabaseAccessException(final String message, final Throwable cause) {
         super(message, cause);
     }

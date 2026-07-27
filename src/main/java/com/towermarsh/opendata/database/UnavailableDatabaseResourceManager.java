@@ -15,11 +15,19 @@ import java.sql.Connection;
  */
 public final class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 
+    /**
+     *
+     * @return
+     * @throws DatabaseException
+     */
     @Override
     public Connection getConnection() throws DatabaseException {
         throw new DatabaseException("Database access is disabled during --dry-run.");
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         // Nothing to release.

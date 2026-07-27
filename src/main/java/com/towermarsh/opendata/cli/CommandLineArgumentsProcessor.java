@@ -29,6 +29,11 @@ public final class CommandLineArgumentsProcessor {
     private static final String APPLICATION_NAME = "opendata";
     private final Options options = createOptions();
 
+    /**
+     *
+     * @param arguments
+     * @return
+     */
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
         try {
@@ -97,6 +102,10 @@ public final class CommandLineArgumentsProcessor {
         }
     }
 
+    /**
+     *
+     * @param writer
+     */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
         final var formatter = new HelpFormatter();

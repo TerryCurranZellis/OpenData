@@ -37,6 +37,12 @@ public final class DownloadResult {
     private final DataFile file;
     private final String message;
 
+    /**
+     *
+     * @param successful
+     * @param file
+     * @param message
+     */
     public DownloadResult(
             boolean successful,
             DataFile file,
@@ -47,14 +53,26 @@ public final class DownloadResult {
         this.message = message;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isSuccessful() {
         return successful;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataFile getFile() {
         return file;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessage() {
         return message;
     }

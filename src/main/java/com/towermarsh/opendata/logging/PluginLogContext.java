@@ -18,6 +18,12 @@ public final class PluginLogContext {
     private PluginLogContext() {
     }
 
+    /**
+     *
+     * @param pluginId
+     * @param runId
+     * @return
+     */
     public static Scope open(final String pluginId, final UUID runId) {
         final Entry previous = CURRENT.get();
         CURRENT.set(new Entry(pluginId, runId));
@@ -30,6 +36,10 @@ public final class PluginLogContext {
         };
     }
 
+    /**
+     *
+     * @return
+     */
     public static Optional<Entry> current() {
         return Optional.ofNullable(CURRENT.get());
     }
@@ -41,8 +51,15 @@ public final class PluginLogContext {
         }
     }
 
+    /**
+     *
+     */
     @FunctionalInterface
     public interface Scope extends AutoCloseable {
+
+        /**
+         *
+         */
         @Override
         void close();
     }

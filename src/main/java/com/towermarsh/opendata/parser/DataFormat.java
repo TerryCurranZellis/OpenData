@@ -13,8 +13,20 @@ import java.util.Objects;
  * Tabular and structured file formats understood by the parser factory.
  */
 public enum DataFormat {
+
+    /**
+     *
+     */
     CSV,
+
+    /**
+     *
+     */
     EXCEL,
+
+    /**
+     *
+     */
     JSON;
 
     /**

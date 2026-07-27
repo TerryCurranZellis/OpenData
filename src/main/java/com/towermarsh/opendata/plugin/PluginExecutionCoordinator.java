@@ -35,6 +35,14 @@ public final class PluginExecutionCoordinator {
     private final Clock clock;
     private final Duration shutdownTimeout;
 
+    /**
+     *
+     * @param pluginFactory
+     * @param audit
+     * @param database
+     * @param clock
+     * @param shutdownTimeout
+     */
     public PluginExecutionCoordinator(
             final PluginFactory pluginFactory,
             final PluginRunAudit audit,
@@ -48,6 +56,14 @@ public final class PluginExecutionCoordinator {
         this.shutdownTimeout = Objects.requireNonNull(shutdownTimeout, "shutdownTimeout");
     }
 
+    /**
+     *
+     * @param plugins
+     * @param requestedParallelism
+     * @param dryRun
+     * @return
+     * @throws InterruptedException
+     */
     public PluginExecutionSummary execute(
             final List<ResolvedPlugin> plugins,
             final int requestedParallelism,

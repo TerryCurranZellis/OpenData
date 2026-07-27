@@ -34,10 +34,19 @@ package com.towermarsh.opendata.database;
 
 public class DatabaseException extends RuntimeException {
 
+    /**
+     *
+     * @param message
+     */
     public DatabaseException(final String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public DatabaseException(
             final String message,
             final Throwable cause) {

@@ -31,9 +31,29 @@ package com.towermarsh.opendata.config.model;
  * @version 21 Jul 2026
  */
 public enum CredentialLocation {
+
+    /**
+     *
+     */
     HEADER,
+
+    /**
+     *
+     */
     QUERY_PARAMETER,
+
+    /**
+     *
+     */
     COOKIE,
+
+    /**
+     *
+     */
     REQUEST_BODY,
+
+    /**
+     *
+     */
     NONE
 }

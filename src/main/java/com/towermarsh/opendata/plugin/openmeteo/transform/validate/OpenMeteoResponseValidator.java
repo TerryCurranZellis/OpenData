@@ -14,6 +14,12 @@ import java.util.Objects;
 /** Validates the parallel daily arrays returned by Open-Meteo. */
 public final class OpenMeteoResponseValidator {
 
+    /**
+     *
+     * @param response
+     * @return
+     * @throws OpenMeteoException
+     */
     public OpenMeteoResponse validate(final OpenMeteoResponse response)
             throws OpenMeteoException {
         Objects.requireNonNull(response, "response");

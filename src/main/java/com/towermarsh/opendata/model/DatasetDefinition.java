@@ -66,14 +66,26 @@ public final class DatasetDefinition {
                         "source");
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDatasetId() {
         return datasetId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     public DataSourceDefinition getSource() {
         return source;
     }

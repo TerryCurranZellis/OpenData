@@ -35,6 +35,10 @@ public final class OpenMeteoDownloader {
     private final OpenMeteoConfiguration configuration;
     private final HttpClient httpClient;
 
+    /**
+     *
+     * @param configuration
+     */
     public OpenMeteoDownloader(final OpenMeteoConfiguration configuration) {
         this(
                 configuration,
@@ -50,12 +54,24 @@ public final class OpenMeteoDownloader {
         this.httpClient = Objects.requireNonNull(httpClient, "httpClient");
     }
 
+    /**
+     *
+     * @return
+     * @throws OpenMeteoException
+     */
     public String download() throws OpenMeteoException {
         final var today = LocalDate.now(configuration.timezone());
         final var range = configuration.resolveDateRange(today);
         return download(range.startDate(), range.endDate());
     }
 
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws OpenMeteoException
+     */
     public String download(final LocalDate startDate, final LocalDate endDate)
             throws OpenMeteoException {
         Objects.requireNonNull(startDate, "startDate");

@@ -27,6 +27,11 @@ public final class OverrideConfiguration {
         this.values = Map.copyOf(values);
     }
 
+    /**
+     *
+     * @param file
+     * @return
+     */
     public static OverrideConfiguration load(final Optional<Path> file) {
         Objects.requireNonNull(file, "file");
         if (file.isEmpty()) {
@@ -48,10 +53,20 @@ public final class OverrideConfiguration {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<String, String> applicationValues() {
         return scoped("application.");
     }
 
+    /**
+     *
+     * @param pluginId
+     * @param multiPluginRun
+     * @return
+     */
     public Map<String, String> pluginValues(final String pluginId, final boolean multiPluginRun) {
         final String prefix = "plugin." + normalise(pluginId) + ".";
         final Map<String, String> result = new LinkedHashMap<>(scoped(prefix));

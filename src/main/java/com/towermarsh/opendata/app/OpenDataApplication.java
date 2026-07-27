@@ -41,6 +41,14 @@ public final class OpenDataApplication {
 
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
+    /**
+     *
+     * @param arguments
+     * @param processor
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public ExecutionStatus start(
             final CommandLineArguments arguments,
             final CommandLineArgumentsProcessor processor) throws IOException, InterruptedException {

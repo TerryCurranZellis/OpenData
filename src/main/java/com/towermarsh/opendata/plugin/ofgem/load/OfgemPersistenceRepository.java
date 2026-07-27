@@ -35,10 +35,21 @@ import java.util.Objects;
 public final class OfgemPersistenceRepository {
     private final DatabaseResourceManager database;
 
+    /**
+     *
+     * @param database
+     */
     public OfgemPersistenceRepository(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }
 
+    /**
+     *
+     * @param definition
+     * @param download
+     * @param data
+     * @return
+     */
     public OfgemPersistenceResult persist(
             final PluginDefinition definition,
             final ResolvedDownload download,

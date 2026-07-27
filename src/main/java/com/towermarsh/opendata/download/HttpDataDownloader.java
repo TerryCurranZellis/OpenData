@@ -39,10 +39,17 @@ public final class HttpDataDownloader implements DataDownloader {
     private final HttpClient client;
     private final HttpDownloadOptions options;
 
+    /**
+     *
+     */
     public HttpDataDownloader() {
         this(HttpDownloadOptions.defaults());
     }
 
+    /**
+     *
+     * @param options
+     */
     public HttpDataDownloader(HttpDownloadOptions options) {
         this.options = Objects.requireNonNull(options, "options");
         this.client = HttpClient.newBuilder()

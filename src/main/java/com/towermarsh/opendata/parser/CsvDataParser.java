@@ -30,10 +30,17 @@ public final class CsvDataParser implements DataParser {
 
     private final CsvParserOptions options;
 
+    /**
+     *
+     */
     public CsvDataParser() {
         this(CsvParserOptions.defaults());
     }
 
+    /**
+     *
+     * @param options
+     */
     public CsvDataParser(CsvParserOptions options) {
         this.options = Objects.requireNonNull(options, "options");
     }

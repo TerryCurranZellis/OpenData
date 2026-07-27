@@ -31,9 +31,29 @@ package com.towermarsh.opendata.config.model;
  * @version 21 Jul 2026
  */
 public enum DownloadStrategyType {
+
+    /**
+     *
+     */
     DIRECT_HTTP,
+
+    /**
+     *
+     */
     AUTHENTICATED_API,
+
+    /**
+     *
+     */
     HTML_LINK_DISCOVERY,
+
+    /**
+     *
+     */
     HTML_TABLE,
+
+    /**
+     *
+     */
     BROWSER_AUTOMATION
 }

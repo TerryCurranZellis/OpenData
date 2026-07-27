@@ -20,6 +20,11 @@ public final class ContextualLogFormatter extends Formatter {
     private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ISO_OFFSET_DATE_TIME
             .withZone(ZoneId.systemDefault());
 
+    /**
+     *
+     * @param record
+     * @return
+     */
     @Override
     public String format(final LogRecord record) {
         final var builder = new StringBuilder(256)

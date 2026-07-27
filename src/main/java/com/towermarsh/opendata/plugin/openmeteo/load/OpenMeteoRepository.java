@@ -23,10 +23,21 @@ import java.util.UUID;
 public final class OpenMeteoRepository {
     private final DatabaseResourceManager database;
 
+    /**
+     *
+     * @param database
+     */
     public OpenMeteoRepository(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }
 
+    /**
+     *
+     * @param configuration
+     * @param records
+     * @param runId
+     * @return
+     */
     public OpenMeteoPersistenceResult save(
             final OpenMeteoConfiguration configuration,
             final List<DailyWeatherRecord> records,

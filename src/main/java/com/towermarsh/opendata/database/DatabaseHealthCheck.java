@@ -19,6 +19,10 @@ public final class DatabaseHealthCheck {
 
     private final DatabaseConnectionManager connectionManager;
 
+    /**
+     *
+     * @param connectionManager
+     */
     public DatabaseHealthCheck(DatabaseConnectionManager connectionManager) {
         this.connectionManager = Objects.requireNonNull(
                 connectionManager, "connectionManager");

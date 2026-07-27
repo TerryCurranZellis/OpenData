@@ -64,14 +64,26 @@ public final class DataFile {
                         "downloadedAt");
     }
 
+    /**
+     *
+     * @return
+     */
     public Path getFilePath() {
         return filePath;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getSize() {
         return size;
     }
 
+    /**
+     *
+     * @return
+     */
     public LocalDateTime getDownloadedAt() {
         return downloadedAt;
     }

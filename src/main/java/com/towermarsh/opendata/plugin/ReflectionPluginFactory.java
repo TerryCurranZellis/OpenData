@@ -12,6 +12,12 @@ import java.lang.reflect.InvocationTargetException;
 
 /** Creates configured plugin classes named in plugin properties. */
 public final class ReflectionPluginFactory implements PluginFactory {
+
+    /**
+     *
+     * @param plugin
+     * @return
+     */
     @Override
     public OpenDataPlugin create(final ResolvedPlugin plugin) {
         final String className = plugin.descriptor().implementationClass();

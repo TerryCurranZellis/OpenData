@@ -26,6 +26,10 @@ import java.util.logging.Logger;
 
 /** Complete Open-Meteo download and SQL Server persistence plugin. */
 public final class OpenMeteoPlugin implements OpenDataPlugin {
+
+    /**
+     *
+     */
     public static final String PLUGIN_ID = "openmeteo";
     private static final Logger LOGGER = Logger.getLogger(OpenMeteoPlugin.class.getName());
 
@@ -35,10 +39,18 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
     private final OpenMeteoResponseValidator validator;
     private final OpenMeteoTransformer transformer;
 
+    /**
+     *
+     * @param definition
+     */
     public OpenMeteoPlugin(final PluginDefinition definition) {
         this(OpenMeteoConfiguration.from(definition));
     }
 
+    /**
+     *
+     * @param configuration
+     */
     public OpenMeteoPlugin(final OpenMeteoConfiguration configuration) {
         this(
                 configuration,
@@ -61,6 +73,12 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
         this.transformer = Objects.requireNonNull(transformer, "transformer");
     }
 
+    /**
+     *
+     * @param context
+     * @return
+     * @throws OpenMeteoException
+     */
     @Override
     public PluginMetrics execute(final PluginExecutionContext context) throws OpenMeteoException {
         Objects.requireNonNull(context, "context");
@@ -78,11 +96,20 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
                 persistence.skipped());
     }
 
-    /** Runs the download, extract, validate, and transform stages without loading. */
+    /** Runs the download, extract, validate, and transform stages without loading.
+     * @return
+     * @throws com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException  */
     public List<DailyWeatherRecord> execute() throws OpenMeteoException {
         return process(downloader.download());
     }
 
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     * @throws OpenMeteoException
+     */
     public List<DailyWeatherRecord> execute(
             final LocalDate startDate,
             final LocalDate endDate) throws OpenMeteoException {
@@ -94,6 +121,10 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
         return transformer.transform(response, configuration);
     }
 
+    /**
+     *
+     * @return
+     */
     public OpenMeteoConfiguration configuration() {
         return configuration;
     }

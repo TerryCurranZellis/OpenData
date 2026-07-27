@@ -15,6 +15,12 @@ import java.util.Set;
 /** Validates invariants that span multiple extracted Ofgem price-cap rows. */
 public final class OfgemWorkbookDataValidator {
 
+    /**
+     *
+     * @param data
+     * @return
+     * @throws ImportException
+     */
     public OfgemPriceCapWorkbookData validate(final OfgemPriceCapWorkbookData data)
             throws ImportException {
         Objects.requireNonNull(data, "data");

@@ -32,10 +32,19 @@ package com.towermarsh.opendata.exception;
 public class DownloadException
         extends OpenDataException {
 
+    /**
+     *
+     * @param message
+     */
     public DownloadException(String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public DownloadException(
             String message,
             Throwable cause) {

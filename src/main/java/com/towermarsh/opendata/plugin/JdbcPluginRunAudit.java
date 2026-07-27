@@ -40,11 +40,22 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
     private final DatabaseResourceManager database;
     private final String hostName;
 
+    /**
+     *
+     * @param database
+     */
     public JdbcPluginRunAudit(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
         this.hostName = resolveHostName();
     }
 
+    /**
+     *
+     * @param runId
+     * @param pluginId
+     * @param threadName
+     * @param startedAt
+     */
     @Override
     public void started(
             final UUID runId,
@@ -64,6 +75,10 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
         }
     }
 
+    /**
+     *
+     * @param result
+     */
     @Override
     public void completed(final PluginRunResult result) {
         try (var connection = database.getConnection();

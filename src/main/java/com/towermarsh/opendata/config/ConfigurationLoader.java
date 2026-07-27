@@ -57,6 +57,9 @@ public final class ConfigurationLoader {
     private final ClassLoader classLoader;
     private final Map<String, String> builtInDefaults;
 
+    /**
+     *
+     */
     public ConfigurationLoader() {
         this(Thread.currentThread().getContextClassLoader(), standardDefaults());
     }

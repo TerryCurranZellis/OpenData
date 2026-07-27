@@ -11,10 +11,19 @@ package com.towermarsh.opendata.cli;
 public final class CommandLineProcessingException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     *
+     * @param message
+     */
     public CommandLineProcessingException(final String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public CommandLineProcessingException(final String message, final Throwable cause) {
         super(message, cause);
     }

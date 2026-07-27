@@ -28,6 +28,10 @@ import java.util.logging.Logger;
  * Downloads, validates and persists the current Ofgem price-cap workbook. 
  */
 public final class OfgemPlugin implements OpenDataPlugin {
+
+    /**
+     *
+     */
     public static final String PLUGIN_ID = "ofgem";
     private static final Logger LOGGER = Logger.getLogger(OfgemPlugin.class.getName());
 
@@ -36,10 +40,18 @@ public final class OfgemPlugin implements OpenDataPlugin {
     private final OfgemPriceCapWorkbookExtractor extractor;
     private final OfgemWorkbookDataValidator validator;
 
+    /**
+     *
+     * @param definition
+     */
     public OfgemPlugin(final PluginDefinition definition) {
         this(OfgemConfiguration.from(definition));
     }
 
+    /**
+     *
+     * @param configuration
+     */
     public OfgemPlugin(final OfgemConfiguration configuration) {
         this(
                 configuration,
@@ -59,6 +71,14 @@ public final class OfgemPlugin implements OpenDataPlugin {
         this.validator = Objects.requireNonNull(validator, "validator");
     }
 
+    /**
+     *
+     * @param context
+     * @return
+     * @throws DownloadException
+     * @throws ImportException
+     * @throws IOException
+     */
     @Override
     public PluginMetrics execute(final PluginExecutionContext context)
             throws DownloadException, ImportException, IOException {
@@ -90,6 +110,10 @@ public final class OfgemPlugin implements OpenDataPlugin {
                 result.skipped());
     }
 
+    /**
+     *
+     * @return
+     */
     public OfgemConfiguration configuration() {
         return configuration;
     }

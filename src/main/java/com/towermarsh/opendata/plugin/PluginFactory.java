@@ -10,5 +10,11 @@ package com.towermarsh.opendata.plugin;
 /** Creates a fresh plugin instance for one task. */
 @FunctionalInterface
 public interface PluginFactory {
+
+    /**
+     *
+     * @param plugin
+     * @return
+     */
     OpenDataPlugin create(ResolvedPlugin plugin);
 }

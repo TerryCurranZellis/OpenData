@@ -162,13 +162,19 @@ public record OpenMeteoConfiguration(
      * <p>
      * Default values
      * <table>
+     * <caption>Default date values</caption>
+     * <tr>
+     * <th>Property</th>
+     * <th>Default value</th>
+     * </tr>
      * <tr>
      * <td>StartDate</td>
      * <td>2000-01-01</td>
      * </tr>
+     * <tr>
      * <td>EndDate</td>
-     * <td>Today -1 day</td>
-     * </td>
+     * <td>Current date minus one day</td>
+     * </tr>
      * </table>
      *
      * @param today today's date
@@ -255,6 +261,7 @@ public record OpenMeteoConfiguration(
 
     /**
      * Validates one SQL identifier used by the plugin-local load package.
+     *
      * @param value the column id in the data
      * @param name the column name in the db
      */
@@ -268,6 +275,7 @@ public record OpenMeteoConfiguration(
 
     /**
      * create a daterange record
+     *
      * @param startDate start date for the range
      * @param endDate end date for the range
      */
@@ -275,8 +283,9 @@ public record OpenMeteoConfiguration(
 
         /**
          * Set the date range
+         *
          * @param startDate
-         * @param endDate 
+         * @param endDate
          */
         public DateRange {
             Objects.requireNonNull(startDate, "startDate");

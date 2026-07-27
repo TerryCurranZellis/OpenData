@@ -32,10 +32,17 @@ public final class ExcelDataParser implements DataParser {
 
     private final ExcelParserOptions options;
 
+    /**
+     *
+     */
     public ExcelDataParser() {
         this(ExcelParserOptions.defaults());
     }
 
+    /**
+     *
+     * @param options
+     */
     public ExcelDataParser(ExcelParserOptions options) {
         this.options = Objects.requireNonNull(options, "options");
     }

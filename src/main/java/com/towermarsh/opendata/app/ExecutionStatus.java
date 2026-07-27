@@ -5,14 +5,49 @@ package com.towermarsh.opendata.app;
  */
 public enum ExecutionStatus {
 
+    /**
+     *
+     */
     NOT_STARTED(1, "Not started"),
+
+    /**
+     *
+     */
     SUCCESS(0, "Successful"),
+
+    /**
+     *
+     */
     APPLICATION_FAILURE(1, "Application error"),
+
+    /**
+     *
+     */
     COMMAND_LINE_ERROR(2, "Command-line error"),
+
+    /**
+     *
+     */
     CONFIGURATION_ERROR(3, "Configuration error"),
+
+    /**
+     *
+     */
     PLUGIN_FAILURE(4, "One or more plugins failed"),
+
+    /**
+     *
+     */
     DATABASE_FAILURE(5, "Database failure"),
+
+    /**
+     *
+     */
     IO_FAILURE(6, "Input/output failure"),
+
+    /**
+     *
+     */
     INTERRUPTED(130, "Interrupted");
 
     /**

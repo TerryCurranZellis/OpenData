@@ -15,6 +15,9 @@ import java.util.Objects;
 public final class OpenMeteoResponseExtractor {
     private final ObjectMapper objectMapper;
 
+    /**
+     *
+     */
     public OpenMeteoResponseExtractor() {
         this(new ObjectMapper());
     }
@@ -23,6 +26,12 @@ public final class OpenMeteoResponseExtractor {
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper");
     }
 
+    /**
+     *
+     * @param json
+     * @return
+     * @throws OpenMeteoException
+     */
     public OpenMeteoResponse extract(final String json) throws OpenMeteoException {
         Objects.requireNonNull(json, "json");
         try {

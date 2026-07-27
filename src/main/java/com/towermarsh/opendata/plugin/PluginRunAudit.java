@@ -12,7 +12,19 @@ import java.util.UUID;
 
 /** Persists generic plugin-run lifecycle information. */
 public interface PluginRunAudit {
+
+    /**
+     *
+     * @param runId
+     * @param pluginId
+     * @param threadName
+     * @param startedAt
+     */
     void started(UUID runId, String pluginId, String threadName, Instant startedAt);
 
+    /**
+     *
+     * @param result
+     */
     void completed(PluginRunResult result);
 }

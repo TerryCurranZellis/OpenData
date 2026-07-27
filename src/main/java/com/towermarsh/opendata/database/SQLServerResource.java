@@ -82,6 +82,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
         }
     }
 
+    /**
+     *
+     * @param configuration
+     * @return
+     */
     public static synchronized SQLServerResource initialise(final DatabasePoolConfiguration configuration) {
         if (instance != null && !instance.closed.get()) {
             return instance;
@@ -90,6 +95,10 @@ public final class SQLServerResource implements DatabaseResourceManager {
         return instance;
     }
 
+    /**
+     *
+     * @return
+     */
     public static synchronized SQLServerResource getInstance() {
         if (instance == null || instance.closed.get()) {
             throw new IllegalStateException("SQLServerResource has not been initialised.");
@@ -97,6 +106,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
         return instance;
     }
 
+    /**
+     *
+     * @return
+     * @throws DatabaseException
+     */
     @Override
     public Connection getConnection() throws DatabaseException {
         if (closed.get()) {
@@ -111,21 +125,36 @@ public final class SQLServerResource implements DatabaseResourceManager {
         }
     }
 
+    /**
+     *
+     * @param connection
+     */
     @Override
     public void close(final Connection connection) {
         closeAndLog(connection, "connection");
     }
 
+    /**
+     *
+     * @param statement
+     */
     @Override
     public void close(final PreparedStatement statement) {
         closeAndLog(statement, "prepared statement");
     }
 
+    /**
+     *
+     * @param resultSet
+     */
     @Override
     public void close(final ResultSet resultSet) {
         closeAndLog(resultSet, "result set");
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         if (!closed.compareAndSet(false, true)) {
@@ -144,10 +173,18 @@ public final class SQLServerResource implements DatabaseResourceManager {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int activeConnections() {
         return connectionPool.getNumActive();
     }
 
+    /**
+     *
+     * @return
+     */
     public int idleConnections() {
         return connectionPool.getNumIdle();
     }
