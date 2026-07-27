@@ -44,7 +44,7 @@ import java.util.Optional;
  * @param credentials secret references
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public record PluginDefinition(
         String id,
@@ -58,6 +58,7 @@ public record PluginDefinition(
         Map<String, PluginPropertyDefinition> properties,
         Map<String, CredentialReference> credentials) {
 
+    /** Validates and normalises record components. */
     public PluginDefinition {
         Objects.requireNonNull(id, "id");
         Objects.requireNonNull(displayName, "displayName");
@@ -69,6 +70,12 @@ public record PluginDefinition(
         credentials = Map.copyOf(Objects.requireNonNull(credentials, "credentials"));
     }
 
+    /**
+     * Returns a required endpoint definition by name.
+     *
+     * @param name endpoint name
+     * @return matching endpoint definition
+     */
     public PluginEndpointDefinition requireEndpoint(final String name) {
         return endpoints.stream()
                 .filter(endpoint -> endpoint.name().equalsIgnoreCase(name))
@@ -77,10 +84,22 @@ public record PluginDefinition(
                         "Plugin '%s' does not define endpoint '%s'.".formatted(id, name)));
     }
 
+    /**
+     * Looks up a plugin property definition by name.
+     *
+     * @param name property name
+     * @return matching property definition when present
+     */
     public Optional<PluginPropertyDefinition> findProperty(final String name) {
         return Optional.ofNullable(properties.get(name.toLowerCase(java.util.Locale.ROOT)));
     }
 
+    /**
+     * Returns a required non-blank plugin property value.
+     *
+     * @param name property name
+     * @return property value
+     */
     public String requireProperty(final String name) {
         return findProperty(name)
                 .map(PluginPropertyDefinition::value)

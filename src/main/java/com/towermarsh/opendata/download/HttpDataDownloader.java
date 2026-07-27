@@ -1,7 +1,25 @@
 /*
+ * Filename: HttpDataDownloader.java
+ *
  * (c) Copyright 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * The author may be contacted by email to the following address:
+ *
+ * terry.curran@towermarsh.co.uk
  */
 package com.towermarsh.opendata.download;
 
@@ -27,9 +45,13 @@ import java.util.logging.Logger;
 /**
  * Streaming HTTP implementation of {@link DataDownloader}.
  *
- * <p>The response is written to a temporary sibling file and moved into place
- * only after the transfer has completed. This avoids leaving a partial dataset
- * at the final path.</p>
+ * <p>
+ * The response is written to a temporary sibling file and moved into place only
+ * after the transfer has completed. This avoids leaving a partial dataset at
+ * the final path.</p>
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class HttpDataDownloader implements DataDownloader {
 
@@ -41,6 +63,8 @@ public final class HttpDataDownloader implements DataDownloader {
 
     /**
      *
+     * Creates a downloader using default HTTP download options.
+     *
      */
     public HttpDataDownloader() {
         this(HttpDownloadOptions.defaults());
@@ -48,7 +72,10 @@ public final class HttpDataDownloader implements DataDownloader {
 
     /**
      *
-     * @param options
+     * Creates a downloader using the supplied HTTP options.
+     *
+     * @param options HTTP download options
+     *
      */
     public HttpDataDownloader(HttpDownloadOptions options) {
         this.options = Objects.requireNonNull(options, "options");
@@ -107,12 +134,11 @@ public final class HttpDataDownloader implements DataDownloader {
             enforceMaximum(declaredLength, sourceUri);
 
             long bytes;
-            try (InputStream input = response.body();
-                    OutputStream output = Files.newOutputStream(
-                            temporary,
-                            StandardOpenOption.CREATE,
-                            StandardOpenOption.TRUNCATE_EXISTING,
-                            StandardOpenOption.WRITE)) {
+            try (InputStream input = response.body(); OutputStream output = Files.newOutputStream(
+                    temporary,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE)) {
                 bytes = copyWithLimit(input, output, options.maximumBytes());
             }
 
@@ -133,6 +159,15 @@ public final class HttpDataDownloader implements DataDownloader {
         }
     }
 
+    /**
+     * Validates the declared remote content length against the configured
+     * maximum.
+     *
+     * @param contentLength declared remote content length
+     * @param sourceUri source URI being downloaded
+     * @throws DownloadException if the declared length exceeds the configured
+     * maximum
+     */
     private void enforceMaximum(long contentLength, URI sourceUri)
             throws DownloadException {
         if (options.maximumBytes() > 0
@@ -143,6 +178,17 @@ public final class HttpDataDownloader implements DataDownloader {
         }
     }
 
+    /**
+     * Copies a response stream while enforcing the configured maximum size.
+     *
+     * @param input source input stream
+     * @param output destination output stream
+     * @param maximumBytes maximum permitted size in bytes, or {@code 0} for no
+     * limit
+     * @return copied byte count
+     * @throws IOException if stream copying fails
+     * @throws DownloadException if the download exceeds the configured maximum
+     */
     private static long copyWithLimit(
             InputStream input,
             OutputStream output,
@@ -162,6 +208,13 @@ public final class HttpDataDownloader implements DataDownloader {
         return total;
     }
 
+    /**
+     * Moves a completed temporary file into its final destination.
+     *
+     * @param source temporary source file
+     * @param destination final destination file
+     * @throws IOException if the move fails
+     */
     private static void moveIntoPlace(Path source, Path destination)
             throws IOException {
         try {
@@ -173,6 +226,11 @@ public final class HttpDataDownloader implements DataDownloader {
         }
     }
 
+    /**
+     * Deletes a temporary file without masking the primary failure.
+     *
+     * @param path temporary file path
+     */
     private static void deleteQuietly(Path path) {
         try {
             Files.deleteIfExists(path);

@@ -12,7 +12,18 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Objects;
 
-/** Typed configuration used by the executable Ofgem plugin. */
+/** Typed configuration used by the executable Ofgem plugin.
+ * @param publicationEndpoint configured publication endpoint definition
+ * @param outputFilename downloaded workbook file name
+ * @param connectTimeout HTTP connection timeout
+ * @param requestTimeout HTTP request timeout
+ * @param archiveOriginalFile whether the downloaded workbook is archived after a write run
+ * @param workingDirectory directory used for the active download
+ * @param archiveDirectory directory containing archived workbooks
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 public record OfgemConfiguration(
         PluginEndpointDefinition publicationEndpoint,
         String outputFilename,
@@ -24,6 +35,7 @@ public record OfgemConfiguration(
 
     public static final String ENDPOINT_NAME = "price-cap-publication";
 
+    /** Validates and normalises record components. */
     public OfgemConfiguration {
         Objects.requireNonNull(publicationEndpoint, "publicationEndpoint");
         outputFilename = requireText(outputFilename, "download.output-filename");
@@ -39,6 +51,12 @@ public record OfgemConfiguration(
         }
     }
 
+    /**
+     * Builds typed Ofgem configuration from a resolved plugin definition.
+     *
+     * @param definition resolved plugin definition
+     * @return typed Ofgem configuration
+     */
     public static OfgemConfiguration from(final PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!"ofgem".equalsIgnoreCase(definition.id())) {
@@ -55,10 +73,23 @@ public record OfgemConfiguration(
                 Path.of(value(definition, "archive.directory", "archive/ofgem")));
     }
 
+    /**
+     * Returns the local workbook download path.
+     *
+     * @return local workbook download path
+     */
     public Path downloadPath() {
         return workingDirectory.resolve(outputFilename).normalize();
     }
 
+    /**
+     * Returns a plugin property value or a default.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @param defaultValue fallback value
+     * @return resolved property value
+     */
     private static String value(
             final PluginDefinition definition,
             final String name,
@@ -69,6 +100,14 @@ public record OfgemConfiguration(
                 .orElse(defaultValue);
     }
 
+    /**
+     * Returns an ISO-8601 duration property or a default.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @param defaultValue fallback value
+     * @return parsed duration
+     */
     private static Duration duration(
             final PluginDefinition definition,
             final String name,
@@ -81,6 +120,14 @@ public record OfgemConfiguration(
         }
     }
 
+    /**
+     * Returns a boolean property or a default.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @param defaultValue fallback value
+     * @return parsed boolean value
+     */
     private static boolean bool(
             final PluginDefinition definition,
             final String name,
@@ -93,6 +140,13 @@ public record OfgemConfiguration(
         };
     }
 
+    /**
+     * Returns a required non-blank text value.
+     *
+     * @param value value to validate
+     * @param name field name for error reporting
+     * @return trimmed text value
+     */
     private static String requireText(final String value, final String name) {
         Objects.requireNonNull(value, name);
         final String result = value.trim();

@@ -21,7 +21,6 @@
  *
  * terry.curran@towermarsh.co.uk
  */
-
 package com.towermarsh.opendata.config;
 
 import java.io.IOException;
@@ -33,32 +32,32 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-
 import com.towermarsh.opendata.config.model.BootstrapConfig;
 
 /**
  * Loads application bootstrap configuration from the classpath.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class BootstrapConfigurationLoader {
 
-    private static final String RESOURCE =
-            "config/application.properties";
+    private static final String RESOURCE
+            = "config/application.properties";
 
     private final ClassLoader classLoader;
 
     /**
-     *
+     * Creates a loader that uses the thread context class loader.
      */
     public BootstrapConfigurationLoader() {
         this(Thread.currentThread().getContextClassLoader());
     }
 
     /**
+     * Creates a loader using the supplied class loader.
      *
-     * @param classLoader
+     * @param classLoader class loader containing the bootstrap resource
      */
     public BootstrapConfigurationLoader(final ClassLoader classLoader) {
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
@@ -66,7 +65,11 @@ public final class BootstrapConfigurationLoader {
 
     /**
      *
-     * @return
+     * Loads bootstrap configuration from the packaged application properties
+     * resource.
+     *
+     * @return bootstrap configuration
+     *
      */
     public BootstrapConfig load() {
         try (InputStream input = classLoader.getResourceAsStream(RESOURCE)) {
@@ -98,6 +101,13 @@ public final class BootstrapConfigurationLoader {
         }
     }
 
+    /**
+     * Returns a required bootstrap property.
+     *
+     * @param values bootstrap property values
+     * @param key property key to resolve
+     * @return trimmed property value
+     */
     private static String require(
             final Map<String, String> values,
             final String key) {

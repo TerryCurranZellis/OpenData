@@ -39,7 +39,7 @@ import java.util.Objects;
  * @param values additional bootstrap values
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public record BootstrapConfig(
         String applicationName,
@@ -48,6 +48,8 @@ public record BootstrapConfig(
         Path archiveDirectory,
         Path failedDirectory,
         Map<String, String> values) {
+
+    /** Validates and normalises record components. */
 
     public BootstrapConfig {
         Objects.requireNonNull(applicationName, "applicationName");

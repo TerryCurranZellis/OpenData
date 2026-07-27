@@ -5,5 +5,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Open-Meteo historical weather download, validation, and SQL Server persistence. */
+/**
+ * Open-Meteo plugin entry points.
+ *
+ * <ul>
+ * <li>{@link OpenMeteoPlugin}</li>
+ * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 package com.towermarsh.opendata.plugin.openmeteo;

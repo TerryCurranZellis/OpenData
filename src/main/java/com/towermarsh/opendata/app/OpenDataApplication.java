@@ -36,18 +36,31 @@ import java.util.logging.Logger;
 /**
  * Coordinates registry selection, configuration, pooled database access, and
  * plugin execution.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class OpenDataApplication {
 
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
     /**
+<<<<<<< HEAD
      *
      * @param arguments
      * @param processor
      * @return
      * @throws IOException
      * @throws InterruptedException
+=======
+     * Starts the OpenData application for one parsed command line.
+     *
+     * @param arguments parsed command-line arguments
+     * @param processor processor used to print help
+     * @return execution status
+     * @throws IOException if console or logging output cannot be written
+     * @throws InterruptedException if plugin execution is interrupted
+>>>>>>> origin/copilot/finish-java-source-documentation
      */
     public ExecutionStatus start(
             final CommandLineArguments arguments,
@@ -139,6 +152,12 @@ public final class OpenDataApplication {
         }
     }
 
+    /**
+     * Extracts the most useful message from the root cause of a failure.
+     *
+     * @param exception exception to inspect
+     * @return root-cause message or exception type name
+     */
     private static String messageFor(final Throwable exception) {
         var current = exception;
         while (current.getCause() != null && current.getCause() != current) {
@@ -150,6 +169,11 @@ public final class OpenDataApplication {
                 : message;
     }
 
+    /**
+     * Logs the outcome of each plugin run and the aggregate execution totals.
+     *
+     * @param summary plugin execution summary to log
+     */
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach((var result) -> {
             LOGGER.log(

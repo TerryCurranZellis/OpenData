@@ -12,6 +12,9 @@ import java.sql.Connection;
 /**
  * Database marker used by a dry run; any attempted write is treated as a
  * defect.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 
@@ -21,6 +24,12 @@ public final class UnavailableDatabaseResourceManager implements DatabaseResourc
      * @throws DatabaseException
      */
     @Override
+    /**
+     * Always rejects connection requests during a dry run.
+     *
+     * @return never returns normally
+     * @throws DatabaseException always, because database access is disabled
+     */
     public Connection getConnection() throws DatabaseException {
         throw new DatabaseException("Database access is disabled during --dry-run.");
     }
@@ -29,6 +38,9 @@ public final class UnavailableDatabaseResourceManager implements DatabaseResourc
      *
      */
     @Override
+    /**
+     * Closes the dry-run resource manager.
+     */
     public void close() {
         // Nothing to release.
     }

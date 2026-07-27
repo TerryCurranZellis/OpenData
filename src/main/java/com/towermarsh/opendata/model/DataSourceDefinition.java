@@ -29,7 +29,7 @@ import java.util.Objects;
  * Defines an OpenData source.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class DataSourceDefinition {
 
@@ -66,24 +66,27 @@ public final class DataSourceDefinition {
     }
 
     /**
+     * Returns the source name.
      *
-     * @return
+     * @return source name
      */
     public String getName() {
         return name;
     }
 
     /**
+     * Returns the source description.
      *
-     * @return
+     * @return source description
      */
     public String getDescription() {
         return description;
     }
 
     /**
+     * Returns the source URL.
      *
-     * @return
+     * @return source URL
      */
     public String getUrl() {
         return url;

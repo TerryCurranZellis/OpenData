@@ -36,7 +36,7 @@ import java.util.Map;
  * Parser for JSON datasets.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class JsonDataParser
         implements DataParser {
@@ -44,7 +44,7 @@ public final class JsonDataParser
     private final ObjectMapper mapper;
 
     /**
-     *
+     * Creates a JSON parser backed by a default Jackson object mapper.
      */
     public JsonDataParser() {
 

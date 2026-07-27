@@ -27,7 +27,7 @@ package com.towermarsh.opendata.model;
  * Represents the outcome of an import operation.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class ImportResult {
 
@@ -57,32 +57,36 @@ public final class ImportResult {
     }
 
     /**
+     * Returns the dataset identifier.
      *
-     * @return
+     * @return dataset identifier
      */
     public String getDatasetId() {
         return datasetId;
     }
 
     /**
+     * Returns the number of processed records.
      *
-     * @return
+     * @return processed record count
      */
     public long getRecordsProcessed() {
         return recordsProcessed;
     }
 
     /**
+     * Returns the number of failed records.
      *
-     * @return
+     * @return failed record count
      */
     public long getRecordsFailed() {
         return recordsFailed;
     }
 
     /**
+     * Indicates whether the import succeeded.
      *
-     * @return
+     * @return {@code true} when the import succeeded
      */
     public boolean isSuccessful() {
         return successful;

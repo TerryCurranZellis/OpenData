@@ -31,7 +31,7 @@ import java.net.URI;
  * Defines the contract for downloading OpenData files.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public interface DataDownloader {
 

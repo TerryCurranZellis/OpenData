@@ -26,6 +26,9 @@ package com.towermarsh.opendata.config;
 
 /**
  * Validates resolved application and plugin configuration.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 @FunctionalInterface
 public interface ConfigurationValidator {

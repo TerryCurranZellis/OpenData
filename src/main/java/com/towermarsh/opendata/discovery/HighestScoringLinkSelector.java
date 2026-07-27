@@ -1,7 +1,25 @@
 /*
+ * Filename: HighestScoringLinkSelector.java
+ *
  * (c) Copyright 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * The author may be contacted by email to the following address:
+ *
+ * terry.curran@towermarsh.co.uk
  */
 package com.towermarsh.opendata.discovery;
 
@@ -14,9 +32,13 @@ import java.util.Objects;
 /**
  * Selects the candidate that best matches configured preferred terms.
  *
- * <p>Filename matches receive more weight than descriptive-text matches. A tie
- * is rejected by default so that a plugin cannot silently download an arbitrary
+ * <p>
+ * Filename matches receive more weight than descriptive-text matches. A tie is
+ * rejected by default so that a plugin cannot silently download an arbitrary
  * file after a publisher changes its page.</p>
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class HighestScoringLinkSelector implements DiscoveredLinkSelector {
 
@@ -24,20 +46,34 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
 
     /**
      *
+     * Creates a selector that fails when more than one candidate shares the
+     * best score.
+     *
      */
     public HighestScoringLinkSelector() {
         this(true);
     }
 
     /**
+     * Creates a selector with configurable tie handling.
      *
-     * @param failOnTie
+     * @param failOnTie whether equal best scores should be rejected
+     *
      */
     public HighestScoringLinkSelector(boolean failOnTie) {
         this.failOnTie = failOnTie;
     }
 
     @Override
+    /**
+     * Selects the highest-scoring discovered link.
+     *
+     * @param candidates discovered links to score
+     * @param preferredTerms preferred terms used during scoring
+     * @return selected discovered link
+     * @throws DiscoveryException if no candidates are available or the best
+     * score is tied
+     */
     public DiscoveredLink select(
             List<DiscoveredLink> candidates,
             List<String> preferredTerms) throws DiscoveryException {
@@ -63,6 +99,13 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
         return best.link();
     }
 
+    /**
+     * Computes a score for one discovered link.
+     *
+     * @param link discovered link to score
+     * @param terms preferred search terms
+     * @return computed score
+     */
     private static int score(DiscoveredLink link, List<String> terms) {
         String fileName = normalizeText(link.fileName());
         String descriptive = normalizeText(link.linkText() + " " + link.title());
@@ -78,6 +121,12 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
         return score;
     }
 
+    /**
+     * Normalises preferred search terms for case-insensitive matching.
+     *
+     * @param terms raw preferred terms
+     * @return normalised terms
+     */
     private static List<String> normalize(List<String> terms) {
         if (terms == null) {
             return List.of();
@@ -91,6 +140,12 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
                 .toList();
     }
 
+    /**
+     * Normalises link text for token-based matching.
+     *
+     * @param value text to normalise
+     * @return normalised text
+     */
     private static String normalizeText(final String value) {
         return value.toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", " ")
@@ -98,5 +153,6 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
     }
 
     private record ScoredLink(DiscoveredLink link, int score) {
+
     }
 }

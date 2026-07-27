@@ -17,7 +17,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-/** Application-level settings loaded before plugin execution. */
+/**
+ * Application-level settings loaded before plugin execution.
+ *
+ * @param database database connection and pool settings
+ * @param execution plugin execution settings
+ * @param logging logging settings
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 public record ApplicationRuntimeConfiguration(
         DatabasePoolConfiguration database,
         ExecutionConfiguration execution,
@@ -25,12 +34,19 @@ public record ApplicationRuntimeConfiguration(
 
     private static final String RESOURCE = "config/application.properties";
 
+    /** Validates and normalises record components. */
     public ApplicationRuntimeConfiguration {
         Objects.requireNonNull(database, "database");
         Objects.requireNonNull(execution, "execution");
         Objects.requireNonNull(logging, "logging");
     }
 
+    /**
+     * Loads packaged runtime configuration and overlays application overrides.
+     *
+     * @param overrides application-level override values without the `application.` prefix
+     * @return resolved runtime configuration
+     */
     public static ApplicationRuntimeConfiguration load(final Map<String, String> overrides) {
         final Map<String, String> values = loadResource();
         values.putAll(Objects.requireNonNull(overrides, "overrides"));
@@ -56,6 +72,11 @@ public record ApplicationRuntimeConfiguration(
         return new ApplicationRuntimeConfiguration(database, execution, logging);
     }
 
+    /**
+     * Loads the packaged runtime configuration resource.
+     *
+     * @return normalised runtime property values
+     */
     private static Map<String, String> loadResource() {
         final var classLoader = Thread.currentThread().getContextClassLoader();
         try (var input = classLoader.getResourceAsStream(RESOURCE)) {
@@ -72,6 +93,13 @@ public record ApplicationRuntimeConfiguration(
         }
     }
 
+    /**
+     * Returns a required application property.
+     *
+     * @param values property values indexed by normalised key
+     * @param key property key to resolve
+     * @return trimmed property value
+     */
     private static String required(final Map<String, String> values, final String key) {
         final String value = values.get(normalise(key));
         if (value == null || value.isBlank()) {
@@ -80,6 +108,14 @@ public record ApplicationRuntimeConfiguration(
         return value.trim();
     }
 
+    /**
+     * Returns an integer application property or a default value.
+     *
+     * @param values property values indexed by normalised key
+     * @param key property key to resolve
+     * @param defaultValue fallback value when the property is absent
+     * @return parsed integer value
+     */
     private static int integer(final Map<String, String> values, final String key, final int defaultValue) {
         final String value = values.get(normalise(key));
         if (value == null || value.isBlank()) {
@@ -92,6 +128,14 @@ public record ApplicationRuntimeConfiguration(
         }
     }
 
+    /**
+     * Returns a boolean application property or a default value.
+     *
+     * @param values property values indexed by normalised key
+     * @param key property key to resolve
+     * @param defaultValue fallback value when the property is absent
+     * @return parsed boolean value
+     */
     private static boolean bool(final Map<String, String> values, final String key, final boolean defaultValue) {
         final String value = values.get(normalise(key));
         if (value == null || value.isBlank()) {
@@ -104,6 +148,12 @@ public record ApplicationRuntimeConfiguration(
         };
     }
 
+    /**
+     * Normalises a property name for case-insensitive lookups.
+     *
+     * @param value property name to normalise
+     * @return trimmed lower-case property name
+     */
     private static String normalise(final String value) {
         return value.trim().toLowerCase(java.util.Locale.ROOT);
     }

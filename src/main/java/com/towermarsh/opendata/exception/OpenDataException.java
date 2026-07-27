@@ -28,7 +28,7 @@ package com.towermarsh.opendata.exception;
  *
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public class OpenDataException extends Exception {
 
@@ -36,6 +36,11 @@ public class OpenDataException extends Exception {
      * Creates a new exception.
      *
      * @param message error description
+     */
+    /**
+     * Creates a new OpenData exception.
+     *
+     * @param message the detail message
      */
     public OpenDataException(String message) {
         super(message);
@@ -46,6 +51,12 @@ public class OpenDataException extends Exception {
      *
      * @param message error description
      * @param cause underlying exception
+     */
+    /**
+     * Creates a new OpenData exception.
+     *
+     * @param message the detail message
+     * @param cause the cause of this exception
      */
     public OpenDataException(
             String message,

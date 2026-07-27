@@ -36,7 +36,7 @@ import java.util.Objects;
  * @param description optional description
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public record PluginPropertyDefinition(
         String name,
@@ -44,6 +44,8 @@ public record PluginPropertyDefinition(
         PluginPropertyType type,
         boolean sensitive,
         String description) {
+
+    /** Validates and normalises record components. */
 
     public PluginPropertyDefinition {
         Objects.requireNonNull(name, "name");

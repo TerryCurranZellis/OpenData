@@ -35,7 +35,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
  * Creates the Phase 1 {@link ApplicationConfig}.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class ApplicationConfigurationService {
 
@@ -43,9 +43,10 @@ public final class ApplicationConfigurationService {
     private final PluginDefinitionLoader pluginDefinitionLoader;
 
     /**
-     * Configure the application service
-     * @param bootstrapConfig
-     * @param pluginDefinitionLoader 
+     * Creates a service that resolves application configuration for one invocation.
+     *
+     * @param bootstrapConfig loaded bootstrap configuration
+     * @param pluginDefinitionLoader loader used to resolve plugin definitions
      */
     public ApplicationConfigurationService(
             final BootstrapConfig bootstrapConfig,

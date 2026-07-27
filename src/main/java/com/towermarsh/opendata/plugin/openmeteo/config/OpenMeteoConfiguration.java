@@ -38,7 +38,7 @@ import java.util.Optional;
  * @param databaseLockTimeout how long to keep database connection open
  *
  * @author Terry Curran
- * @version 27 Jul 2026
+ * @version 17 July 2026
  */
 public record OpenMeteoConfiguration(
         URI endpoint,
@@ -65,25 +65,7 @@ public record OpenMeteoConfiguration(
     public static final String ENDPOINT_NAME = "archive";
 
     /**
-     * instantiate the record definition
-     *
-     * @param endpoint
-     * @param locationKey
-     * @param locationName
-     * @param latitude
-     * @param longitude
-     * @param timezone
-     * @param connectTimeout
-     * @param requestTimeout
-     * @param startDate
-     * @param endDate
-     * @param defaultStartDaysAgo
-     * @param includeCurrentDate
-     * @param targetSchema
-     * @param locationTable
-     * @param dailyTable
-     * @param databaseBatchSize
-     * @param databaseLockTimeout
+     * Validates and normalises record components.
      */
     public OpenMeteoConfiguration {
         Objects.requireNonNull(endpoint, "endpoint");
@@ -187,10 +169,25 @@ public record OpenMeteoConfiguration(
         return new DateRange(effectiveStart, effectiveEnd);
     }
 
+    /**
+     * Returns a required plugin property value.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @return property value
+     */
     private static String required(final PluginDefinition definition, final String name) {
         return definition.requireProperty(name);
     }
 
+    /**
+     * Returns a plugin property value or a default.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @param defaultValue fallback value
+     * @return resolved property value
+     */
     private static String value(final PluginDefinition definition, final String name, final String defaultValue) {
         return definition.findProperty(name)
                 .map(property -> property.value().trim())
@@ -198,6 +195,14 @@ public record OpenMeteoConfiguration(
                 .orElse(defaultValue);
     }
 
+    /**
+     * Returns an integer plugin property or a default.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @param defaultValue fallback value
+     * @return parsed integer value
+     */
     private static int integer(final PluginDefinition definition, final String name, final int defaultValue) {
         final String text = value(definition, name, Integer.toString(defaultValue));
         try {
@@ -207,6 +212,13 @@ public record OpenMeteoConfiguration(
         }
     }
 
+    /**
+     * Returns a required decimal plugin property.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @return parsed decimal value
+     */
     private static double decimal(final PluginDefinition definition, final String name) {
         try {
             return Double.parseDouble(required(definition, name));
@@ -215,6 +227,14 @@ public record OpenMeteoConfiguration(
         }
     }
 
+    /**
+     * Returns a boolean plugin property or a default.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @param defaultValue fallback value
+     * @return parsed boolean value
+     */
     private static boolean bool(final PluginDefinition definition, final String name, final boolean defaultValue) {
         return switch (value(definition, name, Boolean.toString(defaultValue)).toLowerCase(Locale.ROOT)) {
             case "true", "yes", "1", "on" ->
@@ -226,6 +246,13 @@ public record OpenMeteoConfiguration(
         };
     }
 
+    /**
+     * Returns an optional date property.
+     *
+     * @param definition plugin definition
+     * @param name property name
+     * @return optional parsed date
+     */
     private static Optional<LocalDate> optionalDate(final PluginDefinition definition, final String name) {
         return definition.findProperty(name)
                 .map(property -> property.value().trim())
@@ -233,6 +260,12 @@ public record OpenMeteoConfiguration(
                 .map(LocalDate::parse);
     }
 
+    /**
+     * Converts free text into a stable slug.
+     *
+     * @param value text to normalise
+     * @return slug value
+     */
     private static String slug(final String value) {
         final var result = value.trim().toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", "-")
@@ -240,6 +273,13 @@ public record OpenMeteoConfiguration(
         return result.isBlank() ? "location" : result;
     }
 
+    /**
+     * Returns a required non-blank text value.
+     *
+     * @param value value to validate
+     * @param name field name for error reporting
+     * @return trimmed text value
+     */
     private static String requireText(final String value, final String name) {
         return requireText(value, name, Integer.MAX_VALUE);
     }
@@ -262,8 +302,9 @@ public record OpenMeteoConfiguration(
     /**
      * Validates one SQL identifier used by the plugin-local load package.
      *
-     * @param value the column id in the data
-     * @param name the column name in the db
+     * @param value identifier value to validate
+     * @param name property name for error reporting
+     * @return validated SQL identifier
      */
     public static String sqlIdentifier(final String value, final String name) {
         final var result = requireText(value, name);
@@ -274,18 +315,16 @@ public record OpenMeteoConfiguration(
     }
 
     /**
-     * create a daterange record
      *
-     * @param startDate start date for the range
-     * @param endDate end date for the range
+     * Inclusive Open-Meteo query date range.
+     *
+     * @param startDate inclusive start date
+     * @param endDate inclusive end date
      */
     public record DateRange(LocalDate startDate, LocalDate endDate) {
 
         /**
-         * Set the date range
-         *
-         * @param startDate
-         * @param endDate
+         * Validates and normalises record components.
          */
         public DateRange {
             Objects.requireNonNull(startDate, "startDate");

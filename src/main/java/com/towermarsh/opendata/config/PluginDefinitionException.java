@@ -21,7 +21,6 @@
  *
  * terry.curran@towermarsh.co.uk
  */
-
 package com.towermarsh.opendata.config;
 
 /**
@@ -29,22 +28,27 @@ package com.towermarsh.opendata.config;
  * structured plugin definition.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class PluginDefinitionException extends RuntimeException {
 
     /**
      *
-     * @param message
+     *
+     * Creates a new plugin definition exception.
+     *
+     * @param message the detail message
+     *
      */
     public PluginDefinitionException(final String message) {
         super(message);
     }
 
     /**
+     * Creates a new plugin definition exception.
      *
-     * @param message
-     * @param cause
+     * @param message the detail message
+     * @param cause the cause of this exception
      */
     public PluginDefinitionException(final String message, final Throwable cause) {
         super(message, cause);

@@ -1,7 +1,25 @@
 /*
+ * Filename: ExcelParserOptions.java
+ *
  * (c) Copyright 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * The author may be contacted by email to the following address:
+ *
+ * terry.curran@towermarsh.co.uk
  */
 package com.towermarsh.opendata.parser;
 
@@ -16,6 +34,9 @@ import java.util.Objects;
  * @param firstDataRowIndex zero-based first data row
  * @param evaluateFormulas whether formula results should be evaluated
  * @param skipCompletelyBlankRows whether fully blank rows are omitted
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record ExcelParserOptions(
         String sheetName,
@@ -25,6 +46,7 @@ public record ExcelParserOptions(
         boolean evaluateFormulas,
         boolean skipCompletelyBlankRows) {
 
+    /** Validates and normalises record components. */
     public ExcelParserOptions {
         sheetName = Objects.requireNonNullElse(sheetName, "").trim();
         if (sheetIndex < 0 || headerRowIndex < 0 || firstDataRowIndex < 0) {
@@ -36,6 +58,11 @@ public record ExcelParserOptions(
         }
     }
 
+    /**
+     * Returns the default Excel parser options.
+     *
+     * @return default Excel parser options
+     */
     public static ExcelParserOptions defaults() {
         return new ExcelParserOptions("", 0, 0, 1, true, true);
     }

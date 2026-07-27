@@ -10,6 +10,18 @@ import java.util.Properties;
 
 /**
  * Immutable Apache DBCP connection-pool settings.
+ * @param initialSize initial number of pooled connections
+ * @param minIdle minimum number of idle pooled connections
+ * @param maxIdle maximum number of idle pooled connections
+ * @param maxTotal maximum number of pooled connections
+ * @param maxWait maximum time to wait for a connection
+ * @param minEvictableIdleTime minimum idle time before eviction is permitted
+ * @param testOnBorrow whether connections are validated when borrowed
+ * @param validationQuery SQL validation query
+ * @param validationQueryTimeoutSeconds timeout for the validation query in seconds
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record DatabasePoolConfig(
         int initialSize,
@@ -24,6 +36,7 @@ public record DatabasePoolConfig(
 
     private static final String PREFIX = "database.pool.";
 
+    /** Validates and normalises record components. */
     public DatabasePoolConfig {
         Objects.requireNonNull(maxWait, "maxWait");
         Objects.requireNonNull(minEvictableIdleTime, "minEvictableIdleTime");
@@ -113,14 +126,38 @@ public record DatabasePoolConfig(
                         defaults.validationQueryTimeoutSeconds()));
     }
 
+    /**
+     * Reads an integer pool property.
+     *
+     * @param properties source properties
+     * @param name property suffix after `database.pool.`
+     * @param defaultValue fallback value
+     * @return parsed integer value
+     */
     private static int integer(Properties properties, String name, int defaultValue) {
         return Integer.parseInt(properties.getProperty(PREFIX + name, String.valueOf(defaultValue)).trim());
     }
 
+    /**
+     * Reads a long-valued pool property.
+     *
+     * @param properties source properties
+     * @param name property suffix after `database.pool.`
+     * @param defaultValue fallback value
+     * @return parsed long value
+     */
     private static long longValue(Properties properties, String name, long defaultValue) {
         return Long.parseLong(properties.getProperty(PREFIX + name, String.valueOf(defaultValue)).trim());
     }
 
+    /**
+     * Reads a boolean pool property.
+     *
+     * @param properties source properties
+     * @param name property suffix after `database.pool.`
+     * @param defaultValue fallback value
+     * @return parsed boolean value
+     */
     private static boolean booleanValue(
             Properties properties,
             String name,

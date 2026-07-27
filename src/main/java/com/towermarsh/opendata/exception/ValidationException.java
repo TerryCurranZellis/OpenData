@@ -27,23 +27,27 @@ package com.towermarsh.opendata.exception;
  * Indicates that imported data failed validation.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public class ValidationException
         extends OpenDataException {
 
     /**
+     * Creates a new validation exception.
      *
-     * @param message
+     * @param message the detail message
+     *
      */
     public ValidationException(String message) {
         super(message);
     }
 
     /**
+     * Creates a new validation exception.
      *
-     * @param message
-     * @param cause
+     * @param message the detail message
+     * @param cause the cause of this exception
+     *
      */
     public ValidationException(
             String message,

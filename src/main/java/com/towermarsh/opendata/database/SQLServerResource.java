@@ -32,6 +32,9 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * The pool is thread-safe. Each repository obtains a connection for its own
  * transaction and returns it with try-with-resources. A JDBC connection is
  * never shared between plugin threads.</p>
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class SQLServerResource implements DatabaseResourceManager {
 
@@ -44,6 +47,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
     private final GenericObjectPool<PoolableConnection> connectionPool;
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
+    /**
+     * Creates and prepares the singleton SQL Server resource.
+     *
+     * @param configuration database pool configuration
+     */
     private SQLServerResource(final DatabasePoolConfiguration configuration) {
         Objects.requireNonNull(configuration, "configuration");
         poolName = configuration.poolName();
@@ -84,8 +92,10 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
     /**
      *
-     * @param configuration
-     * @return
+     * Initialises the singleton SQL Server resource when required.
+     *
+     * @param configuration database pool configuration
+     * @return initialised singleton resource
      */
     public static synchronized SQLServerResource initialise(final DatabasePoolConfiguration configuration) {
         if (instance != null && !instance.closed.get()) {
@@ -97,7 +107,10 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
     /**
      *
-     * @return
+     * Returns the already-initialised singleton SQL Server resource.
+     *
+     * @return singleton SQL Server resource
+     *
      */
     public static synchronized SQLServerResource getInstance() {
         if (instance == null || instance.closed.get()) {
@@ -108,10 +121,16 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
     /**
      *
-     * @return
-     * @throws DatabaseException
+     * @return @throws DatabaseException
      */
     @Override
+    /**
+     * Borrows a connection from the registered DBCP pool.
+     *
+     * @return pooled SQL Server connection
+     * @throws DatabaseException if the pool is closed or a connection cannot be
+     * obtained
+     */
     public Connection getConnection() throws DatabaseException {
         if (closed.get()) {
             throw new DatabaseException("SQL Server connection pool is closed.");
@@ -130,6 +149,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param connection
      */
     @Override
+    /**
+     * Closes a borrowed JDBC connection.
+     *
+     * @param connection connection to close
+     */
     public void close(final Connection connection) {
         closeAndLog(connection, "connection");
     }
@@ -139,6 +163,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param statement
      */
     @Override
+    /**
+     * Closes a prepared statement.
+     *
+     * @param statement statement to close
+     */
     public void close(final PreparedStatement statement) {
         closeAndLog(statement, "prepared statement");
     }
@@ -148,6 +177,11 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param resultSet
      */
     @Override
+    /**
+     * Closes a result set.
+     *
+     * @param resultSet result set to close
+     */
     public void close(final ResultSet resultSet) {
         closeAndLog(resultSet, "result set");
     }
@@ -156,6 +190,9 @@ public final class SQLServerResource implements DatabaseResourceManager {
      *
      */
     @Override
+    /**
+     * Closes the registered SQL Server connection pool.
+     */
     public void close() {
         if (!closed.compareAndSet(false, true)) {
             return;
@@ -174,8 +211,9 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     /**
+     * Returns the number of active pooled connections.
      *
-     * @return
+     * @return active connection count
      */
     public int activeConnections() {
         return connectionPool.getNumActive();
@@ -183,12 +221,19 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
     /**
      *
-     * @return
+     * Returns the number of idle pooled connections.
+     *
+     * @return idle connection count
      */
     public int idleConnections() {
         return connectionPool.getNumIdle();
     }
 
+    /**
+     * Gets the number of active, and idle connections in the pool
+     *
+     * @return
+     */
     @Override
     public DatabasePoolSnapshot getPoolSnapshot() {
         return new DatabasePoolSnapshot(
@@ -198,6 +243,12 @@ public final class SQLServerResource implements DatabaseResourceManager {
                 closed.get());
     }
 
+    /**
+     * Closes a JDBC resource and reports close failures consistently.
+     *
+     * @param resource resource to close
+     * @param description resource description for error reporting
+     */
     private static void closeAndLog(final AutoCloseable resource, final String description) {
         if (resource == null) {
             return;

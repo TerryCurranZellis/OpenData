@@ -9,6 +9,17 @@ import java.util.Objects;
 
 /**
  * One annual cap level from the Ofgem "1a Levelised DTC" worksheet.
+ * @param regionCode price-cap region code
+ * @param paymentMethodCode payment method code
+ * @param tariffTypeCode tariff type code
+ * @param consumptionBasisCode consumption basis code
+ * @param amountGbp price-cap amount in pounds sterling
+ * @param vatIncluded whether the amount includes VAT
+ * @param sourceSheet source worksheet name
+ * @param sourceCell source cell reference
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemPriceCapLevel(
         String regionCode,
@@ -19,6 +30,8 @@ public record OfgemPriceCapLevel(
         boolean vatIncluded,
         String sourceSheet,
         String sourceCell) {
+
+    /** Validates and normalises record components. */
 
     public OfgemPriceCapLevel {
         regionCode = requireText(regionCode, "regionCode");

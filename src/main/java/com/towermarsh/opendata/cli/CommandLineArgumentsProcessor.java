@@ -24,15 +24,25 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-/** Parses and validates the OpenData command line. */
+/**
+ * Parses and validates the OpenData command line.
+ *
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 public final class CommandLineArgumentsProcessor {
+
     private static final String APPLICATION_NAME = "opendata";
     private final Options options = createOptions();
 
     /**
+     * Parses and validates the supplied command-line arguments.
      *
-     * @param arguments
-     * @return
+     * @param arguments raw command-line arguments
+     * @return parsed arguments
+     * @throws CommandLineProcessingException if the command line is invalid
+     *
      */
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
@@ -47,11 +57,14 @@ public final class CommandLineArgumentsProcessor {
     /**
      * Normalises launcher input before Commons CLI parsing.
      *
-     * <p>A normal Java process receives one array element per command-line token. Some IDE and
-     * wrapper configurations incorrectly pass the complete command line as one quoted argument,
-     * for example {@code {"--plugin all --dry-run"}}. Commons CLI then treats that value as an
-     * unrecognised token and no plugin selection is available. This method safely expands only
-     * that single-element form; correctly tokenised command lines are left unchanged.</p>
+     * <p>
+     * A normal Java process receives one array element per command-line token.
+     * Some IDE and wrapper configurations incorrectly pass the complete command
+     * line as one quoted argument, for example
+     * {@code {"--plugin all --dry-run"}}. Commons CLI then treats that value as
+     * an unrecognised token and no plugin selection is available. This method
+     * safely expands only that single-element form; correctly tokenised command
+     * lines are left unchanged.</p>
      */
     static String[] normaliseArguments(final String[] arguments) {
         if (arguments.length != 1) {
@@ -91,10 +104,22 @@ public final class CommandLineArgumentsProcessor {
         return tokens.toArray(String[]::new);
     }
 
+    /**
+     * Determines whether a value contains any whitespace characters.
+     *
+     * @param value value to inspect
+     * @return {@code true} when the value contains whitespace
+     */
     private static boolean containsWhitespace(final String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
+    /**
+     * Adds the current token to the token list when it is non-empty.
+     *
+     * @param tokens collected command-line tokens
+     * @param token token buffer to flush
+     */
     private static void addToken(final List<String> tokens, final StringBuilder token) {
         if (!token.isEmpty()) {
             tokens.add(token.toString());
@@ -104,7 +129,10 @@ public final class CommandLineArgumentsProcessor {
 
     /**
      *
-     * @param writer
+     * Prints command-line help to the supplied writer.
+     *
+     * @param writer destination for help output
+     *
      */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
@@ -115,26 +143,31 @@ public final class CommandLineArgumentsProcessor {
                 118,
                 APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] [--file <settings>] [options]",
                 System.lineSeparator()
-                        + "Runs one or more OpenData plugins. Each selected plugin is submitted as an independent task."
-                        + System.lineSeparator() + System.lineSeparator()
-                        + "Examples:" + System.lineSeparator()
-                        + "  opendata --plugin openmeteo" + System.lineSeparator()
-                        + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
-                        + "  opendata --plugin openmeteo,ofgem" + System.lineSeparator()
-                        + "  opendata --plugin all" + System.lineSeparator()
-                        + "  opendata --plugin all --file C:\\OpenData\\run.properties" + System.lineSeparator(),
+                + "Runs one or more OpenData plugins. Each selected plugin is submitted as an independent task."
+                + System.lineSeparator() + System.lineSeparator()
+                + "Examples:" + System.lineSeparator()
+                + "  opendata --plugin openmeteo" + System.lineSeparator()
+                + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
+                + "  opendata --plugin openmeteo,ofgem" + System.lineSeparator()
+                + "  opendata --plugin all" + System.lineSeparator()
+                + "  opendata --plugin all --file C:\\OpenData\\run.properties" + System.lineSeparator(),
                 options,
                 2,
                 4,
                 System.lineSeparator()
-                        + "For a multi-plugin run, plugin overrides in --file must use plugin.<id>.<property>."
-                        + System.lineSeparator()
-                        + "Application overrides use application.<property>. Password values are never logged."
-                        + System.lineSeparator(),
+                + "For a multi-plugin run, plugin overrides in --file must use plugin.<id>.<property>."
+                + System.lineSeparator()
+                + "Application overrides use application.<property>. Password values are never logged."
+                + System.lineSeparator(),
                 true);
         writer.flush();
     }
 
+    /**
+     * Builds the supported command-line option set.
+     *
+     * @return configured options
+     */
     private static Options createOptions() {
         final var result = new Options();
         result.addOption(Option.builder("p")
@@ -165,6 +198,13 @@ public final class CommandLineArgumentsProcessor {
         return result;
     }
 
+    /**
+     * Converts a parsed Commons CLI command line into immutable invocation
+     * arguments.
+     *
+     * @param commandLine parsed command line
+     * @return immutable invocation arguments
+     */
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
         final boolean help = commandLine.hasOption("help");
         final boolean version = commandLine.hasOption("version");

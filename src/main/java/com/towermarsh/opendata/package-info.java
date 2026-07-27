@@ -22,10 +22,13 @@
  * terry.curran@towermarsh.co.uk
  */
 /**
- * Main entry point to the application.
+ * Main entry point to the OpenData application.
  *
- * <p>
- * Contains the main application entry point.
- * </p>
+ * <ul>
+ * <li>{@link Main}</li>
+ * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata;

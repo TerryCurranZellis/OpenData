@@ -12,16 +12,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/** Provides pooled JDBC resources to repositories. */
+/**
+ * Provides pooled JDBC resources to repositories.
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 public interface DatabaseResourceManager extends AutoCloseable {
 
     /**
+     * Borrows a database connection from the underlying resource.
      *
-     * @return
-     * @throws SQLException
+     * @return borrowed connection
+     * @throws SQLException if a connection cannot be obtained
      */
     Connection getConnection() throws SQLException;
-
 
     /**
      * Returns current pool usage where the implementation exposes it.
@@ -34,7 +39,10 @@ public interface DatabaseResourceManager extends AutoCloseable {
 
     /**
      *
-     * @param connection
+     * Closes a borrowed JDBC connection.
+     *
+     * @param connection connection to close
+     *
      */
     default void close(final Connection connection) {
         closeQuietly(connection);
@@ -42,7 +50,10 @@ public interface DatabaseResourceManager extends AutoCloseable {
 
     /**
      *
-     * @param statement
+     * Closes a prepared statement.
+     *
+     * @param statement statement to close
+     *
      */
     default void close(final PreparedStatement statement) {
         closeQuietly(statement);
@@ -50,7 +61,10 @@ public interface DatabaseResourceManager extends AutoCloseable {
 
     /**
      *
-     * @param resultSet
+     * Closes a result set.
+     *
+     * @param resultSet result set to close
+     *
      */
     default void close(final ResultSet resultSet) {
         closeQuietly(resultSet);
@@ -58,7 +72,10 @@ public interface DatabaseResourceManager extends AutoCloseable {
 
     /**
      *
-     * @param resource
+     * Closes a resource while suppressing any secondary close failure.
+     *
+     * @param resource resource to close
+     *
      */
     private static void closeQuietly(final AutoCloseable resource) {
         if (resource == null) {
@@ -72,6 +89,8 @@ public interface DatabaseResourceManager extends AutoCloseable {
     }
 
     /**
+     *
+     * Closes the underlying database resource.
      *
      */
     @Override

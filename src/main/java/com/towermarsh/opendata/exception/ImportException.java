@@ -28,23 +28,25 @@ package com.towermarsh.opendata.exception;
  *
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public class ImportException
         extends OpenDataException {
 
     /**
+     * Creates a new import exception.
      *
-     * @param message
+     * @param message the detail message
      */
     public ImportException(String message) {
         super(message);
     }
 
     /**
+     * s a new import exception.
      *
-     * @param message
-     * @param cause
+     * @param message the detail message
+     * @param cause the cause of this exception
      */
     public ImportException(
             String message,

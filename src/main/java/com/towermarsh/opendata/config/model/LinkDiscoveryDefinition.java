@@ -35,13 +35,15 @@ import java.util.Objects;
  * @param selectLastMatchingLink whether the final matching link is selected
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public record LinkDiscoveryDefinition(
         String cssSelector,
         String hrefPattern,
         String textPattern,
         boolean selectLastMatchingLink) {
+
+    /** Validates and normalises record components. */
 
     public LinkDiscoveryDefinition {
         Objects.requireNonNull(cssSelector, "cssSelector");

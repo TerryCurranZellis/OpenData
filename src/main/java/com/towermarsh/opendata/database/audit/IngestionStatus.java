@@ -6,6 +6,9 @@ package com.towermarsh.opendata.database.audit;
 
 /**
  * Persisted lifecycle status for one dataset ingestion run.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public enum IngestionStatus {
 

@@ -10,7 +10,10 @@ package com.towermarsh.opendata.plugin;
 import java.time.Instant;
 import java.util.UUID;
 
-/** Audit implementation for dry runs and tests. */
+/** Audit implementation for dry runs and tests.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class NoOpPluginRunAudit implements PluginRunAudit {
 
     /**

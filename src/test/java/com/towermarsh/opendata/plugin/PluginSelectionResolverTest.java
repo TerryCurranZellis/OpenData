@@ -23,7 +23,11 @@ class PluginSelectionResolverTest {
         final var disabled = descriptor("future", false);
         final PluginRegistry registry = new PluginRegistry() {
             @Override
-            public List<PluginDescriptor> list() {
+            /**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
+public List<PluginDescriptor> list() {
                 return List.of(enabled, disabled);
             }
 

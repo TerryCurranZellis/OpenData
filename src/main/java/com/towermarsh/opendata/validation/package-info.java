@@ -22,11 +22,15 @@
  * terry.curran@towermarsh.co.uk
  */
 /**
- * Data quality validation framework.
+ * Validation contracts and result models.
  *
- * <p>
- * Ensures datasets meet quality requirements
- * before loading into databases.
- * </p>
+ * <ul>
+ * <li>{@link DataQualityValidator}</li>
+ * <li>{@link ValidationResult}</li>
+ * <li>{@link Validator}</li>
+ * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.validation;

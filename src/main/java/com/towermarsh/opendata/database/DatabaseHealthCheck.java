@@ -10,6 +10,9 @@ import java.util.Objects;
 
 /**
  * Performs a lightweight SQL Server identity and database check.
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class DatabaseHealthCheck {
 
@@ -21,7 +24,10 @@ public final class DatabaseHealthCheck {
 
     /**
      *
-     * @param connectionManager
+     * Creates a health check that uses the supplied connection manager.
+     *
+     * @param connectionManager connection manager used to query SQL Server
+     *
      */
     public DatabaseHealthCheck(DatabaseConnectionManager connectionManager) {
         this.connectionManager = Objects.requireNonNull(
@@ -29,14 +35,14 @@ public final class DatabaseHealthCheck {
     }
 
     /**
-     * check database access
-     * @return return if database ok
-     * @throws DatabaseException
+     * Executes a lightweight SQL Server health check query.
+     *
+     * @return database identity details captured during the check
+     * @throws DatabaseException if the health check query cannot be completed
+     * successfully
      */
     public Result check() throws DatabaseException {
-        try (var connection = connectionManager.getConnection(); 
-             var statement = connection.prepareStatement(SQL); 
-             var resultSet = statement.executeQuery()) {
+        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(SQL); var resultSet = statement.executeQuery()) {
             if (!resultSet.next()) {
                 throw new DatabaseException("SQL Server health check returned no row");
             }

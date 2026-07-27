@@ -10,7 +10,21 @@ package com.towermarsh.opendata.config;
 import java.time.Duration;
 import java.util.Objects;
 
-/** SQL Server and Apache DBCP pool settings. */
+/** SQL Server and Apache DBCP pool settings.
+ * @param driverClass JDBC driver class name
+ * @param jdbcUrl JDBC connection URL
+ * @param user database login name
+ * @param password database password or blank when supplied externally later
+ * @param poolName Apache DBCP pool registration name
+ * @param maxTotal maximum number of pooled connections
+ * @param maxIdle maximum number of idle pooled connections
+ * @param minIdle minimum number of idle pooled connections
+ * @param maxWait maximum time to wait for a pooled connection
+ * @param validationQuery SQL query used to validate pooled connections
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 public record DatabasePoolConfiguration(
         String driverClass,
         String jdbcUrl,
@@ -23,6 +37,7 @@ public record DatabasePoolConfiguration(
         Duration maxWait,
         String validationQuery) {
 
+    /** Validates and normalises record components. */
     public DatabasePoolConfiguration {
         driverClass = requireText(driverClass, "driverClass");
         jdbcUrl = requireText(jdbcUrl, "jdbcUrl");
@@ -39,6 +54,13 @@ public record DatabasePoolConfiguration(
         }
     }
 
+    /**
+     * Returns a required non-blank text value.
+     *
+     * @param value value to validate
+     * @param name field name for error reporting
+     * @return trimmed text value
+     */
     private static String requireText(final String value, final String name) {
         Objects.requireNonNull(value, name);
         if (value.isBlank()) {

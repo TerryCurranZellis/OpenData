@@ -30,7 +30,7 @@ import java.util.Objects;
  *
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class DatasetDefinition {
 
@@ -67,24 +67,27 @@ public final class DatasetDefinition {
     }
 
     /**
+     * Returns the dataset identifier.
      *
-     * @return
+     * @return dataset identifier
      */
     public String getDatasetId() {
         return datasetId;
     }
 
     /**
+     * Returns the dataset name.
      *
-     * @return
+     * @return dataset name
      */
     public String getName() {
         return name;
     }
 
     /**
+     * Returns the owning data source definition.
      *
-     * @return
+     * @return owning data source definition
      */
     public DataSourceDefinition getSource() {
         return source;

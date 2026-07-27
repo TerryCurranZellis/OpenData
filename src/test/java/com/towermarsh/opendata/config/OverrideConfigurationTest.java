@@ -14,6 +14,10 @@ import java.nio.file.Files;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
+/**
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 class OverrideConfigurationTest {
     @Test
     void singlePluginRunAcceptsUnscopedPluginProperties() throws Exception {

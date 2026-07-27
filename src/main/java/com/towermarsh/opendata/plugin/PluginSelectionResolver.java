@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-/** Resolves named plugins or every enabled plugin from the registry. */
+/** Resolves named plugins or every enabled plugin from the registry.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class PluginSelectionResolver {
 
     /**

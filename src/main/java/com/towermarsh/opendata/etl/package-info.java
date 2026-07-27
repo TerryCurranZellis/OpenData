@@ -22,11 +22,15 @@
  * terry.curran@towermarsh.co.uk
  */
 /**
- * Extract Transform Load processing pipeline.
+ * Extraction, transformation, and loading service contracts.
  *
- * <p>
- * Coordinates movement of data from
- * external sources into persistent storage.
- * </p>
+ * <ul>
+ * <li>{@link ExtractService}</li>
+ * <li>{@link LoadService}</li>
+ * <li>{@link TransformService}</li>
+ * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.etl;

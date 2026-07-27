@@ -30,7 +30,7 @@ import java.util.List;
  * Represents the result of a validation operation.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class ValidationResult {
 
@@ -68,7 +68,10 @@ public final class ValidationResult {
 
     /**
      *
-     * @return
+     * Indicates whether validation succeeded.
+     *
+     * @return {@code true} when validation succeeded
+     *
      */
     public boolean isValid() {
         return valid;
@@ -76,7 +79,10 @@ public final class ValidationResult {
 
     /**
      *
-     * @return
+     * Returns the number of checked records.
+     *
+     * @return checked record count
+     *
      */
     public long getRecordsChecked() {
         return recordsChecked;
@@ -84,7 +90,10 @@ public final class ValidationResult {
 
     /**
      *
-     * @return
+     * Returns the number of rejected records.
+     *
+     * @return rejected record count
+     *
      */
     public long getRecordsRejected() {
         return recordsRejected;
@@ -92,7 +101,10 @@ public final class ValidationResult {
 
     /**
      *
-     * @return
+     * Returns validation error messages.
+     *
+     * @return immutable validation error messages
+     *
      */
     public List<String> getErrors() {
         return errors;

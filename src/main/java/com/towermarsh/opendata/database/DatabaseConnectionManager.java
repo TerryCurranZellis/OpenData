@@ -11,6 +11,9 @@ import java.util.Objects;
 
 /**
  * Compatibility facade used by repositories to borrow pooled connections.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class DatabaseConnectionManager implements AutoCloseable {
 
@@ -59,8 +62,9 @@ public final class DatabaseConnectionManager implements AutoCloseable {
     }
 
     /**
+     * Closes the underlying database resource manager.
      *
-     * @throws DatabaseException
+     * @throws DatabaseException if the database resource cannot be closed
      */
     @Override
     public void close() throws DatabaseException {

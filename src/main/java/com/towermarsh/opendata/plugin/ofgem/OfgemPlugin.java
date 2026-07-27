@@ -24,8 +24,11 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** 
- * Downloads, validates and persists the current Ofgem price-cap workbook. 
+/**
+ * Downloads, validates and persists the current Ofgem price-cap workbook.
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class OfgemPlugin implements OpenDataPlugin {
 
@@ -41,16 +44,18 @@ public final class OfgemPlugin implements OpenDataPlugin {
     private final OfgemWorkbookDataValidator validator;
 
     /**
+     * Creates the Ofgem plugin from a resolved plugin definition.
      *
-     * @param definition
+     * @param definition resolved plugin definition
      */
     public OfgemPlugin(final PluginDefinition definition) {
         this(OfgemConfiguration.from(definition));
     }
 
     /**
+     * Creates the Ofgem plugin from typed configuration.
      *
-     * @param configuration
+     * @param configuration typed Ofgem configuration
      */
     public OfgemPlugin(final OfgemConfiguration configuration) {
         this(
@@ -85,8 +90,8 @@ public final class OfgemPlugin implements OpenDataPlugin {
         Objects.requireNonNull(context, "context");
 
         final ResolvedDownload download = downloader.download();
-        final OfgemPriceCapWorkbookData workbookData =
-                validator.validate(extractor.extract(download.localFile()));
+        final OfgemPriceCapWorkbookData workbookData
+                = validator.validate(extractor.extract(download.localFile()));
         final int recordCount = workbookData.levels().size();
 
         LOGGER.info(() -> "Ofgem extracted %d price-cap records for %s"
@@ -98,8 +103,8 @@ public final class OfgemPlugin implements OpenDataPlugin {
 
         downloader.archive(download.localFile(), workbookData.period().effectiveFrom());
 
-        final OfgemPersistenceRepository repository =
-                new OfgemPersistenceRepository(context.database());
+        final OfgemPersistenceRepository repository
+                = new OfgemPersistenceRepository(context.database());
         final OfgemPersistenceResult result = repository.persist(
                 context.definition(), download, workbookData);
 
@@ -111,8 +116,9 @@ public final class OfgemPlugin implements OpenDataPlugin {
     }
 
     /**
+     * Returns the typed Ofgem configuration.
      *
-     * @return
+     * @return typed Ofgem configuration
      */
     public OfgemConfiguration configuration() {
         return configuration;

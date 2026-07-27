@@ -11,11 +11,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
 import java.util.Objects;
 
-/** Parses raw Open-Meteo JSON into the API response model. */
+/**
+ * Parses raw Open-Meteo JSON into the API response model.
+ *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 public final class OpenMeteoResponseExtractor {
+
     private final ObjectMapper objectMapper;
 
     /**
+     *
+     * Creates an extractor backed by a default Jackson object mapper.
      *
      */
     public OpenMeteoResponseExtractor() {
@@ -27,10 +35,11 @@ public final class OpenMeteoResponseExtractor {
     }
 
     /**
+     * Parses a raw Open-Meteo JSON payload.
      *
-     * @param json
-     * @return
-     * @throws OpenMeteoException
+     * @param json raw JSON payload
+     * @return parsed API response
+     * @throws OpenMeteoException if the payload cannot be parsed
      */
     public OpenMeteoResponse extract(final String json) throws OpenMeteoException {
         Objects.requireNonNull(json, "json");

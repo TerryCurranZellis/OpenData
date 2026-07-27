@@ -22,12 +22,17 @@
  * terry.curran@towermarsh.co.uk
  */
 /**
- * Domain model objects.
+ * Shared models for downloaded files, datasets, and import outcomes.
  *
- * <p>
- * Contains immutable objects used throughout
- * the OpenData processing pipeline.
- * </p>
+ * <ul>
+ * <li>{@link DataFile}</li>
+ * <li>{@link DataSourceDefinition}</li>
+ * <li>{@link DatasetDefinition}</li>
+ * <li>{@link ImportResult}</li>
+ * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 package com.towermarsh.opendata.model;
 

@@ -2,5 +2,14 @@
  * (c) Copyright 2026 Terry Curran
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Typed Open-Meteo plugin configuration. */
+/**
+ * Typed configuration for the Open-Meteo plugin.
+ *
+ * <ul>
+ * <li>{@link OpenMeteoConfiguration}</li>
+ * </ul>
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
+ */
 package com.towermarsh.opendata.plugin.openmeteo.config;

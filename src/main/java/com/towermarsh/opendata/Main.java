@@ -25,6 +25,9 @@ import java.util.logging.Logger;
 
 /**
  * OpenData application entry point.
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public final class Main {
 

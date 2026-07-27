@@ -25,7 +25,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Runs each selected plugin as an isolated task on a bounded executor. */
+/** Runs each selected plugin as an isolated task on a bounded executor.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class PluginExecutionCoordinator {
     private static final Logger LOGGER = Logger.getLogger(PluginExecutionCoordinator.class.getName());
 

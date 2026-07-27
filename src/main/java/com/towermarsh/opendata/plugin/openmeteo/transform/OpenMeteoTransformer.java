@@ -19,7 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** Converts a validated Open-Meteo API response into domain records. */
+/** Converts a validated Open-Meteo API response into domain records.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OpenMeteoTransformer {
 
     /**

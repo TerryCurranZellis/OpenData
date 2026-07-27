@@ -37,7 +37,7 @@ import java.util.Objects;
  * @param parameterName header, query parameter or cookie name
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public record CredentialReference(
         String name,
@@ -46,6 +46,8 @@ public record CredentialReference(
         String secretReference,
         CredentialLocation location,
         String parameterName) {
+
+    /** Validates and normalises record components. */
 
     public CredentialReference {
         Objects.requireNonNull(name, "name");

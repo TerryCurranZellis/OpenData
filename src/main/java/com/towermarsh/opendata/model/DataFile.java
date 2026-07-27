@@ -31,7 +31,7 @@ import java.util.Objects;
  * Represents a downloaded OpenData file.
  *
  * @author Terry Curran
- * @version 21 Jul 2026
+ * @version 17 July 2026
  */
 public final class DataFile {
 
@@ -65,24 +65,30 @@ public final class DataFile {
     }
 
     /**
+     * Returns the downloaded file path.
      *
-     * @return
+     * @return file path
+     *
      */
     public Path getFilePath() {
         return filePath;
     }
 
     /**
+     * Returns the downloaded file size in bytes.
      *
-     * @return
+     * @return file size in bytes
+     *
      */
     public long getSize() {
         return size;
     }
 
     /**
+     * Returns the download timestamp.
      *
-     * @return
+     * @return download timestamp
+     *
      */
     public LocalDateTime getDownloadedAt() {
         return downloadedAt;

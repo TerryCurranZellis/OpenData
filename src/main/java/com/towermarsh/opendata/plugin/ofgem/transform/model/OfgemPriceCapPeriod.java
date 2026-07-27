@@ -9,6 +9,14 @@ import java.util.Objects;
 
 /**
  * Effective period represented by an Ofgem price-cap workbook.
+ * @param periodName published Ofgem period name
+ * @param effectiveFrom period start date
+ * @param effectiveTo period end date
+ * @param sourceColumnReference source workbook column reference
+ * @param current whether the period is marked as current
+  *
+ * @author Terry Curran
+ * @version 17 July 2026
  */
 public record OfgemPriceCapPeriod(
         String periodName,
@@ -16,6 +24,8 @@ public record OfgemPriceCapPeriod(
         LocalDate effectiveTo,
         Integer sourceColumnReference,
         boolean current) {
+
+    /** Validates and normalises record components. */
 
     public OfgemPriceCapPeriod {
         periodName = requireText(periodName, "periodName");

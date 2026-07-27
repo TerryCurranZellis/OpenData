@@ -19,25 +19,31 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/** Transactional and idempotent SQL Server writer for Open-Meteo daily data. */
+/** Transactional and idempotent SQL Server writer for Open-Meteo daily data.  *
+* @author Terry Curran
+* @version 17 July 2026
+*/
 public final class OpenMeteoRepository {
     private final DatabaseResourceManager database;
 
     /**
+     * Creates a repository backed by the supplied database resource manager.
      *
-     * @param database
+     * @param database database resource manager
      */
     public OpenMeteoRepository(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }
 
     /**
+     * Saves transformed daily weather records transactionally.
      *
-     * @param configuration
-     * @param records
-     * @param runId
-     * @return
+     * @param configuration typed Open-Meteo configuration
+     * @param records transformed daily weather records
+     * @param runId plugin run identifier
+     * @return persistence result summary
      */
+    @SuppressWarnings("ThrowFromFinallyBlock")
     public OpenMeteoPersistenceResult save(
             final OpenMeteoConfiguration configuration,
             final List<DailyWeatherRecord> records,
@@ -153,6 +159,12 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Creates the temporary staging table used for one load operation.
+     *
+     * @param connection open database connection
+     * @throws SQLException if the staging table cannot be created
+     */
     private static void createStageTable(final Connection connection) throws SQLException {
         execute(connection, """
                 CREATE TABLE #OpenMeteoDaily (
@@ -272,11 +284,25 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Builds a qualified SQL Server table name from validated identifiers.
+     *
+     * @param schema schema name
+     * @param table table name
+     * @return qualified table name
+     */
     private static String qualified(final String schema, final String table) {
         return '[' + OpenMeteoConfiguration.sqlIdentifier(schema, "schema") + "].["
                 + OpenMeteoConfiguration.sqlIdentifier(table, "table") + ']';
     }
 
+    /**
+     * Executes a SQL statement without parameters.
+     *
+     * @param connection open database connection
+     * @param sql SQL statement to execute
+     * @throws SQLException if execution fails
+     */
     private static void execute(final Connection connection, final String sql) throws SQLException {
         try (var statement = connection.createStatement()) {
             statement.execute(sql);
@@ -318,6 +344,13 @@ public final class OpenMeteoRepository {
         return failure;
     }
 
+    /**
+     * Combines cleanup SQL exceptions into a single throwable chain.
+     *
+     * @param existing existing accumulated exception
+     * @param additional additional cleanup failure
+     * @return combined exception reference
+     */
     private static SQLException combine(
             final SQLException existing,
             final SQLException additional) {
@@ -328,6 +361,12 @@ public final class OpenMeteoRepository {
         return existing;
     }
 
+    /**
+     * Attempts to roll back the active database transaction.
+     *
+     * @param connection open database connection
+     * @param original original failure that triggered the rollback
+     */
     private static void rollback(final Connection connection, final Exception original) {
         try {
             connection.rollback();
