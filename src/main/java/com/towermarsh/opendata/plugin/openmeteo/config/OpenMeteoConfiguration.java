@@ -16,7 +16,30 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-/** Typed Open-Meteo API and persistence configuration. */
+/**
+ * Typed Open-Meteo API and persistence configuration. *
+ *
+ * @param endpoint endpoint name
+ * @param locationKey location key id
+ * @param locationName location name
+ * @param latitude location latitude
+ * @param longitude location longitude
+ * @param timezone location timezone e.g. Europe/London
+ * @param connectTimeout how long to try to connect
+ * @param requestTimeout how long to wait for a result to be returned
+ * @param startDate start date for query default 2000-01-01
+ * @param endDate end date for query default today - 1 day
+ * @param defaultStartDaysAgo get data for this many days - ignored now
+ * @param includeCurrentDate data includes today
+ * @param targetSchema where the database table is
+ * @param locationTable name of the table
+ * @param dailyTable data is recorded by day
+ * @param databaseBatchSize how many records to load in a batch
+ * @param databaseLockTimeout how long to keep database connection open
+ *
+ * @author Terry Curran
+ * @version 27 Jul 2026
+ */
 public record OpenMeteoConfiguration(
         URI endpoint,
         String locationKey,
@@ -36,8 +59,32 @@ public record OpenMeteoConfiguration(
         int databaseBatchSize,
         Duration databaseLockTimeout) {
 
+    /**
+     * default end point
+     */
     public static final String ENDPOINT_NAME = "archive";
 
+    /**
+     * instantiate the record definition
+     *
+     * @param endpoint
+     * @param locationKey
+     * @param locationName
+     * @param latitude
+     * @param longitude
+     * @param timezone
+     * @param connectTimeout
+     * @param requestTimeout
+     * @param startDate
+     * @param endDate
+     * @param defaultStartDaysAgo
+     * @param includeCurrentDate
+     * @param targetSchema
+     * @param locationTable
+     * @param dailyTable
+     * @param databaseBatchSize
+     * @param databaseLockTimeout
+     */
     public OpenMeteoConfiguration {
         Objects.requireNonNull(endpoint, "endpoint");
         locationKey = requireText(locationKey, "location-key", 100);
@@ -79,6 +126,12 @@ public record OpenMeteoConfiguration(
         }
     }
 
+    /**
+     * Get the configuration settings
+     *
+     * @param definition definition
+     * @return the settings
+     */
     public static OpenMeteoConfiguration from(final PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!"openmeteo".equalsIgnoreCase(definition.id())) {
@@ -104,22 +157,29 @@ public record OpenMeteoConfiguration(
                 Duration.ofSeconds(integer(definition, "database.lock-timeout-seconds", 30)));
     }
 
-    //public DateRange resolveDateRange(final LocalDate today) {
-    //    Objects.requireNonNull(today, "today");
-    //    final LocalDate effectiveEnd = endDate.orElse(includeCurrentDate ? today : today.minusDays(1));
-    //    final LocalDate effectiveStart = startDate.orElse(effectiveEnd.minusDays(defaultStartDaysAgo));
-    //    return new DateRange(effectiveStart, effectiveEnd);
-    //}
-	
-	public DateRange resolveDateRange(final LocalDate today) {
-		Objects.requireNonNull(today, "today");
-		final LocalDate defaultStart = LocalDate.of(2000, 1, 1);
-		final LocalDate defaultEnd   = today.minusDays(1);
-		final LocalDate effectiveEnd = endDate.orElse(defaultEnd);
-		final LocalDate effectiveStart = startDate.orElse(defaultStart);
-    return new DateRange(effectiveStart, effectiveEnd);
-}
-
+    /**
+     * Resolve the date range
+     * <p>
+     * Default values
+     * <table>
+     * <tr>
+     * <td>StartDate</td>
+     * <td>2000-01-01</td>
+     * </tr>
+     * <td>EndDate</td>
+     * <td>Today -1 day</td>
+     * </td>
+     * </table>
+     *
+     * @param today today's date
+     * @return the date range required
+     */
+    public DateRange resolveDateRange(final LocalDate today) {
+        Objects.requireNonNull(today, "today");
+        final LocalDate effectiveStart = startDate.orElse(LocalDate.of(2000, 1, 1));
+        final LocalDate effectiveEnd = endDate.orElse(today.minusDays(1));
+        return new DateRange(effectiveStart, effectiveEnd);
+    }
 
     private static String required(final PluginDefinition definition, final String name) {
         return definition.requireProperty(name);
@@ -151,9 +211,12 @@ public record OpenMeteoConfiguration(
 
     private static boolean bool(final PluginDefinition definition, final String name, final boolean defaultValue) {
         return switch (value(definition, name, Boolean.toString(defaultValue)).toLowerCase(Locale.ROOT)) {
-            case "true", "yes", "1", "on" -> true;
-            case "false", "no", "0", "off" -> false;
-            default -> throw new IllegalArgumentException("OpenMeteo property '" + name + "' must be a boolean");
+            case "true", "yes", "1", "on" ->
+                true;
+            case "false", "no", "0", "off" ->
+                false;
+            default ->
+                throw new IllegalArgumentException("OpenMeteo property '" + name + "' must be a boolean");
         };
     }
 
@@ -165,7 +228,7 @@ public record OpenMeteoConfiguration(
     }
 
     private static String slug(final String value) {
-        final String result = value.trim().toLowerCase(Locale.ROOT)
+        final var result = value.trim().toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("(^-|-$)", "");
         return result.isBlank() ? "location" : result;
@@ -180,7 +243,7 @@ public record OpenMeteoConfiguration(
             final String name,
             final int maximumLength) {
         Objects.requireNonNull(value, name);
-        final String result = value.trim();
+        final var result = value.trim();
         if (result.isBlank()) {
             throw new IllegalArgumentException(name + " must not be blank");
         }
@@ -190,16 +253,31 @@ public record OpenMeteoConfiguration(
         return result;
     }
 
-    /** Validates one SQL identifier used by the plugin-local load package. */
+    /**
+     * Validates one SQL identifier used by the plugin-local load package.
+     * @param value the column id in the data
+     * @param name the column name in the db
+     */
     public static String sqlIdentifier(final String value, final String name) {
-        final String result = requireText(value, name);
+        final var result = requireText(value, name);
         if (!result.matches("[A-Za-z_][A-Za-z0-9_]*")) {
             throw new IllegalArgumentException(name + " is not a safe SQL identifier: " + result);
         }
         return result;
     }
 
+    /**
+     * create a daterange record
+     * @param startDate start date for the range
+     * @param endDate end date for the range
+     */
     public record DateRange(LocalDate startDate, LocalDate endDate) {
+
+        /**
+         * Set the date range
+         * @param startDate
+         * @param endDate 
+         */
         public DateRange {
             Objects.requireNonNull(startDate, "startDate");
             Objects.requireNonNull(endDate, "endDate");

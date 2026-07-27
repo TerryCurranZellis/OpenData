@@ -21,11 +21,9 @@
  *
  * terry.curran@towermarsh.co.uk
  */
-
 package com.towermarsh.opendata.config;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -39,7 +37,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.towermarsh.opendata.config.model.AuthenticationType;
@@ -223,8 +220,12 @@ public final class PropertiesPluginDefinitionLoader
             final var definition
                     = new PluginPropertyDefinition(
                             name,
-                            require(values, prefix + "value"),
-                            enumValue(values, prefix + "type", PluginPropertyType.class, PluginPropertyType.STRING),
+                            values.getOrDefault(prefix + "value", "").trim(),
+                            enumValue(
+                                    values,
+                                    prefix + "type",
+                                    PluginPropertyType.class,
+                                    PluginPropertyType.STRING),
                             getBoolean(values, prefix + "sensitive", false),
                             values.getOrDefault(prefix + "description", ""));
 
@@ -235,7 +236,8 @@ public final class PropertiesPluginDefinitionLoader
     }
 
     /**
-     * parse credentials some apis have credentials 
+     * parse credentials some apis have credentials
+     *
      * @param values key value pair
      * @return credentials mapped to plugin
      */
@@ -249,21 +251,23 @@ public final class PropertiesPluginDefinitionLoader
             final var prefix = "credential." + name + ".";
             final var reference = new CredentialReference(
                     name,
-                    enumValue( values, prefix + "authentication-type", AuthenticationType.class),
+                    enumValue(values, prefix + "authentication-type", AuthenticationType.class),
                     require(values, prefix + "provider"),
                     require(values, prefix + "secret-reference"),
-                    enumValue( values, prefix + "location", CredentialLocation.class,CredentialLocation.NONE),
+                    enumValue(values, prefix + "location", CredentialLocation.class, CredentialLocation.NONE),
                     values.getOrDefault(prefix + "parameter-name", ""));
             result.put(name.toLowerCase(Locale.ROOT), reference);
         });
 
         return result;
     }
-/**
- * load resources
- * @param resourceName resource name
- * @return map of resource for plugin
- */
+
+    /**
+     * load resources
+     *
+     * @param resourceName resource name
+     * @return map of resource for plugin
+     */
     private Map<String, String> loadRequiredResource(
             final String resourceName) {
 
@@ -296,6 +300,7 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * extract value for keys
+     *
      * @param values map of keys and values
      * @param rootPrefix start at this location
      * @return the key map
@@ -321,6 +326,7 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * get the properties
+     *
      * @param values map of key values
      * @return the properties
      */
@@ -345,6 +351,7 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * build a smaller map from a larger map
+     *
      * @param values original map
      * @param prefix start at this location
      * @return the new map
@@ -362,6 +369,7 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * Check is a plugin parameter is present, its required
+     *
      * @param values map to search
      * @param key key to find
      * @return the key
@@ -379,6 +387,7 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * look for optional values
+     *
      * @param values map to check
      * @param key key to find
      * @return return the value if its there
@@ -394,6 +403,7 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * check if a key is in the map, or if its a default value
+     *
      * @param values map to check
      * @param key key to find
      * @param defaultValue default value to use
@@ -422,10 +432,11 @@ public final class PropertiesPluginDefinitionLoader
 
     /**
      * get the integer value for a key
+     *
      * @param values map to check
      * @param key key to check
      * @param defaultValue default value if key not founf
-     * @return 
+     * @return
      */
     private static int getInt(
             final Map<String, String> values,
@@ -447,12 +458,13 @@ public final class PropertiesPluginDefinitionLoader
     }
 
     /**
-     * get the enum  from the map
+     * get the enum from the map
+     *
      * @param <E> the enum value to find
      * @param values map of values
      * @param key key to find
      * @param enumClass enum class
-     * @return 
+     * @return
      */
     private static <E extends Enum<E>> E enumValue(
             final Map<String, String> values,
@@ -461,15 +473,16 @@ public final class PropertiesPluginDefinitionLoader
 
         return enumValue(values, key, enumClass, null);
     }
-/**
- * 
- * @param <E>
- * @param values
- * @param key
- * @param enumClass
- * @param defaultValue
- * @return 
- */
+
+    /**
+     *
+     * @param <E>
+     * @param values
+     * @param key
+     * @param enumClass
+     * @param defaultValue
+     * @return
+     */
     private static <E extends Enum<E>> E enumValue(
             final Map<String, String> values,
             final String key,
@@ -499,9 +512,9 @@ public final class PropertiesPluginDefinitionLoader
     }
 
     /**
-     * 
+     *
      * @param value
-     * @return 
+     * @return
      */
     private static String normalise(final String value) {
         return Objects.requireNonNull(value, "value")
