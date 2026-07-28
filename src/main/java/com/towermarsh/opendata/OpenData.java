@@ -1,5 +1,5 @@
 /*
- * Filename: Main.java
+ * Filename: OpenData.java
  *
  * (c) Copyright 2026 Terry Curran
  *
@@ -15,6 +15,9 @@ import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.PluginDefinitionException;
 import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.logging.LoggingManager;
+import com.towermarsh.opendata.ui.AboutDialog;
+import com.towermarsh.opendata.ui.ApplicationInfo;
+import com.towermarsh.opendata.ui.StartupSplashScreen;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -25,33 +28,40 @@ import java.util.logging.Logger;
 
 /**
  * OpenData application entry point.
-  *
+ *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 28 July 2026
  */
-public final class Main {
+public final class OpenData {
 
-    private Main() {
+    private OpenData() {
     }
 
     /**
      * Starts the application without terminating the JVM explicitly.
      *
-     * @param args command line arguments
+     * @param args the command line argument array
      */
     public static void main(final String[] args) {
         final var startedAt = Instant.now();
         final var processor = new CommandLineArgumentsProcessor();
+        final var splash = new StartupSplashScreen();
         var status = ExecutionStatus.NOT_STARTED;
-        var logger = Logger.getLogger(Main.class.getName());
+        var logger = Logger.getLogger(OpenData.class.getName());
         try {
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
             final var arguments = processor.parse(args);
-            status = new OpenDataApplication().start(arguments, processor);
+            if (arguments.aboutRequested()) {
+                AboutDialog.showAndWait(ApplicationInfo.current());
+                status = ExecutionStatus.SUCCESS;
+            } else {
+                splash.show();
+                status = new OpenDataApplication().start(arguments, processor);
+            }
         } catch (CommandLineProcessingException exception) {
             status = ExecutionStatus.COMMAND_LINE_ERROR;
-            System.err.println("Command-line error: " + messageFor(exception));
+            logger.log(Level.SEVERE, "Command-line error: {0}", messageFor(exception));
             processor.printHelp(new PrintWriter(System.err, true));
         } catch (PluginDefinitionException | OpenDataConfigurationException exception) {
             status = ExecutionStatus.CONFIGURATION_ERROR;
@@ -69,10 +79,6 @@ public final class Main {
         } catch (Exception exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
             logger.log(Level.SEVERE, "Unexpected application failure: {0}", messageFor(exception));
-            /*
-             * Keep the stack trace available when detailed diagnostic
-             * logging is enabled, but do not print it during normal operation.
-             */
             logger.log(Level.FINE, "Unexpected application failure details.", exception);
         } finally {
             final var duration = Duration.between(startedAt, Instant.now());
@@ -83,10 +89,9 @@ public final class Main {
     }
 
     /**
-     * Returns a useful exception message without producing a stack dump.
+     * display the exception message
      *
-     * @param exception exception to examine
-     * @return exception message
+     * @param exception the exception details
      */
     private static String messageFor(final Throwable exception) {
         var current = exception;
@@ -94,9 +99,8 @@ public final class Main {
             current = current.getCause();
         }
         final var message = current.getMessage();
-        if (message == null || message.isBlank()) {
-            return current.getClass().getSimpleName();
-        }
-        return message;
+        return message == null || message.isBlank()
+                ? current.getClass().getSimpleName()
+                : message;
     }
 }

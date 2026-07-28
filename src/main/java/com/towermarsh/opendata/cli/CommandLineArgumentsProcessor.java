@@ -27,20 +27,25 @@ import org.apache.commons.cli.ParseException;
 /**
  * Parses and validates the OpenData command line.
  *
- *
- * @author Terry Curran
- * @version 17 July 2026
+ * @author terry curran
+ * @version 28 July 2026
  */
 public final class CommandLineArgumentsProcessor {
 
+    /**
+     * Application Name
+     */
     private static final String APPLICATION_NAME = "opendata";
+
+    /**
+     * Create command line options
+     */
     private final Options options = createOptions();
 
     /**
-     * instantiate CommandLineArgumentsProcessor
+     * Creates a command-line processor.
      */
     public CommandLineArgumentsProcessor() {
-
     }
 
     /**
@@ -49,7 +54,6 @@ public final class CommandLineArgumentsProcessor {
      * @param arguments raw command-line arguments
      * @return parsed arguments
      * @throws CommandLineProcessingException if the command line is invalid
-     *
      */
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
@@ -65,31 +69,25 @@ public final class CommandLineArgumentsProcessor {
      * Normalises launcher input before Commons CLI parsing.
      *
      * <p>
-     * A normal Java process receives one array element per command-line token.
-     * Some IDE and wrapper configurations incorrectly pass the complete command
-     * line as one quoted argument, for example
-     * {@code {"--plugin all --dry-run"}}. Commons CLI then treats that value as
-     * an unrecognised token and no plugin selection is available. This method
-     * safely expands only that single-element form; correctly tokenised command
-     * lines are left unchanged.</p>
+     * Some IDE and wrapper configurations pass the complete command line as one
+     * argument. This method expands only that single-element form.</p>
+     *
+     * @param arguments array of command line arguments
      */
     static String[] normaliseArguments(final String[] arguments) {
         if (arguments.length != 1) {
             return Arrays.copyOf(arguments, arguments.length);
         }
-
         final String commandLine = arguments[0];
         if (commandLine == null || commandLine.isBlank() || !containsWhitespace(commandLine)) {
             return Arrays.copyOf(arguments, arguments.length);
         }
-
         final List<String> tokens = new ArrayList<>();
         final StringBuilder token = new StringBuilder();
         char quote = 0;
-
         for (int index = 0; index < commandLine.length(); index++) {
             final char current = commandLine.charAt(index);
-            if ((current == '\'' || current == '"')) {
+            if (current == '\'' || current == '"') {
                 if (quote == 0) {
                     quote = current;
                 } else if (quote == current) {
@@ -103,7 +101,6 @@ public final class CommandLineArgumentsProcessor {
                 token.append(current);
             }
         }
-
         if (quote != 0) {
             throw new IllegalArgumentException("Unterminated quoted command-line value.");
         }
@@ -112,20 +109,19 @@ public final class CommandLineArgumentsProcessor {
     }
 
     /**
-     * Determines whether a value contains any whitespace characters.
+     * Check for whitespace
      *
-     * @param value value to inspect
-     * @return {@code true} when the value contains whitespace
+     * @param value string to check
      */
     private static boolean containsWhitespace(final String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
     /**
-     * Adds the current token to the token list when it is non-empty.
+     * Tokenize the command line
      *
-     * @param tokens collected command-line tokens
-     * @param token token buffer to flush
+     * @param tokens exiting tokens
+     * @param token token to add
      */
     private static void addToken(final List<String> tokens, final StringBuilder token) {
         if (!token.isEmpty()) {
@@ -135,11 +131,9 @@ public final class CommandLineArgumentsProcessor {
     }
 
     /**
-     *
      * Prints command-line help to the supplied writer.
      *
-     * @param writer destination for help output
-     *
+     * @param writer output source
      */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
@@ -157,6 +151,7 @@ public final class CommandLineArgumentsProcessor {
                 + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
                 + "  opendata --plugin openmeteo,ofgem" + System.lineSeparator()
                 + "  opendata --plugin all" + System.lineSeparator()
+                + "  opendata --about" + System.lineSeparator()
                 + "  opendata --plugin all --file C:\\OpenData\\run.properties" + System.lineSeparator(),
                 options,
                 2,
@@ -171,52 +166,70 @@ public final class CommandLineArgumentsProcessor {
     }
 
     /**
-     * Builds the supported command-line option set.
+     * Build the command line options
      *
-     * @return configured options
+     * @return the command line options
      */
     private static Options createOptions() {
         final var result = new Options();
-        result.addOption(Option.builder("p")
+        result.addOption(Option
+                .builder("p")
                 .longOpt("plugin")
-                .hasArg()
-                .argName("id|all")
+                .hasArg().argName("id|all")
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
                 .build());
-        result.addOption(Option.builder("f")
+        result.addOption(Option
+                .builder("f")
                 .longOpt("file")
                 .hasArg()
                 .argName("settings.properties")
                 .desc("Optional application and plugin override properties file.")
                 .build());
-        result.addOption(Option.builder("j")
+        result.addOption(Option
+                .builder("j")
                 .longOpt("parallelism")
                 .hasArg()
                 .argName("1-64")
                 .desc("Maximum plugins executing concurrently; defaults to application configuration.")
                 .build());
-        result.addOption(Option.builder().longOpt("dry-run")
-                .desc("Download and validate without database writes or run-audit rows.").build());
-        result.addOption(Option.builder("v").longOpt("verbose")
-                .desc("Enable FINE java.util.logging output.").build());
-        result.addOption(Option.builder("h").longOpt("help").desc("Display help.").build());
-        result.addOption(Option.builder().longOpt("version").desc("Display version.").build());
-        result.addOption(Option.builder().longOpt("list-plugins").desc("List installed plugins.").build());
+        result.addOption(Option
+                .builder().longOpt("dry-run")
+                .desc("Download and validate without database writes or run-audit rows.")
+                .build());
+        result.addOption(Option
+                .builder("v")
+                .longOpt("verbose")
+                .desc("Enable FINE java.util.logging output.")
+                .build());
+        result.addOption(Option
+                .builder("h")
+                .longOpt("help")
+                .desc("Display help.")
+                .build());
+        result.addOption(Option
+                .builder()
+                .longOpt("about")
+                .desc("Display the graphical About and version window.")
+                .build());
+        result.addOption(Option
+                .builder()
+                .longOpt("list-plugins")
+                .desc("List installed plugins.")
+                .build());
         return result;
     }
 
     /**
-     * Converts a parsed Commons CLI command line into immutable invocation
-     * arguments.
+     * Parse the command line
      *
-     * @param commandLine parsed command line
-     * @return immutable invocation arguments
+     * @param commandLine the command line
+     * @return the command line arguments record
      */
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
         final boolean help = commandLine.hasOption("help");
-        final boolean version = commandLine.hasOption("version");
+        final boolean about = commandLine.hasOption("about");
         final boolean list = commandLine.hasOption("list-plugins");
-        final boolean informational = help || version || list;
+        final boolean informational = help || about || list;
         final List<String> rawIds = new ArrayList<>();
         final String[] optionValues = commandLine.getOptionValues("plugin");
         if (optionValues != null) {
@@ -228,7 +241,6 @@ public final class CommandLineArgumentsProcessor {
                 }
             }
         }
-
         final boolean all = rawIds.stream().anyMatch("all"::equals);
         if (all && rawIds.size() > 1) {
             throw new IllegalArgumentException("--plugin all cannot be combined with another plugin id.");
@@ -243,7 +255,6 @@ public final class CommandLineArgumentsProcessor {
         if (commandLine.hasOption("file") && rawIds.isEmpty()) {
             throw new IllegalArgumentException("--file requires --plugin.");
         }
-
         OptionalInt parallelism = OptionalInt.empty();
         if (commandLine.hasOption("parallelism")) {
             try {
@@ -256,7 +267,6 @@ public final class CommandLineArgumentsProcessor {
                 throw new IllegalArgumentException("--parallelism must be an integer.", exception);
             }
         }
-
         return new CommandLineArguments(
                 all ? List.of() : List.copyOf(uniqueIds),
                 all,
@@ -265,7 +275,7 @@ public final class CommandLineArgumentsProcessor {
                 commandLine.hasOption("dry-run"),
                 commandLine.hasOption("verbose"),
                 help,
-                version,
+                about,
                 list);
     }
 }

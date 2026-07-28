@@ -2,6 +2,8 @@
   "projectTitle": "OpenData Framework",
   "manualTitle": "OpenData Framework Technical Documentation",
   "userGuideTitle": "OpenData Framework User Guide",
+  "slogan": "Transforming data for innovation",
+  "coverImage": "docs/assets/opendata-cover.png",
   "technicalOutputBaseName": "OpenData-Technical-Documentation",
   "userOutputBaseName": "OpenData-User-Guide",
   "author": "OpenData Framework Project",

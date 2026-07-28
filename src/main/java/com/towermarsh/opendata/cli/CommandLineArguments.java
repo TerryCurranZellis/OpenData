@@ -23,11 +23,11 @@ import java.util.OptionalInt;
  * @param dryRun whether database writes and audit rows are disabled
  * @param verbose whether verbose logging is requested
  * @param helpRequested whether help output was requested
- * @param versionRequested whether version output was requested
+ * @param aboutRequested whether the graphical About window was requested
  * @param listPluginsRequested whether installed plugin listing was requested
-  *
+ *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 28 July 2026
  */
 public record CommandLineArguments(
         List<String> pluginIds,
@@ -37,11 +37,12 @@ public record CommandLineArguments(
         boolean dryRun,
         boolean verbose,
         boolean helpRequested,
-        boolean versionRequested,
+        boolean aboutRequested,
         boolean listPluginsRequested) {
 
-    /** Validates record components. */
-    /** Validates and normalises record components. */
+    /** 
+	 * Validates and normalises record components. 
+	 */
     public CommandLineArguments {
         pluginIds = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
         overrideFile = overrideFile == null ? Optional.empty() : overrideFile;
@@ -59,9 +60,9 @@ public record CommandLineArguments(
     /**
      * Indicates whether the invocation only requests informational output.
      *
-     * @return {@code true} when help, version, or plugin listing output was requested
+     * @return {@code true} when help, About, or plugin listing output was requested
      */
     public boolean informationalRequest() {
-        return helpRequested || versionRequested || listPluginsRequested;
+        return helpRequested || aboutRequested || listPluginsRequested;
     }
 }

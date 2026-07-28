@@ -8,23 +8,21 @@
 package com.towermarsh.opendata.cli;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Terry Curran
- * @version 17 July 2026
- */
+/** Tests command-line parsing including the graphical About option. */
 class CommandLineArgumentsProcessorTest {
+
     private final CommandLineArgumentsProcessor processor = new CommandLineArgumentsProcessor();
 
     @Test
     void acceptsRepeatedAndCommaSeparatedPluginsInOrder() {
         final var arguments = processor.parse(new String[]{
-            "--plugin", "openmeteo,ofgem",
-            "--parallelism", "2"
+            "--plugin", "openmeteo,ofgem", "--parallelism", "2"
         });
         assertEquals(java.util.List.of("openmeteo", "ofgem"), arguments.pluginIds());
         assertEquals(2, arguments.parallelism().orElseThrow());
@@ -38,9 +36,29 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
+    void acceptsAboutWithoutPluginSelection() {
+        final var arguments = processor.parse(new String[]{"--about"});
+        assertTrue(arguments.aboutRequested());
+        assertTrue(arguments.informationalRequest());
+        assertTrue(arguments.pluginIds().isEmpty());
+    }
+
+    @Test
+    void reservesShortVForVerboseLogging() {
+        final var arguments = processor.parse(new String[]{"--plugin", "example", "-v"});
+        assertTrue(arguments.verbose());
+        assertFalse(arguments.aboutRequested());
+    }
+
+    @Test
+    void rejectsRemovedVersionOption() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--version"}));
+    }
+
+    @Test
     void acceptsCompleteCommandLinePassedAsOneLauncherArgument() {
         final var arguments = processor.parse(new String[]{"--plugin all --dry-run"});
-
         assertTrue(arguments.allPluginsRequested());
         assertTrue(arguments.dryRun());
     }
@@ -50,7 +68,6 @@ class CommandLineArgumentsProcessorTest {
         final var arguments = processor.parse(new String[]{
             "--plugin example --file \"C:\\OpenData Files\\example.properties\" --dry-run"
         });
-
         assertEquals(java.nio.file.Path.of("C:\\OpenData Files\\example.properties"),
                 arguments.overrideFile().orElseThrow());
         assertTrue(arguments.dryRun());
