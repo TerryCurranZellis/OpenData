@@ -26,5 +26,5 @@
   "templateDirectory": "docs/templates",
   "sharedDirectory": "docs/shared",
   "generatedDirectory": "docs/generated",
-  "projectVersion": "development"
+  "projectVersion": "1.0.0"
 }

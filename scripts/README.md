@@ -101,3 +101,7 @@ Render only PlantUML diagrams with:
 . .\scripts\Convert-PlantUml.ps1
 Convert-PlantUml -ProjectRoot $PWD -Format svg -Clean
 ```
+
+## Java quality verification
+
+`Invoke-Code-Quality.ps1` runs tests and the Maven quality checks. Add `-Strict` to fail on configured Checkstyle, SpotBugs or PMD violations.

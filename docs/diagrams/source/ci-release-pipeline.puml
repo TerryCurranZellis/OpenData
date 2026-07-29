@@ -1,0 +1,30 @@
+@startuml
+' Copyright © 2026 Terry Curran
+' SPDX-License-Identifier: Apache-2.0
+
+title OpenData Build, Documentation and Release Pipeline
+
+start
+:Developer pushes commit or opens pull request;
+fork
+  :Build and quality workflow;
+  :Set up Java 17 and Maven cache;
+  :Run clean verify;
+  :Publish test and quality reports;
+fork again
+  :Documentation validation workflow;
+  :Validate manifest, sources and links;
+  :Build HTML manuals with Pandoc;
+  :Publish documentation artifact;
+end fork
+if (Tagged release vX.Y.Z?) then (yes)
+  :Verify tag matches pom.xml version;
+  :Run strict quality verification;
+  :Build JAR and source ZIP;
+  :Generate SHA-256 checksums;
+  :Publish GitHub Release;
+else (no)
+  :Complete CI checks;
+endif
+stop
+@enduml

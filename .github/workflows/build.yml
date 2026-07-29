@@ -1,0 +1,36 @@
+name: Build and quality
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Maven verification
+        run: mvn --batch-mode --no-transfer-progress clean verify
+      - name: Upload test and quality reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-reports
+          if-no-files-found: ignore
+          path: |
+            target/surefire-reports/**
+            target/site/**
+            target/checkstyle-*.xml
+            target/pmd.xml
+            target/spotbugsXml.xml

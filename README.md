@@ -11,6 +11,11 @@ monolith.
 > acceptance tests, live write and rollback verification, and audit-model
 > consolidation remain release gates.
 
+## Release status
+
+The current supported release is **1.0.0**, published as the completed seven-batch open-source baseline. See [RELEASE_NOTES.md](RELEASE_NOTES.md), [CHANGELOG.md](CHANGELOG.md), and the [final release checklist](docs/release/Final-Release-Checklist.md).
+
+
 ## Capabilities
 
 - Select one or more plugins, including `--plugin all`.
@@ -86,6 +91,22 @@ The exact launcher prefix depends on the IDE or classpath runner until executabl
 packaging is added. See the
 [command-line reference](docs/reference/command-line-reference.md).
 
+### Code quality
+
+Run the complete test and static-analysis baseline with:
+
+```powershell
+mvn clean verify
+```
+
+Use strict quality enforcement with:
+
+```powershell
+./scripts/Invoke-Code-Quality.ps1 -Strict
+```
+
+See [`docs/development/Java-Quality-Guide.md`](docs/development/Java-Quality-Guide.md) for the quality rules and adoption process.
+
 ## Documentation
 
 | Area | Entry point |
@@ -115,3 +136,14 @@ and the version or commit tested.
 ## Licence
 
 OpenData is licensed under the Apache License, Version 2.0. See [`LICENSE`](LICENSE), [`NOTICE`](NOTICE), and the [licensing policy](docs/Licensing-Policy.md).
+
+## Build verification
+
+Run the complete local verification lifecycle with:
+
+```powershell
+mvn clean verify
+./scripts/Validate-Documentation.ps1 -FailOnWarning
+```
+
+See [Build, CI and Release Guide](docs/development/Build-CI-and-Release-Guide.md) for continuous integration and release procedures.

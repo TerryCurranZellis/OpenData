@@ -16,7 +16,7 @@ Run it once from the project root after copying the overlay files.
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [Parameter(Mandatory = $false)]
-    [string] $ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
+    [string] $ProjectRoot = (Split-Path -Parent (Split-Path -Parent $PSScriptRoot))
 )
 
 $ErrorActionPreference = 'Stop'

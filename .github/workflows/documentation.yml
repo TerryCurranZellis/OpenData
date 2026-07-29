@@ -1,30 +1,41 @@
-name: Documentation
+name: Documentation validation
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'docs/**'
-      - 'scripts/documentation/**'
+      - 'scripts/**'
       - 'config/documentation.json'
+      - '.github/workflows/documentation.yml'
   pull_request:
     paths:
       - 'docs/**'
-      - 'scripts/documentation/**'
+      - 'scripts/**'
       - 'config/documentation.json'
+      - '.github/workflows/documentation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  validate:
     runs-on: windows-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Validate manifest, sources and links
+        shell: pwsh
+        run: ./scripts/Validate-Documentation.ps1 -FailOnWarning
       - name: Install Pandoc
-        run: choco install pandoc -y
-      - name: Validate and build HTML
-        shell: powershell
-        run: .\scripts\documentation\Build-Documentation.ps1 -Format Html -Validate -Clean
+        shell: pwsh
+        run: choco install pandoc -y --no-progress
+      - name: Build HTML manuals
+        shell: pwsh
+        run: ./scripts/Build-Documentation.ps1 -Document All -Format Html
       - name: Upload documentation
         uses: actions/upload-artifact@v4
         with:
-          name: opendata-documentation
-          path: docs/build/
+          name: opendata-documentation-html
+          path: docs/build/*.html

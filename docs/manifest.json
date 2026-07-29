@@ -59,7 +59,15 @@
         "shared/glossary.md",
         "shared/licence.md",
         "shared/acknowledgements.md",
-        "reviews/Batch-3-Implementation-Notes.md"
+        "reviews/Batch-3-Implementation-Notes.md",
+        "development/Java-Quality-Guide.md",
+        "reviews/Batch-4-Implementation-Notes.md",
+        "reviews/Batch-5-Implementation-Notes.md",
+        "development/Build-CI-and-Release-Guide.md",
+        "reviews/Batch-6-Implementation-Notes.md",
+        "release/Release-1.0.0.md",
+        "release/Final-Release-Checklist.md",
+        "reviews/Batch-7-Implementation-Notes.md"
       ]
     },
     "user": {
@@ -81,6 +89,24 @@
       "name": "Licensing Migration",
       "status": "completed",
       "notes": "reviews/Batch-4-Implementation-Notes.md"
+    },
+    {
+      "batch": 5,
+      "name": "Java Quality Improvements",
+      "status": "completed",
+      "notes": "reviews/Batch-5-Implementation-Notes.md"
+    },
+    {
+      "batch": 6,
+      "name": "Build and CI Improvements",
+      "status": "completed",
+      "notes": "reviews/Batch-6-Implementation-Notes.md"
+    },
+    {
+      "batch": 7,
+      "name": "Final Release Package",
+      "status": "completed",
+      "notes": "reviews/Batch-7-Implementation-Notes.md"
     }
   ]
 }

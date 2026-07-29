@@ -1,42 +1,30 @@
-# Changelog
-
-All notable changes to OpenData are recorded in this file.
-
-The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
-this project uses semantic versioning for published releases.
-
 ## [Unreleased]
-### Changed
 
-- Standardised Java, PowerShell and SQL source headers with Apache-2.0 SPDX identifiers.
-- Added a canonical plain-text `LICENSE` and project licensing policy.
+No changes have been recorded since version 1.0.0.
 
+## [1.0.0] - 2026-07-29
 
 ### Added
 
-- Configuration-driven documentation framework and document manifest.
-- Reusable documentation templates and shared manual sections.
-- Root-level contributor, conduct, security and notice files.
-- Repository standards and open-source release guidance.
+- Configuration-driven documentation framework and reusable templates.
+- Repository governance, contribution, security and licensing standards.
+- Standard Apache 2.0 source headers and licensing policy.
+- Checkstyle, PMD, SpotBugs, Javadoc and JaCoCo quality tooling.
+- GitHub Actions workflows for build, documentation and tagged releases.
+- Documentation validation, local release packaging and release checksums.
+- Final generated technical documentation and user guide packages.
 
 ### Changed
 
-- Documentation generation now consumes `config/documentation.json` and
-  `docs/manifest.json` rather than relying only on hard-coded source lists.
-- Community and release information now uses conventional repository-root files.
-- The project README now provides a clearer status statement, quick start and
-  contributor navigation.
+- Documentation generation now uses `documentation.json` and `docs/manifest.json`.
+- Build and release processes now enforce Java 17, Maven 3.9 and version consistency.
+- Repository documentation and onboarding material were reorganised for public use.
 
 ### Fixed
 
-- Removed machine-specific invocations from documentation scripts.
-- Corrected documentation renderer references and PlantUML source locations.
-
-## [1.0.0] - Unreleased
-
-This version is reserved for the first supported public release. Production
-acceptance, executable packaging and final database verification remain release
-gates and must be completed before this heading receives a release date.
+- Removed machine-specific execution paths from utility scripts.
+- Corrected documentation workflow references to missing scripts.
+- Added missing package documentation and completed diagram inventory metadata.
 
 ## [0.1.0] - 2026-07-22
 
@@ -48,5 +36,6 @@ gates and must be completed before this heading receives a release date.
 - Ofgem and OpenMeteo reference plugins.
 - Architecture, ADR, guide, operations and reference documentation.
 
-[Unreleased]: https://github.com/TerryCurranZellis/OpenData/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/TerryCurranZellis/OpenData/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v1.0.0
 [0.1.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v0.1.0
