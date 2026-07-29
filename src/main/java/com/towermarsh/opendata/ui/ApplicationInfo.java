@@ -28,10 +28,12 @@ public record ApplicationInfo(
         String licence,
         String copyright) {
 
-    /** Creates information for the currently running OpenData application. */
+    /** 
+     * Creates information for the currently running OpenData application. 
+     */
     public static ApplicationInfo current() {
-        final Package applicationPackage = ApplicationInfo.class.getPackage();
-        final String implementationVersion = Optional
+        final var applicationPackage = ApplicationInfo.class.getPackage();
+        final var implementationVersion = Optional
                 .ofNullable(applicationPackage.getImplementationVersion())
                 .filter(value -> !value.isBlank())
                 .orElse("development");
