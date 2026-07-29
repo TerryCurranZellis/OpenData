@@ -1,7 +1,6 @@
 /*
- * Filename: OfgemConfiguration.java
+ * Copyright © 2026 Terry Curran
  *
- * (c) Copyright 2026 Terry Curran
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.towermarsh.opendata.plugin.ofgem.config;

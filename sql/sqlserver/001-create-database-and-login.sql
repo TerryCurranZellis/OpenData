@@ -1,4 +1,8 @@
 /*
+ * Copyright © 2026 Terry Curran
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
     OpenData SQL Server bootstrap.
 
     Run with an administrator login using SQLCMD mode, for example:

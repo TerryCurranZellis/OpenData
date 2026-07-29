@@ -1,3 +1,8 @@
+<#
+Copyright © 2026 Terry Curran
+SPDX-License-Identifier: Apache-2.0
+#>
+
 #Requires -Version 5.1
 function Invoke-Documentation {
   <#
@@ -65,6 +70,35 @@ function Invoke-Documentation {
     Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
   }
 
+  function Read-DocumentationManifest {
+    param([Parameter(Mandatory)][string] $Root)
+
+    $config = Read-DocumentationConfig -Root $Root
+    $relativePath = if ([string]::IsNullOrWhiteSpace($config.manifestPath)) {
+      'docs\manifest.json'
+    } else {
+      $config.manifestPath
+    }
+    $path = Join-Path -Path $Root -ChildPath $relativePath
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+      throw ('Documentation manifest was not found: {0}' -f $path)
+    }
+    Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
+  }
+
+  function Convert-TemplateTokens {
+    param(
+      [Parameter(Mandatory)][string] $Content,
+      [Parameter(Mandatory)][hashtable] $Tokens
+    )
+
+    $result = $Content
+    foreach ($key in $Tokens.Keys) {
+      $result = $result.Replace(('{{{0}}}' -f $key), [string]$Tokens[$key])
+    }
+    return $result
+  }
+
   function Ensure-Directory {
     param([Parameter(Mandatory)][string] $Path)
 
@@ -81,40 +115,6 @@ function Invoke-Documentation {
     }
   }
 
-  function Add-MarkdownDirectory {
-    param(
-      [Parameter(Mandatory)]
-      [System.Collections.Generic.List[System.IO.FileInfo]] $List,
-      [Parameter(Mandatory)]
-      [string] $Path
-    )
-
-    if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
-      return
-    }
-
-    $readme = Join-Path -Path $Path -ChildPath 'README.md'
-    if (Test-Path -LiteralPath $readme -PathType Leaf) {
-      $List.Add((Get-Item -LiteralPath $readme))
-    }
-
-    $preferredNames = @('ARCHITECTURE.md')
-    foreach ($preferredName in $preferredNames) {
-      $preferred = Join-Path -Path $Path -ChildPath $preferredName
-      if (Test-Path -LiteralPath $preferred -PathType Leaf) {
-        $List.Add((Get-Item -LiteralPath $preferred))
-      }
-    }
-
-    Get-ChildItem -LiteralPath $Path -File -Recurse -Filter '*.md' |
-    Where-Object {
-      $_.FullName -ne $readme -and
-      $_.Name -notin $preferredNames
-    } |
-    Sort-Object -Property FullName |
-    ForEach-Object { $List.Add($_) }
-  }
-
   function Get-DocumentationFiles {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -123,41 +123,48 @@ function Invoke-Documentation {
       [string] $DocumentSet
     )
 
+    $manifest = Read-DocumentationManifest -Root $Root
+    $manualName = $DocumentSet.ToLowerInvariant()
+    $manual = $manifest.manuals.$manualName
+    if ($null -eq $manual) {
+      throw ('Manual definition is missing from docs\manifest.json: {0}' -f $manualName)
+    }
+
     $docsRoot = Join-Path -Path $Root -ChildPath 'docs'
     $files = New-Object -TypeName 'System.Collections.Generic.List[System.IO.FileInfo]'
+    $seen = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 
-    if ($DocumentSet -eq 'User') {
-      Add-MarkdownDirectory -List $files -Path (Join-Path -Path $docsRoot -ChildPath 'user-guide')
-      return $files
-    }
-
-    $rootReadme = Join-Path -Path $docsRoot -ChildPath 'README.md'
-    if (Test-Path -LiteralPath $rootReadme -PathType Leaf) {
-      $files.Add((Get-Item -LiteralPath $rootReadme))
-    }
-
-    foreach ($directory in @(
-        'architecture',
-        'development',
-        'standards',
-        'guides',
-        'operations',
-        'plugins',
-        'reference',
-        'roadmap',
-    'decisions')) {
-      Add-MarkdownDirectory -List $files -Path (Join-Path -Path $docsRoot -ChildPath $directory)
-    }
-
-    foreach ($review in @(
-        'DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md',
-    'UNRESOLVED-TOOLCHAIN-AND-SPECIFICATION-GAPS-2026-07-26.md')) {
-      $reviewPath = Join-Path -Path $docsRoot -ChildPath ('review\{0}' -f $review)
-      if (Test-Path -LiteralPath $reviewPath -PathType Leaf) {
-        $files.Add((Get-Item -LiteralPath $reviewPath))
+    foreach ($entry in @($manual.sources)) {
+      if ([string]::IsNullOrWhiteSpace([string]$entry)) {
+        continue
+      }
+      $pattern = Join-Path -Path $docsRoot -ChildPath ([string]$entry -replace '/', '\')
+      $matches = @(Get-ChildItem -Path $pattern -File -ErrorAction SilentlyContinue |
+        Sort-Object -Property FullName)
+      if ($matches.Count -eq 0 -and $entry -notmatch '[*?]') {
+        throw ('Manifest source was not found: docs/{0}' -f $entry)
+      }
+      foreach ($match in $matches) {
+        if ($seen.Add($match.FullName)) {
+          $files.Add($match)
+        }
       }
     }
     return $files
+  }
+
+  function Get-ManualDefinition {
+    param(
+      [Parameter(Mandatory)][string] $Root,
+      [Parameter(Mandatory)][ValidateSet('Technical', 'User')][string] $DocumentSet
+    )
+
+    $manifest = Read-DocumentationManifest -Root $Root
+    $manual = $manifest.manuals.($DocumentSet.ToLowerInvariant())
+    if ($null -eq $manual) {
+      throw ('Manual definition is missing: {0}' -f $DocumentSet)
+    }
+    return $manual
   }
 
   function Remove-DocumentHeader {
@@ -236,15 +243,16 @@ function Invoke-Documentation {
     $config = Read-DocumentationConfig -Root $Root
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
     Ensure-Directory -Path $build
-    $baseName = if ($DocumentSet -eq 'Technical') {
-      $config.technicalOutputBaseName
+    $manualDefinition = Get-ManualDefinition -Root $Root -DocumentSet $DocumentSet
+    $baseName = if ([string]::IsNullOrWhiteSpace($manualDefinition.outputBaseName)) {
+      if ($DocumentSet -eq 'Technical') { $config.technicalOutputBaseName } else { $config.userOutputBaseName }
     } else {
-      $config.userOutputBaseName
+      $manualDefinition.outputBaseName
     }
-    $title = if ($DocumentSet -eq 'Technical') {
-      $config.manualTitle
+    $title = if ([string]::IsNullOrWhiteSpace($manualDefinition.title)) {
+      if ($DocumentSet -eq 'Technical') { $config.manualTitle } else { $config.userGuideTitle }
     } else {
-      $config.userGuideTitle
+      $manualDefinition.title
     }
     $output = Join-Path -Path $build -ChildPath ('{0}.md' -f $baseName)
     $encoding = New-Object -TypeName System.Text.UTF8Encoding -ArgumentList ($false)
@@ -266,6 +274,25 @@ function Invoke-Documentation {
       $writer.WriteLine('---')
       $writer.WriteLine()
 
+      if (-not [string]::IsNullOrWhiteSpace($manualDefinition.coverTemplate)) {
+        $coverPath = Join-Path -Path (Join-Path -Path $Root -ChildPath 'docs') `
+          -ChildPath ($manualDefinition.coverTemplate -replace '/', '\')
+        if (-not (Test-Path -LiteralPath $coverPath -PathType Leaf)) {
+          throw ('Cover template was not found: {0}' -f $coverPath)
+        }
+        $cover = Get-Content -LiteralPath $coverPath -Raw -Encoding UTF8
+        $cover = Convert-TemplateTokens -Content $cover -Tokens @{
+          title = $title
+          projectTitle = $config.projectTitle
+          slogan = $config.slogan
+          author = $config.author
+          version = $config.projectVersion
+          date = $documentDate
+        }
+        $writer.WriteLine($cover.Trim())
+        $writer.WriteLine()
+      }
+
       $files = @(Get-DocumentationFiles -Root $Root -DocumentSet $DocumentSet)
       for ($index = 0; $index -lt $files.Count; $index++) {
         $file = $files[$index]
@@ -281,16 +308,6 @@ function Invoke-Documentation {
           $writer.WriteLine()
         }
       }
-
-      if ($DocumentSet -eq 'User') {
-        $license = Join-Path -Path $Root -ChildPath 'LICENSE.md'
-        if (-not (Test-Path -LiteralPath $license -PathType Leaf)) {
-          throw ('Repository licence was not found: {0}' -f $license)
-        }
-        $writer.WriteLine('# Appendix A: Apache License 2.0')
-        $writer.WriteLine()
-        $writer.WriteLine((Get-Content -LiteralPath $license -Raw -Encoding UTF8))
-      }
     } finally {
       $writer.Dispose()
     }
@@ -303,7 +320,7 @@ function Invoke-Documentation {
       [Parameter(Mandatory=$true)][ValidateSet('svg', 'png')][string] $OutputFormat
     )
 
-    $renderer = Join-Path -Path $Root -ChildPath 'scripts\documentation\Render-PlantUml.ps1'
+    $renderer = Join-Path -Path $Root -ChildPath 'scripts\Convert-PlantUml.ps1'
     if (-not (Test-Path -LiteralPath $renderer -PathType Leaf)) {
       throw ('PlantUML renderer was not found: {0}' -f $renderer)
     }
@@ -322,6 +339,18 @@ function Invoke-Documentation {
     $issues = New-Object -TypeName 'System.Collections.Generic.List[object]'
     $docsRoot = Join-Path -Path $Root -ChildPath 'docs'
     $config = Read-DocumentationConfig -Root $Root
+    try {
+      $manifest = Read-DocumentationManifest -Root $Root
+      foreach ($set in @('Technical', 'User')) {
+        $null = @(Get-DocumentationFiles -Root $Root -DocumentSet $set)
+      }
+    } catch {
+      $issues.Add([pscustomobject]@{
+          Severity = 'Error'
+          File = (Join-Path -Path $Root -ChildPath $config.manifestPath)
+          Message = $_.Exception.Message
+      })
+    }
     $buildRoot = [System.IO.Path]::GetFullPath(
     (Join-Path -Path $Root -ChildPath $config.buildDirectory))
     $files = @(Get-ChildItem -LiteralPath $docsRoot -File -Recurse -Filter '*.md' |
@@ -723,9 +752,3 @@ function Invoke-Documentation {
     }
   }
 }
-$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
-$ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath '\docs\_templates\template.docx'
-
-Invoke-Documentation -ProjectRoot $ProjectRoot -Action Clean
-
-Invoke-Documentation -ProjectRoot $ProjectRoot -Action Build -Document user -Format Docx -ReferenceDoc $ReferenceDoc -RenderDiagrams 

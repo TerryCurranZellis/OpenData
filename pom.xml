@@ -6,6 +6,25 @@
     <version>1.0.0</version>
     <name>OpenData Processing Framework</name>
     <description>Java framework for downloading, validating and importing OpenData sources.</description>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Terry Curran</name>
+            <roles>
+                <role>Owner</role>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

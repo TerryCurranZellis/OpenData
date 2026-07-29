@@ -1,3 +1,8 @@
+<#
+Copyright © 2026 Terry Curran
+SPDX-License-Identifier: Apache-2.0
+#>
+
 #Requires -Version 5.1
 function Convert-PlantUml {
   <#
@@ -62,7 +67,7 @@ function Convert-PlantUml {
   }
 
   $legacySources = @(Get-ChildItem -LiteralPath (Join-Path -Path $ProjectRoot -ChildPath 'docs\diagrams') -File -Recurse -Filter '*.puml' |
-	Where-Object { $_.DirectoryName -ne $source })
+	Where-Object { -not [string]::Equals($_.DirectoryName, $source, [System.StringComparison]::OrdinalIgnoreCase) })
   if ($legacySources.Count -gt 0) {
     $paths = $legacySources.FullName -join [Environment]::NewLine
     throw ("PlantUML sources exist outside the canonical source folder:`n{0}" -f $paths)
@@ -97,6 +102,3 @@ function Convert-PlantUml {
 
   Write-Output -InputObject ('Rendered {0} diagram(s) to {1}' -f $diagrams.Count, $output)
 }
-$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
-
-Convert-PlantUml -ProjectRoot $ProjectRoot

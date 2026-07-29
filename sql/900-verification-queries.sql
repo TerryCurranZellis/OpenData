@@ -1,4 +1,8 @@
 /*
+ * Copyright © 2026 Terry Curran
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
     Optional read-only checks after deployment and the first OpenMeteo run.
 */
 USE [OpenData];

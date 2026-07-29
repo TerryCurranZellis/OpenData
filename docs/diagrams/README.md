@@ -38,3 +38,4 @@ under `docs/diagrams` or another legacy subdirectory.
 Run the documentation build with `-RenderDiagrams`. Markdown embeds the committed
 SVG files, and documentation validation fails when a referenced rendered image is
 missing.
+| Documentation generation | `documentation-generation-flow.puml` | [image](generated/documentation-generation-flow.svg) |

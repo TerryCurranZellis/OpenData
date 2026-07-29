@@ -85,3 +85,19 @@ Maintained scripts target **Windows PowerShell 5.1**. Pandoc must be on `PATH`;
 `tools\plantuml.jar` and Java are required for diagram rendering. PDF output
 also requires the configured LaTeX engine, `pdflscape`, and either
 `rsvg-convert` or Inkscape.
+## Configuration-driven documentation
+
+`Invoke-Documentation.ps1` now reads manual composition from `docs/manifest.json`. Run the script by dot-sourcing it and then invoking the function, for example:
+
+```powershell
+. .\scripts\Invoke-Documentation.ps1
+Invoke-Documentation -ProjectRoot $PWD -Action Test
+Invoke-Documentation -ProjectRoot $PWD -Action Build -Document All -Format Docx -RenderDiagrams
+```
+
+Render only PlantUML diagrams with:
+
+```powershell
+. .\scripts\Convert-PlantUml.ps1
+Convert-PlantUml -ProjectRoot $PWD -Format svg -Clean
+```

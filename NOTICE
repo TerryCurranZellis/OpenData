@@ -1,0 +1,13 @@
+OpenData
+Copyright 2026 Terry Curran
+
+This product is licensed under the Apache License, Version 2.0.
+See LICENSE.md for the complete licence terms.
+
+OpenData includes or depends on third-party open-source libraries. Their
+copyright notices and licence terms remain the property of their respective
+owners and are distributed through the normal Maven dependency metadata and
+artefacts.
+
+“OpenData” is a project name used to identify this software and does not imply
+endorsement by any public data provider whose data may be processed by plugins.

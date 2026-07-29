@@ -21,5 +21,10 @@
   "portraitImageWidthCm": 16,
   "portraitImageHeightCm": 24,
   "landscapeImageWidthCm": 22.5,
-  "landscapeImageHeightCm": 14.5
+  "landscapeImageHeightCm": 14.5,
+  "manifestPath": "docs/manifest.json",
+  "templateDirectory": "docs/templates",
+  "sharedDirectory": "docs/shared",
+  "generatedDirectory": "docs/generated",
+  "projectVersion": "development"
 }

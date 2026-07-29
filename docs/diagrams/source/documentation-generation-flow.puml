@@ -1,0 +1,26 @@
+@startuml
+!theme plain
+title OpenData Documentation Generation Flow
+
+actor Author
+rectangle "Markdown Sources" as Sources
+rectangle "docs/manifest.json" as Manifest
+rectangle "config/documentation.json" as Config
+rectangle "Invoke-Documentation.ps1" as Generator
+rectangle "Templates and Shared Sections" as Shared
+rectangle "Validation" as Validation
+rectangle "Pandoc" as Pandoc
+folder "docs/build" as Output
+
+Author --> Sources : writes
+Sources --> Validation
+Manifest --> Validation
+Config --> Generator
+Manifest --> Generator
+Shared --> Generator
+Validation --> Generator : valid inputs
+Generator --> Pandoc : assembled Markdown
+Pandoc --> Output : HTML / DOCX / PDF
+Generator --> Output : merged Markdown
+and inventory
+@enduml

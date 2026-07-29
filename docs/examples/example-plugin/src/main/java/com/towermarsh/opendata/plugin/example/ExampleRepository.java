@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.plugin.example;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;

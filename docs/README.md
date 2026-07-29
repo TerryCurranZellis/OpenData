@@ -39,3 +39,19 @@ Known mismatches and acceptance gaps are tracked in the
 [documentation gap analysis](review/DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md);
 the outstanding completion actions are collected separately in the
 [unresolved toolchain and specification summary](review/UNRESOLVED-TOOLCHAIN-AND-SPECIFICATION-GAPS-2026-07-26.md).
+## Documentation framework
+
+Manual composition is defined in [`manifest.json`](manifest.json). Reusable content is stored in [`shared/`](shared/), and Markdown templates are stored in [`templates/`](templates/). See [`Documentation-Standards.md`](Documentation-Standards.md) for authoring and validation rules.
+
+## Repository policies
+
+- [Contributing](../CONTRIBUTING.md)
+- [Code of Conduct](../CODE_OF_CONDUCT.md)
+- [Security policy](../SECURITY.md)
+- [Changelog](../CHANGELOG.md)
+- [Apache 2.0 licence](../LICENSE.md)
+- [Notice](../NOTICE)
+
+## Licensing
+
+See [Licensing Policy](Licensing-Policy.md), the repository `LICENSE`, and `NOTICE`.

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": 1,
+  "description": "Inventory and composition rules for generated OpenData manuals.",
+  "orphanPolicy": "warning",
+  "excludeFromOrphanCheck": [
+    "build/**",
+    "generated/**",
+    "_templates/**",
+    "_includes/**",
+    "_filters/**",
+    "diagrams/**",
+    "assets/**",
+    "examples/**",
+    "review/**",
+    "reviews/**",
+    "ChangeLog.md",
+    "CODE_OF_CONDUCT.md",
+    "Contributions.md",
+    "Documentation-Standards.md"
+  ],
+  "templates": {
+    "coverPage": "templates/coverpage.md",
+    "chapter": "templates/chapter.md",
+    "appendix": "templates/appendix.md",
+    "architecture": "templates/architecture.md",
+    "releaseNotes": "templates/release-notes.md"
+  },
+  "shared": [
+    "shared/introduction.md",
+    "shared/glossary.md",
+    "shared/licence.md",
+    "shared/acknowledgements.md"
+  ],
+  "manuals": {
+    "technical": {
+      "title": "OpenData Framework Technical Documentation",
+      "outputBaseName": "OpenData-Technical-Documentation",
+      "coverTemplate": "templates/coverpage.md",
+      "sources": [
+        "README.md",
+        "shared/introduction.md",
+        "architecture/README.md",
+        "architecture/ARCHITECTURE.md",
+        "architecture/**/*.md",
+        "development/**/*.md",
+        "standards/**/*.md",
+        "guides/**/*.md",
+        "operations/**/*.md",
+        "plugins/**/*.md",
+        "reference/**/*.md",
+        "roadmap/**/*.md",
+        "decisions/README.md",
+        "decisions/ADR-REGISTER.md",
+        "decisions/ADR-REGISTER-ADDENDUM.md",
+        "decisions/ADR-*.md",
+        "review/DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md",
+        "review/UNRESOLVED-TOOLCHAIN-AND-SPECIFICATION-GAPS-2026-07-26.md",
+        "shared/glossary.md",
+        "shared/licence.md",
+        "shared/acknowledgements.md",
+        "reviews/Batch-3-Implementation-Notes.md"
+      ]
+    },
+    "user": {
+      "title": "OpenData Framework User Guide",
+      "outputBaseName": "OpenData-User-Guide",
+      "coverTemplate": "templates/coverpage.md",
+      "sources": [
+        "shared/introduction.md",
+        "user-guide/**/*.md",
+        "shared/glossary.md",
+        "shared/licence.md",
+        "shared/acknowledgements.md"
+      ]
+    }
+  },
+  "batchHistory": [
+    {
+      "batch": 4,
+      "name": "Licensing Migration",
+      "status": "completed",
+      "notes": "reviews/Batch-4-Implementation-Notes.md"
+    }
+  ]
+}
