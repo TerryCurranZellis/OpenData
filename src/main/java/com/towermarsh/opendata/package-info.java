@@ -7,7 +7,7 @@
  * Main entry point to the OpenData application.
  *
  * <ul>
- * <li>{@link Main}</li>
+ * <li>{@link OpenData}</li>
  * </ul>
   *
  * @author Terry Curran

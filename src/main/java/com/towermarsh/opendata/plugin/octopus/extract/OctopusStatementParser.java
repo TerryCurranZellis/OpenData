@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  *
  * <p>
  * Parses Octopus Energy statement PDF files (after text extraction) and
- * produces {@link RawElectricityRecord} and {@link RawGasRecord} lists that can
+ * produces {@link ElectricityRecord} and {@link GasRecord} lists that can
  * be written to CSV files or merged directly into the database layer for
  * subsequent analysis.
  *
@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
  *   Path pdfDir = Path.of("samples");
  *   Path outDir = Path.of("output");
  *   OctopusStatementParser parser = new OctopusStatementParser(pdfDir);
- *   List&lt;RawElectricityRecord&gt; elec = parser.parseElectricity();
- *   List&lt;RawGasRecord&gt; gas = parser.parseGas();
+ *   List&lt;ElectricityRecord&gt; elec = parser.parseElectricity();
+ *   List&lt;GasRecord&gt; gas = parser.parseGas();
  *   OctopusStatementParser.writeElectricityCsv(elec, outDir.resolve("electric_data.csv"));
  *   OctopusStatementParser.writeGasCsv(gas, outDir.resolve("gas_data.csv"));
  * </pre>
@@ -162,7 +162,7 @@ public final class OctopusStatementParser {
      * @return list of extracted electricity records; never {@code null}
      * @throws IOException if the PDF cannot be read
      */
-    public static List<RawElectricityRecord> parseElectricityFromFile(Path pdfPath)
+    public static List<ElectricityRecord> parseElectricityFromFile(Path pdfPath)
             throws IOException {
         var rawText = PdfTextExtractor.extract(pdfPath);
         if (rawText.isBlank()) {
@@ -178,7 +178,7 @@ public final class OctopusStatementParser {
         logger.log(Level.INFO, "  Parsing {0}  bill period {1} to {2}",
                 new Object[]{pdfPath.getFileName(), period[0], period[1]});
 
-        List<RawElectricityRecord> records = new ArrayList<>();
+        List<ElectricityRecord> records = new ArrayList<>();
         for (var section : getElectricitySections(fullText)) {
             records.add(newElectricityRecord(section, billDate, period[0], period[1]));
         }
@@ -204,7 +204,7 @@ public final class OctopusStatementParser {
      *         adjustment bills)
      * @throws IOException if the PDF cannot be read
      */
-    public static List<RawGasRecord> parseGasFromFile(Path pdfPath)
+    public static List<GasRecord> parseGasFromFile(Path pdfPath)
             throws IOException {
         var rawText = PdfTextExtractor.extract(pdfPath);
         if (rawText.isBlank()) {
@@ -219,7 +219,7 @@ public final class OctopusStatementParser {
         logger.log(Level.INFO, "  Parsing gas from {0}  bill period {1} to {2}",
                 new Object[]{pdfPath.getFileName(), period[0], period[1]});
 
-        List<RawGasRecord> records = new ArrayList<>();
+        List<GasRecord> records = new ArrayList<>();
         for (var section : getGasSections(fullText)) {
             records.add(newGasRecord(section, billDate, period[0], period[1]));
         }
@@ -244,14 +244,14 @@ public final class OctopusStatementParser {
      * <pre>
      *   Path adj = Path.of("C:/Attachments/octopus/A-5F191685-419015087-1.pdf");
      *   Object[] both = OctopusStatementParser.parseBothFromFile(adj);
-     *   List&lt;RawElectricityRecord&gt; elec = (List&lt;RawElectricityRecord&gt;) both[0];
-     *   List&lt;RawGasRecord&gt;         gas  = (List&lt;RawGasRecord&gt;)         both[1];
+     *   List&lt;ElectricityRecord&gt; elec = (List&lt;ElectricityRecord&gt;) both[0];
+     *   List&lt;GasRecord&gt;         gas  = (List&lt;GasRecord&gt;)         both[1];
      * </pre>
      *
      * @param pdfPath path to the PDF file to parse
      * @return two-element array where index&nbsp;0 holds a
-     *         {@code List<RawElectricityRecord>} and index&nbsp;1 holds a
-     *         {@code List<RawGasRecord>}; neither element is {@code null}
+     *         {@code List<ElectricityRecord>} and index&nbsp;1 holds a
+     *         {@code List<GasRecord>}; neither element is {@code null}
      * @throws IOException if the PDF cannot be read
      */
     public static Object[] parseBothFromFile(Path pdfPath) throws IOException {
@@ -268,12 +268,12 @@ public final class OctopusStatementParser {
         logger.log(Level.INFO, "  Parsing {0}  bill period {1} to {2}",
                 new Object[]{pdfPath.getFileName(), period[0], period[1]});
 
-        List<RawElectricityRecord> elecRecords = new ArrayList<>();
+        List<ElectricityRecord> elecRecords = new ArrayList<>();
         for (var section : getElectricitySections(fullText)) {
             elecRecords.add(newElectricityRecord(section, billDate, period[0], period[1]));
         }
 
-        List<RawGasRecord> gasRecords = new ArrayList<>();
+        List<GasRecord> gasRecords = new ArrayList<>();
         for (var section : getGasSections(fullText)) {
             gasRecords.add(newGasRecord(section, billDate, period[0], period[1]));
         }
@@ -298,8 +298,8 @@ public final class OctopusStatementParser {
      * @throws IOException if any PDF file cannot be read or its text cannot be
      * extracted
      */
-    public List<RawElectricityRecord> parseElectricity() throws IOException {
-        List<RawElectricityRecord> records = new ArrayList<>();
+    public List<ElectricityRecord> parseElectricity() throws IOException {
+        List<ElectricityRecord> records = new ArrayList<>();
         for (var entry : findPdfFiles()) {
             var billDate = entry.billDate();
             var fullText = toJoinedText(PdfTextExtractor.extract(entry.path()));
@@ -325,8 +325,8 @@ public final class OctopusStatementParser {
      * @throws IOException if any PDF file cannot be read or its text cannot be
      * extracted
      */
-    public List<RawGasRecord> parseGas() throws IOException {
-        List<RawGasRecord> records = new ArrayList<>();
+    public List<GasRecord> parseGas() throws IOException {
+        List<GasRecord> records = new ArrayList<>();
         for (var entry : findPdfFiles()) {
             var billDate = entry.billDate();
             var fullText = toJoinedText(PdfTextExtractor.extract(entry.path()));
@@ -357,8 +357,8 @@ public final class OctopusStatementParser {
      * extracted
      */
     public Object[] parseBoth() throws IOException {
-        List<RawElectricityRecord> elecRecords = new ArrayList<>();
-        List<RawGasRecord> gasRecords = new ArrayList<>();
+        List<ElectricityRecord> elecRecords = new ArrayList<>();
+        List<GasRecord> gasRecords = new ArrayList<>();
 
         for (var entry : findPdfFiles()) {
             var billDate = entry.billDate();
@@ -670,7 +670,7 @@ public final class OctopusStatementParser {
     // ── Record builders ──────────────────────────────────────────────────────
     /**
      * Parse one electricity tariff-period section and return a
-     * {@link RawElectricityRecord}.
+     * {@link ElectricityRecord}.
      *
      * @param sectionText raw text of one electricity section (from
      * {@code "Electricity Supply number"} to just past
@@ -681,10 +681,10 @@ public final class OctopusStatementParser {
      * may be empty
      * @param billPeriodEnd overall bill period end ({@code yyyy-MM-dd}); may be
      * empty
-     * @return a fully populated {@link RawElectricityRecord}; fields that
+     * @return a fully populated {@link ElectricityRecord}; fields that
      * cannot be parsed are empty strings
      */
-    static RawElectricityRecord newElectricityRecord(
+    static ElectricityRecord newElectricityRecord(
             String sectionText, String billDate,
             String billPeriodStart, String billPeriodEnd) {
 
@@ -763,7 +763,7 @@ public final class OctopusStatementParser {
             totalCost = totalM.group(1) + totalM.group(2);
         }
 
-        return new RawElectricityRecord(
+        return new ElectricityRecord(
                 billDate, billPeriodStart, billPeriodEnd,
                 tariff[0], tariff[1], tariff[2],
                 mpan, meterId,
@@ -773,7 +773,7 @@ public final class OctopusStatementParser {
     }
 
     /**
-     * Parse one gas tariff-period section and return a {@link RawGasRecord}.
+     * Parse one gas tariff-period section and return a {@link GasRecord}.
      *
      * @param sectionText raw text of one gas section (from
      * {@code "Gas Meter Point Reference:"} to just past
@@ -784,10 +784,10 @@ public final class OctopusStatementParser {
      * may be empty
      * @param billPeriodEnd overall bill period end ({@code yyyy-MM-dd}); may be
      * empty
-     * @return a fully populated {@link RawGasRecord}; fields that cannot be
+     * @return a fully populated {@link GasRecord}; fields that cannot be
      * parsed are empty strings
      */
-    static RawGasRecord newGasRecord(
+    static GasRecord newGasRecord(
             String sectionText, String billDate,
             String billPeriodStart, String billPeriodEnd) {
 
@@ -864,7 +864,7 @@ public final class OctopusStatementParser {
             totalCost = totalM.group(1) + totalM.group(2);
         }
 
-        return new RawGasRecord(
+        return new GasRecord(
                 billDate, billPeriodStart, billPeriodEnd,
                 tariff[0], tariff[1], tariff[2],
                 mprn, meterId,

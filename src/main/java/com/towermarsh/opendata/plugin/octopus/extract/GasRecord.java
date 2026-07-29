@@ -16,7 +16,7 @@ package com.towermarsh.opendata.plugin.octopus.extract;
  *
  * <h2>Example</h2>
  * <pre>
- *   RawGasRecord r = new RawGasRecord(
+ *   GasRecord r = new GasRecord(
  *       "2022-01-05", "2021-12-07", "2022-01-05",
  *       "Octopus Exclusive 12M Fixed", "2021-12-04", "2022-01-03",
  *       "3343444302", "E6E01319111907",
@@ -50,7 +50,7 @@ package com.towermarsh.opendata.plugin.octopus.extract;
  * @version 15 Mar 2026
  *
  */
-public record RawGasRecord(
+public record GasRecord(
         String billDate,
         String billPeriodStart,
         String billPeriodEnd,

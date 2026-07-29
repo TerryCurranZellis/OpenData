@@ -17,7 +17,7 @@ package com.towermarsh.opendata.plugin.octopus.extract;
  *
  * <h2>Example</h2>
  * <pre>
- *   RawElectricityRecord r = new RawElectricityRecord(
+ *   ElectricityRecord r = new ElectricityRecord(
  *       "2022-01-05", "2021-12-07", "2022-01-05",
  *       "Octopus Exclusive 12M Fixed", "2021-12-04", "2022-01-03",
  *       "2000012845052", "20E5013326",
@@ -49,7 +49,7 @@ package com.towermarsh.opendata.plugin.octopus.extract;
  * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
  * @version 15 Mar 2026
  */
-public record RawElectricityRecord(
+public record ElectricityRecord(
         String billDate,
         String billPeriodStart,
         String billPeriodEnd,
