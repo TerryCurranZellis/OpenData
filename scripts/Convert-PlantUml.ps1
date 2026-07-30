@@ -5,17 +5,6 @@ SPDX-License-Identifier: Apache-2.0
 
 #Requires -Version 5.1
 
-[CmdletBinding(SupportsShouldProcess)]
-param(
-  [Parameter(Mandatory)]
-  [string] $ProjectRoot,
-
-  [ValidateSet('svg', 'png')]
-  [string] $Format = 'svg',
-
-  [switch] $Clean
-)
-
 function Convert-PlantUml {
   <#
       .SYNOPSIS
@@ -93,20 +82,23 @@ function Convert-PlantUml {
   }
 
   $failures = New-Object -TypeName 'System.Collections.Generic.List[string]'
-  foreach ($diagram in $diagrams) {
-    Write-Output -InputObject ('Rendering {0}' -f $diagram.Name)
-    & java -jar $jar ('-t{0}' -f $Format) -charset UTF-8 `
+  try {
+    foreach ($diagram in $diagrams) {
+      Write-Output -InputObject ('Rendering {0}' -f $diagram.Name)
+      & java -jar $jar ('-t{0}' -f $Format) -charset UTF-8 `
       -o '..\generated' $diagram.FullName
 
-    $rendered = Join-Path -Path $output -ChildPath (
+      $rendered = Join-Path -Path $output -ChildPath (
       '{0}.{1}' -f $diagram.BaseName, $Format)
-    if ($LASTEXITCODE -ne 0 -or
-      -not (Test-Path -LiteralPath $rendered -PathType Leaf) -or
+      if ($LASTEXITCODE -ne 0 -or
+        -not (Test-Path -LiteralPath $rendered -PathType Leaf) -or
       (Get-Item -LiteralPath $rendered).Length -eq 0) {
-      $failures.Add($diagram.FullName)
+        $failures.Add($diagram.FullName)
+      }
     }
+  } catch {
+  Write-Warning -Message ('{0} failed' -f $diagram.FullName)
   }
-
   if ($failures.Count -gt 0) {
     throw ("PlantUML failed for:`n" +
       ($failures -join [Environment]::NewLine))
@@ -116,8 +108,4 @@ function Convert-PlantUml {
     'Rendered {0} diagram(s) to {1}' -f $diagrams.Count, $output)
 }
 
-$invokeParameters = @{} + $PSBoundParameters
-$invokeParameters.ProjectRoot = $ProjectRoot
-$invokeParameters.Format = $Format
-$invokeParameters.Clean = $Clean
-Convert-PlantUml @invokeParameters
+Convert-PlantUml -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -Format svg

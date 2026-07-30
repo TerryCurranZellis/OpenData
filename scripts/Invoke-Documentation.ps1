@@ -1,31 +1,33 @@
 <#
-    Copyright Â© 2026 Terry Curran
+    Copyright © 2026 Terry Curran
     SPDX-License-Identifier: Apache-2.0
 #>
 
 #Requires -Version 5.1
 
-[CmdletBinding(SupportsShouldProcess)]
-param(
-  [ValidateSet('Build', 'Test', 'Clean')]
-  [string] $Action = 'Build',
+<#
+    [CmdletBinding(SupportsShouldProcess)]
+    param(
+    [ValidateSet('Build', 'Test', 'Clean')]
+    [string] $Action = 'Build',
 
-  [Parameter(Mandatory)]
-  [string] $ProjectRoot,
+    [Parameter(Mandatory)]
+    [string] $ProjectRoot,
 
-  [ValidateSet('Technical', 'User', 'All')]
-  [string] $Document = 'All',
+    [ValidateSet('Technical', 'User', 'All')]
+    [string] $Document = 'All',
 
-  [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
-  [string] $Format = 'All',
+    [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
+    [string] $Format = 'All',
 
-  [AllowNull()]
-  [string] $ReferenceDoc,
+    [AllowNull()]
+    [string] $ReferenceDoc,
 
-  [switch] $RenderDiagrams = $true,
+    [switch] $RenderDiagrams = $true,
 
-  [switch] $FailOnWarning
-)
+    [switch] $FailOnWarning
+    )
+#>
 function Invoke-Documentation {
   <#
       .SYNOPSIS
@@ -116,23 +118,31 @@ function Invoke-Documentation {
     }
     Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
   }
-  #--------------------------------------------------------------------------------
-  # Convert-TemplateTokens
-  #--------------------------------------------------------------------------------
-  function Convert-TemplateTokens {
-    param(
-      [Parameter(Mandatory)][string] $Content,
-      [Parameter(Mandatory)][hashtable] $Tokens
-    )
+#--------------------------------------------------------------------------------
+# Convert-TemplateTokens
+#--------------------------------------------------------------------------------
+function Convert-TemplateTokens {
+  param(
+    [Parameter(Mandatory)]
+    [string] $Content,
 
-    $result = $Content
-    foreach ($key in $Tokens.Keys) {
-      $value = [string]$Tokens[$key]
-      $result = $result.Replace(('{{{0}}}' -f $key), $value)
-      $result = $result.Replace(('{0}{1}{2}' -f '{', $key, '}'), $value)
-    }
-    return $result
+    [Parameter(Mandatory)]
+    [hashtable] $Tokens
+  )
+
+  $result = $Content
+
+  foreach ($key in $Tokens.Keys) {
+    $value = [string]$Tokens[$key]
+
+    # Construct the double-braced placeholder literally.
+    $placeholder = '{{' + $key + '}}'
+
+    $result = $result.Replace($placeholder, $value)
   }
+
+  return $result
+}
 
   #--------------------------------------------------------------------------------
   # Assert-Directory
@@ -182,12 +192,12 @@ function Invoke-Documentation {
 
     $normalisedEntry = $Entry.Replace('\', '/').TrimStart('/')
     $containsWildcard =
-      [System.Management.Automation.WildcardPattern]::ContainsWildcardCharacters(
-        $normalisedEntry)
+    [System.Management.Automation.WildcardPattern]::ContainsWildcardCharacters(
+    $normalisedEntry)
 
     if (-not $containsWildcard) {
       $exactPath = Join-Path -Path $DocsRoot -ChildPath (
-        $normalisedEntry -replace '/', '\')
+      $normalisedEntry -replace '/', '\')
       if (Test-Path -LiteralPath $exactPath -PathType Leaf) {
         return ,(Get-Item -LiteralPath $exactPath)
       }
@@ -197,12 +207,12 @@ function Invoke-Documentation {
     $regex = Convert-ManifestGlobToRegex -Pattern $normalisedEntry
     return @(
       Get-ChildItem -LiteralPath $DocsRoot -File -Recurse |
-        Where-Object {
-          $relative = $_.FullName.Substring($DocsRoot.Length)
-          $relative = $relative.TrimStart('\', '/').Replace('\', '/')
-          $relative -match $regex
-        } |
-        Sort-Object -Property FullName
+      Where-Object {
+        $relative = $_.FullName.Substring($DocsRoot.Length)
+        $relative = $relative.TrimStart('\', '/').Replace('\', '/')
+        $relative -match $regex
+      } |
+      Sort-Object -Property FullName
     )
   }
 
@@ -235,7 +245,7 @@ function Invoke-Documentation {
 
       $matchedFiles = @(Get-ManifestSourceMatches `
         -DocsRoot $docsRoot `
-        -Entry ([string]$entry))
+      -Entry ([string]$entry))
       if ($matchedFiles.Count -eq 0) {
         throw ('Manifest source or pattern matched no files: docs/{0}' -f $entry)
       }
@@ -339,10 +349,10 @@ function Invoke-Documentation {
 
     $unresolved = @([regex]::Matches($Content, '\{\{[A-Za-z][A-Za-z0-9_.-]*\}\}') |
       ForEach-Object Value |
-      Sort-Object -Unique)
+    Sort-Object -Unique)
     if ($unresolved.Count -gt 0) {
       throw ('Unresolved documentation token(s) in {0}: {1}' -f
-        $SourceName, ($unresolved -join ', '))
+      $SourceName, ($unresolved -join ', '))
     }
   }
 
@@ -358,7 +368,7 @@ function Invoke-Documentation {
 
     $paths = New-Object -TypeName 'System.Collections.Generic.List[string]'
     $seenPaths = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' `
-      -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
+    -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
 
     foreach ($candidate in @($Build, $Root, (Join-Path -Path $Root -ChildPath 'docs'))) {
       $fullPath = [IO.Path]::GetFullPath($candidate)
@@ -462,10 +472,10 @@ function Invoke-Documentation {
       $writer.WriteLine()
 
       $tokens = New-DocumentationTokens `
-        -Config $config `
-        -Title $title `
-        -DocumentSet $DocumentSet `
-        -DocumentDate $documentDate
+      -Config $config `
+      -Title $title `
+      -DocumentSet $DocumentSet `
+      -DocumentDate $documentDate
 
       if (-not [string]::IsNullOrWhiteSpace($manualDefinition.coverTemplate)) {
         $coverPath = Join-Path -Path (Join-Path -Path $Root -ChildPath 'docs') `
@@ -975,12 +985,12 @@ function Invoke-Documentation {
   }
 }
 
-$invokeParameters = @{} + $PSBoundParameters
-$invokeParameters.Action = $Action
-$invokeParameters.ProjectRoot = $ProjectRoot
-$invokeParameters.Document = $Document
-$invokeParameters.Format = $Format
-$invokeParameters.ReferenceDoc = $ReferenceDoc
-$invokeParameters.RenderDiagrams = $RenderDiagrams
-$invokeParameters.FailOnWarning = $FailOnWarning
-Invoke-Documentation @invokeParameters
+$Parameters = @{
+  Action = 'build'
+  ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
+  Document = 'All'
+  Format = 'docx'
+  ReferenceDoc = 'C:\Users\terry\Downloads\Corporate_Document_Template.docx'
+  FailOnWarning = $true
+}
+Invoke-Documentation @Parameters

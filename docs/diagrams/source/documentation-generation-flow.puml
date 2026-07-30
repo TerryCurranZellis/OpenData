@@ -21,6 +21,5 @@ Shared --> Generator
 Validation --> Generator : valid inputs
 Generator --> Pandoc : assembled Markdown
 Pandoc --> Output : HTML / DOCX / PDF
-Generator --> Output : merged Markdown
-and inventory
+Generator --> Output : merged Markdown\nand inventory
 @enduml
