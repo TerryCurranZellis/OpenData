@@ -1,6 +1,6 @@
 <#
-Copyright © 2026 Terry Curran
-SPDX-License-Identifier: Apache-2.0
+    Copyright © 2026 Terry Curran
+    SPDX-License-Identifier: Apache-2.0
 #>
 
 #Requires -Version 5.1
@@ -25,7 +25,7 @@ function Invoke-Documentation {
     [ValidateSet('Build', 'Test', 'Clean')]
     [string] $Action = 'Build',
 
-    [Parameter(Mandatory=$true)][string] $ProjectRoot,
+    [Parameter(Mandatory)][string] $ProjectRoot,
 
     [ValidateSet('Technical', 'User', 'All')]
     [string] $Document = 'All',
@@ -43,6 +43,9 @@ function Invoke-Documentation {
 
   $ErrorActionPreference = 'Stop'
 
+  #--------------------------------------------------------------------------------
+  # Resolve-ProjectRoot
+  #--------------------------------------------------------------------------------
   function Resolve-ProjectRoot {
     [CmdletBinding()]
     param(
@@ -60,6 +63,9 @@ function Invoke-Documentation {
     throw 'Unable to locate a project root containing config\documentation.json.'
   }
 
+  #--------------------------------------------------------------------------------
+  # Read-DocumentationConfig
+  #--------------------------------------------------------------------------------
   function Read-DocumentationConfig {
     param([Parameter(Mandatory)][string] $Root)
 
@@ -70,6 +76,9 @@ function Invoke-Documentation {
     Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
   }
 
+  #--------------------------------------------------------------------------------
+  # Read-DocumentationManifest
+  #--------------------------------------------------------------------------------
   function Read-DocumentationManifest {
     param([Parameter(Mandatory)][string] $Root)
 
@@ -85,7 +94,9 @@ function Invoke-Documentation {
     }
     Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
   }
-
+  #--------------------------------------------------------------------------------
+  # Convert-TemplateTokens
+  #--------------------------------------------------------------------------------
   function Convert-TemplateTokens {
     param(
       [Parameter(Mandatory)][string] $Content,
@@ -99,7 +110,10 @@ function Invoke-Documentation {
     return $result
   }
 
-  function Ensure-Directory {
+  #--------------------------------------------------------------------------------
+  # Assert-Directory
+  #--------------------------------------------------------------------------------
+  function Assert-Directory {
     param([Parameter(Mandatory)][string] $Path)
 
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
@@ -107,6 +121,9 @@ function Invoke-Documentation {
     }
   }
 
+  #--------------------------------------------------------------------------------
+  # Assert-Command
+  #--------------------------------------------------------------------------------
   function Assert-Command {
     param([Parameter(Mandatory)][string] $Name)
 
@@ -115,6 +132,9 @@ function Invoke-Documentation {
     }
   }
 
+  #--------------------------------------------------------------------------------
+  # Get-DocumentationFiles
+  #--------------------------------------------------------------------------------
   function Get-DocumentationFiles {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -132,7 +152,7 @@ function Invoke-Documentation {
 
     $docsRoot = Join-Path -Path $Root -ChildPath 'docs'
     $files = New-Object -TypeName 'System.Collections.Generic.List[System.IO.FileInfo]'
-    $seen = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $seen = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
 
     foreach ($entry in @($manual.sources)) {
       if ([string]::IsNullOrWhiteSpace([string]$entry)) {
@@ -140,7 +160,7 @@ function Invoke-Documentation {
       }
       $pattern = Join-Path -Path $docsRoot -ChildPath ([string]$entry -replace '/', '\')
       $matches = @(Get-ChildItem -Path $pattern -File -ErrorAction SilentlyContinue |
-        Sort-Object -Property FullName)
+      Sort-Object -Property FullName)
       if ($matches.Count -eq 0 -and $entry -notmatch '[*?]') {
         throw ('Manifest source was not found: docs/{0}' -f $entry)
       }
@@ -153,6 +173,9 @@ function Invoke-Documentation {
     return $files
   }
 
+  #--------------------------------------------------------------------------------
+  # Get-ManualDefinition
+  #--------------------------------------------------------------------------------
   function Get-ManualDefinition {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -167,6 +190,9 @@ function Invoke-Documentation {
     return $manual
   }
 
+  #--------------------------------------------------------------------------------
+  # Remove-DocumentHeader
+  #--------------------------------------------------------------------------------
   function Remove-DocumentHeader {
     param([
       Parameter(Mandatory)]
@@ -178,9 +204,12 @@ function Invoke-Documentation {
     return $result.Trim()
   }
 
+  #--------------------------------------------------------------------------------
+  # ConvertTo-YamlSingleQuotedString
+  #--------------------------------------------------------------------------------
   function ConvertTo-YamlSingleQuotedString {
     param(
-      [Parameter(Mandatory=$true)]
+      [Parameter(Mandatory)]
       [AllowEmptyString()]
       [string] $Value
     )
@@ -188,6 +217,9 @@ function Invoke-Documentation {
     return "'" + $Value.Replace("'", "''") + "'"
   }
 
+  #--------------------------------------------------------------------------------
+  # Test-TrailingLandscapeBlock 
+  #--------------------------------------------------------------------------------
   function Test-TrailingLandscapeBlock {
     param(
       [Parameter(Mandatory)]
@@ -197,6 +229,9 @@ function Invoke-Documentation {
     return $Content -match '(?ms):::\s*\{\.landscape\}.*?:::\s*$'
   }
 
+  #--------------------------------------------------------------------------------
+  # New-DocumentInventory
+  #--------------------------------------------------------------------------------
   function New-DocumentInventory {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -207,7 +242,7 @@ function Invoke-Documentation {
 
     $config = Read-DocumentationConfig -Root $Root
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
-    Ensure-Directory -Path $build
+    Assert-Directory -Path $build
     $name = '{0}-document-inventory.md' -f $DocumentSet.ToLowerInvariant()
     $output = Join-Path -Path $build -ChildPath $name
     $lines = New-Object -TypeName 'System.Collections.Generic.List[string]'
@@ -232,6 +267,9 @@ function Invoke-Documentation {
     return $output
   }
 
+  #--------------------------------------------------------------------------------
+  # Merge-Documentation
+  #--------------------------------------------------------------------------------
   function Merge-Documentation {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -242,7 +280,7 @@ function Invoke-Documentation {
 
     $config = Read-DocumentationConfig -Root $Root
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
-    Ensure-Directory -Path $build
+    Assert-Directory -Path $build
     $manualDefinition = Get-ManualDefinition -Root $Root -DocumentSet $DocumentSet
     $baseName = if ([string]::IsNullOrWhiteSpace($manualDefinition.outputBaseName)) {
       if ($DocumentSet -eq 'Technical') { $config.technicalOutputBaseName } else { $config.userOutputBaseName }
@@ -260,7 +298,7 @@ function Invoke-Documentation {
     try {
       $documentDate = (Get-Date).ToString(
         $config.dateFormat,
-      [System.Globalization.CultureInfo]::InvariantCulture)
+      [cultureinfo]::InvariantCulture)
       $writer.WriteLine('---')
       $writer.WriteLine(
       'title: {0}' -f (ConvertTo-YamlSingleQuotedString -Value $title))
@@ -276,7 +314,7 @@ function Invoke-Documentation {
 
       if (-not [string]::IsNullOrWhiteSpace($manualDefinition.coverTemplate)) {
         $coverPath = Join-Path -Path (Join-Path -Path $Root -ChildPath 'docs') `
-          -ChildPath ($manualDefinition.coverTemplate -replace '/', '\')
+        -ChildPath ($manualDefinition.coverTemplate -replace '/', '\')
         if (-not (Test-Path -LiteralPath $coverPath -PathType Leaf)) {
           throw ('Cover template was not found: {0}' -f $coverPath)
         }
@@ -313,11 +351,13 @@ function Invoke-Documentation {
     }
     return $output
   }
-
+  #--------------------------------------------------------------------------------
+  # Invoke-PlantUmlRender
+  #--------------------------------------------------------------------------------
   function Invoke-PlantUmlRender {
     param(
       [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory=$true)][ValidateSet('svg', 'png')][string] $OutputFormat
+      [Parameter(Mandatory)][ValidateSet('svg', 'png')][string] $OutputFormat
     )
 
     $renderer = Join-Path -Path $Root -ChildPath 'scripts\Convert-PlantUml.ps1'
@@ -329,7 +369,9 @@ function Invoke-Documentation {
       throw 'PlantUML rendering failed.'
     }
   }
-
+  #--------------------------------------------------------------------------------
+  # Test-Documentation
+  #--------------------------------------------------------------------------------
   function Test-Documentation {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -351,13 +393,13 @@ function Invoke-Documentation {
           Message = $_.Exception.Message
       })
     }
-    $buildRoot = [System.IO.Path]::GetFullPath(
+    $buildRoot = [IO.Path]::GetFullPath(
     (Join-Path -Path $Root -ChildPath $config.buildDirectory))
     $files = @(Get-ChildItem -LiteralPath $docsRoot -File -Recurse -Filter '*.md' |
       Where-Object {
         -not $_.FullName.StartsWith(
           $buildRoot,
-        [System.StringComparison]::OrdinalIgnoreCase)
+        [StringComparison]::OrdinalIgnoreCase)
     })
 
     foreach ($file in $files) {
@@ -365,14 +407,14 @@ function Invoke-Documentation {
       if ($content -notmatch '(?m)^#\s+\S') {
         $issues.Add([pscustomobject]@{
             Severity = 'Error'
- File = $file.FullName
+            File = $file.FullName
             Message = 'Missing level-one heading.'
         })
       }
       if ($content -match "`t") {
         $issues.Add([pscustomobject]@{
             Severity = 'Warning'
- File = $file.FullName
+            File = $file.FullName
             Message = 'Tab character found.'
         })
       }
@@ -383,7 +425,7 @@ function Invoke-Documentation {
           continue
         }
         $decoded = [uri]::UnescapeDataString($target)
-        $linkPath = [System.IO.Path]::GetFullPath(
+        $linkPath = [IO.Path]::GetFullPath(
         (Join-Path -Path $file.DirectoryName -ChildPath ($decoded -replace '/', '\')))
         if (Test-Path -LiteralPath $linkPath) {
           continue
@@ -391,7 +433,7 @@ function Invoke-Documentation {
 
         $issues.Add([pscustomobject]@{
             Severity = 'Error'
- File = $file.FullName
+            File = $file.FullName
             Message = ('Broken relative link: {0}' -f $target)
         })
       }
@@ -403,7 +445,7 @@ function Invoke-Documentation {
     foreach ($file in $legacyPuml) {
       $issues.Add([pscustomobject]@{
           Severity = 'Error'
- File = $file.FullName
+          File = $file.FullName
           Message = 'PlantUML source is outside docs\diagrams\source.'
       })
     }
@@ -418,7 +460,9 @@ function Invoke-Documentation {
       throw 'Documentation validation failed.'
     }
   }
-
+  #--------------------------------------------------------------------------------
+  # Convert-SvgAssetsForPdf
+  #--------------------------------------------------------------------------------
   function Convert-SvgAssetsForPdf {
     param([Parameter(Mandatory)][string] $Root)
 
@@ -455,7 +499,9 @@ function Invoke-Documentation {
       }
     }
   }
-
+  #--------------------------------------------------------------------------------
+  # Set-DocxPageLayout
+  #--------------------------------------------------------------------------------
   function Set-DocxPageLayout {
     param(
       [Parameter(Mandatory)][string] $Path,
@@ -471,14 +517,14 @@ function Invoke-Documentation {
     $wordNamespace = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $drawingNamespace = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'
     $drawingMlNamespace = 'http://schemas.openxmlformats.org/drawingml/2006/main'
-    $stream = [System.IO.File]::Open(
+    $stream = [IO.File]::Open(
       $Path,
-      [System.IO.FileMode]::Open,
-      [System.IO.FileAccess]::ReadWrite,
-    [System.IO.FileShare]::None)
+      [IO.FileMode]::Open,
+      [IO.FileAccess]::ReadWrite,
+    [IO.FileShare]::None)
     $archive = New-Object -TypeName System.IO.Compression.ZipArchive -ArgumentList (
       $stream,
-      [System.IO.Compression.ZipArchiveMode]::Update,
+      [IO.Compression.ZipArchiveMode]::Update,
     $false)
 
     try {
@@ -491,7 +537,7 @@ function Invoke-Documentation {
       try {
         $reader = New-Object -TypeName System.IO.StreamReader -ArgumentList (
           $entryStream,
-          [System.Text.Encoding]::UTF8,
+          [Text.Encoding]::UTF8,
           $true,
           4096,
         $true)
@@ -600,7 +646,7 @@ function Invoke-Documentation {
         $settings = New-Object -TypeName System.Xml.XmlWriterSettings
         $settings.Encoding = New-Object -TypeName System.Text.UTF8Encoding -ArgumentList ($false)
         $settings.Indent = $false
-        $writer = [System.Xml.XmlWriter]::Create($entryStream, $settings)
+        $writer = [Xml.XmlWriter]::Create($entryStream, $settings)
         try {
           $xml.Save($writer)
         } finally {
@@ -616,8 +662,10 @@ function Invoke-Documentation {
 
     Write-Output -InputObject ('Sized {0} DOCX image(s) to fit their A4 section.' -f $resized)
   }
-
-  function Build-DocumentSet {
+  #--------------------------------------------------------------------------------
+  # Publish-DocumentSet
+  #--------------------------------------------------------------------------------
+  function Publish-DocumentSet {
     param(
       [Parameter(Mandatory)][string] $Root,
       [Parameter(Mandatory)]
@@ -686,11 +734,14 @@ function Invoke-Documentation {
           }
           & pandoc @arguments --output $output
           if ($LASTEXITCODE -eq 0) {
-            Set-DocxPageLayout -Path $output `
-            -PortraitWidthCm $config.portraitImageWidthCm `
-            -PortraitHeightCm $config.portraitImageHeightCm `
-            -LandscapeWidthCm $config.landscapeImageWidthCm `
-            -LandscapeHeightCm $config.landscapeImageHeightCm
+            $parameters = @{
+              Path = $output 
+              PortraitWidthCm = $config.portraitImageWidthCm 
+              PortraitHeightCm = $config.portraitImageHeightCm 
+              LandscapeWidthCm = $config.landscapeImageWidthCm 
+              LandscapeHeightCm = $config.landscapeImageHeightCm
+            }
+            Set-DocxPageLayout @parameters
           }
         }
         'Pdf' {
@@ -705,7 +756,9 @@ function Invoke-Documentation {
       Write-Output -InputObject ('Created {0}' -f $output)
     }
   }
-
+  #--------------------------------------------------------------------------------
+  # main process here
+  #--------------------------------------------------------------------------------
   if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
     $ProjectRoot = Resolve-ProjectRoot
   } else {
@@ -746,8 +799,13 @@ function Invoke-Documentation {
         @($Document)
       }
       foreach ($set in $sets) {
-        Build-DocumentSet -Root $ProjectRoot -DocumentSet $set `
-        -OutputFormat $Format -DocxReference $ReferenceDoc
+        $Parameters = @{
+          Root = $ProjectRoot 
+          DocumentSet = $set 
+          OutputFormat = $Format 
+          DocxReference = $ReferenceDoc
+        }
+        Publish-DocumentSet @parameters
       }
     }
   }
