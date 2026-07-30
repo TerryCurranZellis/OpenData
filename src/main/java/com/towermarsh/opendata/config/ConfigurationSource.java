@@ -14,22 +14,22 @@ package com.towermarsh.opendata.config;
 public enum ConfigurationSource {
 
     /**
-     *
+     * built in configuration
      */
     BUILT_IN_DEFAULT,
 
     /**
-     *
+     * Application configuration
      */
     APPLICATION_CLASSPATH,
 
     /**
-     *
+     * Plugin configuration
      */
     PLUGIN_CLASSPATH,
 
     /**
-     *
+     * override configuration
      */
     OVERRIDE_FILE
 }

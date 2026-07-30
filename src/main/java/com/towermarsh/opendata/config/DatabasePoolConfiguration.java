@@ -8,7 +8,8 @@ package com.towermarsh.opendata.config;
 import java.time.Duration;
 import java.util.Objects;
 
-/** SQL Server and Apache DBCP pool settings.
+/** 
+ * SQL Server and Apache DBCP pool settings.
  * @param driverClass JDBC driver class name
  * @param jdbcUrl JDBC connection URL
  * @param user database login name
@@ -35,7 +36,9 @@ public record DatabasePoolConfiguration(
         Duration maxWait,
         String validationQuery) {
 
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public DatabasePoolConfiguration {
         driverClass = requireText(driverClass, "driverClass");
         jdbcUrl = requireText(jdbcUrl, "jdbcUrl");

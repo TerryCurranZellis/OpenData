@@ -38,9 +38,9 @@ public record CommandLineArguments(
         boolean aboutRequested,
         boolean listPluginsRequested) {
 
-    /** 
-	 * Validates and normalises record components. 
-	 */
+    /**
+     * Validates and normalises record components.
+     */
     public CommandLineArguments {
         pluginIds = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
         overrideFile = overrideFile == null ? Optional.empty() : overrideFile;
@@ -58,7 +58,8 @@ public record CommandLineArguments(
     /**
      * Indicates whether the invocation only requests informational output.
      *
-     * @return {@code true} when help, About, or plugin listing output was requested
+     * @return {@code true} when help, About, or plugin listing output was
+     * requested
      */
     public boolean informationalRequest() {
         return helpRequested || aboutRequested || listPluginsRequested;

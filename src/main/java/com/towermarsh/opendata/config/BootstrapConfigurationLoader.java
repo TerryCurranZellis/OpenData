@@ -24,6 +24,9 @@ import com.towermarsh.opendata.config.model.BootstrapConfig;
  */
 public final class BootstrapConfigurationLoader {
 
+    /**
+     * location of the resource file
+     */
     private static final String RESOURCE
             = "config/application.properties";
 
@@ -46,29 +49,24 @@ public final class BootstrapConfigurationLoader {
     }
 
     /**
-     *
      * Loads bootstrap configuration from the packaged application properties
      * resource.
      *
      * @return bootstrap configuration
-     *
      */
     public BootstrapConfig load() {
-        try (InputStream input = classLoader.getResourceAsStream(RESOURCE)) {
+        try (var input = classLoader.getResourceAsStream(RESOURCE)) {
             if (input == null) {
                 throw new PluginDefinitionException(
                         "Bootstrap resource was not found: " + RESOURCE);
             }
-
-            final Properties properties = new Properties();
+            final var properties = new Properties();
             properties.load(new InputStreamReader(
                     input,
                     StandardCharsets.UTF_8));
-
             final Map<String, String> values = new LinkedHashMap<>();
             properties.stringPropertyNames().forEach(
                     name -> values.put(name, properties.getProperty(name).trim()));
-
             return new BootstrapConfig(
                     require(values, "application.name"),
                     require(values, "application.environment"),
@@ -94,7 +92,7 @@ public final class BootstrapConfigurationLoader {
             final Map<String, String> values,
             final String key) {
 
-        final String value = values.get(key);
+        final var value = values.get(key);
         if (value == null || value.isBlank()) {
             throw new PluginDefinitionException(
                     "Required bootstrap property is missing: " + key);

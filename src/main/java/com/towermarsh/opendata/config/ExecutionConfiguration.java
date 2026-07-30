@@ -8,7 +8,8 @@ package com.towermarsh.opendata.config;
 import java.time.Duration;
 import java.util.Objects;
 
-/** Bounded plugin executor settings.
+/** 
+ * Bounded plugin executor settings.
  * @param maxParallelPlugins maximum number of plugins to execute concurrently
  * @param shutdownTimeout maximum time to wait for plugin shutdown
   *
@@ -16,7 +17,9 @@ import java.util.Objects;
  * @version 17 July 2026
  */
 public record ExecutionConfiguration(int maxParallelPlugins, Duration shutdownTimeout) {
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public ExecutionConfiguration {
         Objects.requireNonNull(shutdownTimeout, "shutdownTimeout");
         if (maxParallelPlugins < 1 || maxParallelPlugins > 64) {

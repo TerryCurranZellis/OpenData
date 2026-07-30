@@ -33,7 +33,7 @@ public final class CommandLineArgumentsProcessor {
     /**
      * Application Name
      */
-    private static final String APPLICATION_NAME = "opendata";
+    private static final String APPLICATION_NAME = "OpenData";
 
     /**
      * Create command line options
@@ -56,7 +56,7 @@ public final class CommandLineArgumentsProcessor {
     public CommandLineArguments parse(final String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
         try {
-            final String[] normalisedArguments = normaliseArguments(arguments);
+            final var normalisedArguments = normaliseArguments(arguments);
             return toArguments(new DefaultParser().parse(options, normalisedArguments));
         } catch (ParseException | IllegalArgumentException exception) {
             throw new CommandLineProcessingException(exception.getMessage(), exception);
@@ -76,15 +76,15 @@ public final class CommandLineArgumentsProcessor {
         if (arguments.length != 1) {
             return Arrays.copyOf(arguments, arguments.length);
         }
-        final String commandLine = arguments[0];
+        final var commandLine = arguments[0];
         if (commandLine == null || commandLine.isBlank() || !containsWhitespace(commandLine)) {
             return Arrays.copyOf(arguments, arguments.length);
         }
         final List<String> tokens = new ArrayList<>();
-        final StringBuilder token = new StringBuilder();
+        final var token = new StringBuilder();
         char quote = 0;
-        for (int index = 0; index < commandLine.length(); index++) {
-            final char current = commandLine.charAt(index);
+        for (var index = 0; index < commandLine.length(); index++) {
+            final var current = commandLine.charAt(index);
             if (current == '\'' || current == '"') {
                 if (quote == 0) {
                     quote = current;
@@ -175,45 +175,45 @@ public final class CommandLineArgumentsProcessor {
                 .longOpt("plugin")
                 .hasArg().argName("id|all")
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder("f")
                 .longOpt("file")
                 .hasArg()
                 .argName("settings.properties")
                 .desc("Optional application and plugin override properties file.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder("j")
                 .longOpt("parallelism")
                 .hasArg()
                 .argName("1-64")
                 .desc("Maximum plugins executing concurrently; defaults to application configuration.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder().longOpt("dry-run")
                 .desc("Download and validate without database writes or run-audit rows.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder("v")
                 .longOpt("verbose")
                 .desc("Enable FINE java.util.logging output.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder("h")
                 .longOpt("help")
                 .desc("Display help.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder()
                 .longOpt("about")
                 .desc("Display the graphical About and version window.")
-                .build());
+                .get());
         result.addOption(Option
                 .builder()
                 .longOpt("list-plugins")
                 .desc("List installed plugins.")
-                .build());
+                .get());
         return result;
     }
 
@@ -224,26 +224,26 @@ public final class CommandLineArgumentsProcessor {
      * @return the command line arguments record
      */
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
-        final boolean help = commandLine.hasOption("help");
-        final boolean about = commandLine.hasOption("about");
-        final boolean list = commandLine.hasOption("list-plugins");
-        final boolean informational = help || about || list;
+        final var help = commandLine.hasOption("help");
+        final var about = commandLine.hasOption("about");
+        final var list = commandLine.hasOption("list-plugins");
+        final var informational = help || about || list;
         final List<String> rawIds = new ArrayList<>();
-        final String[] optionValues = commandLine.getOptionValues("plugin");
+        final var optionValues = commandLine.getOptionValues("plugin");
         if (optionValues != null) {
-            for (String optionValue : optionValues) {
-                for (String item : optionValue.split(",")) {
+            for (var optionValue : optionValues) {
+                for (var item : optionValue.split(",")) {
                     if (!item.isBlank()) {
                         rawIds.add(item.trim().toLowerCase(Locale.ROOT));
                     }
                 }
             }
         }
-        final boolean all = rawIds.stream().anyMatch("all"::equals);
+        final var all = rawIds.stream().anyMatch("all"::equals);
         if (all && rawIds.size() > 1) {
             throw new IllegalArgumentException("--plugin all cannot be combined with another plugin id.");
         }
-        final LinkedHashSet<String> uniqueIds = new LinkedHashSet<>(rawIds);
+        final var uniqueIds = new LinkedHashSet<String>(rawIds);
         if (uniqueIds.size() != rawIds.size()) {
             throw new IllegalArgumentException("A plugin was selected more than once.");
         }
@@ -253,10 +253,10 @@ public final class CommandLineArgumentsProcessor {
         if (commandLine.hasOption("file") && rawIds.isEmpty()) {
             throw new IllegalArgumentException("--file requires --plugin.");
         }
-        OptionalInt parallelism = OptionalInt.empty();
+        var parallelism = OptionalInt.empty();
         if (commandLine.hasOption("parallelism")) {
             try {
-                final int value = Integer.parseInt(commandLine.getOptionValue("parallelism"));
+                final var value = Integer.parseInt(commandLine.getOptionValue("parallelism"));
                 if (value < 1 || value > 64) {
                     throw new IllegalArgumentException("--parallelism must be between 1 and 64.");
                 }

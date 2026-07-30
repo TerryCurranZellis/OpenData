@@ -48,7 +48,7 @@ public final class OverrideConfiguration {
         if (file.isEmpty()) {
             return new OverrideConfiguration(Map.of());
         }
-        final Path path = file.get().toAbsolutePath().normalize();
+        final var path = file.get().toAbsolutePath().normalize();
         if (!Files.isRegularFile(path)) {
             throw new OpenDataConfigurationException("Override file does not exist: " + path);
         }
@@ -81,16 +81,16 @@ public final class OverrideConfiguration {
      * @return plugin override values without the `plugin.id.` prefix
      */
     public Map<String, String> pluginValues(final String pluginId, final boolean multiPluginRun) {
-        final String prefix = "plugin." + normalise(pluginId) + ".";
+        final var prefix = "plugin." + normalise(pluginId) + ".";
         final Map<String, String> result = new LinkedHashMap<>(scoped(prefix));
         if (!multiPluginRun) {
-            values.forEach((key, value) -> {
+            values.forEach((var key, var value) -> {
                 if (!key.startsWith("application.") && !key.startsWith("plugin.")) {
                     result.put(key, value);
                 }
             });
         } else {
-            final boolean hasUnscoped = values.keySet().stream()
+            final var hasUnscoped = values.keySet().stream()
                     .anyMatch(key -> !key.startsWith("application.") && !key.startsWith("plugin."));
             if (hasUnscoped) {
                 throw new OpenDataConfigurationException(
@@ -108,7 +108,7 @@ public final class OverrideConfiguration {
      */
     private Map<String, String> scoped(final String prefix) {
         final Map<String, String> result = new LinkedHashMap<>();
-        values.forEach((key, value) -> {
+        values.forEach((var key, var value) -> {
             if (key.startsWith(prefix)) {
                 result.put(key.substring(prefix.length()), value);
             }

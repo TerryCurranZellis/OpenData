@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -30,9 +31,14 @@ public record ApplicationRuntimeConfiguration(
         ExecutionConfiguration execution,
         LoggingConfiguration logging) {
 
+    /**
+     * location for configuration file
+     */
     private static final String RESOURCE = "config/application.properties";
 
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public ApplicationRuntimeConfiguration {
         Objects.requireNonNull(database, "database");
         Objects.requireNonNull(execution, "execution");
@@ -46,7 +52,7 @@ public record ApplicationRuntimeConfiguration(
      * @return resolved runtime configuration
      */
     public static ApplicationRuntimeConfiguration load(final Map<String, String> overrides) {
-        final Map<String, String> values = loadResource();
+        final var values = loadResource();
         values.putAll(Objects.requireNonNull(overrides, "overrides"));
         final var database = new DatabasePoolConfiguration(
                 required(values, "database.driver-class"),
@@ -71,9 +77,9 @@ public record ApplicationRuntimeConfiguration(
     }
 
     /**
-     * Loads the packaged runtime configuration resource.
+     * Loads the packaged run-time configuration resource.
      *
-     * @return normalised runtime property values
+     * @return normalised run=time property values
      */
     private static Map<String, String> loadResource() {
         final var classLoader = Thread.currentThread().getContextClassLoader();
@@ -84,7 +90,7 @@ public record ApplicationRuntimeConfiguration(
             final var properties = new Properties();
             properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
             final Map<String, String> result = new LinkedHashMap<>();
-            properties.stringPropertyNames().forEach(name -> result.put(normalise(name), properties.getProperty(name).trim()));
+            properties.stringPropertyNames().forEach((var name) -> result.put(normalise(name), properties.getProperty(name).trim()));
             return result;
         } catch (IOException exception) {
             throw new OpenDataConfigurationException("Unable to read " + RESOURCE, exception);
@@ -99,7 +105,7 @@ public record ApplicationRuntimeConfiguration(
      * @return trimmed property value
      */
     private static String required(final Map<String, String> values, final String key) {
-        final String value = values.get(normalise(key));
+        final var value = values.get(normalise(key));
         if (value == null || value.isBlank()) {
             throw new OpenDataConfigurationException("Required application property is missing: " + key);
         }
@@ -115,7 +121,7 @@ public record ApplicationRuntimeConfiguration(
      * @return parsed integer value
      */
     private static int integer(final Map<String, String> values, final String key, final int defaultValue) {
-        final String value = values.get(normalise(key));
+        final var value = values.get(normalise(key));
         if (value == null || value.isBlank()) {
             return defaultValue;
         }
@@ -127,19 +133,19 @@ public record ApplicationRuntimeConfiguration(
     }
 
     /**
-     * Returns a boolean application property or a default value.
+     * Returns a Boolean application property or a default value.
      *
      * @param values property values indexed by normalised key
      * @param key property key to resolve
      * @param defaultValue fallback value when the property is absent
-     * @return parsed boolean value
+     * @return parsed Boolean value
      */
     private static boolean bool(final Map<String, String> values, final String key, final boolean defaultValue) {
-        final String value = values.get(normalise(key));
+        final var value = values.get(normalise(key));
         if (value == null || value.isBlank()) {
             return defaultValue;
         }
-        return switch (value.trim().toLowerCase(java.util.Locale.ROOT)) {
+        return switch (value.trim().toLowerCase(Locale.ROOT)) {
             case "true", "yes", "1", "on" -> true;
             case "false", "no", "0", "off" -> false;
             default -> throw new OpenDataConfigurationException("Application property must be a boolean: " + key);
@@ -147,12 +153,12 @@ public record ApplicationRuntimeConfiguration(
     }
 
     /**
-     * Normalises a property name for case-insensitive lookups.
+     * Normalises a property name for case-insensitive look-ups.
      *
      * @param value property name to normalise
      * @return trimmed lower-case property name
      */
     private static String normalise(final String value) {
-        return value.trim().toLowerCase(java.util.Locale.ROOT);
+        return value.trim().toLowerCase(Locale.ROOT);
     }
 }

@@ -20,11 +20,13 @@ import java.util.Properties;
 import com.towermarsh.opendata.cli.CommandLineArguments;
 import com.towermarsh.opendata.config.model.BootstrapConfig;
 import com.towermarsh.opendata.exception.ConfigurationException;
+import java.io.InputStreamReader;
 
 /**
  * Loads and merges framework, application, plugin and user override properties.
  *
- * <p>Environment variables are deliberately not used. This preserves explicit,
+ * <p>
+ * Environment variables are deliberately not used. This preserves explicit,
  * repeatable execution through Apache Commons CLI and properties files.</p>
  *
  * @author Terry Curran
@@ -33,10 +35,10 @@ import com.towermarsh.opendata.exception.ConfigurationException;
 public final class ConfigurationLoader {
 
     /**
-     * Application resources file 
+     * Application resources file
      */
     private static final String APPLICATION_RESOURCE = "config/application.properties";
-    
+
     /**
      * plugin loaded locations
      */
@@ -60,8 +62,9 @@ public final class ConfigurationLoader {
 
     /**
      * Creates the configuration settings and load
+     *
      * @param classLoader
-     * @param builtInDefaults 
+     * @param builtInDefaults
      */
     ConfigurationLoader(
             final ClassLoader classLoader,
@@ -76,31 +79,32 @@ public final class ConfigurationLoader {
      *
      * @param arguments parsed command-line arguments
      * @return immutable resolved configuration
-     * @throws com.towermarsh.opendata.exception.ConfigurationException if the resource cannot be loaded
+     * @throws com.towermarsh.opendata.exception.ConfigurationException if the
+     * resource cannot be loaded
      */
     public ApplicationConfig load(final CommandLineArguments arguments) throws ConfigurationException {
         Objects.requireNonNull(arguments, "arguments");
 
-        final String pluginId = arguments.pluginIds().stream().findFirst()
+        final var pluginId = arguments.pluginIds().stream().findFirst()
                 .orElseThrow(() -> new ConfigurationException(
-                        "A named plugin is required before configuration can be loaded."));
+                "A named plugin is required before configuration can be loaded."));
 
         final Map<String, ResolvedConfigurationValue> merged = new LinkedHashMap<>();
         merge(merged, builtInDefaults, ConfigurationSource.BUILT_IN_DEFAULT);
         merge(merged, loadOptionalClasspathProperties(APPLICATION_RESOURCE),
                 ConfigurationSource.APPLICATION_CLASSPATH);
 
-        final String pluginResource = PLUGIN_RESOURCE_PATTERN.formatted(pluginId);
-        final Map<String, String> pluginDefaults = loadRequiredClasspathProperties(pluginResource);
+        final var pluginResource = PLUGIN_RESOURCE_PATTERN.formatted(pluginId);
+        final var pluginDefaults = loadRequiredClasspathProperties(pluginResource);
         merge(merged, pluginDefaults, ConfigurationSource.PLUGIN_CLASSPATH);
 
-        arguments.overrideFile().ifPresent(path ->
-                merge(merged, loadRequiredFileProperties(path), ConfigurationSource.OVERRIDE_FILE));
+        arguments.overrideFile().ifPresent(path
+                -> merge(merged, loadRequiredFileProperties(path), ConfigurationSource.OVERRIDE_FILE));
 
         final Map<String, String> values = new LinkedHashMap<>();
         merged.forEach((key, resolved) -> values.put(key, resolved.value()));
 
-        final BootstrapConfig bootstrap = buildBootstrapConfig(values);
+        final var bootstrap = buildBootstrapConfig(values);
         final var plugin = new PropertiesPluginDefinitionLoader(classLoader).load(pluginId, values);
 
         return new ApplicationConfig(
@@ -133,10 +137,11 @@ public final class ConfigurationLoader {
      *
      * @param resourceName classpath resource name
      * @return loaded properties or an empty map when the resource is absent
-     * @throws ConfigurationException if the resource cannot be closed after reading
+     * @throws ConfigurationException if the resource cannot be closed after
+     * reading
      */
     private Map<String, String> loadOptionalClasspathProperties(final String resourceName) throws ConfigurationException {
-        try (InputStream input = classLoader.getResourceAsStream(resourceName)) {
+        try (var input = classLoader.getResourceAsStream(resourceName)) {
             if (input == null) {
                 return Map.of();
             }
@@ -153,10 +158,11 @@ public final class ConfigurationLoader {
      *
      * @param resourceName classpath resource name
      * @return loaded properties
-     * @throws ConfigurationException if the resource is missing or cannot be closed
+     * @throws ConfigurationException if the resource is missing or cannot be
+     * closed
      */
     private Map<String, String> loadRequiredClasspathProperties(final String resourceName) throws ConfigurationException {
-        try (InputStream input = classLoader.getResourceAsStream(resourceName)) {
+        try (var input = classLoader.getResourceAsStream(resourceName)) {
             if (input == null) {
                 throw new ConfigurationException(
                         "Plugin configuration resource was not found: classpath:" + resourceName);
@@ -174,10 +180,11 @@ public final class ConfigurationLoader {
      *
      * @param path path to the override file
      * @return loaded properties
-     * @throws ConfigurationException if the file is missing, unreadable, or invalid
+     * @throws ConfigurationException if the file is missing, unreadable, or
+     * invalid
      */
     private Map<String, String> loadRequiredFileProperties(final Path path) throws ConfigurationException {
-        final Path normalised = path.toAbsolutePath().normalize();
+        final var normalised = path.toAbsolutePath().normalize();
 
         if (!Files.exists(normalised)) {
             throw new ConfigurationException("Configuration override file does not exist: " + normalised);
@@ -189,7 +196,7 @@ public final class ConfigurationLoader {
             throw new ConfigurationException("Configuration override file is not readable: " + normalised);
         }
 
-        try (InputStream input = Files.newInputStream(normalised)) {
+        try (var input = Files.newInputStream(normalised)) {
             return readProperties(input, normalised.toString());
         } catch (IOException exception) {
             throw new ConfigurationException(
@@ -210,9 +217,9 @@ public final class ConfigurationLoader {
             final InputStream input,
             final String sourceDescription) throws ConfigurationException {
 
-        final Properties properties = new Properties();
+        final var properties = new Properties();
         try {
-            properties.load(new java.io.InputStreamReader(input, StandardCharsets.UTF_8));
+            properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
         } catch (IOException exception) {
             throw new ConfigurationException(
                     "Unable to parse properties from " + sourceDescription,
@@ -220,22 +227,22 @@ public final class ConfigurationLoader {
         }
 
         final Map<String, String> result = new LinkedHashMap<>();
-        for (String name : properties.stringPropertyNames()) {
-            final String key = normaliseKey(name);
-            final String value = Optional.ofNullable(properties.getProperty(name))
+        properties.stringPropertyNames().forEach((var name) -> {
+            final var key = normaliseKey(name);
+            final var value = Optional.ofNullable(properties.getProperty(name))
                     .orElse("")
                     .trim();
-
             if (result.put(key, value) != null) {
                 throw new ConfigurationException(
                         "Duplicate configuration property after key normalisation: " + key);
             }
-        }
+        });
         return result;
     }
 
     /**
-     * Merges configuration values into the resolved map using the supplied source tag.
+     * Merges configuration values into the resolved map using the supplied
+     * source tag.
      *
      * @param target merge target keyed by normalised property name
      * @param source raw source values
@@ -246,8 +253,8 @@ public final class ConfigurationLoader {
             final Map<String, String> source,
             final ConfigurationSource sourceType) {
 
-        source.forEach((key, value) ->
-                target.put(normaliseKey(key), new ResolvedConfigurationValue(value, sourceType)));
+        source.forEach((key, value)
+                -> target.put(normaliseKey(key), new ResolvedConfigurationValue(value, sourceType)));
     }
 
     /**
@@ -259,7 +266,7 @@ public final class ConfigurationLoader {
      */
     private static String normaliseKey(final String key) throws ConfigurationException {
         Objects.requireNonNull(key, "key");
-        final String normalised = key.trim().toLowerCase(Locale.ROOT);
+        final var normalised = key.trim().toLowerCase(Locale.ROOT);
         if (normalised.isEmpty()) {
             throw new ConfigurationException("Configuration property names must not be blank.");
         }

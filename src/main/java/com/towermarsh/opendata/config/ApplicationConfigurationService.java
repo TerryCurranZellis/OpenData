@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
 import com.towermarsh.opendata.config.model.BootstrapConfig;
-import com.towermarsh.opendata.config.model.PluginDefinition;
 
 /**
  * Creates the Phase 1 {@link ApplicationConfig}.

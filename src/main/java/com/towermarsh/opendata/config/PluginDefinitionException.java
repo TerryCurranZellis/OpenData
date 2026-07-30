@@ -15,8 +15,6 @@ package com.towermarsh.opendata.config;
 public final class PluginDefinitionException extends RuntimeException {
 
     /**
-     *
-     *
      * Creates a new plugin definition exception.
      *
      * @param message the detail message

@@ -8,7 +8,8 @@ package com.towermarsh.opendata.config;
 import java.nio.file.Path;
 import java.util.Objects;
 
-/** java.util.logging file-handler settings.
+/** 
+ * java.util.logging file-handler settings.
  * @param directory directory containing application log files
  * @param fileLimitBytes maximum size of each log file in bytes
  * @param fileCount number of rotating log files to retain
@@ -18,7 +19,9 @@ import java.util.Objects;
  * @version 17 July 2026
  */
 public record LoggingConfiguration(Path directory, int fileLimitBytes, int fileCount, boolean append) {
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public LoggingConfiguration {
         Objects.requireNonNull(directory, "directory");
         if (fileLimitBytes < 1024) {

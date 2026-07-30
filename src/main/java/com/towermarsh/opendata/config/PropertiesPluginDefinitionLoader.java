@@ -48,6 +48,9 @@ import com.towermarsh.opendata.config.model.PluginPropertyType;
 public final class PropertiesPluginDefinitionLoader
         implements PluginDefinitionLoader {
 
+    /**
+     * Pattern to create path to plugin config
+     */
     private static final String RESOURCE_PATTERN
             = "config/plugins/%s.properties";
 
@@ -267,10 +270,9 @@ public final class PropertiesPluginDefinitionLoader
                     StandardCharsets.UTF_8));
 
             return properties.stringPropertyNames().stream()
-                    .collect(Collectors.toMap(
-                            PropertiesPluginDefinitionLoader::normalise,
+                    .collect(Collectors.toMap(value -> PropertiesPluginDefinitionLoader.normalise(value),
                             name -> properties.getProperty(name).trim(),
-                            (first, second) -> second,
+                            (var first, var second) -> second,
                             LinkedHashMap::new));
         } catch (IOException exception) {
             throw new PluginDefinitionException(
@@ -350,7 +352,7 @@ public final class PropertiesPluginDefinitionLoader
     }
 
     /**
-     * Check is a plugin parameter is present, its required
+     * Check if a plugin parameter is present, its required
      *
      * @param values map to search
      * @param key key to find
@@ -494,7 +496,7 @@ public final class PropertiesPluginDefinitionLoader
     }
 
     /**
-     *
+     * normalize string
      * @param value
      * @return
      */

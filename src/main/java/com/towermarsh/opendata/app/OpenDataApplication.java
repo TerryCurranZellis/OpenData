@@ -39,18 +39,20 @@ import java.util.logging.Logger;
  */
 public final class OpenDataApplication {
 
-	/**
-	 * set up the logger
-	 */
+    /**
+     * set up the logger
+     */
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
-    /** 
-	 * Starts the OpenData application for one parsed command line.
-	 * @param arguments the command line aruguments
-	 * @param processor the command line processor
-	 * @throws IOException - I/O error with input file
-	 * @throws InterruptedException error in concurrent processing
-	 */
+    /**
+     * Starts the OpenData application for one parsed command line.
+     *
+     * @param arguments the command line arguments
+     * @param processor the command line processor
+     * @return ExecutionStatus status of process
+     * @throws IOException - I/O error with input file
+     * @throws InterruptedException error in concurrent processing
+     */
     public ExecutionStatus start(
             final CommandLineArguments arguments,
             final CommandLineArgumentsProcessor processor) throws IOException, InterruptedException {
@@ -77,14 +79,14 @@ public final class OpenDataApplication {
         LoggingManager.configure(runtime.logging(), arguments.verbose());
 
         final var selected = new PluginSelectionResolver().resolve(arguments, registry);
-        final boolean multiPluginRun = selected.size() > 1;
+        final var multiPluginRun = selected.size() > 1;
         final var definitionLoader = new PropertiesPluginDefinitionLoader();
         final var plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(
-                        descriptor,
-                        definitionLoader.load(
-                                descriptor.id(),
-                                overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
+                descriptor,
+                definitionLoader.load(
+                        descriptor.id(),
+                        overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
                 .toList();
 
         final var parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
@@ -116,10 +118,11 @@ public final class OpenDataApplication {
         }
     }
 
-    /** 
-	 * Close the connection to the database
-	 * @param database the database connection
-	 */
+    /**
+     * Close the connection to the database
+     *
+     * @param database the database connection
+     */
     private static void closeDatabase(final DatabaseResourceManager database) {
         if (database == null) {
             return;
@@ -133,9 +136,10 @@ public final class OpenDataApplication {
     }
 
     /**
-	 * Get the error message from the exception
-	 * @param exception the exception details
-	 */
+     * Get the error message from the exception
+     *
+     * @param exception the exception details
+     */
     private static String messageFor(final Throwable exception) {
         var current = exception;
         while (current.getCause() != null && current.getCause() != current) {
@@ -147,10 +151,11 @@ public final class OpenDataApplication {
                 : message;
     }
 
-	/*
-	 * Show the execution summary for each plugin
-	 * @param summary summary details for each pluging
-	 */
+    /**
+     * Show the execution summary for each plugin
+     *
+     * @param summary summary details for each pluging
+     */
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach(result -> LOGGER.log(
                 result.successful() ? Level.INFO : Level.SEVERE,
