@@ -989,8 +989,9 @@ $Parameters = @{
   Action = 'build'
   ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
   Document = 'All'
-  Format = 'docx'
+  Format = 'All'
   ReferenceDoc = 'C:\Users\terry\Downloads\Corporate_Document_Template.docx'
+  RenderDiagrams = $true
   FailOnWarning = $true
 }
 Invoke-Documentation @Parameters
