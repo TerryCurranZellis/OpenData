@@ -4,28 +4,6 @@
 #>
 
 #Requires -Version 5.1
-
-[CmdletBinding(SupportsShouldProcess)]
-param(
-  [ValidateSet('Build', 'Test', 'Clean')]
-  [string] $Action = 'Build',
-
-  [Parameter(Mandatory)]
-  [string] $ProjectRoot,
-
-  [ValidateSet('Technical', 'User', 'All')]
-  [string] $Document = 'All',
-
-  [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
-  [string] $Format = 'All',
-
-  [AllowNull()]
-  [string] $ReferenceDoc,
-
-  [switch] $RenderDiagrams = $true,
-
-  [switch] $FailOnWarning
-)
 function Invoke-Documentation {
   <#
       .SYNOPSIS
@@ -127,9 +105,7 @@ function Invoke-Documentation {
 
     $result = $Content
     foreach ($key in $Tokens.Keys) {
-      $value = [string]$Tokens[$key]
-      $result = $result.Replace(('{{{0}}}' -f $key), $value)
-      $result = $result.Replace(('{0}{1}{2}' -f '{', $key, '}'), $value)
+      $result = $result.Replace(('{{{0}}}' -f $key), [string]$Tokens[$key])
     }
     return $result
   }
@@ -154,56 +130,6 @@ function Invoke-Documentation {
     if (-not (Get-Command -Name $Name -ErrorAction SilentlyContinue)) {
       throw ("Required command '{0}' was not found." -f $Name)
     }
-  }
-
-  #--------------------------------------------------------------------------------
-  # Convert-ManifestGlobToRegex
-  #--------------------------------------------------------------------------------
-  function Convert-ManifestGlobToRegex {
-    param([Parameter(Mandatory)][string] $Pattern)
-
-    $normalised = $Pattern.Replace('\', '/').TrimStart('/')
-    $escaped = [regex]::Escape($normalised)
-    $escaped = $escaped -replace '\\\*\\\*/', '(?:.*/)?'
-    $escaped = $escaped -replace '\\\*\\\*', '.*'
-    $escaped = $escaped -replace '\\\*', '[^/]*'
-    $escaped = $escaped -replace '\\\?', '[^/]'
-    return '^(?:{0})$' -f $escaped
-  }
-
-  #--------------------------------------------------------------------------------
-  # Get-ManifestSourceMatches
-  #--------------------------------------------------------------------------------
-  function Get-ManifestSourceMatches {
-    param(
-      [Parameter(Mandatory)][string] $DocsRoot,
-      [Parameter(Mandatory)][string] $Entry
-    )
-
-    $normalisedEntry = $Entry.Replace('\', '/').TrimStart('/')
-    $containsWildcard =
-      [System.Management.Automation.WildcardPattern]::ContainsWildcardCharacters(
-        $normalisedEntry)
-
-    if (-not $containsWildcard) {
-      $exactPath = Join-Path -Path $DocsRoot -ChildPath (
-        $normalisedEntry -replace '/', '\')
-      if (Test-Path -LiteralPath $exactPath -PathType Leaf) {
-        return ,(Get-Item -LiteralPath $exactPath)
-      }
-      return @()
-    }
-
-    $regex = Convert-ManifestGlobToRegex -Pattern $normalisedEntry
-    return @(
-      Get-ChildItem -LiteralPath $DocsRoot -File -Recurse |
-        Where-Object {
-          $relative = $_.FullName.Substring($DocsRoot.Length)
-          $relative = $relative.TrimStart('\', '/').Replace('\', '/')
-          $relative -match $regex
-        } |
-        Sort-Object -Property FullName
-    )
   }
 
   #--------------------------------------------------------------------------------
@@ -233,11 +159,21 @@ function Invoke-Documentation {
         continue
       }
 
-      $matchedFiles = @(Get-ManifestSourceMatches `
-        -DocsRoot $docsRoot `
-        -Entry ([string]$entry))
-      if ($matchedFiles.Count -eq 0) {
-        throw ('Manifest source or pattern matched no files: docs/{0}' -f $entry)
+      $pattern = Join-Path -Path $docsRoot -ChildPath ([string]$entry -replace '/', '\')
+
+      # Do not call this variable $matches because $Matches is an
+      # automatic PowerShell variable used by -match and -notmatch.
+      $matchedFiles = @(
+        Get-ChildItem -Path $pattern `-File -ErrorAction SilentlyContinue |
+        Sort-Object -Property FullName
+      )
+
+      $containsWildcard =
+      [System.Management.Automation.WildcardPattern]::
+      ContainsWildcardCharacters([string]$entry)
+
+      if ($matchedFiles.Count -eq 0 -and -not $containsWildcard) {
+        throw ('Manifest source was not found: docs/{0}' -f $entry)
       }
 
       foreach ($matchedFile in $matchedFiles) {
@@ -246,6 +182,7 @@ function Invoke-Documentation {
         }
       }
     }
+
     return $files
   }
 
@@ -270,8 +207,8 @@ function Invoke-Documentation {
   # Remove-DocumentHeader
   #--------------------------------------------------------------------------------
   function Remove-DocumentHeader {
-    param(
-      [Parameter(Mandatory)]
+    param([
+      Parameter(Mandatory)]
       [string] $Content
     )
 
@@ -306,77 +243,6 @@ function Invoke-Documentation {
   }
 
   #--------------------------------------------------------------------------------
-  # New-DocumentationTokens
-  #--------------------------------------------------------------------------------
-  function New-DocumentationTokens {
-    param(
-      [Parameter(Mandatory)] $Config,
-      [Parameter(Mandatory)][string] $Title,
-      [Parameter(Mandatory)][string] $DocumentSet,
-      [Parameter(Mandatory)][string] $DocumentDate
-    )
-
-    return @{
-      title = $Title
-      projectTitle = [string]$Config.projectTitle
-      slogan = [string]$Config.slogan
-      author = [string]$Config.author
-      version = [string]$Config.projectVersion
-      date = $DocumentDate
-      coverImage = [string]$Config.coverImage
-      documentSet = $DocumentSet
-    }
-  }
-
-  #--------------------------------------------------------------------------------
-  # Assert-NoUnresolvedTokens
-  #--------------------------------------------------------------------------------
-  function Assert-NoUnresolvedTokens {
-    param(
-      [Parameter(Mandatory)][string] $Content,
-      [Parameter(Mandatory)][string] $SourceName
-    )
-
-    $unresolved = @([regex]::Matches($Content, '\{\{[A-Za-z][A-Za-z0-9_.-]*\}\}') |
-      ForEach-Object Value |
-      Sort-Object -Unique)
-    if ($unresolved.Count -gt 0) {
-      throw ('Unresolved documentation token(s) in {0}: {1}' -f
-        $SourceName, ($unresolved -join ', '))
-    }
-  }
-
-  #--------------------------------------------------------------------------------
-  # Get-PandocResourcePath
-  #--------------------------------------------------------------------------------
-  function Get-PandocResourcePath {
-    param(
-      [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)][string] $Build,
-      [Parameter(Mandatory)][System.IO.FileInfo[]] $SourceFiles
-    )
-
-    $paths = New-Object -TypeName 'System.Collections.Generic.List[string]'
-    $seenPaths = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' `
-      -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
-
-    foreach ($candidate in @($Build, $Root, (Join-Path -Path $Root -ChildPath 'docs'))) {
-      $fullPath = [IO.Path]::GetFullPath($candidate)
-      if ($seenPaths.Add($fullPath)) {
-        $paths.Add($fullPath)
-      }
-    }
-
-    foreach ($file in $SourceFiles) {
-      if ($null -ne $file -and $seenPaths.Add($file.DirectoryName)) {
-        $paths.Add($file.DirectoryName)
-      }
-    }
-
-    return ($paths -join [IO.Path]::PathSeparator)
-  }
-
-  #--------------------------------------------------------------------------------
   # New-DocumentInventory
   #--------------------------------------------------------------------------------
   function New-DocumentInventory {
@@ -393,9 +259,7 @@ function Invoke-Documentation {
     $name = '{0}-document-inventory.md' -f $DocumentSet.ToLowerInvariant()
     $output = Join-Path -Path $build -ChildPath $name
     $lines = New-Object -TypeName 'System.Collections.Generic.List[string]'
-    $lines.Add(('# {0} Document Source Inventory' -f $DocumentSet))
-    $lines.Add('')
-    $lines.Add('> This file is only an inventory of source Markdown files. It is not the assembled manual.')
+    $lines.Add(('# {0} Document Inventory' -f $DocumentSet))
     $lines.Add('')
     $lines.Add('| Document | First heading |')
     $lines.Add('|---|---|')
@@ -461,12 +325,6 @@ function Invoke-Documentation {
       $writer.WriteLine('---')
       $writer.WriteLine()
 
-      $tokens = New-DocumentationTokens `
-        -Config $config `
-        -Title $title `
-        -DocumentSet $DocumentSet `
-        -DocumentDate $documentDate
-
       if (-not [string]::IsNullOrWhiteSpace($manualDefinition.coverTemplate)) {
         $coverPath = Join-Path -Path (Join-Path -Path $Root -ChildPath 'docs') `
         -ChildPath ($manualDefinition.coverTemplate -replace '/', '\')
@@ -474,8 +332,14 @@ function Invoke-Documentation {
           throw ('Cover template was not found: {0}' -f $coverPath)
         }
         $cover = Get-Content -LiteralPath $coverPath -Raw -Encoding UTF8
-        $cover = Convert-TemplateTokens -Content $cover -Tokens $tokens
-        Assert-NoUnresolvedTokens -Content $cover -SourceName $coverPath
+        $cover = Convert-TemplateTokens -Content $cover -Tokens @{
+          title = $title
+          projectTitle = $config.projectTitle
+          slogan = $config.slogan
+          author = $config.author
+          version = $config.projectVersion
+          date = $documentDate
+        }
         $writer.WriteLine($cover.Trim())
         $writer.WriteLine()
       }
@@ -485,8 +349,6 @@ function Invoke-Documentation {
         $file = $files[$index]
         $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
         $content = Remove-DocumentHeader -Content $content
-        $content = Convert-TemplateTokens -Content $content -Tokens $tokens
-        Assert-NoUnresolvedTokens -Content $content -SourceName $file.FullName
         $writer.WriteLine($content)
         $writer.WriteLine()
         $hasFollowingContent =
@@ -515,7 +377,7 @@ function Invoke-Documentation {
     if (-not (Test-Path -LiteralPath $renderer -PathType Leaf)) {
       throw ('PlantUML renderer was not found: {0}' -f $renderer)
     }
-    & $renderer -ProjectRoot $Root -Format $OutputFormat -Clean
+    & $renderer -ProjectRoot $Root -Format $OutputFormat
     if (-not $?) {
       throw 'PlantUML rendering failed.'
     }
@@ -835,8 +697,7 @@ function Invoke-Documentation {
     )
 
     $config = Read-DocumentationConfig -Root $Root
-    $inventory = New-DocumentInventory -Root $Root -DocumentSet $DocumentSet
-    Write-Output -InputObject ('Created source inventory {0}' -f $inventory)
+    $null = New-DocumentInventory -Root $Root -DocumentSet $DocumentSet
     $manual = Merge-Documentation -Root $Root -DocumentSet $DocumentSet
     if ($OutputFormat -eq 'None') {
       Write-Output -InputObject ('Created {0}' -f $manual)
@@ -845,18 +706,11 @@ function Invoke-Documentation {
 
     Assert-Command -Name 'pandoc'
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
-    $manualDefinition = Get-ManualDefinition -Root $Root -DocumentSet $DocumentSet
-    $baseName = if ([string]::IsNullOrWhiteSpace([string]$manualDefinition.outputBaseName)) {
-      if ($DocumentSet -eq 'Technical') {
-        $config.technicalOutputBaseName
-      } else {
-        $config.userOutputBaseName
-      }
+    $baseName = if ($DocumentSet -eq 'Technical') {
+      $config.technicalOutputBaseName
     } else {
-      [string]$manualDefinition.outputBaseName
+      $config.userOutputBaseName
     }
-    $sourceFiles = @(Get-DocumentationFiles -Root $Root -DocumentSet $DocumentSet)
-    $resourcePath = Get-PandocResourcePath -Root $Root -Build $build -SourceFiles $sourceFiles
     $landscapeFilter = Join-Path -Path $Root -ChildPath $config.landscapeFilter
     $latexHeader = Join-Path -Path $Root -ChildPath $config.latexLandscapeHeader
     $baseArgs = @(
@@ -867,7 +721,7 @@ function Invoke-Documentation {
       '--toc-depth=3',
       '--number-sections',
       ('--lua-filter={0}' -f $landscapeFilter),
-      ('--resource-path={0}' -f $resourcePath),
+      ('--resource-path={0}' -f $build),
       '--metadata', ('lang={0}' -f $config.language),
       '--metadata', 'papersize=a4'
     )
@@ -975,12 +829,4 @@ function Invoke-Documentation {
   }
 }
 
-$invokeParameters = @{} + $PSBoundParameters
-$invokeParameters.Action = $Action
-$invokeParameters.ProjectRoot = $ProjectRoot
-$invokeParameters.Document = $Document
-$invokeParameters.Format = $Format
-$invokeParameters.ReferenceDoc = $ReferenceDoc
-$invokeParameters.RenderDiagrams = $RenderDiagrams
-$invokeParameters.FailOnWarning = $FailOnWarning
-Invoke-Documentation @invokeParameters
+Invoke-Documentation -Action Build -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -Verbose -Document All -Format Docx -RenderDiagrams -ReferenceDoc 'C:\Users\terry\Documents\Moving to Cognos Analytics.docx'

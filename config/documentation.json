@@ -13,7 +13,7 @@
   "buildDirectory": "docs/build",
   "diagramSourceDirectory": "docs/diagrams/source",
   "diagramOutputDirectory": "docs/diagrams/generated",
-  "plantUmlJar": "tools/plantuml.jar",
+  "plantUmlJar": "tools/plantuml-asl-1.2026.6.jar",
   "referenceDoc": "docs/_templates/template.docx",
   "landscapeFilter": "docs/_filters/landscape.lua",
   "latexLandscapeHeader": "docs/_includes/landscape.tex",

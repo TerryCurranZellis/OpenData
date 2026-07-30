@@ -1,6 +1,5 @@
 -- Converts fenced Divs with class "landscape" into landscape sections/pages.
 -- DOCX receives A4 section breaks; LaTeX/PDF receives pdflscape boundaries.
--- Explicit \newpage blocks are converted to real DOCX page breaks.
 
 local portrait_section = [[
 <w:p>
@@ -25,14 +24,6 @@ local landscape_section = [[
                w:header="720" w:footer="720" w:gutter="0"/>
     </w:sectPr>
   </w:pPr>
-</w:p>
-]]
-
-local page_break = [[
-<w:p>
-  <w:r>
-    <w:br w:type="page"/>
-  </w:r>
 </w:p>
 ]]
 
@@ -97,16 +88,20 @@ function Image(image)
   return image
 end
 
--- Preserve normal Markdown tables in DOCX. Only tables explicitly wrapped in
--- .landscape-table or .docx-linear-table are converted to labelled entries.
 function Table(tbl)
+  if FORMAT:match('docx') then
+    return table_as_labelled_entries(tbl)
+  end
   return nil
 end
 
 function RawBlock(block)
   if FORMAT:match('docx') and block.format == 'tex' and
       block.text:match('^\\newpage%s*$') then
-    return pandoc.RawBlock('openxml', page_break)
+    -- Chapter breaks are applied to Heading 1 paragraphs in the DOCX
+    -- post-processing step. Removing explicit break paragraphs avoids blank
+    -- pages when a chapter follows a landscape section boundary.
+    return {}
   end
   return nil
 end
