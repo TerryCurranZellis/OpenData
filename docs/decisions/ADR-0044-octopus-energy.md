@@ -1,4 +1,4 @@
-# ADR-043: Octopus Energy
+# ADR-0044: Octopus Energy
 
 - Status: Proposed
 - Date: 2026-07-27
@@ -6,7 +6,7 @@
 
 ## Context
 
-Octopus enery statement arrives as a PDF attachment to email
+Octopus Energy statement arrives as a PDF attachment to email
 
 ## Decision
 
@@ -40,7 +40,7 @@ Manual Process
 
 ## Java Code
 
-Some code already exists as I currntly d a manual download
+The following classes and methods describe the proposed implementation for processing downloaded Octopus Energy statements. The Octopus Energy plugin has not yet been implemented.
 
 ### OctopusStatementParser
 
@@ -138,10 +138,10 @@ Some code already exists as I currntly d a manual download
 ```
 ### ElectricityRecord
 - will need validating
-	- all data is string
-	- unit rate/standing charge is in pence (100pence=1pound)
-	- readings are decimal number
-	- totals are in pounds (GBP)
+    - all data is string
+    - unit rate/standing charge is in pence (100pence=1pound)
+    - readings are decimal number
+    - totals are in pounds (GBP)
 ```Java
 /**
  * Immutable record holding one row of extracted electricity billing data,
@@ -192,11 +192,11 @@ CREATE TABLE [dbo].[Electricity] (
 ```
 ### GasRecord
 - will need validating
-	- all data is string
-	- unit rate/standing charge is in pence (100pence=1pound)
-	- readings are decimal number
-	- consumption is multipled by a facor to convert to kWh
-	- totals are in pounds (GBP)
+    - all data is string
+    - unit rate/standing charge is in pence (100pence=1pound)
+    - readings are decimal number
+    - consumption is multipled by a facor to convert to kWh
+    - totals are in pounds (GBP)
 ```Java
 /**
  * Immutable record holding one row of extracted gas billing data,

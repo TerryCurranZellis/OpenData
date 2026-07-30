@@ -40,7 +40,6 @@
       "sources": [
         "README.md",
         "shared/introduction.md",
-        "architecture/README.md",
         "architecture/ARCHITECTURE.md",
         "architecture/**/*.md",
         "development/**/*.md",

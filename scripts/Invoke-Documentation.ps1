@@ -424,6 +424,11 @@ function Invoke-Documentation {
         if ($target -match '^(https?:|mailto:|#)') {
           continue
         }
+        # Template placeholders such as {{diagramPath}} are resolved before
+        # publication and are not filesystem paths during validation.
+        if ($target -match '\{\{[^}]+\}\}') {
+          continue
+        }
         $decoded = [uri]::UnescapeDataString($target)
         $linkPath = [IO.Path]::GetFullPath(
         (Join-Path -Path $file.DirectoryName -ChildPath ($decoded -replace '/', '\')))

@@ -63,7 +63,7 @@
 | [ADR-0041](ADR-0041-contextual-jul-for-concurrent-plugins.md) | Add task context to `java.util.logging` | Accepted | Implemented |
 | [ADR-0042](ADR-0042-side-effect-free-dry-run.md) | Keep dry runs free of persistent side effects | Accepted | Implemented |
 | [ADR-0043](ADR-0043-plugin-local-pipeline-packages.md) | Organise provider code as plugin-local pipeline packages | Accepted | Implemented |
-| [ADR-0044](ADR-0044-octopus-energy-implement.md) | Implement octopus enery plugin | Accepted | Inprocess |
+| [ADR-0044](ADR-0044-octopus-energy.md) | Implement Octopus Energy plugin | Proposed | Future work |
 |  
 :::
 
