@@ -31,7 +31,7 @@
 
   "diagramSourceDirectory": "docs/diagrams/source",
   "diagramOutputDirectory": "docs/diagrams/generated",
-  "plantUmlJar": "tools/plantuml.jar",
+  "plantUmlJar": "tools/plantuml-asl-1.2026.6.jar",
 
   "landscapeFilter": "docs/_filters/landscape.lua",
   "tocFilter": "docs/_filters/document-toc.lua",

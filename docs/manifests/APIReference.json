@@ -16,6 +16,8 @@
     "plugins/**/*.md",
     "shared/glossary.md",
     "shared/licence.md",
+	"shared/third-party-notices.md",
+	"shared/data-source-notices.md",
     "shared/acknowledgements.md"
   ]
 }

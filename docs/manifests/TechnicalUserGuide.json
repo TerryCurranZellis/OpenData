@@ -24,6 +24,8 @@
     "user-guide/11-maintenance-and-security.md",
     "shared/glossary.md",
     "shared/licence.md",
+	"shared/third-party-notices.md",
+	"shared/data-source-notices.md",
     "shared/acknowledgements.md"
   ]
 }

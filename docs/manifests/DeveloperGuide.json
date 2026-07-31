@@ -23,10 +23,11 @@
     "guides/plugin-contract-migration.md",
     "decisions/README.md",
     "decisions/ADR-REGISTER.md",
-    "decisions/ADR-REGISTER-ADDENDUM.md",
     "decisions/ADR-*.md",
     "shared/glossary.md",
     "shared/licence.md",
+	"shared/third-party-notices.md",
+	"shared/data-source-notices.md",
     "shared/acknowledgements.md"
   ]
 }

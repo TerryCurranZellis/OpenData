@@ -1,10 +1,9 @@
 # Architecture Decisions
 
 **Document ID:** ADR-INDEX-001  
-**Version:** 1.2  
+**Version:** 1.3
 **Status:** Baseline  
-**Baseline date:** 26 July 2026
-
+**Baseline date:** 31 July 2026
 ---
 
 ADRs capture durable choices, not implementation task lists. Valid statuses are
@@ -18,7 +17,7 @@ unused number and must never reuse an existing filename or number.
 
 Conflicting ADR-0030 through ADR-0033 files introduced by a later merge are
 retained as superseded aliases. Their canonical replacements are ADR-0038
-through ADR-0041; see the [legacy addendum](ADR-REGISTER-ADDENDUM.md).
+through ADR-0041.
 
 An accepted ADR is not rewritten to hide a later change. A replacement decision
 must create a new ADR and mark the earlier record Superseded.
