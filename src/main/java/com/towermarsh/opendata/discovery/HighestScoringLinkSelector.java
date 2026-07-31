@@ -27,10 +27,8 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
     private final boolean failOnTie;
 
     /**
-     *
      * Creates a selector that fails when more than one candidate shares the
      * best score.
-     *
      */
     public HighestScoringLinkSelector() {
         this(true);
@@ -60,17 +58,15 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
             List<DiscoveredLink> candidates,
             List<String> preferredTerms) throws DiscoveryException {
         Objects.requireNonNull(candidates, "candidates");
-        List<String> terms = normalize(preferredTerms);
+        var terms = normalize(preferredTerms);
         if (candidates.isEmpty()) {
             throw new DiscoveryException("No candidate data links were discovered");
         }
-
         var scored = candidates.stream()
                 .map(link -> new ScoredLink(link, score(link, terms)))
                 .sorted(Comparator.comparingInt(ScoredLink::score).reversed()
                         .thenComparing(item -> item.link().targetUri().toString()))
                 .toList();
-
         var best = scored.get(0);
         if (failOnTie && scored.size() > 1 && scored.get(1).score() == best.score()) {
             throw new DiscoveryException(
@@ -89,10 +85,10 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
      * @return computed score
      */
     private static int score(DiscoveredLink link, List<String> terms) {
-        String fileName = normalizeText(link.fileName());
-        String descriptive = normalizeText(link.linkText() + " " + link.title());
-        int score = "https".equalsIgnoreCase(link.targetUri().getScheme()) ? 1 : 0;
-        for (String term : terms) {
+        var fileName = normalizeText(link.fileName());
+        var descriptive = normalizeText(link.linkText() + " " + link.title());
+        var score = "https".equalsIgnoreCase(link.targetUri().getScheme()) ? 1 : 0;
+        for (var term : terms) {
             if (fileName.contains(term)) {
                 score += 5;
             }

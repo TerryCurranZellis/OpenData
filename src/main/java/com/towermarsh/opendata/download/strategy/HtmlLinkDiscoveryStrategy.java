@@ -21,7 +21,7 @@ import com.towermarsh.opendata.exception.DownloadException;
 /**
  * Downloads an HTML landing page, discovers a matching file link and streams
  * the resolved resource to disk.
-  *
+ *
  * @author Terry Curran
  * @version 17 July 2026
  */
@@ -45,8 +45,8 @@ public final class HtmlLinkDiscoveryStrategy {
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
         this.linkResolver = new HtmlLinkResolver();
-        this.fileDownloader =
-                new DirectHttpDownloadStrategy(connectTimeout);
+        this.fileDownloader
+                = new DirectHttpDownloadStrategy(connectTimeout);
     }
 
     /**
@@ -67,11 +67,11 @@ public final class HtmlLinkDiscoveryStrategy {
             final Duration requestTimeout,
             final LinkDiscoveryDefinition discovery) throws DownloadException {
 
-        final String html = fetchHtml(
+        final var html = fetchHtml(
                 landingPageUri,
                 headers,
                 requestTimeout);
-        final URI resolvedUri = linkResolver.resolve(
+        final var resolvedUri = linkResolver.resolve(
                 landingPageUri,
                 html,
                 discovery);
@@ -88,14 +88,14 @@ public final class HtmlLinkDiscoveryStrategy {
             final Map<String, String> headers,
             final Duration timeout) throws DownloadException {
 
-        final HttpRequest.Builder builder =
-                HttpRequest.newBuilder(uri)
+        final var builder
+                = HttpRequest.newBuilder(uri)
                         .GET()
                         .timeout(timeout);
         headers.forEach(builder::header);
 
         try {
-            final HttpResponse<String> response = httpClient.send(
+            final var response = httpClient.send(
                     builder.build(),
                     HttpResponse.BodyHandlers.ofString());
 

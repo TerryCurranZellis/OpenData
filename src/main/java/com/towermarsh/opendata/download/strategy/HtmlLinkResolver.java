@@ -16,13 +16,15 @@ import org.jsoup.nodes.Element;
 
 import com.towermarsh.opendata.config.model.LinkDiscoveryDefinition;
 import com.towermarsh.opendata.exception.DownloadException;
+import java.util.function.Consumer;
 
 /**
  * Resolves a downloadable link from an already-downloaded HTML document.
  *
- * <p>Network access is deliberately separate from HTML parsing so link
- * matching can be tested deterministically.</p>
-  *
+ * <p>
+ * Network access is deliberately separate from HTML parsing so link matching
+ * can be tested deterministically.</p>
+ *
  * @author Terry Curran
  * @version 17 July 2026
  */
@@ -46,44 +48,41 @@ public final class HtmlLinkResolver {
         Objects.requireNonNull(html, "html");
         Objects.requireNonNull(definition, "definition");
 
-        final Pattern hrefPattern =
-                Pattern.compile(definition.hrefPattern());
-        final Pattern textPattern =
-                definition.textPattern().isBlank()
-                        ? null
-                        : Pattern.compile(definition.textPattern());
+        final var hrefPattern
+                = Pattern.compile(definition.hrefPattern());
+        final var textPattern
+                = definition.textPattern().isBlank()
+                ? null
+                : Pattern.compile(definition.textPattern());
 
         final List<URI> matches = new ArrayList<>();
-        final var document =
-                Jsoup.parse(html, landingPageUri.toString());
+        final var document
+                = Jsoup.parse(html, landingPageUri.toString());
 
-        for (Element element :
-                document.select(definition.cssSelector())) {
+        document.select(definition.cssSelector()).forEach(new Consumer<Element>() {
+            @Override
+            public void accept(Element element) {
+                final var href = element.attr("href").trim();
+                if (!(href.isEmpty()
+                        || !hrefPattern.matcher(href).matches())) {
+                    final String linkText = element.text().trim();
+                    if (!(textPattern != null
+                            && !textPattern.matcher(linkText).matches())) {
+                        final var absolute = element.absUrl("href");
+                        final URI resolved = absolute.isBlank()
+                                ? landingPageUri.resolve(href)
+                                : URI.create(absolute);
 
-            final String href = element.attr("href").trim();
-            if (href.isEmpty()
-                    || !hrefPattern.matcher(href).matches()) {
-                continue;
+                        matches.add(resolved);
+                    }
+                }
             }
-
-            final String linkText = element.text().trim();
-            if (textPattern != null
-                    && !textPattern.matcher(linkText).matches()) {
-                continue;
-            }
-
-            final String absolute = element.absUrl("href");
-            final URI resolved = absolute.isBlank()
-                    ? landingPageUri.resolve(href)
-                    : URI.create(absolute);
-
-            matches.add(resolved);
-        }
+        });
 
         if (matches.isEmpty()) {
             throw new DownloadException(
                     "No downloadable link matched the configured HTML "
-                            + "discovery rules at " + landingPageUri);
+                    + "discovery rules at " + landingPageUri);
         }
 
         return definition.selectLastMatchingLink()

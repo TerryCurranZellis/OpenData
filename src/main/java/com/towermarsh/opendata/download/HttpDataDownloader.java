@@ -73,9 +73,9 @@ public final class HttpDataDownloader implements DataDownloader {
         Objects.requireNonNull(sourceUri, "sourceUri");
         Objects.requireNonNull(destination, "destination");
 
-        Path absoluteDestination = destination.toAbsolutePath().normalize();
-        Path parent = absoluteDestination.getParent();
-        Path temporary = absoluteDestination.resolveSibling(
+        var absoluteDestination = destination.toAbsolutePath().normalize();
+        var parent = absoluteDestination.getParent();
+        var temporary = absoluteDestination.resolveSibling(
                 absoluteDestination.getFileName() + ".part");
 
         try {
@@ -88,7 +88,7 @@ public final class HttpDataDownloader implements DataDownloader {
                         + absoluteDestination);
             }
 
-            HttpRequest request = HttpRequest.newBuilder(sourceUri)
+            var request = HttpRequest.newBuilder(sourceUri)
                     .timeout(options.requestTimeout())
                     .header("Accept", "*/*")
                     .header("User-Agent", options.userAgent())
@@ -100,9 +100,9 @@ public final class HttpDataDownloader implements DataDownloader {
             HttpResponse<InputStream> response = client.send(
                     request, HttpResponse.BodyHandlers.ofInputStream());
 
-            int status = response.statusCode();
+            var status = response.statusCode();
             if (status < 200 || status >= 300) {
-                try (InputStream ignored = response.body()) {
+                try (var ignored = response.body()) {
                     // Close response body before reporting the error.
                 }
                 throw new DownloadException(
@@ -110,13 +110,13 @@ public final class HttpDataDownloader implements DataDownloader {
                         + " for " + sourceUri);
             }
 
-            long declaredLength = response.headers()
+            var declaredLength = response.headers()
                     .firstValueAsLong("Content-Length")
                     .orElse(-1L);
             enforceMaximum(declaredLength, sourceUri);
 
             long bytes;
-            try (InputStream input = response.body(); OutputStream output = Files.newOutputStream(
+            try (var input = response.body(); var output = Files.newOutputStream(
                     temporary,
                     StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING,
@@ -175,8 +175,8 @@ public final class HttpDataDownloader implements DataDownloader {
             InputStream input,
             OutputStream output,
             long maximumBytes) throws IOException, DownloadException {
-        byte[] buffer = new byte[64 * 1024];
-        long total = 0;
+        var buffer = new byte[64 * 1024];
+        var total = 0L;
         int read;
         while ((read = input.read(buffer)) >= 0) {
             total += read;

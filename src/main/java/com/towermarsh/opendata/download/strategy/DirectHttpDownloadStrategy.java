@@ -71,10 +71,10 @@ public final class DirectHttpDownloadStrategy {
         Objects.requireNonNull(headers, "headers");
         Objects.requireNonNull(requestTimeout, "requestTimeout");
 
-        final Path absoluteDestination =
+        final var absoluteDestination =
                 destination.toAbsolutePath().normalize();
-        final Path parent = absoluteDestination.getParent();
-        final Path partFile =
+        final var parent = absoluteDestination.getParent();
+        final var partFile =
                 absoluteDestination.resolveSibling(
                         absoluteDestination.getFileName() + ".part");
 
@@ -84,14 +84,14 @@ public final class DirectHttpDownloadStrategy {
             }
             Files.deleteIfExists(partFile);
 
-            final HttpRequest.Builder requestBuilder =
+            final var requestBuilder =
                     HttpRequest.newBuilder(requestedUri)
                             .GET()
                             .timeout(requestTimeout);
 
             headers.forEach(requestBuilder::header);
 
-            final HttpResponse<Path> response = httpClient.send(
+            final var response = httpClient.send(
                     requestBuilder.build(),
                     HttpResponse.BodyHandlers.ofFile(partFile));
 

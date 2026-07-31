@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * @param excludedTerms terms of which none may occur in link metadata
  * @param hrefPattern optional regular expression applied to the absolute URI
  * @param textPattern optional regular expression applied to link text and title
-  *
+ *
  * @author Terry Curran
  * @version 17 July 2026
  */
@@ -34,8 +34,9 @@ public record LinkDiscoveryRequest(
         Pattern hrefPattern,
         Pattern textPattern) {
 
-    /** Validates and normalises record components. */
-
+    /**
+     * Validates and normalises record components.
+     */
     public LinkDiscoveryRequest {
         Objects.requireNonNull(pageUri, "pageUri");
         allowedExtensions = normalizeExtensions(allowedExtensions);
@@ -67,7 +68,7 @@ public record LinkDiscoveryRequest(
      */
     public boolean matches(DiscoveredLink link) {
         Objects.requireNonNull(link, "link");
-        String searchable = link.searchableText();
+        var searchable = link.searchableText();
 
         if (!allowedExtensions.isEmpty()
                 && !allowedExtensions.contains(link.extension())) {
@@ -83,7 +84,7 @@ public record LinkDiscoveryRequest(
                 && !hrefPattern.matcher(link.targetUri().toString()).find()) {
             return false;
         }
-        String descriptiveText = (link.linkText() + " " + link.title()).trim();
+        var descriptiveText = (link.linkText() + " " + link.title()).trim();
         return textPattern == null || textPattern.matcher(descriptiveText).find();
     }
 
@@ -91,8 +92,8 @@ public record LinkDiscoveryRequest(
         if (extensions == null || extensions.isEmpty()) {
             return Set.of();
         }
-        LinkedHashSet<String> normalized = new LinkedHashSet<>();
-        for (String extension : extensions) {
+        var normalized = new LinkedHashSet<String>();
+        for (var extension : extensions) {
             if (extension != null && !extension.isBlank()) {
                 normalized.add(extension.trim()
                         .replaceFirst("^\\.", "")

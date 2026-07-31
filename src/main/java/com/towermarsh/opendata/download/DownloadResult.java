@@ -36,7 +36,7 @@ public final class DownloadResult {
     }
 
     /**
-     *
+     * Successful result
      * @return
      */
     public boolean isSuccessful() {
@@ -44,7 +44,7 @@ public final class DownloadResult {
     }
 
     /**
-     *
+     * named data file
      * @return
      */
     public DataFile getFile() {
@@ -52,7 +52,7 @@ public final class DownloadResult {
     }
 
     /**
-     *
+     * message from sender
      * @return
      */
     public String getMessage() {

@@ -63,7 +63,7 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
         Objects.requireNonNull(request, "request");
         try {
             LOGGER.log(Level.INFO, "Discovering file links on {0}", request.pageUri());
-            Document document = Jsoup.connect(request.pageUri().toString())
+            var document = Jsoup.connect(request.pageUri().toString())
                     .userAgent(userAgent)
                     .timeout(Math.toIntExact(timeout.toMillis()))
                     .followRedirects(true)
@@ -93,7 +93,7 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
         Objects.requireNonNull(html, "html");
         Objects.requireNonNull(request, "request");
         try {
-            Document document = Jsoup.parse(html, pageUri.toString());
+            var document = Jsoup.parse(html, pageUri.toString());
             return discoverDocument(document, request);
         } catch (RuntimeException ex) {
             throw new DiscoveryException("Unable to parse HTML for " + pageUri, ex);
@@ -112,8 +112,8 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
             LinkDiscoveryRequest request) {
         Map<URI, DiscoveredLink> uniqueLinks = new LinkedHashMap<>();
 
-        for (Element anchor : document.select("a[href]")) {
-            String absoluteHref = anchor.absUrl("href");
+        for (var anchor : document.select("a[href]")) {
+            var absoluteHref = anchor.absUrl("href");
             if (absoluteHref.isBlank()) {
                 continue;
             }
@@ -126,9 +126,9 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
                 continue;
             }
 
-            String fileName = fileName(target);
-            String extension = extension(fileName);
-            DiscoveredLink link = new DiscoveredLink(
+            var fileName = fileName(target);
+            var extension = extension(fileName);
+            var link = new DiscoveredLink(
                     request.pageUri(),
                     target,
                     anchor.text(),
@@ -141,7 +141,7 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
             }
         }
 
-        List<DiscoveredLink> results = List.copyOf(uniqueLinks.values());
+        var results = List.copyOf(uniqueLinks.values());
         LOGGER.log(Level.INFO, "Discovered {0} matching link(s)", results.size());
         return results;
     }
@@ -153,8 +153,8 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
      * @return trailing path segment or an empty string
      */
     private static String fileName(URI uri) {
-        String path = Objects.requireNonNullElse(uri.getPath(), "");
-        int slash = path.lastIndexOf('/');
+        var path = Objects.requireNonNullElse(uri.getPath(), "");
+        var slash = path.lastIndexOf('/');
         return slash >= 0 ? path.substring(slash + 1) : path;
     }
 
@@ -165,7 +165,7 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
      * @return lower-case extension without the dot, or an empty string
      */
     private static String extension(String fileName) {
-        int dot = fileName.lastIndexOf('.');
+        var dot = fileName.lastIndexOf('.');
         if (dot < 0 || dot == fileName.length() - 1) {
             return "";
         }
