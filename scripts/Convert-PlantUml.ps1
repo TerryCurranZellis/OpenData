@@ -97,7 +97,12 @@ function Convert-PlantUml {
       }
     }
   } catch {
-  Write-Warning -Message ('{0} failed' -f $diagram.FullName)
+    if ($null -ne $diagram) {
+      $failures.Add($diagram.FullName)
+      Write-Warning -Message ('{0} failed: {1}' -f $diagram.FullName, $_.Exception.Message)
+    } else {
+      throw
+    }
   }
   if ($failures.Count -gt 0) {
     throw ("PlantUML failed for:`n" +
@@ -108,4 +113,3 @@ function Convert-PlantUml {
     'Rendered {0} diagram(s) to {1}' -f $diagrams.Count, $output)
 }
 
-Convert-PlantUml -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -Format svg

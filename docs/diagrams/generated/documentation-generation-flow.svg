@@ -1,1 +1,195 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="722px" preserveAspectRatio="none" style="width:830px;height:722px;background:#FFFFFF;" version="1.1" viewBox="0 0 830 722" width="830px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="2"><text fill="#000000" font-family="Verdana" font-size="22" font-weight="700" lengthAdjust="spacing" textLength="528.3438" x="150.1035" y="37.1182">OpenData Documentation Generation Flow</text></g><!--entity Author--><g class="entity" data-qualified-name="Author" data-source-line="4" id="ent0001"><ellipse cx="88.6387" cy="66.7373" fill="#FFFFFF" rx="8" ry="8" style="stroke:#000000;stroke-width:1;"/><path d="M88.6387,74.7373 L88.6387,101.7373 M75.6387,82.7373 L101.6387,82.7373 M88.6387,101.7373 L75.6387,116.7373 M88.6387,101.7373 L101.6387,116.7373" fill="none" style="stroke:#000000;stroke-width:1;"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="47.2773" x="65" y="132.8125">Author</text></g><!--entity Sources--><g class="entity" data-qualified-name="Sources" data-source-line="5" id="ent0002"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="152.7539" x="12" y="212.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="132.7539" x="22" y="236.8125">Markdown Sources</text></g><!--entity Manifest--><g class="entity" data-qualified-name="Manifest" data-source-line="6" id="ent0003"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="153.5264" x="200.5" y="212.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="133.5264" x="210.5" y="236.8125">docs/manifest.json</text></g><!--entity Config--><g class="entity" data-qualified-name="Config" data-source-line="7" id="ent0004"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="207.8857" x="330.5" y="310.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="187.8857" x="340.5" y="334.8125">config/documentation.json</text></g><!--entity Generator--><g class="entity" data-qualified-name="Generator" data-source-line="8" id="ent0005"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="211.4199" x="250" y="424.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="191.4199" x="260" y="448.8125">Invoke-Documentation.ps1</text></g><!--entity Shared--><g class="entity" data-qualified-name="Shared" data-source-line="9" id="ent0006"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="242.5508" x="574" y="310.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="222.5508" x="584" y="334.8125">Templates and Shared Sections</text></g><!--entity Validation--><g class="entity" data-qualified-name="Validation" data-source-line="10" id="ent0007"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="89.5078" x="132.5" y="310.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="69.5078" x="142.5" y="334.8125">Validation</text></g><!--entity Pandoc--><g class="entity" data-qualified-name="Pandoc" data-source-line="11" id="ent0008"><rect fill="#FFFFFF" height="37.0146" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1;" width="70.2236" x="241.5" y="538.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="50.2236" x="251.5" y="562.8125">Pandoc</text></g><!--entity Output--><g class="entity" data-qualified-name="Output" data-source-line="12" id="ent0009"><path d="M310,652.7373 L351,652.7373 A3.75,3.75 0 0 1 353.5,655.2373 L360.5,673.7373 L407.1533,673.7373 A2.5,2.5 0 0 1 409.6533,676.2373 L409.6533,705.252 A2.5,2.5 0 0 1 407.1533,707.752 L310,707.752 A2.5,2.5 0 0 1 307.5,705.252 L307.5,655.2373 A2.5,2.5 0 0 1 310,652.7373" fill="#FFFFFF" style="stroke:#000000;stroke-width:1;"/><line style="stroke:#000000;stroke-width:1;" x1="307.5" x2="360.5" y1="673.7373" y2="673.7373"/><text fill="#000000" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="72.1533" x="317.5" y="694.8125">docs/build</text></g><!--link Author to Sources--><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" data-link-type="dependency" data-source-line="14" id="lnk10"><path d="M88.5,136.0573 C88.5,161.2873 88.5,188.1173 88.5,207.5573" fill="none" id="Author-to-Sources" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="88.5,212.5573,92.5,203.5573,88.5,207.5573,84.5,203.5573,88.5,212.5573" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="39.3936" x="89.5" y="179.8071">writes</text></g><!--link Sources to Validation--><g class="link" data-entity-1="ent0002" data-entity-2="ent0007" data-link-type="dependency" data-source-line="15" id="lnk11"><path d="M104.82,249.8473 C120.78,267.0573 141.5506,289.4607 157.5806,306.7507" fill="none" id="Sources-to-Validation" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="160.98,310.4173,157.7944,301.0979,157.5806,306.7507,151.9278,306.5369,160.98,310.4173" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Manifest to Validation--><g class="link" data-entity-1="ent0003" data-entity-2="ent0007" data-link-type="dependency" data-source-line="16" id="lnk12"><path d="M259.16,249.8473 C241.23,267.0573 217.6769,289.6646 199.6669,306.9546" fill="none" id="Manifest-to-Validation" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="196.06,310.4173,205.3226,307.07,199.6669,306.9546,199.7823,301.2989,196.06,310.4173" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Config to Generator--><g class="link" data-entity-1="ent0004" data-entity-2="ent0005" data-link-type="dependency" data-source-line="17" id="lnk13"><path d="M421.81,348.2273 C406.98,369.2573 385.4811,399.7208 370.7811,420.5708" fill="none" id="Config-to-Generator" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="367.9,424.6573,376.3552,419.6065,370.7811,420.5708,369.8168,414.9968,367.9,424.6573" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Manifest to Generator--><g class="link" data-entity-1="ent0003" data-entity-2="ent0005" data-link-type="dependency" data-source-line="18" id="lnk14"><path d="M282.12,250.0873 C288.22,272.9973 299.71,313.8173 312.5,347.7373 C322.8,375.0573 335.0817,401.1614 344.3217,419.9314" fill="none" id="Manifest-to-Generator" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="346.53,424.4173,346.1438,414.576,344.3217,419.9314,338.9663,418.1093,346.53,424.4173" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Shared to Generator--><g class="link" data-entity-1="ent0006" data-entity-2="ent0005" data-link-type="dependency" data-source-line="19" id="lnk15"><path d="M642,347.8573 C578.23,368.8673 477.069,402.193 413.439,423.153" fill="none" id="Shared-to-Generator" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="408.69,424.7173,418.4896,425.7007,413.439,423.153,415.9867,418.1023,408.69,424.7173" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/></g><!--link Validation to Generator--><g class="link" data-entity-1="ent0007" data-entity-2="ent0005" data-link-type="dependency" data-source-line="20" id="lnk16"><path d="M170.94,347.9773 C166.95,362.0973 164.37,381.5973 174.5,394.7373 C184.72,407.9873 211.1409,417.1644 244.8909,424.7244" fill="none" id="Validation-to-Generator" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="249.77,425.8173,241.862,419.9468,244.8909,424.7244,240.1133,427.7533,249.77,425.8173" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="75.3213" x="175.5" y="391.8071">valid inputs</text></g><!--link Generator to Pandoc--><g class="link" data-entity-1="ent0005" data-entity-2="ent0008" data-link-type="dependency" data-source-line="21" id="lnk17"><path d="M303.9,461.9373 C290.71,469.0673 278.11,478.7573 270.5,491.7373 C262.19,505.8973 263.8381,520.1089 268.0581,533.8089" fill="none" id="Generator-to-Pandoc" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="269.53,538.5873,270.7033,528.8086,268.0581,533.8089,263.0578,531.1636,269.53,538.5873" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="140.6831" x="271.5" y="505.8071">assembled Markdown</text></g><!--link Pandoc to Output--><g class="link" data-entity-1="ent0008" data-entity-2="ent0009" data-link-type="dependency" data-source-line="22" id="lnk18"><path d="M274.06,575.7873 C273.02,589.4473 273.53,608.4073 281.5,622.7373 C288.03,634.4773 294.1411,641.4225 304.9111,649.5625" fill="none" id="Pandoc-to-Output" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="308.9,652.5773,304.1319,643.9596,304.9111,649.5625,299.3082,650.3418,308.9,652.5773" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="129.6191" x="282.5" y="619.8071">HTML / DOCX / PDF</text></g><!--link Generator to Output--><g class="link" data-entity-1="ent0005" data-entity-2="ent0009" data-link-type="dependency" data-source-line="23" id="lnk19"><path d="M388.64,461.7673 C399.58,469.3973 410.49,479.4373 416.5,491.7373 C442.07,544.0473 439.13,569.0973 416.5,622.7373 C411.75,634.0073 407.1185,661.6659 398.3385,670.1359" fill="none" id="Generator-to-Output" style="stroke:#000000;stroke-width:1;"/><polygon fill="#000000" points="394.74,673.6073,403.9944,670.2375,398.3385,670.1359,398.4401,664.4799,394.74,673.6073" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="121.3101" x="436.5" y="554.8071">merged Markdown</text><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="90.416" x="451.947" y="570.6064">and inventory</text></g><?plantuml-src NP91Ry8m38Nl-HKUTq2xxZ1fecARD0GIQDfXbv2ua94wLPA2zk_dfksQSchwtcVNp-b3F6E5K5jfI4GJBSAsHYfab50urLH8KKRZ25wHq7V7jNKt8QIApiDB4y_E2uygIZfn-MmZ_KMx6y7UDLvXc84Cmpddj5DXMKao9OQu-0cE4hdfbHnLZafpMkfyeB5YbToSVwUhk-1y4c1HXyU4zq6cGn-muXr43219m_uiFVA3VQxi4oGjh_cKrkZKEm7ZQmxjk9zJ2UYEedHMe-_p7njZTNAtJQoRA4ItK9ZFduUbmHFSlE7Pn22qPlQvOMNtUhUOf8wX9_0ezv6dujXhQl14rzO2Gpnp4AFHObrEPcG8M1qjjnt-2T5xBTO5PkpjiFc09HJRrHS_TiNwhjy_MA4_PSs-gRqhGrU-OkT__m00?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="676pt" height="781pt"
+ viewBox="0.00 0.00 676.00 780.77" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 762.77)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-18,18 -18,-762.77 658,-762.77 658,18 -18,18"/>
+<text text-anchor="middle" x="320" y="-723.17" font-family="Arial" font-size="22.00">OpenData Manifest&#45;Driven Documentation Generation Flow</text>
+<!-- Maintainer -->
+<g id="node1" class="node">
+<title>Maintainer</title>
+<ellipse fill="#eef4f8" stroke="#3f4f5f" cx="135" cy="-694.38" rx="50.41" ry="18.27"/>
+<text text-anchor="middle" x="135" y="-691.58" font-family="Arial" font-size="11.00">Maintainer</text>
+</g>
+<!-- Manifests -->
+<g id="node2" class="node">
+<title>Manifests</title>
+<polygon fill="#f5f1e8" stroke="#3f4f5f" points="286.5,-626 283.5,-630 262.5,-630 259.5,-626 139.5,-626 139.5,-588 286.5,-588 286.5,-626"/>
+<text text-anchor="middle" x="213" y="-610.2" font-family="Arial" font-size="11.00">docs/manifests</text>
+<text text-anchor="middle" x="213" y="-598.2" font-family="Arial" font-size="11.00">(one JSON per document)</text>
+</g>
+<!-- Maintainer&#45;&gt;Manifests -->
+<g id="edge1" class="edge">
+<title>Maintainer&#45;&gt;Manifests</title>
+<path fill="none" stroke="#526577" d="M150.41,-676.52C162.17,-663.64 178.51,-645.76 191.55,-631.48"/>
+<polygon fill="#526577" stroke="#526577" points="193.63,-632.83 196.54,-626.01 190.01,-629.53 193.63,-632.83"/>
+<text text-anchor="middle" x="219" y="-648.8" font-family="Arial" font-size="9.00">adds/changes guide</text>
+</g>
+<!-- Sources -->
+<g id="node3" class="node">
+<title>Sources</title>
+<polygon fill="#f5f1e8" stroke="#3f4f5f" points="114,-626 111,-630 90,-630 87,-626 0,-626 0,-588 114,-588 114,-626"/>
+<text text-anchor="middle" x="57" y="-610.2" font-family="Arial" font-size="11.00">Ordered Markdown</text>
+<text text-anchor="middle" x="57" y="-598.2" font-family="Arial" font-size="11.00">sections</text>
+</g>
+<!-- Maintainer&#45;&gt;Sources -->
+<g id="edge2" class="edge">
+<title>Maintainer&#45;&gt;Sources</title>
+<path fill="none" stroke="#526577" d="M119.24,-676.71C113.19,-670.27 106.24,-662.82 100,-656 92.76,-648.09 84.91,-639.37 77.92,-631.56"/>
+<polygon fill="#526577" stroke="#526577" points="79.73,-629.91 73.24,-626.32 76.08,-633.17 79.73,-629.91"/>
+<text text-anchor="middle" x="132" y="-648.8" font-family="Arial" font-size="9.00">authors content</text>
+</g>
+<!-- Discovery -->
+<g id="node6" class="node">
+<title>Discovery</title>
+<path fill="white" stroke="#3f4f5f" d="M395.5,-538C395.5,-538 310.5,-538 310.5,-538 304.5,-538 298.5,-532 298.5,-526 298.5,-526 298.5,-512 298.5,-512 298.5,-506 304.5,-500 310.5,-500 310.5,-500 395.5,-500 395.5,-500 401.5,-500 407.5,-506 407.5,-512 407.5,-512 407.5,-526 407.5,-526 407.5,-532 401.5,-538 395.5,-538"/>
+<text text-anchor="middle" x="353" y="-522.2" font-family="Arial" font-size="11.00">Manifest discovery</text>
+<text text-anchor="middle" x="353" y="-510.2" font-family="Arial" font-size="11.00">and normalisation</text>
+</g>
+<!-- Manifests&#45;&gt;Discovery -->
+<g id="edge3" class="edge">
+<title>Manifests&#45;&gt;Discovery</title>
+<path fill="none" stroke="#526577" d="M242.35,-587.97C264.28,-574.5 294.37,-556.02 317.63,-541.73"/>
+<polygon fill="#526577" stroke="#526577" points="319.01,-543.76 323.69,-538 316.44,-539.58 319.01,-543.76"/>
+<text text-anchor="middle" x="318.5" y="-560.8" font-family="Arial" font-size="9.00">discover *.json</text>
+</g>
+<!-- Validation -->
+<g id="node7" class="node">
+<title>Validation</title>
+<path fill="white" stroke="#3f4f5f" d="M374.5,-450C374.5,-450 331.5,-450 331.5,-450 325.5,-450 319.5,-444 319.5,-438 319.5,-438 319.5,-426 319.5,-426 319.5,-420 325.5,-414 331.5,-414 331.5,-414 374.5,-414 374.5,-414 380.5,-414 386.5,-420 386.5,-426 386.5,-426 386.5,-438 386.5,-438 386.5,-444 380.5,-450 374.5,-450"/>
+<text text-anchor="middle" x="353" y="-429.2" font-family="Arial" font-size="11.00">Validation</text>
+</g>
+<!-- Sources&#45;&gt;Validation -->
+<g id="edge7" class="edge">
+<title>Sources&#45;&gt;Validation</title>
+<path fill="none" stroke="#526577" d="M87.84,-587.98C143.13,-555.66 258.8,-488.05 317.38,-453.82"/>
+<polygon fill="#526577" stroke="#526577" points="318.74,-455.86 323.55,-450.21 316.27,-451.63 318.74,-455.86"/>
+</g>
+<!-- Assembly -->
+<g id="node8" class="node">
+<title>Assembly</title>
+<path fill="#edf7ed" stroke="#3f4f5f" d="M449,-364C449,-364 257,-364 257,-364 251,-364 245,-358 245,-352 245,-352 245,-338 245,-338 245,-332 251,-326 257,-326 257,-326 449,-326 449,-326 455,-326 461,-332 461,-338 461,-338 461,-352 461,-352 461,-358 455,-364 449,-364"/>
+<text text-anchor="middle" x="353" y="-348.2" font-family="Arial" font-size="11.00">Markdown assembly</text>
+<text text-anchor="middle" x="353" y="-336.2" font-family="Arial" font-size="11.00">Front matter → TOC marker → chapters</text>
+</g>
+<!-- Sources&#45;&gt;Assembly -->
+<g id="edge10" class="edge">
+<title>Sources&#45;&gt;Assembly</title>
+<path fill="none" stroke="#526577" d="M75.9,-587.68C98.11,-566.29 136.22,-530.02 170,-500 223.92,-452.09 288.92,-398.29 325.14,-368.66"/>
+<polygon fill="#526577" stroke="#526577" points="326.83,-370.44 330.7,-364.11 323.73,-366.65 326.83,-370.44"/>
+<text text-anchor="middle" x="237.5" y="-472.8" font-family="Arial" font-size="9.00">ordered content</text>
+</g>
+<!-- Config -->
+<g id="node4" class="node">
+<title>Config</title>
+<path fill="#eef4f8" stroke="#3f4f5f" d="M452.5,-626C452.5,-626 323.5,-626 323.5,-626 317.5,-626 311.5,-620 311.5,-614 311.5,-614 311.5,-600 311.5,-600 311.5,-594 317.5,-588 323.5,-588 323.5,-588 452.5,-588 452.5,-588 458.5,-588 464.5,-594 464.5,-600 464.5,-600 464.5,-614 464.5,-614 464.5,-620 458.5,-626 452.5,-626"/>
+<text text-anchor="middle" x="388" y="-610.2" font-family="Arial" font-size="11.00">config/documentation.json</text>
+<text text-anchor="middle" x="388" y="-598.2" font-family="Arial" font-size="11.00">Global settings and defaults</text>
+</g>
+<!-- Config&#45;&gt;Discovery -->
+<g id="edge4" class="edge">
+<title>Config&#45;&gt;Discovery</title>
+<path fill="none" stroke="#526577" d="M380.58,-587.76C375.52,-575.33 368.76,-558.72 363.2,-545.05"/>
+<polygon fill="#526577" stroke="#526577" points="365.32,-543.77 360.41,-538.21 360.78,-545.62 365.32,-543.77"/>
+<text text-anchor="middle" x="410" y="-560.8" font-family="Arial" font-size="9.00">directories/defaults</text>
+</g>
+<!-- Shared -->
+<g id="node5" class="node">
+<title>Shared</title>
+<polygon fill="#f5f1e8" stroke="#3f4f5f" points="640,-626 637,-630 616,-630 613,-626 490,-626 490,-588 640,-588 640,-626"/>
+<text text-anchor="middle" x="565" y="-610.2" font-family="Arial" font-size="11.00">docs/shared</text>
+<text text-anchor="middle" x="565" y="-598.2" font-family="Arial" font-size="11.00">Cover · copyright · revision</text>
+</g>
+<!-- Shared&#45;&gt;Validation -->
+<g id="edge6" class="edge">
+<title>Shared&#45;&gt;Validation</title>
+<path fill="none" stroke="#526577" d="M551.16,-588C525.63,-555.16 471.5,-487.33 447,-470 430.95,-458.65 410.92,-450.14 393.49,-444.17"/>
+<polygon fill="#526577" stroke="#526577" points="394.11,-441.79 386.7,-441.92 392.57,-446.44 394.11,-441.79"/>
+</g>
+<!-- Shared&#45;&gt;Assembly -->
+<g id="edge9" class="edge">
+<title>Shared&#45;&gt;Assembly</title>
+<path fill="none" stroke="#526577" d="M558,-587.88C549.16,-566.06 532.69,-528.75 513,-500 473.36,-442.13 458.55,-430.45 406,-384 399.96,-378.66 393.18,-373.35 386.54,-368.47"/>
+<polygon fill="#526577" stroke="#526577" points="387.61,-366.22 380.5,-364.12 384.75,-370.2 387.61,-366.22"/>
+<text text-anchor="middle" x="536.5" y="-472.8" font-family="Arial" font-size="9.00">shared front matter</text>
+</g>
+<!-- Discovery&#45;&gt;Validation -->
+<g id="edge5" class="edge">
+<title>Discovery&#45;&gt;Validation</title>
+<path fill="none" stroke="#526577" d="M353,-499.97C353,-487.56 353,-470.91 353,-457.32"/>
+<polygon fill="#526577" stroke="#526577" points="355.45,-457.13 353,-450.13 350.55,-457.13 355.45,-457.13"/>
+<text text-anchor="middle" x="397" y="-472.8" font-family="Arial" font-size="9.00">normalised manifests</text>
+</g>
+<!-- Validation&#45;&gt;Assembly -->
+<g id="edge8" class="edge">
+<title>Validation&#45;&gt;Assembly</title>
+<path fill="none" stroke="#526577" d="M353,-413.8C353,-401.6 353,-385.03 353,-371.33"/>
+<polygon fill="#526577" stroke="#526577" points="355.45,-371.06 353,-364.06 350.55,-371.06 355.45,-371.06"/>
+<text text-anchor="middle" x="376.5" y="-386.8" font-family="Arial" font-size="9.00">valid inputs</text>
+</g>
+<!-- Toc -->
+<g id="node9" class="node">
+<title>Toc</title>
+<path fill="#edf7ed" stroke="#3f4f5f" d="M542.5,-285C542.5,-285 407.5,-285 407.5,-285 401.5,-285 395.5,-279 395.5,-273 395.5,-273 395.5,-259 395.5,-259 395.5,-253 401.5,-247 407.5,-247 407.5,-247 542.5,-247 542.5,-247 548.5,-247 554.5,-253 554.5,-259 554.5,-259 554.5,-273 554.5,-273 554.5,-279 548.5,-285 542.5,-285"/>
+<text text-anchor="middle" x="475" y="-269.2" font-family="Arial" font-size="11.00">document&#45;toc.lua</text>
+<text text-anchor="middle" x="475" y="-257.2" font-family="Arial" font-size="11.00">Format&#45;aware TOC insertion</text>
+</g>
+<!-- Assembly&#45;&gt;Toc -->
+<g id="edge11" class="edge">
+<title>Assembly&#45;&gt;Toc</title>
+<path fill="none" stroke="#526577" d="M381.6,-325.95C399.07,-314.92 421.52,-300.75 440.04,-289.07"/>
+<polygon fill="#526577" stroke="#526577" points="441.54,-291.01 446.15,-285.21 438.93,-286.87 441.54,-291.01"/>
+</g>
+<!-- Output -->
+<g id="node12" class="node">
+<title>Output</title>
+<polygon fill="#f5f1e8" stroke="#3f4f5f" points="439,-50 436,-54 415,-54 412,-50 267,-50 267,0 439,0 439,-50"/>
+<text text-anchor="middle" x="353" y="-34.2" font-family="Arial" font-size="11.00">docs/build</text>
+<text text-anchor="middle" x="353" y="-22.2" font-family="Arial" font-size="11.00">HTML · DOCX · PDF</text>
+<text text-anchor="middle" x="353" y="-10.2" font-family="Arial" font-size="11.00">Merged Markdown · inventories</text>
+</g>
+<!-- Assembly&#45;&gt;Output -->
+<g id="edge15" class="edge">
+<title>Assembly&#45;&gt;Output</title>
+<path fill="none" stroke="#526577" stroke-dasharray="5,2" d="M347.41,-325.84C343.15,-310.35 338,-287.43 338,-267 338,-267 338,-267 338,-108 338,-91.09 341.13,-72.52 344.52,-57.34"/>
+<polygon fill="#526577" stroke="#526577" points="346.99,-57.56 346.2,-50.19 342.22,-56.44 346.99,-57.56"/>
+<text text-anchor="middle" x="371" y="-184.8" font-family="Arial" font-size="9.00">source products</text>
+</g>
+<!-- Layout -->
+<g id="node10" class="node">
+<title>Layout</title>
+<path fill="#edf7ed" stroke="#3f4f5f" d="M549,-206C549,-206 441,-206 441,-206 435,-206 429,-200 429,-194 429,-194 429,-180 429,-180 429,-174 435,-168 441,-168 441,-168 549,-168 549,-168 555,-168 561,-174 561,-180 561,-180 561,-194 561,-194 561,-200 555,-206 549,-206"/>
+<text text-anchor="middle" x="495" y="-190.2" font-family="Arial" font-size="11.00">landscape.lua</text>
+<text text-anchor="middle" x="495" y="-178.2" font-family="Arial" font-size="11.00">Page layout processing</text>
+</g>
+<!-- Toc&#45;&gt;Layout -->
+<g id="edge12" class="edge">
+<title>Toc&#45;&gt;Layout</title>
+<path fill="none" stroke="#526577" d="M479.74,-246.75C482.36,-236.68 485.64,-224.03 488.49,-213.05"/>
+<polygon fill="#526577" stroke="#526577" points="490.91,-213.51 490.29,-206.12 486.16,-212.28 490.91,-213.51"/>
+</g>
+<!-- Pandoc -->
+<g id="node11" class="node">
+<title>Pandoc</title>
+<path fill="white" stroke="#3f4f5f" d="M493.5,-127C493.5,-127 424.5,-127 424.5,-127 418.5,-127 412.5,-121 412.5,-115 412.5,-115 412.5,-103 412.5,-103 412.5,-97 418.5,-91 424.5,-91 424.5,-91 493.5,-91 493.5,-91 499.5,-91 505.5,-97 505.5,-103 505.5,-103 505.5,-115 505.5,-115 505.5,-121 499.5,-127 493.5,-127"/>
+<text text-anchor="middle" x="459" y="-106.2" font-family="Arial" font-size="11.00">Pandoc writers</text>
+</g>
+<!-- Layout&#45;&gt;Pandoc -->
+<g id="edge13" class="edge">
+<title>Layout&#45;&gt;Pandoc</title>
+<path fill="none" stroke="#526577" d="M486.47,-167.99C481.61,-157.74 475.47,-144.77 470.23,-133.71"/>
+<polygon fill="#526577" stroke="#526577" points="472.31,-132.38 467.1,-127.1 467.88,-134.47 472.31,-132.38"/>
+</g>
+<!-- Pandoc&#45;&gt;Output -->
+<g id="edge14" class="edge">
+<title>Pandoc&#45;&gt;Output</title>
+<path fill="none" stroke="#526577" d="M436.78,-90.81C423.15,-80.27 405.38,-66.52 389.7,-54.39"/>
+<polygon fill="#526577" stroke="#526577" points="391.07,-52.35 384.04,-50.01 388.07,-56.23 391.07,-52.35"/>
+</g>
+</g>
+</svg>

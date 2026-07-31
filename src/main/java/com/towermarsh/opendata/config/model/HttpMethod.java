@@ -14,32 +14,32 @@ package com.towermarsh.opendata.config.model;
 public enum HttpMethod {
 
     /**
-     *
+     * GET Method
      */
     GET,
 
     /**
-     *
+     * POST Method
      */
     POST,
 
     /**
-     *
+     * PUT method
      */
     PUT,
 
     /**
-     *
+     * PATHCJ
      */
     PATCH,
 
     /**
-     *
+     * Delete
      */
     DELETE,
 
     /**
-     *
+     * Head
      */
     HEAD
 }

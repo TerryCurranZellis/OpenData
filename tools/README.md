@@ -1,11 +1,14 @@
 # Tools
 
 Place the approved PlantUML distribution at `tools/plantuml.jar` when diagram
-rendering is required. The committed July 2026 SVG baseline was produced with
-PlantUML 1.2026.1.
+rendering is required. The JAR is intentionally ignored by Git.
 
-The JAR is intentionally ignored. Render diagrams without building manuals:
+Render diagrams without building manuals:
 
 ```powershell
-.\scripts\documentation\Render-PlantUml.ps1 -Format svg -Clean
+. .\scripts\Convert-PlantUml.ps1
+Convert-PlantUml -ProjectRoot $PWD -Format svg -Clean
 ```
+
+The same renderer can be requested during a documentation build with
+`-RenderDiagrams`.

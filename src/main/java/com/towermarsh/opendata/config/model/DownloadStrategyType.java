@@ -14,27 +14,27 @@ package com.towermarsh.opendata.config.model;
 public enum DownloadStrategyType {
 
     /**
-     *
+     * direct http
      */
     DIRECT_HTTP,
 
     /**
-     *
+     * Authenticate api call
      */
     AUTHENTICATED_API,
 
     /**
-     *
+     * html link
      */
     HTML_LINK_DISCOVERY,
 
     /**
-     *
+     * html table
      */
     HTML_TABLE,
 
     /**
-     *
+     * browser automation
      */
     BROWSER_AUTOMATION
 }

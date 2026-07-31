@@ -4,7 +4,7 @@
 #Requires -Version 5.1
 [CmdletBinding()]
 param(
-  [ValidateSet('Technical','User','All')][string]$Document = 'All',
+  [string[]]$Document = @('All'),
   [ValidateSet('Html','Docx','Pdf','All','None')][string]$Format = 'Html',
   [switch]$RenderDiagrams,
   [switch]$FailOnWarning

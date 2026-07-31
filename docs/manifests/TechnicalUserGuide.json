@@ -1,0 +1,29 @@
+{
+  "id": "TechnicalUserGuide",
+  "order": 10,
+  "title": "OpenData Technical User Guide",
+  "output": "OpenData-Technical-User-Guide.docx",
+  "metadata": {
+    "documentType": "Technical user guide",
+    "audience": "Operators and technical users",
+    "revisionSummary": "Manifest-driven documentation engine baseline"
+  },
+  "sections": [
+    "shared/introduction.md",
+    "user-guide/README.md",
+    "user-guide/01-introduction.md",
+    "user-guide/02-prerequisites-and-installation.md",
+    "user-guide/03-sql-server-setup.md",
+    "user-guide/04-configuration.md",
+    "user-guide/05-command-line-use.md",
+    "user-guide/06-ofgem-price-cap-plugin.md",
+    "user-guide/07-openmeteo-weather-plugin.md",
+    "user-guide/08-multiple-plugins-and-parallelism.md",
+    "user-guide/09-dry-runs.md",
+    "user-guide/10-logs-audit-and-troubleshooting.md",
+    "user-guide/11-maintenance-and-security.md",
+    "shared/glossary.md",
+    "shared/licence.md",
+    "shared/acknowledgements.md"
+  ]
+}

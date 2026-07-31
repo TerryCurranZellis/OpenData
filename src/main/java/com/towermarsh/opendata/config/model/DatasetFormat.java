@@ -14,47 +14,47 @@ package com.towermarsh.opendata.config.model;
 public enum DatasetFormat {
 
     /**
-     *
+     * CSV file
      */
     CSV,
 
     /**
-     *
+     * JSON file
      */
     JSON,
 
     /**
-     *
+     * XML file
      */
     XML,
 
     /**
-     *
+     * Excel prior to 2017
      */
     XLS,
 
     /**
-     *
+     * Excel 2017+
      */
     XLSX,
 
     /**
-     *
+     * HTML page
      */
     HTML,
 
     /**
-     *
+     * ZIP file
      */
     ZIP,
 
     /**
-     *
+     * raw text
      */
     TEXT,
 
     /**
-     *
+     * some sort of binary file, could be anything
      */
     BINARY;
 

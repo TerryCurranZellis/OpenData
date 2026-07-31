@@ -14,27 +14,27 @@ package com.towermarsh.opendata.config.model;
 public enum CredentialLocation {
 
     /**
-     *
+     * its in the header
      */
     HEADER,
 
     /**
-     *
+     * its passed as a parameter
      */
     QUERY_PARAMETER,
 
     /**
-     *
+     * its a cookie
      */
     COOKIE,
 
     /**
-     *
+     * its in the request body
      */
     REQUEST_BODY,
 
     /**
-     *
+     * the are none
      */
     NONE
 }

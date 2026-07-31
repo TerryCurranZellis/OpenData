@@ -1,0 +1,32 @@
+{
+  "id": "DeveloperGuide",
+  "order": 30,
+  "title": "OpenData Developer Guide",
+  "output": "OpenData-Developer-Guide.docx",
+  "metadata": {
+    "documentType": "Developer guide",
+    "audience": "OpenData maintainers and plugin developers",
+    "revisionSummary": "Initial manifest-driven developer guide"
+  },
+  "sections": [
+    "shared/introduction.md",
+    "architecture/ARCHITECTURE.md",
+    "architecture/**/*.md",
+    "development/README.md",
+    "development/**/*.md",
+    "standards/README.md",
+    "standards/**/*.md",
+    "guides/adding-a-plugin.md",
+    "guides/adding-a-csv-plugin.md",
+    "guides/adding-an-excel-plugin.md",
+    "guides/adding-html-link-discovery.md",
+    "guides/plugin-contract-migration.md",
+    "decisions/README.md",
+    "decisions/ADR-REGISTER.md",
+    "decisions/ADR-REGISTER-ADDENDUM.md",
+    "decisions/ADR-*.md",
+    "shared/glossary.md",
+    "shared/licence.md",
+    "shared/acknowledgements.md"
+  ]
+}

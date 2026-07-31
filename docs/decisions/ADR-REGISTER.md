@@ -1,9 +1,9 @@
 # Architecture Decision Register
 
 **Document ID:** ADR-REGISTER-001  
-**Version:** 1.3  
+**Version:** 1.4  
 **Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Baseline date:** 31 July 2026  
 **Minimum Java version:** 17
 
 ---
@@ -64,6 +64,8 @@
 | [ADR-0042](ADR-0042-side-effect-free-dry-run.md) | Keep dry runs free of persistent side effects | Accepted | Implemented |
 | [ADR-0043](ADR-0043-plugin-local-pipeline-packages.md) | Organise provider code as plugin-local pipeline packages | Accepted | Implemented |
 | [ADR-0044](ADR-0044-octopus-energy.md) | Implement Octopus Energy plugin | Proposed | Future work |
+| [ADR-0045](ADR-0045-documentation-delivery-baseline.md) | Standardise the documentation delivery baseline | Accepted | Implemented |
+| [ADR-0046](ADR-0046-manifest-driven-documentation-engine.md) | Use a manifest-driven documentation engine | Accepted | Implemented |
 |  
 :::
 

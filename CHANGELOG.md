@@ -1,6 +1,29 @@
 ## [Unreleased]
 
-No changes have been recorded since version 1.0.0.
+### Added
+
+- Per-document manifests for the Technical User Guide, Administrator Guide, Developer Guide and API Reference.
+- Shared cover, copyright and revision-history Markdown.
+- A format-aware TOC filter and manifest-driven documentation architecture.
+- ADR-0045 and ADR-0046, migration notes and a documentation-engine change log.
+
+### Changed
+
+- Refactored the documentation builder into a generic manifest processor.
+- `Invoke-Documentation -Action All` now discovers and builds every manifest.
+- Front matter is assembled before the table of contents in HTML, DOCX and PDF.
+- HTML and PDF writer-generated title blocks are suppressed so the cover remains first.
+- DOCX output requests automatic refresh of the native Word TOC field.
+- Azure Pipelines now validates and builds every discovered manifest through maintained wrappers.
+- `documentation.json` now contains global settings and inherited defaults only.
+- PlantUML and documentation scripts no longer contain unconditional local-machine invocations.
+- The legacy branding patch is now a safe no-op compatibility stub.
+- The configured PlantUML JAR path now matches `tools/plantuml.jar`.
+
+### Removed
+
+- The combined `docs/manifest.json` from the maintained build path.
+- Hard-coded Technical/User document branching and the global Pandoc `--toc` option.
 
 ## [1.0.0] - 2026-07-29
 

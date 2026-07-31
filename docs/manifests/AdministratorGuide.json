@@ -1,0 +1,29 @@
+{
+  "id": "AdministratorGuide",
+  "order": 20,
+  "title": "OpenData Administrator Guide",
+  "output": "OpenData-Administrator-Guide.docx",
+  "metadata": {
+    "documentType": "Administrator guide",
+    "audience": "Database, platform and operations administrators",
+    "revisionSummary": "Initial manifest-driven administrator guide"
+  },
+  "sections": [
+    "shared/introduction.md",
+    "guides/sql-server-bootstrap.md",
+    "guides/database-configuration-and-security.md",
+    "guides/configuring-api-credentials.md",
+    "operations/README.md",
+    "operations/operations-runbook.md",
+    "operations/logging-and-pool.md",
+    "operations/monitoring-and-diagnostics.md",
+    "operations/backup-and-recovery.md",
+    "guides/database-troubleshooting.md",
+    "reference/database-configuration.md",
+    "reference/database-schema-reference.md",
+    "reference/ingestion-audit-reference.md",
+    "shared/glossary.md",
+    "shared/licence.md",
+    "shared/acknowledgements.md"
+  ]
+}

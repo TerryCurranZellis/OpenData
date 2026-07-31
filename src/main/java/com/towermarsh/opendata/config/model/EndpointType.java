@@ -14,32 +14,32 @@ package com.towermarsh.opendata.config.model;
 public enum EndpointType {
 
     /**
-     *
+     * api results
      */
     API,
 
     /**
-     *
+     * file to download
      */
     FILE,
 
     /**
-     *
+     * Landing page
      */
     LANDING_PAGE,
 
     /**
-     *
+     * html tabke
      */
     HTML_TABLE,
 
     /**
-     *
+     * web page meta data
      */
     METADATA,
 
     /**
-     *
+     * Authentication page 
      */
     AUTHENTICATION
 }

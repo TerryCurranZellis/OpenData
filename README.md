@@ -120,8 +120,14 @@ See [`docs/development/Java-Quality-Guide.md`](docs/development/Java-Quality-Gui
 | Adding a plugin | [docs/guides/adding-a-plugin.md](docs/guides/adding-a-plugin.md) |
 | Documentation framework | [docs/README.md](docs/README.md) |
 
-Generate documentation with `scripts/Invoke-Documentation.ps1`; render PlantUML
-sources with `scripts/Convert-PlantUml.ps1`.
+Build every document manifest with:
+
+```powershell
+.\scripts\Build-Documentation.ps1 -Document All -Format All
+```
+
+Validate sources and manifests with `scripts/Validate-Documentation.ps1`; render
+PlantUML sources with `scripts/Convert-PlantUml.ps1`.
 
 ## Contributing and support
 

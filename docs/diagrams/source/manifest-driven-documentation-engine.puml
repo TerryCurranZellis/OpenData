@@ -1,0 +1,62 @@
+@startuml
+!theme plain
+title Manifest-Driven Documentation Engine
+
+package "Configuration" {
+  artifact "config/documentation.json" as GlobalConfig
+  folder "docs/manifests/*.json" as DocumentManifests
+}
+
+package "Content" {
+  folder "docs/shared" as SharedContent
+  folder "Guide and reference Markdown" as MarkdownContent
+  folder "docs/diagrams/generated" as RenderedDiagrams
+}
+
+package "Generic PowerShell Engine" {
+  component "Manifest Discovery" as ManifestDiscovery
+  component "Defaults and Override Resolution" as Resolution
+  component "Validation" as Validation
+  component "Source Inventory" as Inventory
+  component "Markdown Assembly" as Assembly
+  component "Pandoc Command Builder" as CommandBuilder
+}
+
+package "Pandoc Processing" {
+  component "document-toc.lua" as Toc
+  component "landscape.lua" as Landscape
+  component "DOCX Reference Template" as WordTemplate
+  component "Pandoc Writers" as Writers
+}
+
+folder "docs/build" as Build
+
+GlobalConfig --> ManifestDiscovery
+DocumentManifests --> ManifestDiscovery
+ManifestDiscovery --> Resolution
+GlobalConfig --> Resolution
+Resolution --> Validation
+SharedContent --> Validation
+MarkdownContent --> Validation
+RenderedDiagrams --> Validation
+Validation --> Inventory
+Validation --> Assembly
+SharedContent --> Assembly
+MarkdownContent --> Assembly
+Assembly --> CommandBuilder
+Resolution --> CommandBuilder
+CommandBuilder --> Toc
+Toc --> Landscape
+Landscape --> Writers
+WordTemplate --> Writers : DOCX styles
+Writers --> Build : HTML, DOCX, PDF
+Inventory --> Build
+Assembly --> Build : merged Markdown
+
+note bottom of DocumentManifests
+Adding a document changes data only:
+- add manifest
+- add/reuse Markdown
+- run Action All
+end note
+@enduml

@@ -39,7 +39,9 @@ public record PluginDefinition(
         Map<String, PluginPropertyDefinition> properties,
         Map<String, CredentialReference> credentials) {
 
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public PluginDefinition {
         Objects.requireNonNull(id, "id");
         Objects.requireNonNull(displayName, "displayName");

@@ -4,21 +4,26 @@ trigger:
       - main
   paths:
     include:
-      - docs/*
-      - scripts/documentation/*
+      - docs/**
+      - scripts/**
       - config/documentation.json
+      - azure-pipelines-docs.yml
 
 pool:
   vmImage: windows-latest
 
 steps:
 - powershell: |
-    choco install pandoc -y
+    choco install pandoc -y --no-progress
   displayName: Install Pandoc
 
 - powershell: |
-    .\scripts\documentation\Build-Documentation.ps1 -Format Html -Validate -Clean
-  displayName: Validate and build documentation
+    .\scripts\Validate-Documentation.ps1 -FailOnWarning
+  displayName: Validate documentation
+
+- powershell: |
+    .\scripts\Build-Documentation.ps1 -Document All -Format Html -FailOnWarning
+  displayName: Build every documentation manifest
 
 - task: PublishBuildArtifacts@1
   inputs:

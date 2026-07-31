@@ -1,0 +1,21 @@
+{
+  "id": "APIReference",
+  "order": 40,
+  "title": "OpenData API and Configuration Reference",
+  "output": "OpenData-API-Reference.docx",
+  "metadata": {
+    "documentType": "API and configuration reference",
+    "audience": "Plugin developers, integrators and support engineers",
+    "revisionSummary": "Initial manifest-driven API reference"
+  },
+  "sections": [
+    "shared/introduction.md",
+    "reference/README.md",
+    "reference/**/*.md",
+    "plugins/README.md",
+    "plugins/**/*.md",
+    "shared/glossary.md",
+    "shared/licence.md",
+    "shared/acknowledgements.md"
+  ]
+}

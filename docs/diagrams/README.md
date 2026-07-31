@@ -1,9 +1,9 @@
 # PlantUML Diagram Index
 
 **Document ID:** DIAG-INDEX-001  
-**Version:** 1.3  
+**Version:** 1.4  
 **Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Baseline date:** 31 July 2026
 
 ---
 
@@ -34,8 +34,9 @@ under `docs/diagrams` or another legacy subdirectory.
 | Run state | `ingestion-run-state.puml` | [image](generated/ingestion-run-state.svg) |
 | OpenMeteo data model | `openmeteo-data-model.puml` | [image](generated/openmeteo-data-model.svg) |
 | OpenMeteo persistence | `openmeteo-persistence.puml` | [image](generated/openmeteo-persistence.svg) |
+| Documentation generation | `documentation-generation-flow.puml` | [image](generated/documentation-generation-flow.svg) |
+| Manifest-driven documentation engine | `manifest-driven-documentation-engine.puml` | [image](generated/manifest-driven-documentation-engine.svg) |
 
 Run the documentation build with `-RenderDiagrams`. Markdown embeds the committed
 SVG files, and documentation validation fails when a referenced rendered image is
 missing.
-| Documentation generation | `documentation-generation-flow.puml` | [image](generated/documentation-generation-flow.svg) |

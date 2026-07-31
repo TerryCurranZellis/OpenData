@@ -1,58 +1,27 @@
 <#
-    Copyright © 2026 Terry Curran
-    SPDX-License-Identifier: Apache-2.0
+Copyright Â© 2026 Terry Curran
+SPDX-License-Identifier: Apache-2.0
 #>
 
 #Requires -Version 5.1
 
-<#
-    [CmdletBinding(SupportsShouldProcess)]
-    param(
-    [ValidateSet('Build', 'Test', 'Clean')]
-    [string] $Action = 'Build',
-
-    [Parameter(Mandatory)]
-    [string] $ProjectRoot,
-
-    [ValidateSet('Technical', 'User', 'All')]
-    [string] $Document = 'All',
-
-    [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
-    [string] $Format = 'All',
-
-    [AllowNull()]
-    [string] $ReferenceDoc,
-
-    [switch] $RenderDiagrams = $true,
-
-    [switch] $FailOnWarning
-    )
-#>
 function Invoke-Documentation {
   <#
-      .SYNOPSIS
-      Builds, validates or cleans OpenData documentation.
+  .SYNOPSIS
+  Builds, validates or cleans manifest-driven OpenData documentation.
 
-      .DESCRIPTION
-      Builds separate technical documentation and user-guide outputs, validates all
-      Markdown links, and renders canonical PlantUML sources from
-      docs\diagrams\source into docs\diagrams\generated.
-
-      .EXAMPLE
-      Invoke-Documentation -Action Test
-
-      .EXAMPLE
-      Invoke-Documentation -Action Build -Document All -Format Docx -RenderDiagrams
+  .DESCRIPTION
+  Discovers document manifests from the configured manifest directory. The
+  engine contains no document-specific names or source lists.
   #>
   [CmdletBinding(SupportsShouldProcess)]
   param(
-    [ValidateSet('Build', 'Test', 'Clean')]
+    [ValidateSet('Build', 'Test', 'Clean', 'All')]
     [string] $Action = 'Build',
 
-    [Parameter(Mandatory)][string] $ProjectRoot,
+    [string] $ProjectRoot,
 
-    [ValidateSet('Technical', 'User', 'All')]
-    [string] $Document = 'All',
+    [string[]] $Document = @('All'),
 
     [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
     [string] $Format = 'All',
@@ -67,14 +36,8 @@ function Invoke-Documentation {
 
   $ErrorActionPreference = 'Stop'
 
-  #--------------------------------------------------------------------------------
-  # Resolve-ProjectRoot
-  #--------------------------------------------------------------------------------
   function Resolve-ProjectRoot {
-    [CmdletBinding()]
-    param(
-      [string] $StartPath = $PSScriptRoot
-    )
+    param([string] $StartPath = $PSScriptRoot)
 
     $current = Get-Item -LiteralPath (Resolve-Path -LiteralPath $StartPath)
     while ($null -ne $current) {
@@ -87,66 +50,75 @@ function Invoke-Documentation {
     throw 'Unable to locate a project root containing config\documentation.json.'
   }
 
-  #--------------------------------------------------------------------------------
-  # Read-DocumentationConfig
-  #--------------------------------------------------------------------------------
+  function Read-JsonFile {
+    param([Parameter(Mandatory)][string] $Path)
+
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+      throw ('JSON file was not found: {0}' -f $Path)
+    }
+    try {
+      return Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
+    } catch {
+      throw ('Invalid JSON in {0}: {1}' -f $Path, $_.Exception.Message)
+    }
+  }
+
   function Read-DocumentationConfig {
     param([Parameter(Mandatory)][string] $Root)
 
-    $path = Join-Path -Path $Root -ChildPath 'config\documentation.json'
-    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
-      throw ('Documentation configuration was not found: {0}' -f $path)
-    }
-    Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
+    return Read-JsonFile -Path (Join-Path -Path $Root -ChildPath 'config\documentation.json')
   }
 
-  #--------------------------------------------------------------------------------
-  # Read-DocumentationManifest
-  #--------------------------------------------------------------------------------
-  function Read-DocumentationManifest {
-    param([Parameter(Mandatory)][string] $Root)
+  function Get-ObjectProperty {
+    param(
+      [AllowNull()] $Object,
+      [Parameter(Mandatory)][string] $Name,
+      [AllowNull()] $DefaultValue
+    )
 
-    $config = Read-DocumentationConfig -Root $Root
-    $relativePath = if ([string]::IsNullOrWhiteSpace($config.manifestPath)) {
-      'docs\manifest.json'
-    } else {
-      $config.manifestPath
+    if ($null -eq $Object) {
+      return $DefaultValue
     }
-    $path = Join-Path -Path $Root -ChildPath $relativePath
-    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
-      throw ('Documentation manifest was not found: {0}' -f $path)
+    $property = $Object.PSObject.Properties[$Name]
+    if ($null -eq $property -or $null -eq $property.Value) {
+      return $DefaultValue
     }
-    Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
-  }
-#--------------------------------------------------------------------------------
-# Convert-TemplateTokens
-#--------------------------------------------------------------------------------
-function Convert-TemplateTokens {
-  param(
-    [Parameter(Mandatory)]
-    [string] $Content,
-
-    [Parameter(Mandatory)]
-    [hashtable] $Tokens
-  )
-
-  $result = $Content
-
-  foreach ($key in $Tokens.Keys) {
-    $value = [string]$Tokens[$key]
-
-    # Construct the double-braced placeholder literally.
-    $placeholder = '{{' + $key + '}}'
-
-    $result = $result.Replace($placeholder, $value)
+    return $property.Value
   }
 
-  return $result
-}
+  function ConvertTo-Hashtable {
+    param([AllowNull()] $Object)
 
-  #--------------------------------------------------------------------------------
-  # Assert-Directory
-  #--------------------------------------------------------------------------------
+    $result = @{}
+    if ($null -ne $Object) {
+      foreach ($property in $Object.PSObject.Properties) {
+        $result[$property.Name] = $property.Value
+      }
+    }
+    return $result
+  }
+
+  function Get-ManifestSetting {
+    param(
+      [Parameter(Mandatory)] $Manifest,
+      [AllowNull()] $Defaults,
+      [Parameter(Mandatory)][string] $Name,
+      [AllowNull()] $Fallback
+    )
+
+    $manifestProperty = $Manifest.PSObject.Properties[$Name]
+    if ($null -ne $manifestProperty -and $null -ne $manifestProperty.Value) {
+      return $manifestProperty.Value
+    }
+    if ($null -ne $Defaults) {
+      $defaultProperty = $Defaults.PSObject.Properties[$Name]
+      if ($null -ne $defaultProperty -and $null -ne $defaultProperty.Value) {
+        return $defaultProperty.Value
+      }
+    }
+    return $Fallback
+  }
+
   function Assert-Directory {
     param([Parameter(Mandatory)][string] $Path)
 
@@ -155,9 +127,6 @@ function Convert-TemplateTokens {
     }
   }
 
-  #--------------------------------------------------------------------------------
-  # Assert-Command
-  #--------------------------------------------------------------------------------
   function Assert-Command {
     param([Parameter(Mandatory)][string] $Name)
 
@@ -166,9 +135,150 @@ function Convert-TemplateTokens {
     }
   }
 
-  #--------------------------------------------------------------------------------
-  # Convert-ManifestGlobToRegex
-  #--------------------------------------------------------------------------------
+  function ConvertTo-NormalisedManifest {
+    param(
+      [Parameter(Mandatory)][System.IO.FileInfo] $ManifestFile,
+      [Parameter(Mandatory)] $Config
+    )
+
+    $raw = Read-JsonFile -Path $ManifestFile.FullName
+    $defaults = Get-ObjectProperty -Object $Config -Name 'defaultDocument' -DefaultValue $null
+    $id = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'id' -Fallback $ManifestFile.BaseName)
+    $title = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'title' -Fallback '')
+    $output = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'output' -Fallback '')
+    $sections = @(Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'sections' -Fallback @())
+
+    if ([string]::IsNullOrWhiteSpace($id)) {
+      throw ('Manifest id is missing: {0}' -f $ManifestFile.FullName)
+    }
+    if ([string]::IsNullOrWhiteSpace($title)) {
+      throw ('Manifest title is missing: {0}' -f $ManifestFile.FullName)
+    }
+    if ([string]::IsNullOrWhiteSpace($output)) {
+      throw ('Manifest output is missing: {0}' -f $ManifestFile.FullName)
+    }
+    if ($sections.Count -eq 0) {
+      throw ('Manifest sections are missing: {0}' -f $ManifestFile.FullName)
+    }
+    if ([IO.Path]::IsPathRooted($output) -or $output -match '[\\/]') {
+      throw ('Manifest output must be a filename, not a path: {0}' -f $output)
+    }
+
+    $metadata = ConvertTo-Hashtable -Object (Get-ObjectProperty -Object $Config -Name 'documentMetadata' -DefaultValue $null)
+    $manifestMetadata = ConvertTo-Hashtable -Object (Get-ObjectProperty -Object $raw -Name 'metadata' -DefaultValue $null)
+    foreach ($key in $manifestMetadata.Keys) {
+      $metadata[$key] = $manifestMetadata[$key]
+    }
+
+    return [pscustomobject]@{
+      Id = $id
+      Order = [int](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'order' -Fallback 100)
+      Title = $title
+      Output = $output
+      Template = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'template' -Fallback '')
+      CoverPage = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'coverPage' -Fallback '')
+      CopyrightPage = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'copyright' -Fallback '')
+      RevisionHistory = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'revisionHistory' -Fallback '')
+      GenerateToc = [bool](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'generateToc' -Fallback $true)
+      TocDepth = [int](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'tocDepth' -Fallback 3)
+      NumberHeadings = [bool](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'numberHeadings' -Fallback $true)
+      IncludeInventory = [bool](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'includeInventory' -Fallback $true)
+      Sections = $sections
+      Metadata = $metadata
+      SourcePath = $ManifestFile.FullName
+      SourceName = $ManifestFile.Name
+    }
+  }
+
+  function Get-DocumentationManifests {
+    param([Parameter(Mandatory)][string] $Root)
+
+    $config = Read-DocumentationConfig -Root $Root
+    $directorySetting = [string](Get-ObjectProperty -Object $config -Name 'manifestDirectory' -DefaultValue 'docs\manifests')
+    $pattern = [string](Get-ObjectProperty -Object $config -Name 'manifestPattern' -DefaultValue '*.json')
+    $directory = Join-Path -Path $Root -ChildPath $directorySetting
+    if (-not (Test-Path -LiteralPath $directory -PathType Container)) {
+      throw ('Documentation manifest directory was not found: {0}' -f $directory)
+    }
+
+    $files = @(Get-ChildItem -LiteralPath $directory -File -Filter $pattern | Sort-Object -Property Name)
+    if ($files.Count -eq 0) {
+      throw ('No document manifests matched {0} in {1}.' -f $pattern, $directory)
+    }
+
+    $manifests = @(foreach ($file in $files) {
+      ConvertTo-NormalisedManifest -ManifestFile $file -Config $config
+    })
+
+    $duplicateIds = @($manifests | Group-Object -Property Id | Where-Object Count -gt 1)
+    if ($duplicateIds.Count -gt 0) {
+      throw ('Duplicate manifest id(s): {0}' -f (($duplicateIds.Name | Sort-Object) -join ', '))
+    }
+    $duplicateOutputs = @($manifests | Group-Object -Property Output | Where-Object Count -gt 1)
+    if ($duplicateOutputs.Count -gt 0) {
+      throw ('Duplicate manifest output filename(s): {0}' -f (($duplicateOutputs.Name | Sort-Object) -join ', '))
+    }
+
+    return @($manifests | Sort-Object -Property Order, Id)
+  }
+
+  function Select-DocumentationManifests {
+    param(
+      [Parameter(Mandatory)][string] $Root,
+      [Parameter(Mandatory)][string[]] $Requested
+    )
+
+    $all = @(Get-DocumentationManifests -Root $Root)
+    if ($Requested.Count -eq 0 -or @($Requested | Where-Object { $_ -eq 'All' }).Count -gt 0) {
+      return $all
+    }
+
+    $selected = New-Object -TypeName 'System.Collections.Generic.List[object]'
+    $seen = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
+    foreach ($name in $Requested) {
+      $matches = @($all | Where-Object {
+        $_.Id -eq $name -or
+        [IO.Path]::GetFileNameWithoutExtension($_.SourceName) -eq $name -or
+        [IO.Path]::GetFileNameWithoutExtension($_.Output) -eq $name
+      })
+      if ($matches.Count -eq 0) {
+        throw ('Unknown document manifest: {0}. Available ids: {1}' -f $name, (($all.Id) -join ', '))
+      }
+      foreach ($item in $matches) {
+        if ($seen.Add($item.Id)) {
+          $selected.Add($item)
+        }
+      }
+    }
+    return $selected.ToArray()
+  }
+
+  function Convert-TemplateTokens {
+    param(
+      [Parameter(Mandatory)][string] $Content,
+      [Parameter(Mandatory)][hashtable] $Tokens
+    )
+
+    $result = $Content
+    foreach ($key in $Tokens.Keys) {
+      $result = $result.Replace(('{{' + $key + '}}'), [string]$Tokens[$key])
+    }
+    return $result
+  }
+
+  function Assert-NoUnresolvedTokens {
+    param(
+      [Parameter(Mandatory)][string] $Content,
+      [Parameter(Mandatory)][string] $SourceName
+    )
+
+    $unresolved = @([regex]::Matches($Content, '\{\{[A-Za-z][A-Za-z0-9_.-]*\}\}') |
+      ForEach-Object Value | Sort-Object -Unique)
+    if ($unresolved.Count -gt 0) {
+      throw ('Unresolved documentation token(s) in {0}: {1}' -f $SourceName, ($unresolved -join ', '))
+    }
+  }
+
   function Convert-ManifestGlobToRegex {
     param([Parameter(Mandatory)][string] $Pattern)
 
@@ -181,9 +291,6 @@ function Convert-TemplateTokens {
     return '^(?:{0})$' -f $escaped
   }
 
-  #--------------------------------------------------------------------------------
-  # Get-ManifestSourceMatches
-  #--------------------------------------------------------------------------------
   function Get-ManifestSourceMatches {
     param(
       [Parameter(Mandatory)][string] $DocsRoot,
@@ -191,13 +298,9 @@ function Convert-TemplateTokens {
     )
 
     $normalisedEntry = $Entry.Replace('\', '/').TrimStart('/')
-    $containsWildcard =
-    [System.Management.Automation.WildcardPattern]::ContainsWildcardCharacters(
-    $normalisedEntry)
-
-    if (-not $containsWildcard) {
-      $exactPath = Join-Path -Path $DocsRoot -ChildPath (
-      $normalisedEntry -replace '/', '\')
+    $hasWildcard = [System.Management.Automation.WildcardPattern]::ContainsWildcardCharacters($normalisedEntry)
+    if (-not $hasWildcard) {
+      $exactPath = Join-Path -Path $DocsRoot -ChildPath ($normalisedEntry -replace '/', '\')
       if (Test-Path -LiteralPath $exactPath -PathType Leaf) {
         return ,(Get-Item -LiteralPath $exactPath)
       }
@@ -205,292 +308,244 @@ function Convert-TemplateTokens {
     }
 
     $regex = Convert-ManifestGlobToRegex -Pattern $normalisedEntry
-    return @(
-      Get-ChildItem -LiteralPath $DocsRoot -File -Recurse |
+    return @(Get-ChildItem -LiteralPath $DocsRoot -File -Recurse |
       Where-Object {
-        $relative = $_.FullName.Substring($DocsRoot.Length)
-        $relative = $relative.TrimStart('\', '/').Replace('\', '/')
+        $relative = $_.FullName.Substring($DocsRoot.Length).TrimStart('\', '/').Replace('\', '/')
         $relative -match $regex
       } |
-      Sort-Object -Property FullName
-    )
+      Sort-Object -Property FullName)
   }
 
-  #--------------------------------------------------------------------------------
-  # Get-DocumentationFiles
-  #--------------------------------------------------------------------------------
+  function Resolve-DocumentationContentFile {
+    param(
+      [Parameter(Mandatory)][string] $Root,
+      [Parameter(Mandatory)][string] $RelativePath,
+      [Parameter(Mandatory)][string] $Description
+    )
+
+    $docsRoot = [IO.Path]::GetFullPath((Join-Path -Path $Root -ChildPath 'docs'))
+    $path = [IO.Path]::GetFullPath((Join-Path -Path $docsRoot -ChildPath ($RelativePath -replace '/', '\')))
+    if (-not $path.StartsWith($docsRoot, [StringComparison]::OrdinalIgnoreCase)) {
+      throw ('{0} escapes the docs directory: {1}' -f $Description, $RelativePath)
+    }
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+      throw ('{0} was not found: {1}' -f $Description, $path)
+    }
+    return Get-Item -LiteralPath $path
+  }
+
   function Get-DocumentationFiles {
     param(
       [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)]
-      [ValidateSet('Technical', 'User')]
-      [string] $DocumentSet
+      [Parameter(Mandatory)] $Manifest
     )
-
-    $manifest = Read-DocumentationManifest -Root $Root
-    $manualName = $DocumentSet.ToLowerInvariant()
-    $manual = $manifest.manuals.$manualName
-    if ($null -eq $manual) {
-      throw ('Manual definition is missing from docs\manifest.json: {0}' -f $manualName)
-    }
 
     $docsRoot = Join-Path -Path $Root -ChildPath 'docs'
     $files = New-Object -TypeName 'System.Collections.Generic.List[System.IO.FileInfo]'
     $seen = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
-
-    foreach ($entry in @($manual.sources)) {
+    foreach ($entry in @($Manifest.Sections)) {
       if ([string]::IsNullOrWhiteSpace([string]$entry)) {
         continue
       }
-
-      $matchedFiles = @(Get-ManifestSourceMatches `
-        -DocsRoot $docsRoot `
-      -Entry ([string]$entry))
-      if ($matchedFiles.Count -eq 0) {
-        throw ('Manifest source or pattern matched no files: docs/{0}' -f $entry)
+      $matches = @(Get-ManifestSourceMatches -DocsRoot $docsRoot -Entry ([string]$entry))
+      if ($matches.Count -eq 0) {
+        throw ('Manifest source or pattern matched no files in {0}: docs/{1}' -f $Manifest.SourceName, $entry)
       }
-
-      foreach ($matchedFile in $matchedFiles) {
-        if ($seen.Add($matchedFile.FullName)) {
-          $files.Add($matchedFile)
+      foreach ($file in $matches) {
+        if ($file.Extension -ne '.md') {
+          throw ('Manifest sections must resolve to Markdown files: {0}' -f $file.FullName)
+        }
+        if ($seen.Add($file.FullName)) {
+          $files.Add($file)
         }
       }
     }
-    return $files
+    return $files.ToArray()
   }
 
-  #--------------------------------------------------------------------------------
-  # Get-ManualDefinition
-  #--------------------------------------------------------------------------------
-  function Get-ManualDefinition {
+  function Get-ManifestFrontMatterFiles {
     param(
       [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)][ValidateSet('Technical', 'User')][string] $DocumentSet
+      [Parameter(Mandatory)] $Manifest
     )
 
-    $manifest = Read-DocumentationManifest -Root $Root
-    $manual = $manifest.manuals.($DocumentSet.ToLowerInvariant())
-    if ($null -eq $manual) {
-      throw ('Manual definition is missing: {0}' -f $DocumentSet)
+    $files = New-Object -TypeName 'System.Collections.Generic.List[System.IO.FileInfo]'
+    foreach ($definition in @(
+      @{ Name = 'Cover page'; Path = $Manifest.CoverPage },
+      @{ Name = 'Copyright page'; Path = $Manifest.CopyrightPage },
+      @{ Name = 'Revision history'; Path = $Manifest.RevisionHistory }
+    )) {
+      if (-not [string]::IsNullOrWhiteSpace([string]$definition.Path)) {
+        $file = Resolve-DocumentationContentFile -Root $Root -RelativePath ([string]$definition.Path) -Description $definition.Name
+        $files.Add($file)
+      }
     }
-    return $manual
+    return $files.ToArray()
   }
 
-  #--------------------------------------------------------------------------------
-  # Remove-DocumentHeader
-  #--------------------------------------------------------------------------------
   function Remove-DocumentHeader {
-    param(
-      [Parameter(Mandatory)]
-      [string] $Content
-    )
+    param([Parameter(Mandatory)][string] $Content)
 
     $result = $Content -replace '(?ms)^---\s*\r?\n.*?\r?\n---\s*\r?\n', ''
     $result = $result -replace '(?ms)^\*\*Document ID:\*\*.*?\r?\n---\s*\r?\n', ''
     return $result.Trim()
   }
 
-  #--------------------------------------------------------------------------------
-  # ConvertTo-YamlSingleQuotedString
-  #--------------------------------------------------------------------------------
   function ConvertTo-YamlSingleQuotedString {
-    param(
-      [Parameter(Mandatory)]
-      [AllowEmptyString()]
-      [string] $Value
-    )
+    param([Parameter(Mandatory)][AllowEmptyString()][string] $Value)
 
     return "'" + $Value.Replace("'", "''") + "'"
   }
 
-  #--------------------------------------------------------------------------------
-  # Test-TrailingLandscapeBlock 
-  #--------------------------------------------------------------------------------
   function Test-TrailingLandscapeBlock {
-    param(
-      [Parameter(Mandatory)]
-      [string] $Content
-    )
+    param([Parameter(Mandatory)][string] $Content)
 
     return $Content -match '(?ms):::\s*\{\.landscape\}.*?:::\s*$'
   }
 
-  #--------------------------------------------------------------------------------
-  # New-DocumentationTokens
-  #--------------------------------------------------------------------------------
   function New-DocumentationTokens {
     param(
       [Parameter(Mandatory)] $Config,
-      [Parameter(Mandatory)][string] $Title,
-      [Parameter(Mandatory)][string] $DocumentSet,
+      [Parameter(Mandatory)] $Manifest,
       [Parameter(Mandatory)][string] $DocumentDate
     )
 
-    return @{
-      title = $Title
+    $author = if ($Manifest.Metadata.ContainsKey('author')) {
+      [string]$Manifest.Metadata['author']
+    } else {
+      [string]$Config.author
+    }
+    $tokens = @{
+      title = [string]$Manifest.Title
       projectTitle = [string]$Config.projectTitle
       slogan = [string]$Config.slogan
-      author = [string]$Config.author
+      author = $author
       version = [string]$Config.projectVersion
       date = $DocumentDate
+      year = (Get-Date).Year.ToString([cultureinfo]::InvariantCulture)
       coverImage = [string]$Config.coverImage
-      documentSet = $DocumentSet
+      documentId = [string]$Manifest.Id
+      output = [string]$Manifest.Output
     }
+    foreach ($key in $Manifest.Metadata.Keys) {
+      $tokens[[string]$key] = [string]$Manifest.Metadata[$key]
+    }
+    return $tokens
   }
 
-  #--------------------------------------------------------------------------------
-  # Assert-NoUnresolvedTokens
-  #--------------------------------------------------------------------------------
-  function Assert-NoUnresolvedTokens {
-    param(
-      [Parameter(Mandatory)][string] $Content,
-      [Parameter(Mandatory)][string] $SourceName
-    )
+  function Get-OutputBaseName {
+    param([Parameter(Mandatory)] $Manifest)
 
-    $unresolved = @([regex]::Matches($Content, '\{\{[A-Za-z][A-Za-z0-9_.-]*\}\}') |
-      ForEach-Object Value |
-    Sort-Object -Unique)
-    if ($unresolved.Count -gt 0) {
-      throw ('Unresolved documentation token(s) in {0}: {1}' -f
-      $SourceName, ($unresolved -join ', '))
+    $extension = [IO.Path]::GetExtension($Manifest.Output)
+    if ([string]::IsNullOrWhiteSpace($extension)) {
+      return $Manifest.Output
     }
+    return [IO.Path]::GetFileNameWithoutExtension($Manifest.Output)
   }
 
-  #--------------------------------------------------------------------------------
-  # Get-PandocResourcePath
-  #--------------------------------------------------------------------------------
-  function Get-PandocResourcePath {
-    param(
-      [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)][string] $Build,
-      [Parameter(Mandatory)][System.IO.FileInfo[]] $SourceFiles
-    )
-
-    $paths = New-Object -TypeName 'System.Collections.Generic.List[string]'
-    $seenPaths = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' `
-    -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
-
-    foreach ($candidate in @($Build, $Root, (Join-Path -Path $Root -ChildPath 'docs'))) {
-      $fullPath = [IO.Path]::GetFullPath($candidate)
-      if ($seenPaths.Add($fullPath)) {
-        $paths.Add($fullPath)
-      }
-    }
-
-    foreach ($file in $SourceFiles) {
-      if ($null -ne $file -and $seenPaths.Add($file.DirectoryName)) {
-        $paths.Add($file.DirectoryName)
-      }
-    }
-
-    return ($paths -join [IO.Path]::PathSeparator)
-  }
-
-  #--------------------------------------------------------------------------------
-  # New-DocumentInventory
-  #--------------------------------------------------------------------------------
   function New-DocumentInventory {
     param(
       [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)]
-      [ValidateSet('Technical', 'User')]
-      [string] $DocumentSet
+      [Parameter(Mandatory)] $Manifest
     )
 
     $config = Read-DocumentationConfig -Root $Root
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
     Assert-Directory -Path $build
-    $name = '{0}-document-inventory.md' -f $DocumentSet.ToLowerInvariant()
-    $output = Join-Path -Path $build -ChildPath $name
+    $safeId = $Manifest.Id -replace '[^A-Za-z0-9._-]', '-'
+    $output = Join-Path -Path $build -ChildPath ('{0}-document-inventory.md' -f $safeId)
     $lines = New-Object -TypeName 'System.Collections.Generic.List[string]'
-    $lines.Add(('# {0} Document Source Inventory' -f $DocumentSet))
+    $lines.Add(('# {0} Document Source Inventory' -f $Manifest.Title))
     $lines.Add('')
-    $lines.Add('> This file is only an inventory of source Markdown files. It is not the assembled manual.')
+    $lines.Add(('Manifest: `{0}`' -f $Manifest.SourceName))
     $lines.Add('')
-    $lines.Add('| Document | First heading |')
-    $lines.Add('|---|---|')
+    $lines.Add('| Order | Role | Document | First heading |')
+    $lines.Add('|---:|---|---|---|')
+    $position = 1
 
-    foreach ($file in (Get-DocumentationFiles -Root $Root -DocumentSet $DocumentSet)) {
+    foreach ($file in @(Get-ManifestFrontMatterFiles -Root $Root -Manifest $Manifest)) {
       $heading = Get-Content -LiteralPath $file.FullName -Encoding UTF8 |
-      Where-Object { $_ -match '^#\s+\S' } |
-      Select-Object -First 1
+        Where-Object { $_ -match '^#\s+\S' } |
+        Select-Object -First 1
       if ($null -eq $heading) {
         $heading = '(No level-one heading)'
       } else {
         $heading = $heading -replace '^#\s+', ''
       }
       $relative = $file.FullName.Substring($Root.Length).TrimStart('\', '/') -replace '\\', '/'
-      $lines.Add(('| [{0}](../../{1}) | {2} |' -f $file.Name, $relative, $heading))
+      $lines.Add(('| {0} | Front matter | [{1}](../../{2}) | {3} |' -f $position, $file.Name, $relative, $heading))
+      $position++
     }
+
+    foreach ($file in @(Get-DocumentationFiles -Root $Root -Manifest $Manifest)) {
+      $heading = Get-Content -LiteralPath $file.FullName -Encoding UTF8 |
+        Where-Object { $_ -match '^#\s+\S' } |
+        Select-Object -First 1
+      if ($null -eq $heading) {
+        $heading = '(No level-one heading)'
+      } else {
+        $heading = $heading -replace '^#\s+', ''
+      }
+      $relative = $file.FullName.Substring($Root.Length).TrimStart('\', '/') -replace '\\', '/'
+      $lines.Add(('| {0} | Section | [{1}](../../{2}) | {3} |' -f $position, $file.Name, $relative, $heading))
+      $position++
+    }
+
     $lines | Set-Content -LiteralPath $output -Encoding UTF8
     return $output
   }
 
-  #--------------------------------------------------------------------------------
-  # Merge-Documentation
-  #--------------------------------------------------------------------------------
   function Merge-Documentation {
     param(
       [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)]
-      [ValidateSet('Technical', 'User')]
-      [string] $DocumentSet
+      [Parameter(Mandatory)] $Manifest
     )
 
     $config = Read-DocumentationConfig -Root $Root
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
     Assert-Directory -Path $build
-    $manualDefinition = Get-ManualDefinition -Root $Root -DocumentSet $DocumentSet
-    $baseName = if ([string]::IsNullOrWhiteSpace($manualDefinition.outputBaseName)) {
-      if ($DocumentSet -eq 'Technical') { $config.technicalOutputBaseName } else { $config.userOutputBaseName }
-    } else {
-      $manualDefinition.outputBaseName
-    }
-    $title = if ([string]::IsNullOrWhiteSpace($manualDefinition.title)) {
-      if ($DocumentSet -eq 'Technical') { $config.manualTitle } else { $config.userGuideTitle }
-    } else {
-      $manualDefinition.title
-    }
-    $output = Join-Path -Path $build -ChildPath ('{0}.md' -f $baseName)
+    $output = Join-Path -Path $build -ChildPath ('{0}.md' -f (Get-OutputBaseName -Manifest $Manifest))
     $encoding = New-Object -TypeName System.Text.UTF8Encoding -ArgumentList ($false)
     $writer = New-Object -TypeName System.IO.StreamWriter -ArgumentList ($output, $false, $encoding)
     try {
-      $documentDate = (Get-Date).ToString(
-        $config.dateFormat,
-      [cultureinfo]::InvariantCulture)
+      $documentDate = (Get-Date).ToString($config.dateFormat, [cultureinfo]::InvariantCulture)
+      $author = if ($Manifest.Metadata.ContainsKey('author')) {
+        [string]$Manifest.Metadata['author']
+      } else {
+        [string]$config.author
+      }
+      $language = if ($Manifest.Metadata.ContainsKey('language')) {
+        [string]$Manifest.Metadata['language']
+      } else {
+        [string]$config.language
+      }
+
       $writer.WriteLine('---')
-      $writer.WriteLine(
-      'title: {0}' -f (ConvertTo-YamlSingleQuotedString -Value $title))
-      $writer.WriteLine(
-        'author: {0}' -f (
-      ConvertTo-YamlSingleQuotedString -Value $config.author))
-      $writer.WriteLine(
-        'date: {0}' -f (
-      ConvertTo-YamlSingleQuotedString -Value $documentDate))
-      $writer.WriteLine(('lang: {0}' -f $config.language))
+      $writer.WriteLine('title: {0}' -f (ConvertTo-YamlSingleQuotedString -Value $Manifest.Title))
+      $writer.WriteLine('author: {0}' -f (ConvertTo-YamlSingleQuotedString -Value $author))
+      $writer.WriteLine('date: {0}' -f (ConvertTo-YamlSingleQuotedString -Value $documentDate))
+      $writer.WriteLine('lang: {0}' -f $language)
+      $writer.WriteLine('opendata-generate-toc: {0}' -f $Manifest.GenerateToc.ToString().ToLowerInvariant())
+      $writer.WriteLine('opendata-toc-depth: {0}' -f $Manifest.TocDepth)
       $writer.WriteLine('---')
       $writer.WriteLine()
 
-      $tokens = New-DocumentationTokens `
-      -Config $config `
-      -Title $title `
-      -DocumentSet $DocumentSet `
-      -DocumentDate $documentDate
-
-      if (-not [string]::IsNullOrWhiteSpace($manualDefinition.coverTemplate)) {
-        $coverPath = Join-Path -Path (Join-Path -Path $Root -ChildPath 'docs') `
-        -ChildPath ($manualDefinition.coverTemplate -replace '/', '\')
-        if (-not (Test-Path -LiteralPath $coverPath -PathType Leaf)) {
-          throw ('Cover template was not found: {0}' -f $coverPath)
-        }
-        $cover = Get-Content -LiteralPath $coverPath -Raw -Encoding UTF8
-        $cover = Convert-TemplateTokens -Content $cover -Tokens $tokens
-        Assert-NoUnresolvedTokens -Content $cover -SourceName $coverPath
-        $writer.WriteLine($cover.Trim())
+      $tokens = New-DocumentationTokens -Config $config -Manifest $Manifest -DocumentDate $documentDate
+      foreach ($frontMatterFile in @(Get-ManifestFrontMatterFiles -Root $Root -Manifest $Manifest)) {
+        $content = Get-Content -LiteralPath $frontMatterFile.FullName -Raw -Encoding UTF8
+        $content = Convert-TemplateTokens -Content $content -Tokens $tokens
+        Assert-NoUnresolvedTokens -Content $content -SourceName $frontMatterFile.FullName
+        $writer.WriteLine($content.Trim())
         $writer.WriteLine()
       }
 
-      $files = @(Get-DocumentationFiles -Root $Root -DocumentSet $DocumentSet)
+      if ($Manifest.GenerateToc) {
+        $writer.WriteLine('::: {.document-toc}')
+        $writer.WriteLine(':::')
+        $writer.WriteLine()
+      }
+
+      $files = @(Get-DocumentationFiles -Root $Root -Manifest $Manifest)
       for ($index = 0; $index -lt $files.Count; $index++) {
         $file = $files[$index]
         $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
@@ -499,10 +554,7 @@ function Convert-TemplateTokens {
         Assert-NoUnresolvedTokens -Content $content -SourceName $file.FullName
         $writer.WriteLine($content)
         $writer.WriteLine()
-        $hasFollowingContent =
-        $index -lt ($files.Count - 1) -or $DocumentSet -eq 'User'
-        if ($hasFollowingContent -and
-        -not (Test-TrailingLandscapeBlock -Content $content)) {
+        if ($index -lt ($files.Count - 1) -and -not (Test-TrailingLandscapeBlock -Content $content)) {
           $writer.WriteLine('\newpage')
           $writer.WriteLine()
         }
@@ -512,9 +564,34 @@ function Convert-TemplateTokens {
     }
     return $output
   }
-  #--------------------------------------------------------------------------------
-  # Invoke-PlantUmlRender
-  #--------------------------------------------------------------------------------
+
+  function Get-PandocResourcePath {
+    param(
+      [Parameter(Mandatory)][string] $Root,
+      [Parameter(Mandatory)][string] $Build,
+      [Parameter(Mandatory)] $Manifest
+    )
+
+    $paths = New-Object -TypeName 'System.Collections.Generic.List[string]'
+    $seen = New-Object -TypeName 'System.Collections.Generic.HashSet[string]' -ArgumentList ([StringComparer]::OrdinalIgnoreCase)
+    $files = @()
+    $files += @(Get-ManifestFrontMatterFiles -Root $Root -Manifest $Manifest)
+    $files += @(Get-DocumentationFiles -Root $Root -Manifest $Manifest)
+
+    foreach ($candidate in @($Build, $Root, (Join-Path -Path $Root -ChildPath 'docs'))) {
+      $fullPath = [IO.Path]::GetFullPath($candidate)
+      if ($seen.Add($fullPath)) {
+        $paths.Add($fullPath)
+      }
+    }
+    foreach ($file in $files) {
+      if ($null -ne $file -and $seen.Add($file.DirectoryName)) {
+        $paths.Add($file.DirectoryName)
+      }
+    }
+    return ($paths -join [IO.Path]::PathSeparator)
+  }
+
   function Invoke-PlantUmlRender {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -525,14 +602,10 @@ function Convert-TemplateTokens {
     if (-not (Test-Path -LiteralPath $renderer -PathType Leaf)) {
       throw ('PlantUML renderer was not found: {0}' -f $renderer)
     }
-    & $renderer -ProjectRoot $Root -Format $OutputFormat -Clean
-    if (-not $?) {
-      throw 'PlantUML rendering failed.'
-    }
+    . $renderer
+    Convert-PlantUml -ProjectRoot $Root -Format $OutputFormat -Clean
   }
-  #--------------------------------------------------------------------------------
-  # Test-Documentation
-  #--------------------------------------------------------------------------------
+
   function Test-Documentation {
     param(
       [Parameter(Mandatory)][string] $Root,
@@ -542,77 +615,80 @@ function Convert-TemplateTokens {
     $issues = New-Object -TypeName 'System.Collections.Generic.List[object]'
     $docsRoot = Join-Path -Path $Root -ChildPath 'docs'
     $config = Read-DocumentationConfig -Root $Root
+
     try {
-      $manifest = Read-DocumentationManifest -Root $Root
-      foreach ($set in @('Technical', 'User')) {
-        $null = @(Get-DocumentationFiles -Root $Root -DocumentSet $set)
+      $manifests = @(Get-DocumentationManifests -Root $Root)
+      foreach ($manifest in $manifests) {
+        $null = @(Get-ManifestFrontMatterFiles -Root $Root -Manifest $manifest)
+        $null = @(Get-DocumentationFiles -Root $Root -Manifest $manifest)
+        if (-not [string]::IsNullOrWhiteSpace($manifest.Template)) {
+          $templatePath = Join-Path -Path $Root -ChildPath ($manifest.Template -replace '/', '\')
+          if (-not (Test-Path -LiteralPath $templatePath -PathType Leaf)) {
+            throw ('Word template was not found for {0}: {1}' -f $manifest.Id, $templatePath)
+          }
+        }
+        if ($manifest.TocDepth -lt 1 -or $manifest.TocDepth -gt 6) {
+          throw ('tocDepth must be between 1 and 6 in {0}.' -f $manifest.SourceName)
+        }
       }
     } catch {
       $issues.Add([pscustomobject]@{
-          Severity = 'Error'
-          File = (Join-Path -Path $Root -ChildPath $config.manifestPath)
-          Message = $_.Exception.Message
+        Severity = 'Error'
+        File = (Join-Path -Path $Root -ChildPath $config.manifestDirectory)
+        Message = $_.Exception.Message
       })
     }
-    $buildRoot = [IO.Path]::GetFullPath(
-    (Join-Path -Path $Root -ChildPath $config.buildDirectory))
+
+    $buildRoot = [IO.Path]::GetFullPath((Join-Path -Path $Root -ChildPath $config.buildDirectory))
     $files = @(Get-ChildItem -LiteralPath $docsRoot -File -Recurse -Filter '*.md' |
       Where-Object {
-        -not $_.FullName.StartsWith(
-          $buildRoot,
-        [StringComparison]::OrdinalIgnoreCase)
-    })
+        -not $_.FullName.StartsWith($buildRoot, [StringComparison]::OrdinalIgnoreCase)
+      })
 
     foreach ($file in $files) {
       $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
       if ($content -notmatch '(?m)^#\s+\S') {
         $issues.Add([pscustomobject]@{
-            Severity = 'Error'
-            File = $file.FullName
-            Message = 'Missing level-one heading.'
+          Severity = 'Error'
+          File = $file.FullName
+          Message = 'Missing level-one heading.'
         })
       }
       if ($content -match "`t") {
         $issues.Add([pscustomobject]@{
-            Severity = 'Warning'
-            File = $file.FullName
-            Message = 'Tab character found.'
+          Severity = 'Warning'
+          File = $file.FullName
+          Message = 'Tab character found.'
         })
       }
 
       foreach ($match in [regex]::Matches($content, '!?\[[^\]]*\]\(([^)#]+)(?:#[^)]+)?\)')) {
         $target = $match.Groups[1].Value.Trim('<', '>')
-        if ($target -match '^(https?:|mailto:|#)') {
-          continue
-        }
-        # Template placeholders such as {{diagramPath}} are resolved before
-        # publication and are not filesystem paths during validation.
-        if ($target -match '\{\{[^}]+\}\}') {
+        if ($target -match '^(https?:|mailto:|#)' -or $target -match '\{\{[^}]+\}\}') {
           continue
         }
         $decoded = [uri]::UnescapeDataString($target)
-        $linkPath = [IO.Path]::GetFullPath(
-        (Join-Path -Path $file.DirectoryName -ChildPath ($decoded -replace '/', '\')))
-        if (Test-Path -LiteralPath $linkPath) {
-          continue
-        }
-
-        $issues.Add([pscustomobject]@{
+        $linkPath = [IO.Path]::GetFullPath((Join-Path -Path $file.DirectoryName -ChildPath ($decoded -replace '/', '\')))
+        if (-not (Test-Path -LiteralPath $linkPath)) {
+          $issues.Add([pscustomobject]@{
             Severity = 'Error'
             File = $file.FullName
             Message = ('Broken relative link: {0}' -f $target)
-        })
+          })
+        }
       }
     }
 
-    $legacyPuml = @(Get-ChildItem -LiteralPath (Join-Path -Path $Root -ChildPath 'docs\diagrams') `
-      -File -Recurse -Filter '*.puml' |
-    Where-Object { $_.DirectoryName -ne (Join-Path -Path $Root -ChildPath 'docs\diagrams\source') })
+    $canonicalSource = [IO.Path]::GetFullPath((Join-Path -Path $Root -ChildPath $config.diagramSourceDirectory))
+    $legacyPuml = @(Get-ChildItem -LiteralPath (Join-Path -Path $Root -ChildPath 'docs\diagrams') -File -Recurse -Filter '*.puml' |
+      Where-Object {
+        -not [string]::Equals($_.DirectoryName, $canonicalSource, [StringComparison]::OrdinalIgnoreCase)
+      })
     foreach ($file in $legacyPuml) {
       $issues.Add([pscustomobject]@{
-          Severity = 'Error'
-          File = $file.FullName
-          Message = 'PlantUML source is outside docs\diagrams\source.'
+        Severity = 'Error'
+        File = $file.FullName
+        Message = ('PlantUML source is outside {0}.' -f $config.diagramSourceDirectory)
       })
     }
 
@@ -626,9 +702,7 @@ function Convert-TemplateTokens {
       throw 'Documentation validation failed.'
     }
   }
-  #--------------------------------------------------------------------------------
-  # Convert-SvgAssetsForPdf
-  #--------------------------------------------------------------------------------
+
   function Convert-SvgAssetsForPdf {
     param([Parameter(Mandatory)][string] $Root)
 
@@ -648,23 +722,105 @@ function Convert-TemplateTokens {
     foreach ($svg in $svgFiles) {
       $pdf = Join-Path -Path $diagramDirectory -ChildPath ('{0}.pdf' -f $svg.BaseName)
       if ((Test-Path -LiteralPath $pdf -PathType Leaf) -and
-      (Get-Item -LiteralPath $pdf).LastWriteTimeUtc -ge $svg.LastWriteTimeUtc) {
+          (Get-Item -LiteralPath $pdf).LastWriteTimeUtc -ge $svg.LastWriteTimeUtc) {
         continue
       }
-
       if ($null -ne $rsvg) {
         & $rsvg.Path -f pdf -o $pdf $svg.FullName
       } else {
         & $inkscape.Path $svg.FullName --export-type=pdf `
-        ('--export-filename={0}' -f $pdf) --export-area-drawing
+          ('--export-filename={0}' -f $pdf) --export-area-drawing
       }
       if ($LASTEXITCODE -ne 0 -or
-        -not (Test-Path -LiteralPath $pdf -PathType Leaf) -or
-      (Get-Item -LiteralPath $pdf).Length -eq 0) {
+          -not (Test-Path -LiteralPath $pdf -PathType Leaf) -or
+          (Get-Item -LiteralPath $pdf).Length -eq 0) {
         throw ('Unable to create the PDF diagram asset: {0}' -f $pdf)
       }
     }
   }
+  #--------------------------------------------------------------------------------
+  # Set-DocxFieldRefresh
+  #--------------------------------------------------------------------------------
+  function Set-DocxFieldRefresh {
+    param([Parameter(Mandatory)][string] $Path)
+
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    $wordNamespace = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    $stream = [IO.File]::Open(
+      $Path,
+      [IO.FileMode]::Open,
+      [IO.FileAccess]::ReadWrite,
+      [IO.FileShare]::None)
+    $archive = New-Object -TypeName System.IO.Compression.ZipArchive -ArgumentList (
+      $stream,
+      [IO.Compression.ZipArchiveMode]::Update,
+      $false)
+
+    try {
+      $entry = $archive.GetEntry('word/settings.xml')
+      if ($null -eq $entry) {
+        throw ('The DOCX package does not contain word/settings.xml: {0}' -f $Path)
+      }
+
+      $entryStream = $entry.Open()
+      try {
+        $reader = New-Object -TypeName System.IO.StreamReader -ArgumentList (
+          $entryStream,
+          [Text.Encoding]::UTF8,
+          $true,
+          4096,
+          $true)
+        try {
+          $settingsXml = $reader.ReadToEnd()
+        } finally {
+          $reader.Dispose()
+        }
+      } finally {
+        $entryStream.Dispose()
+      }
+
+      $xml = New-Object -TypeName System.Xml.XmlDocument
+      $xml.PreserveWhitespace = $true
+      $xml.LoadXml($settingsXml)
+      $namespaces = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList ($xml.NameTable)
+      $namespaces.AddNamespace('w', $wordNamespace)
+      $settingsNode = $xml.SelectSingleNode('/w:settings', $namespaces)
+      if ($null -eq $settingsNode) {
+        throw ('The DOCX settings could not be read: {0}' -f $Path)
+      }
+
+      $updateFields = $settingsNode.SelectSingleNode('./w:updateFields', $namespaces)
+      if ($null -eq $updateFields) {
+        $updateFields = $xml.CreateElement('w', 'updateFields', $wordNamespace)
+        $null = $settingsNode.PrependChild($updateFields)
+      }
+      $updateFields.SetAttribute('val', $wordNamespace, 'true')
+
+      $entryStream = $entry.Open()
+      try {
+        $entryStream.SetLength(0)
+        $writerSettings = New-Object -TypeName System.Xml.XmlWriterSettings
+        $writerSettings.Encoding = New-Object -TypeName System.Text.UTF8Encoding -ArgumentList ($false)
+        $writerSettings.Indent = $false
+        $writer = [Xml.XmlWriter]::Create($entryStream, $writerSettings)
+        try {
+          $xml.Save($writer)
+        } finally {
+          $writer.Dispose()
+        }
+      } finally {
+        $entryStream.Dispose()
+      }
+    } finally {
+      $archive.Dispose()
+      $stream.Dispose()
+    }
+
+    Write-Output -InputObject 'Configured Word to refresh document fields when the DOCX is opened.'
+  }
+
   #--------------------------------------------------------------------------------
   # Set-DocxPageLayout
   #--------------------------------------------------------------------------------
@@ -828,26 +984,24 @@ function Convert-TemplateTokens {
 
     Write-Output -InputObject ('Sized {0} DOCX image(s) to fit their A4 section.' -f $resized)
   }
-  #--------------------------------------------------------------------------------
-  # Publish-DocumentSet
-  #--------------------------------------------------------------------------------
-  function Publish-DocumentSet {
+
+  function Publish-Document {
     param(
       [Parameter(Mandatory)][string] $Root,
-      [Parameter(Mandatory)]
-      [ValidateSet('Technical', 'User')]
-      [string] $DocumentSet,
+      [Parameter(Mandatory)] $Manifest,
       [Parameter(Mandatory)]
       [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
       [string] $OutputFormat,
-      [AllowNull()]
-      [string] $DocxReference
+      [AllowNull()][string] $DocxReference
     )
 
     $config = Read-DocumentationConfig -Root $Root
-    $inventory = New-DocumentInventory -Root $Root -DocumentSet $DocumentSet
-    Write-Output -InputObject ('Created source inventory {0}' -f $inventory)
-    $manual = Merge-Documentation -Root $Root -DocumentSet $DocumentSet
+    if ($Manifest.IncludeInventory) {
+      $inventory = New-DocumentInventory -Root $Root -Manifest $Manifest
+      Write-Output -InputObject ('Created source inventory {0}' -f $inventory)
+    }
+
+    $manual = Merge-Documentation -Root $Root -Manifest $Manifest
     if ($OutputFormat -eq 'None') {
       Write-Output -InputObject ('Created {0}' -f $manual)
       return
@@ -855,32 +1009,31 @@ function Convert-TemplateTokens {
 
     Assert-Command -Name 'pandoc'
     $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
-    $manualDefinition = Get-ManualDefinition -Root $Root -DocumentSet $DocumentSet
-    $baseName = if ([string]::IsNullOrWhiteSpace([string]$manualDefinition.outputBaseName)) {
-      if ($DocumentSet -eq 'Technical') {
-        $config.technicalOutputBaseName
-      } else {
-        $config.userOutputBaseName
-      }
-    } else {
-      [string]$manualDefinition.outputBaseName
-    }
-    $sourceFiles = @(Get-DocumentationFiles -Root $Root -DocumentSet $DocumentSet)
-    $resourcePath = Get-PandocResourcePath -Root $Root -Build $build -SourceFiles $sourceFiles
+    $resourcePath = Get-PandocResourcePath -Root $Root -Build $build -Manifest $Manifest
     $landscapeFilter = Join-Path -Path $Root -ChildPath $config.landscapeFilter
+    $tocFilter = Join-Path -Path $Root -ChildPath $config.tocFilter
     $latexHeader = Join-Path -Path $Root -ChildPath $config.latexLandscapeHeader
+
+    foreach ($requiredFilter in @($tocFilter, $landscapeFilter)) {
+      if (-not (Test-Path -LiteralPath $requiredFilter -PathType Leaf)) {
+        throw ('Pandoc filter was not found: {0}' -f $requiredFilter)
+      }
+    }
+
     $baseArgs = @(
       $manual,
       '--from=markdown+yaml_metadata_block+pipe_tables+fenced_divs+link_attributes+raw_attribute',
       '--standalone',
-      '--toc',
-      '--toc-depth=3',
-      '--number-sections',
+      ('--lua-filter={0}' -f $tocFilter),
       ('--lua-filter={0}' -f $landscapeFilter),
       ('--resource-path={0}' -f $resourcePath),
       '--metadata', ('lang={0}' -f $config.language),
       '--metadata', 'papersize=a4'
     )
+    if ($Manifest.NumberHeadings) {
+      $baseArgs += '--number-sections'
+    }
+
     $formats = if ($OutputFormat -eq 'All') {
       @('Html', 'Docx', 'Pdf')
     } else {
@@ -888,55 +1041,63 @@ function Convert-TemplateTokens {
     }
 
     foreach ($item in $formats) {
+      $extension = $item.ToLowerInvariant()
       $output = Join-Path -Path $build -ChildPath (
-      ('{0}.{1}' -f $baseName, $item.ToLowerInvariant()) -replace '\.docx$', '.docx')
+        '{0}.{1}' -f (Get-OutputBaseName -Manifest $Manifest), $extension)
+
       switch ($item) {
         'Html' {
           & pandoc @baseArgs --embed-resources --output $output
         }
         'Docx' {
           $reference = $DocxReference
-          if ([string]::IsNullOrWhiteSpace($reference)) {
-            $candidate = Join-Path -Path $Root -ChildPath $config.referenceDoc
+          if ([string]::IsNullOrWhiteSpace($reference) -and
+              -not [string]::IsNullOrWhiteSpace($Manifest.Template)) {
+            $candidate = Join-Path -Path $Root -ChildPath ($Manifest.Template -replace '/', '\')
             if (Test-Path -LiteralPath $candidate -PathType Leaf) {
               $reference = $candidate
             }
           }
+
           $arguments = @() + $baseArgs
           if (-not [string]::IsNullOrWhiteSpace($reference)) {
             $arguments += '--reference-doc=' + (Resolve-Path -LiteralPath $reference).Path
           }
           & pandoc @arguments --output $output
           if ($LASTEXITCODE -eq 0) {
-            $parameters = @{
-              Path = $output 
-              PortraitWidthCm = $config.portraitImageWidthCm 
-              PortraitHeightCm = $config.portraitImageHeightCm 
-              LandscapeWidthCm = $config.landscapeImageWidthCm 
-              LandscapeHeightCm = $config.landscapeImageHeightCm
-            }
-            Set-DocxPageLayout @parameters
+            Set-DocxPageLayout -Path $output `
+              -PortraitWidthCm $config.portraitImageWidthCm `
+              -PortraitHeightCm $config.portraitImageHeightCm `
+              -LandscapeWidthCm $config.landscapeImageWidthCm `
+              -LandscapeHeightCm $config.landscapeImageHeightCm
+            Set-DocxFieldRefresh -Path $output
           }
         }
         'Pdf' {
           Convert-SvgAssetsForPdf -Root $Root
-          & pandoc @baseArgs ('--include-in-header={0}' -f $latexHeader) `
-          ('--pdf-engine={0}' -f $config.pdfEngine) --output $output
+          & pandoc @baseArgs `
+            ('--include-in-header={0}' -f $latexHeader) `
+            ('--pdf-engine={0}' -f $config.pdfEngine) `
+            --output $output
         }
       }
+
       if ($LASTEXITCODE -ne 0) {
-        throw ('Pandoc failed while building {0} {1} output.' -f $DocumentSet, $item)
+        throw ('Pandoc failed while building {0} {1} output.' -f $Manifest.Id, $item)
       }
       Write-Output -InputObject ('Created {0}' -f $output)
     }
   }
-  #--------------------------------------------------------------------------------
-  # main process here
-  #--------------------------------------------------------------------------------
-  if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
-    $ProjectRoot = Resolve-ProjectRoot
+
+  $ProjectRoot = if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
+    Resolve-ProjectRoot
   } else {
-    $ProjectRoot = (Resolve-Path -LiteralPath $ProjectRoot).Path
+    (Resolve-Path -LiteralPath $ProjectRoot).Path
+  }
+
+  if ($Action -eq 'All') {
+    $Action = 'Build'
+    $Document = @('All')
   }
 
   switch ($Action) {
@@ -947,19 +1108,20 @@ function Convert-TemplateTokens {
       $config = Read-DocumentationConfig -Root $ProjectRoot
       $buildPath = Join-Path -Path $ProjectRoot -ChildPath $config.buildDirectory
       if ((Test-Path -LiteralPath $buildPath) -and
-      $PSCmdlet.ShouldProcess($buildPath, 'Remove generated manuals')) {
+          $PSCmdlet.ShouldProcess($buildPath, 'Remove generated manuals')) {
         Get-ChildItem -LiteralPath $buildPath -Force |
-        Where-Object Name -ne '.gitkeep' |
-        Remove-Item -Recurse -Force
+          Where-Object Name -ne '.gitkeep' |
+          Remove-Item -Recurse -Force
       }
+
       $diagramPath = Join-Path -Path $ProjectRoot -ChildPath $config.diagramOutputDirectory
       if ((Test-Path -LiteralPath $diagramPath) -and
-      $PSCmdlet.ShouldProcess($diagramPath, 'Remove intermediate diagram files')) {
+          $PSCmdlet.ShouldProcess($diagramPath, 'Remove intermediate diagram files')) {
         Get-ChildItem -LiteralPath $diagramPath -File |
-        Where-Object {
-          $_.Name -ne '.gitkeep' -and $_.Extension -ne '.svg'
-        } |
-        Remove-Item -Force
+          Where-Object {
+            $_.Name -ne '.gitkeep' -and $_.Extension -ne '.svg'
+          } |
+          Remove-Item -Force
       }
     }
     'Build' {
@@ -967,31 +1129,13 @@ function Convert-TemplateTokens {
         Invoke-PlantUmlRender -Root $ProjectRoot -OutputFormat 'svg'
       }
       Test-Documentation -Root $ProjectRoot -WarningsAreErrors:$FailOnWarning
-      $sets = if ($Document -eq 'All') {
-        @('Technical', 'User')
-      } else {
-        @($Document)
-      }
-      foreach ($set in $sets) {
-        $Parameters = @{
-          Root = $ProjectRoot 
-          DocumentSet = $set 
-          OutputFormat = $Format 
-          DocxReference = $ReferenceDoc
-        }
-        Publish-DocumentSet @parameters
+      $manifests = @(Select-DocumentationManifests -Root $ProjectRoot -Requested $Document)
+      foreach ($manifest in $manifests) {
+        Publish-Document -Root $ProjectRoot `
+          -Manifest $manifest `
+          -OutputFormat $Format `
+          -DocxReference $ReferenceDoc
       }
     }
   }
 }
-
-$Parameters = @{
-  Action = 'build'
-  ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
-  Document = 'All'
-  Format = 'All'
-  ReferenceDoc = 'C:\Users\terry\Downloads\Corporate_Document_Template.docx'
-  RenderDiagrams = $true
-  FailOnWarning = $true
-}
-Invoke-Documentation @Parameters

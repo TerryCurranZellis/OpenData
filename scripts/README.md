@@ -1,107 +1,73 @@
 # Documentation Scripts
 
-## Unified script
+## Manifest-driven builder
 
-`Invoke-Documentation.ps1` builds, tests and cleans the documentation.
-`Render-PlantUml.ps1` renders diagrams independently.
+`Invoke-Documentation.ps1` defines the maintained documentation function. Load it into the current PowerShell session and invoke it from the repository root:
 
 ```powershell
-# Build technical documentation and the user guide
-.\Invoke-Documentation.ps1 -Action Build -Document All -Format All
+. .\scripts\Invoke-Documentation.ps1
 
-# Build only the user guide
-.\Invoke-Documentation.ps1 -Action Build -Document User -Format Docx
+# Build every manifest in every format
+Invoke-Documentation -Action All
 
-# Build HTML only, rendering PlantUML diagrams first
-.\Invoke-Documentation.ps1 -Action Build -Document Technical -Format Html -RenderDiagrams
+# Build every manifest as DOCX
+Invoke-Documentation -ProjectRoot $PWD -Action Build -Document All -Format Docx
 
-# Validate Markdown headings and relative links
-.\Invoke-Documentation.ps1 -Action Test -FailOnWarning
+# Build selected manifests
+Invoke-Documentation -ProjectRoot $PWD -Action Build `
+  -Document TechnicalUserGuide,AdministratorGuide `
+  -Format Docx
 
-# Remove manual output and intermediate non-SVG diagram files
-.\Invoke-Documentation.ps1 -Action Clean
+# Validate Markdown, manifests, templates and diagrams
+Invoke-Documentation -ProjectRoot $PWD -Action Test -FailOnWarning
 
-# Render all PlantUML sources to SVG without building manuals
-.\Render-PlantUml.ps1 -Format svg -Clean
+# Remove generated manuals and non-SVG diagram intermediates
+Invoke-Documentation -ProjectRoot $PWD -Action Clean
 ```
+
+`-Action All` is an alias for `-Action Build -Document All`. All document manifests matching the configured pattern are discovered at runtime. No document id is hard-coded in the script.
 
 ### Parameters
 
 | Parameter | Default | Description |
 |---|---|---|
-| `-Action` | *(required)* | `Build`, `Test`, or `Clean` |
-| `-ProjectRoot` | auto-detected | Root of the project tree (must contain `config\documentation.json`) |
-| `-Document` | `All` | `Technical`, `User`, or `All` |
-| `-Format` | `All` | Output format for Build: `All`, `Html`, `Docx`, `Pdf`, or `None` (merge only) |
-| `-ReferenceDoc` | *(config)* | Path to a `.docx` reference document for Docx output |
-| `-RenderDiagrams` | `$false` | Render canonical SVG diagrams before building (Build action only) |
-| `-FailOnWarning` | `$false` | Treat warnings as errors (Test action only) |
+| `-Action` | `Build` | `Build`, `Test`, `Clean`, or `All` |
+| `-ProjectRoot` | auto-detected | Optional repository root containing `config/documentation.json` |
+| `-Document` | `All` | One or more manifest ids, manifest base names, output base names, or `All` |
+| `-Format` | `All` | `Html`, `Docx`, `Pdf`, `All`, or `None` |
+| `-ReferenceDoc` | manifest/default | Optional DOCX reference document override |
+| `-RenderDiagrams` | false | Render PlantUML SVG files before building |
+| `-FailOnWarning` | false | Treat validation warnings as errors |
 
-## Page orientation and image size
+`Build-Documentation.ps1` and `Validate-Documentation.ps1` remain convenient wrappers around the same function.
 
-Portrait diagrams use a maximum width of `16cm`. Wide figures use a fenced
-`landscape` block and a maximum width of `22.5cm`, leaving room for the figure
-caption inside the A4 landscape section. The Pandoc filter
-`docs/_filters/landscape.lua`:
+## Document discovery and composition
 
-- inserts A4 landscape section boundaries in DOCX and returns to A4 portrait;
-- post-processes inline DOCX diagrams to fit a `16cm` by `24cm` portrait box or
-  `22.5cm` by `14.5cm` landscape box, preserving aspect ratio;
-- omits explicit DOCX chapter-break paragraphs, avoiding blank pages at
-  section and table boundaries;
-- wraps corresponding PDF figure and wide-table content with `pdflscape`;
-- renders Markdown table rows as labelled entries in DOCX, avoiding
-  multi-page and narrow-column table defects in Word-compatible renderers;
-- leaves HTML as a normal figure block.
+Global settings and inherited defaults are stored in `config/documentation.json`. One JSON manifest per output document is stored in `docs/manifests`.
 
-The DOCX target width/height boxes are configurable through
-`portraitImageWidthCm`, `portraitImageHeightCm`, `landscapeImageWidthCm` and
-`landscapeImageHeightCm` in `config/documentation.json`.
+The assembly order is fixed by the generic engine:
 
-For PDF output, the build creates ignored PDF intermediates beside the SVGs
-using `rsvg-convert` when available or Inkscape otherwise. Markdown and DOCX
-continue to use the canonical SVG asset. `-Action Clean` removes manual output
-and intermediate non-SVG diagram files while preserving committed SVGs.
+1. Cover page.
+2. Copyright page.
+3. Revision history.
+4. Format-aware table of contents.
+5. Ordered Markdown sections.
 
-The user guide build appends the complete root `LICENSE.md` as Appendix A.
+`docs/_filters/document-toc.lua` inserts the TOC at the generated marker. DOCX receives a native Word TOC field with field refresh enabled, PDF receives a LaTeX TOC, and HTML receives linked contents. Automatic HTML/PDF title blocks are suppressed so the cover remains first. The Pandoc `--toc` option is intentionally not used because it would place the TOC before body-based front matter.
 
-## Legacy helper scripts
+## PlantUML
 
-The older scripts under `OldScripts` are retained for reference and are not part
-of the maintained pipeline.
-
-| Script | Purpose |
-|---|---|
-| `Build-Documentation.ps1` | Original orchestration command (superseded by `Invoke-Documentation.ps1`). |
-| `Merge-Documentation.ps1` | Combines ordered Markdown files into one manual source. |
-| `Render-PlantUml.ps1` | Replaced by the maintained script in the parent folder. |
-| `Test-Documentation.ps1` | Checks headings and relative links. |
-| `New-DocumentInventory.ps1` | Creates a generated document inventory. |
-| `Get-DocumentationFiles.ps1` | Returns documentation files in manual order. |
-| `Clean-Documentation.ps1` | Removes generated output. |
-| `New-DocumentationStructure.ps1` | Standalone app — creates the standard folder structure. |
-
-Maintained scripts target **Windows PowerShell 5.1**. Pandoc must be on `PATH`;
-`tools\plantuml.jar` and Java are required for diagram rendering. PDF output
-also requires the configured LaTeX engine, `pdflscape`, and either
-`rsvg-convert` or Inkscape.
-## Configuration-driven documentation
-
-`Invoke-Documentation.ps1` now reads manual composition from `docs/manifest.json`. Run the script by dot-sourcing it and then invoking the function, for example:
-
-```powershell
-. .\scripts\Invoke-Documentation.ps1
-Invoke-Documentation -ProjectRoot $PWD -Action Test
-Invoke-Documentation -ProjectRoot $PWD -Action Build -Document All -Format Docx -RenderDiagrams
-```
-
-Render only PlantUML diagrams with:
+`Convert-PlantUml.ps1` defines the maintained rendering function and contains no local-machine invocation:
 
 ```powershell
 . .\scripts\Convert-PlantUml.ps1
 Convert-PlantUml -ProjectRoot $PWD -Format svg -Clean
 ```
 
-## Java quality verification
+Canonical `.puml` files belong in `docs/diagrams/source`; rendered SVG files belong in `docs/diagrams/generated`.
 
-`Invoke-Code-Quality.ps1` runs tests and the Maven quality checks. Add `-Strict` to fail on configured Checkstyle, SpotBugs or PMD violations.
+## Page orientation and image size
+
+The `landscape.lua` filter creates A4 landscape sections for explicitly marked figures and tables, converts Markdown page breaks to DOCX page breaks, and redirects SVG references to PDF intermediates for LaTeX output. DOCX image bounds are applied after Pandoc using the configured portrait and landscape dimensions.
+
+Maintained scripts target Windows PowerShell 5.1. Pandoc must be on `PATH`; diagram rendering requires Java and the configured PlantUML JAR. PDF output additionally requires the configured LaTeX engine and either `rsvg-convert` or Inkscape.

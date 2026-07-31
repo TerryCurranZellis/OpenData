@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 #Requires -Version 5.1
 [CmdletBinding()]
 param(
-    [string] $Path = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
+    [string] $Path = (Split-Path -Parent $PSScriptRoot)
 )
 
 $ErrorActionPreference = 'Stop'

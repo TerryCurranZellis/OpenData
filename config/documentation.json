@@ -1,30 +1,49 @@
 {
   "projectTitle": "OpenData Framework",
-  "manualTitle": "OpenData Framework Technical Documentation",
-  "userGuideTitle": "OpenData Framework User Guide",
   "slogan": "Transforming data for innovation",
   "coverImage": "docs/assets/opendata-cover.png",
-  "technicalOutputBaseName": "OpenData-Technical-Documentation",
-  "userOutputBaseName": "OpenData-User-Guide",
   "author": "OpenData Framework Project",
   "language": "en-GB",
   "dateFormat": "dd MMMM yyyy",
+  "projectVersion": "1.0.0",
+
   "sourceDirectory": "docs",
   "buildDirectory": "docs/build",
+  "manifestDirectory": "docs/manifests",
+  "manifestPattern": "*.json",
+
+  "defaultDocument": {
+    "template": "docs/_templates/template.docx",
+    "coverPage": "shared/coverpage.md",
+    "copyright": "shared/copyright.md",
+    "revisionHistory": "shared/revision-history.md",
+    "generateToc": true,
+    "tocDepth": 3,
+    "numberHeadings": true,
+    "includeInventory": true
+  },
+
+  "documentMetadata": {
+    "author": "OpenData Framework Project",
+    "language": "en-GB",
+    "status": "Current"
+  },
+
   "diagramSourceDirectory": "docs/diagrams/source",
   "diagramOutputDirectory": "docs/diagrams/generated",
-  "plantUmlJar": "tools/plantuml-asl-1.2026.6.jar",
-  "referenceDoc": "docs/_templates/template.docx",
+  "plantUmlJar": "tools/plantuml.jar",
+
   "landscapeFilter": "docs/_filters/landscape.lua",
+  "tocFilter": "docs/_filters/document-toc.lua",
   "latexLandscapeHeader": "docs/_includes/landscape.tex",
   "pdfEngine": "xelatex",
+
   "portraitImageWidthCm": 16,
   "portraitImageHeightCm": 24,
   "landscapeImageWidthCm": 22.5,
   "landscapeImageHeightCm": 14.5,
-  "manifestPath": "docs/manifest.json",
+
   "templateDirectory": "docs/templates",
   "sharedDirectory": "docs/shared",
-  "generatedDirectory": "docs/generated",
-  "projectVersion": "1.0.0"
+  "generatedDirectory": "docs/generated"
 }

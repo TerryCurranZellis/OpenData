@@ -14,42 +14,42 @@ package com.towermarsh.opendata.config.model;
 public enum PluginPropertyType {
 
     /**
-     *
+     * String
      */
     STRING,
 
     /**
-     *
+     * Integer value
      */
     INTEGER,
 
     /**
-     *
+     * Long value
      */
     LONG,
 
     /**
-     *
+     * Boolean
      */
     BOOLEAN,
 
     /**
-     *
+     * decimal (real) number
      */
     DECIMAL,
 
     /**
-     *
+     * whether we hold for a few seconds or a few hours
      */
     DURATION,
 
     /**
-     *
+     * path
      */
     PATH,
 
     /**
-     *
+     * URI
      */
     URI
 }

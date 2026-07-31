@@ -14,27 +14,27 @@ package com.towermarsh.opendata.database.audit;
 public enum IngestionStatus {
 
     /**
-     *
+     * Started access
      */
     STARTED,
 
     /**
-     *
+     * Completed access
      */
     SUCCEEDED,
 
     /**
-     *
+     * completed but not everything is accepted
      */
     SUCCEEDED_WITH_REJECTIONS,
 
     /**
-     *
+     * failed completely
      */
     FAILED,
 
     /**
-     *
+     * cancelled
      */
     CANCELLED
 }

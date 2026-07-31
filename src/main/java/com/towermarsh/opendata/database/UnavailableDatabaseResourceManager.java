@@ -33,7 +33,7 @@ public final class UnavailableDatabaseResourceManager implements DatabaseResourc
     }
 
     /**
-     *
+     * dry run resource manager
      */
     @Override
     /**

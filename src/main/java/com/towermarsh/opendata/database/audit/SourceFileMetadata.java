@@ -30,7 +30,9 @@ public record SourceFileMetadata(
         String sha256,
         Instant downloadedAt) {
 
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public SourceFileMetadata {
         Objects.requireNonNull(sourceUri, "sourceUri");
         fileName = requireText(fileName, "fileName");

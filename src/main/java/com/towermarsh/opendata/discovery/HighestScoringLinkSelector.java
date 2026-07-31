@@ -65,13 +65,13 @@ public final class HighestScoringLinkSelector implements DiscoveredLinkSelector 
             throw new DiscoveryException("No candidate data links were discovered");
         }
 
-        List<ScoredLink> scored = candidates.stream()
+        var scored = candidates.stream()
                 .map(link -> new ScoredLink(link, score(link, terms)))
                 .sorted(Comparator.comparingInt(ScoredLink::score).reversed()
                         .thenComparing(item -> item.link().targetUri().toString()))
                 .toList();
 
-        ScoredLink best = scored.get(0);
+        var best = scored.get(0);
         if (failOnTie && scored.size() > 1 && scored.get(1).score() == best.score()) {
             throw new DiscoveryException(
                     "More than one candidate link has the best score of "

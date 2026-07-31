@@ -20,7 +20,7 @@ import java.util.Objects;
 
 /**
  * SQL Server implementation of the framework ingestion audit repository.
-  *
+ *
  * @author Terry Curran
  * @version 17 July 2026
  */
@@ -77,8 +77,9 @@ public final class SqlServerIngestionAuditRepository
     private final DatabaseConnectionManager connectionManager;
 
     /**
-     * Instantiate 
-     * @param connectionManager connection 
+     * Instantiate
+     *
+     * @param connectionManager connection
      */
     public SqlServerIngestionAuditRepository(
             DatabaseConnectionManager connectionManager) {
@@ -88,11 +89,12 @@ public final class SqlServerIngestionAuditRepository
 
     /**
      * start run details
+     *
      * @param datasetCode
      * @param sourcePageUri
      * @param applicationVersion
      * @return
-     * @throws DatabaseException 
+     * @throws DatabaseException
      */
     @Override
     public long startRun(
@@ -100,7 +102,7 @@ public final class SqlServerIngestionAuditRepository
             URI sourcePageUri,
             String applicationVersion) throws DatabaseException {
         Objects.requireNonNull(datasetCode, "datasetCode");
-        try (Connection connection = connectionManager.getConnection(); PreparedStatement statement = connection.prepareStatement(
+        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(
                 START_RUN_SQL,
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, sourcePageUri == null ? null : sourcePageUri.toString());
@@ -112,23 +114,24 @@ public final class SqlServerIngestionAuditRepository
             }
             return generatedKey(statement, "ingestion run");
         } catch (SQLException ex) {
-             throw new DatabaseException(ex.getMessage());
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
     /**
      * register file details
+     *
      * @param ingestionRunId
      * @param metadata
      * @return
-     * @throws DatabaseException 
+     * @throws DatabaseException
      */
     @Override
     public long registerSourceFile(
             long ingestionRunId,
             SourceFileMetadata metadata) throws DatabaseException {
         Objects.requireNonNull(metadata, "metadata");
-        try (Connection connection = connectionManager.getConnection(); PreparedStatement statement = connection.prepareStatement(
+        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(
                 SOURCE_FILE_SQL,
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, ingestionRunId);
@@ -147,16 +150,17 @@ public final class SqlServerIngestionAuditRepository
 
     /**
      * final status
+     *
      * @param ingestionRunId
      * @param completion
-     * @throws DatabaseException 
+     * @throws DatabaseException
      */
     @Override
     public void completeRun(
             long ingestionRunId,
             IngestionRunCompletion completion) throws DatabaseException {
         Objects.requireNonNull(completion, "completion");
-        try (Connection connection = connectionManager.getConnection(); PreparedStatement statement = connection.prepareStatement(
+        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(
                 COMPLETE_RUN_SQL)) {
             statement.setString(1, completion.status().name());
             statement.setTimestamp(2, Timestamp.from(completion.finishedAt()));
@@ -177,6 +181,7 @@ public final class SqlServerIngestionAuditRepository
 
     /**
      * record errors
+     *
      * @param ingestionRunId
      * @param sourceFileId
      * @param sourceRowNumber
@@ -184,7 +189,7 @@ public final class SqlServerIngestionAuditRepository
      * @param errorCode
      * @param message
      * @param rawPayload
-     * @throws DatabaseException 
+     * @throws DatabaseException
      */
     @Override
     public void recordError(
@@ -195,7 +200,7 @@ public final class SqlServerIngestionAuditRepository
             String errorCode,
             String message,
             String rawPayload) throws DatabaseException {
-        try (Connection connection = connectionManager.getConnection(); PreparedStatement statement = connection.prepareStatement(ERROR_SQL)) {
+        try (Connection connection = connectionManager.getConnection(); var statement = connection.prepareStatement(ERROR_SQL)) {
             statement.setLong(1, ingestionRunId);
             setNullableLong(statement, 2, sourceFileId);
             setNullableLong(statement, 3, sourceRowNumber);
@@ -211,47 +216,50 @@ public final class SqlServerIngestionAuditRepository
 
     /**
      * generate table keys
+     *
      * @param statement
      * @param description
      * @return
-     * @throws DatabaseException 
+     * @throws DatabaseException
      */
-    private static long generatedKey( PreparedStatement statement,  String description) throws DatabaseException {
-        try (ResultSet keys = statement.getGeneratedKeys()) {
+    private static long generatedKey(PreparedStatement statement, String description) throws DatabaseException {
+        try (var keys = statement.getGeneratedKeys()) {
             if (!keys.next()) {
                 throw new SQLException("No generated key returned for " + description);
             }
             return keys.getLong(1);
         } catch (SQLException ex) {
-           throw new DatabaseException(ex.getMessage());
+            throw new DatabaseException(ex.getMessage());
         }
     }
 
     /**
      * fix null values
+     *
      * @param statement
      * @param index
      * @param value
-     * @throws DatabaseException 
+     * @throws DatabaseException
      */
     private static void setNullableLong(
             PreparedStatement statement,
             int index,
             Long value) throws DatabaseException {
         try {
-        if (value == null) {
-            statement.setNull(index, java.sql.Types.BIGINT);
-        } else {
-            statement.setLong(index, value);
-        }
-        }catch (SQLException ex) {
+            if (value == null) {
+                statement.setNull(index, java.sql.Types.BIGINT);
+            } else {
+                statement.setLong(index, value);
+            }
+        } catch (SQLException ex) {
             throw new DatabaseException(ex.getMessage());
         }
     }
 
     /**
      * get name from url
-     * @return 
+     *
+     * @return
      */
     private static String hostName() {
         try {

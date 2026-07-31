@@ -27,7 +27,7 @@ public final class StandardConfigurationValidator implements ConfigurationValida
     public void validate(final ApplicationConfig configuration) {
         final var bootstrap = configuration.bootstrap();
 
-        final String connectTimeoutStr = bootstrap.values().get("http.connect-timeout-seconds");
+        final var connectTimeoutStr = bootstrap.values().get("http.connect-timeout-seconds");
         if (connectTimeoutStr != null) {
             try {
                 final var connectTimeoutSeconds = Integer.parseInt(connectTimeoutStr.trim());

@@ -1,25 +1,43 @@
 @startuml
 !theme plain
-title OpenData Documentation Generation Flow
+title OpenData Manifest-Driven Documentation Generation Flow
 
-actor Author
-rectangle "Markdown Sources" as Sources
-rectangle "docs/manifest.json" as Manifest
-rectangle "config/documentation.json" as Config
-rectangle "Invoke-Documentation.ps1" as Generator
-rectangle "Templates and Shared Sections" as Shared
+actor Maintainer
+folder "docs/manifests" as Manifests
+rectangle "config/documentation.json\n(global settings and defaults)" as Config
+folder "docs/shared\n(front matter)" as Shared
+folder "Ordered Markdown sections" as Sources
+rectangle "Invoke-Documentation.ps1" as Engine
+rectangle "Manifest discovery\nand normalisation" as Discovery
 rectangle "Validation" as Validation
+rectangle "Markdown assembly" as Assembly
+rectangle "document-toc.lua" as TocFilter
+rectangle "landscape.lua" as LayoutFilter
 rectangle "Pandoc" as Pandoc
 folder "docs/build" as Output
 
-Author --> Sources : writes
+Maintainer --> Manifests : adds or changes a guide
+Maintainer --> Sources : authors content
+Config --> Discovery : directories, tools, defaults
+Manifests --> Discovery : every *.json
+Discovery --> Validation : normalised documents
+Shared --> Validation
 Sources --> Validation
-Manifest --> Validation
-Config --> Generator
-Manifest --> Generator
-Shared --> Generator
-Validation --> Generator : valid inputs
-Generator --> Pandoc : assembled Markdown
+Validation --> Assembly : valid inputs
+Shared --> Assembly : cover, copyright, revision
+Sources --> Assembly : ordered sections
+Assembly --> TocFilter : front matter + TOC marker + chapters
+TocFilter --> LayoutFilter : format-aware TOC inserted
+LayoutFilter --> Pandoc : transformed document
 Pandoc --> Output : HTML / DOCX / PDF
-Generator --> Output : merged Markdown\nand inventory
+Assembly --> Output : merged Markdown and inventory
+
+note right of Assembly
+Order:
+1. Cover
+2. Copyright
+3. Revision history
+4. TOC marker
+5. Chapters
+end note
 @enduml
