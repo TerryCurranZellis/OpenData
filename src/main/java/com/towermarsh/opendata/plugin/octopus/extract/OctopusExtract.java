@@ -37,7 +37,7 @@ import java.util.stream.Stream;
  * is used inside the transform step via {@link com.towermarsh.opendata.plugin.octopus.transform.OctopusStatementParser}.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OctopusExtract {
 

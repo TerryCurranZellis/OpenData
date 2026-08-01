@@ -22,13 +22,15 @@ import java.util.Objects;
  * @param gasRecords          transformed gas billing records; never {@code null}
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public record OctopusParseResult(
         List<ElectricityRecord> electricityRecords,
         List<GasRecord> gasRecords) {
 
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public OctopusParseResult {
         electricityRecords = List.copyOf(Objects.requireNonNull(electricityRecords, "electricityRecords"));
         gasRecords = List.copyOf(Objects.requireNonNull(gasRecords, "gasRecords"));

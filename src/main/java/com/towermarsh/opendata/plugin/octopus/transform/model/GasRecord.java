@@ -5,6 +5,8 @@
  */
 package com.towermarsh.opendata.plugin.octopus.transform.model;
 
+import java.time.LocalDate;
+
 /**
  * Immutable record holding one row of extracted gas billing data,
  * matching the column layout of {@code gas_data.csv}.
@@ -47,28 +49,28 @@ package com.towermarsh.opendata.plugin.octopus.transform.model;
  * @param totalCostGbp            total gas charge including VAT (£) as a string
  * 
  * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
- * @version 1.0.0
+ * @version 2.0.0
  *
  */
 public record GasRecord(
-        String billDate,
-        String billPeriodStart,
-        String billPeriodEnd,
+        LocalDate billDate,
+        LocalDate billPeriodStart,
+        LocalDate billPeriodEnd,
         String tariffName,
-        String tariffPeriodStart,
-        String tariffPeriodEnd,
+        LocalDate tariffPeriodStart,
+        LocalDate tariffPeriodEnd,
         String mprn,
         String meterId,
-        String startReadingDate,
-        String startReadingValue,
+        LocalDate startReadingDate,
+        double startReadingValue,
         String startReadingType,
-        String endReadingDate,
-        String endReadingValue,
+        LocalDate endReadingDate,
+        double endReadingValue,
         String endReadingType,
-        String consumptionM3,
-        String energyUsedKwh,
-        String unitRatePKwh,
-        String standingChargeRatePDay,
-        String standingChargeTotalGbp,
-        String totalCostGbp) {
+        double consumptionM3,
+        double energyUsedKwh,
+        double unitRatePKwh,
+        double standingChargeRatePDay,
+        double standingChargeTotalGbp,
+        double totalCostGbp) {
 }

@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * without modifying the file system.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OctopusFinalise {
 

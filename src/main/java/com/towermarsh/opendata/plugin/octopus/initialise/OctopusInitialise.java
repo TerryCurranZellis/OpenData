@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * audit records without inspecting the stack trace.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OctopusInitialise {
 
@@ -90,13 +90,13 @@ public final class OctopusInitialise {
                 .formatted(context.dryRun()));
 
         // Extract – make PDF files available in the input directory
-        final List<Path> pdfFiles = extractor.extract(configuration);
+        final var pdfFiles = extractor.extract(configuration);
 
         // Transform – parse PDFs into structured records
-        final OctopusParseResult parseResult = transformer.transform(configuration);
+        final var parseResult = transformer.transform(configuration);
 
         // Load – persist (or skip on dry run)
-        final PluginMetrics metrics = loader.load(parseResult, configuration, context);
+        final var metrics = loader.load(parseResult, configuration, context);
 
         // Finalise – clean up and report
         finaliser.finalise(configuration, pdfFiles, parseResult, metrics);

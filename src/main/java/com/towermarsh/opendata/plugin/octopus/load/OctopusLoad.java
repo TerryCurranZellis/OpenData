@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * records reported as skipped.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OctopusLoad {
 
@@ -57,9 +57,9 @@ public final class OctopusLoad {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(context, "context");
 
-        final int totalRecords = parseResult.totalRecords();
-        final int electricityCount = parseResult.electricityRecords().size();
-        final int gasCount = parseResult.gasRecords().size();
+        final var totalRecords = parseResult.totalRecords();
+        final var electricityCount = parseResult.electricityRecords().size();
+        final var gasCount = parseResult.gasRecords().size();
 
         if (context.dryRun()) {
             LOGGER.info(() ->

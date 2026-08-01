@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  * </pre>
  *
  * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
- * @version 1.0.0
+ * @version 2.0.0
  *
  */
 public final class OctopusStatementParser {
@@ -767,12 +767,25 @@ public final class OctopusStatementParser {
         }
 
         return new ElectricityRecord(
-                billDate, billPeriodStart, billPeriodEnd,
-                tariff[0], tariff[1], tariff[2],
-                mpan, meterId,
-                startReadDate, startReadValue, startReadType,
-                endReadDate, endReadValue, endReadType,
-                energyKwh, unitRate, scRate, scTotal, totalCost);
+                billDate, 
+                billPeriodStart, 
+                billPeriodEnd,
+                tariff[0], 
+                tariff[1], 
+                tariff[2],
+                mpan, 
+                meterId,
+                startReadDate, 
+                startReadValue, 
+                startReadType,
+                endReadDate, 
+                endReadValue, 
+                endReadType,
+                energyKwh, 
+                unitRate, 
+                scRate, 
+                scTotal, t
+                otalCost);
     }
 
     /**
@@ -868,12 +881,26 @@ public final class OctopusStatementParser {
         }
 
         return new GasRecord(
-                billDate, billPeriodStart, billPeriodEnd,
-                tariff[0], tariff[1], tariff[2],
-                mprn, meterId,
-                startReadDate, startReadValue, startReadType,
-                endReadDate, endReadValue, endReadType,
-                consumptionM3, energyKwh, unitRate, scRate, scTotal, totalCost);
+                billDate, 
+                billPeriodStart, 
+                billPeriodEnd,
+                tariff[0], 
+                tariff[1], 
+                tariff[2],
+                mprn, 
+                meterId,
+                startReadDate, 
+                startReadValue, 
+                startReadType,
+                endReadDate, 
+                endReadValue, 
+                endReadType,
+                consumptionM3,
+                energyKwh, 
+                unitRate, 
+                scRate, 
+                scTotal, 
+                totalCost);
     }
 
     // ── Inner helper types ───────────────────────────────────────────────────

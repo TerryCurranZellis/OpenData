@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * the two-column PDF layout and all date/value extraction logic.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OctopusTransform {
 
