@@ -12,6 +12,7 @@
  * <li>{@link DownloadException}</li>
  * <li>{@link ImportException}</li>
  * <li>{@link OpenDataException}</li>
+ * <li>{@link PluginException}</li>
  * <li>{@link ValidationException}</li>
  * </ul>
   *
