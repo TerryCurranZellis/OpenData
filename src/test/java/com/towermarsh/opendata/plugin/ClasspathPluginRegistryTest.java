@@ -19,16 +19,17 @@ import org.junit.jupiter.api.Test;
 class ClasspathPluginRegistryTest {
 
     @Test
-    void listsOfgemAndOpenMeteoFromClasspathIndex() {
+    void listsOfgemOpenMeteoAndOctopusFromClasspathIndex() {
         final PluginRegistry registry =
                 new ClasspathPluginRegistry();
 
         assertEquals(
-                List.of("ofgem", "openmeteo"),
+                List.of("octopus", "ofgem", "openmeteo"),
                 registry.list().stream()
                         .map(PluginDescriptor::id)
                         .toList());
 
         assertTrue(registry.requireEnabled("OPENMETEO").enabled());
+        assertTrue(registry.requireEnabled("OCTOPUS").enabled());
     }
 }

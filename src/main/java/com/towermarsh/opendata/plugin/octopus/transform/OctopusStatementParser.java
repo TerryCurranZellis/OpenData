@@ -3,9 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.octopus.extract;
+package com.towermarsh.opendata.plugin.octopus.transform;
 
 import java.io.IOException;
+import com.towermarsh.opendata.plugin.octopus.extract.PdfTextExtractor;
+import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;

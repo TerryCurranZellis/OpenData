@@ -5,13 +5,15 @@
  */
 package com.towermarsh.opendata.plugin.openmeteo.exception;
 
+import com.towermarsh.opendata.exception.OpenDataException;
+
 /**
  * Indicates that OpenMeteo download or response processing failed.
  *
  * @author Terry Curran
  * @version 17 July 2026
  */
-public final class OpenMeteoException extends Exception {
+public final class OpenMeteoException extends OpenDataException {
 
     /**
      * Creates a new Open-Meteo exception.
