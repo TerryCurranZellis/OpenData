@@ -41,6 +41,13 @@ opendata --plugin all --file C:\OpenData\run.properties
 opendata --register --file C:\OpenData\bootstrap.properties
 ```
 
+Create the certificate files before the first registration run:
+
+```powershell
+. .\scripts\New-ConfigurationCertificate.ps1
+New-ConfigurationCertificate
+```
+
 ## Outcomes
 
 The process logs one of `SUCCESS`, `PLUGIN_FAILURE`, `COMMAND_LINE_ERROR`,

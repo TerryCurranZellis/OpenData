@@ -36,6 +36,8 @@ or `--file`:
 - `[core].[plugin_property]`
 
 `--register` seeds both tables from the packaged property files.
+Generate `opendata-config-public.cer` and `opendata-config-private.pfx` with
+`scripts/New-ConfigurationCertificate.ps1` before the first registration run.
 
 ## Production differences
 

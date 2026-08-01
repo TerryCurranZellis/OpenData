@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -27,9 +28,26 @@ class ApplicationBootstrapPropertiesLoaderTest {
 
     @Test
     void storesEncryptedPasswordAndLoadsPlainTextValue() throws Exception {
-        final var publicKey = temporaryDirectory.resolve("keys/public.key");
-        final var privateKey = temporaryDirectory.resolve("keys/private.key");
-        final var cipher = new RsaConfigurationPasswordCipher(publicKey, privateKey);
+        final ConfigurationPasswordCipher cipher = new ConfigurationPasswordCipher() {
+            @Override
+            public String encrypt(final String plainText) {
+                return plainText.isBlank()
+                        ? plainText
+                        : "{enc}" + Base64.getEncoder().encodeToString(plainText.getBytes());
+            }
+
+            @Override
+            public String decrypt(final String storedValue) {
+                return storedValue.startsWith("{enc}")
+                        ? new String(Base64.getDecoder().decode(storedValue.substring(5)))
+                        : storedValue;
+            }
+
+            @Override
+            public boolean isEncrypted(final String storedValue) {
+                return storedValue != null && storedValue.startsWith("{enc}");
+            }
+        };
         final var propertiesFile = temporaryDirectory.resolve("config/application.properties");
         final var loader = new ApplicationBootstrapPropertiesLoader(
                 propertiesFile,

@@ -31,12 +31,16 @@ Ofgem and OpenMeteo runtime; a single migration manifest is an open gap.
 ## PowerShell example
 
 ```powershell
+. .\scripts\New-ConfigurationCertificate.ps1
+New-ConfigurationCertificate
+
 sqlcmd -S localhost -E -b `
   -i .\sql\sqlserver\001-create-database-and-login.sql `
   -v OpenDataPassword="YOUR_LOCAL_PASSWORD"
 
 $scripts = @(
     '.\sql\sqlserver\010-create-core-schema.sql',
+    '.\sql\sqlserver\015-create-configuration-store.sql',
     '.\sql\sqlserver\020-create-ofgem-schema.sql',
     '.\sql\sqlserver\030-seed-reference-data.sql',
     '.\sql\001-core-plugin-run.sql',
@@ -57,6 +61,8 @@ SELECT * FROM core.schema_version ORDER BY version;
 SELECT name FROM sys.schemas WHERE name IN ('core', 'ofgem', 'openmeteo');
 SELECT name FROM sys.database_principals WHERE name IN ('OpenData', 'opendata_app');
 SELECT dataset_code, plugin_id, enabled FROM core.dataset;
+SELECT OBJECT_ID(N'core.application_property') AS application_property_object;
+SELECT OBJECT_ID(N'core.plugin_property') AS plugin_property_object;
 SELECT OBJECT_ID(N'core.PluginRun') AS plugin_run_object;
 SELECT OBJECT_ID(N'openmeteo.DailyWeather') AS daily_weather_object;
 ```

@@ -38,6 +38,13 @@ property files during normal execution.
 
 ## Register configuration in SQL Server
 
+Create the encryption certificate material first:
+
+```powershell
+. .\scripts\New-ConfigurationCertificate.ps1
+New-ConfigurationCertificate
+```
+
 Use `--register` to copy packaged application and plugin properties into SQL
 Server and then switch future runs to database-backed configuration:
 

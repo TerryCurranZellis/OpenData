@@ -71,3 +71,18 @@ Canonical `.puml` files belong in `docs/diagrams/source`; rendered SVG files bel
 The `landscape.lua` filter creates A4 landscape sections for explicitly marked figures and tables, converts Markdown page breaks to DOCX page breaks, and redirects SVG references to PDF intermediates for LaTeX output. DOCX image bounds are applied after Pandoc using the configured portrait and landscape dimensions.
 
 Maintained scripts target Windows PowerShell 5.1. Pandoc must be on `PATH`; diagram rendering requires Java and the configured PlantUML JAR. PDF output additionally requires the configured LaTeX engine and either `rsvg-convert` or Inkscape.
+
+## Configuration encryption certificate
+
+`New-ConfigurationCertificate.ps1` creates the certificate files used by the
+version 2 bootstrap password encryption flow:
+
+```powershell
+. .\scripts\New-ConfigurationCertificate.ps1
+New-ConfigurationCertificate
+```
+
+The script exports:
+
+- `src/main/resources/config/security/opendata-config-public.cer`
+- `src/main/resources/config/security/opendata-config-private.pfx`

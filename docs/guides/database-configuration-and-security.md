@@ -8,16 +8,19 @@
 
 ---
 
-1. Create a local bootstrap override file containing `application.database.url`,
+1. Run `. .\\scripts\\New-ConfigurationCertificate.ps1` and then
+   `New-ConfigurationCertificate` to create
+   `src/main/resources/config/security/opendata-config-public.cer` and
+   `src/main/resources/config/security/opendata-config-private.pfx`.
+2. Create a local bootstrap override file containing `application.database.url`,
    `application.database.user`, and `application.database.password`.
-2. Run `opendata --register --file <bootstrap.properties>`.
-3. Confirm `src/main/resources/config/application.properties` now contains an
+3. Run `opendata --register --file <bootstrap.properties>`.
+4. Confirm `src/main/resources/config/application.properties` now contains an
    encrypted database password and `application.use-database-properties=true`.
-4. Apply `sql/sqlserver/015-create-configuration-store.sql` and the permission
+5. Apply `sql/sqlserver/015-create-configuration-store.sql` and the permission
    grants before relying on database-backed configuration.
-5. Restrict the bootstrap file and the generated RSA key files under
-   `src/main/resources/config/security/`.
-6. Confirm logs do not contain the password or decrypted password value.
+6. Restrict the bootstrap file and the generated certificate files.
+7. Confirm logs do not contain the password or decrypted password value.
 
 ## Local development URL
 

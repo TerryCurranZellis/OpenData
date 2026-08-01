@@ -61,6 +61,7 @@ plugin.ofgem.property.download.request-timeout.value=PT180S
 
 ## Registration
 
+Generate the certificate material first with `scripts/New-ConfigurationCertificate.ps1`.
 Run `opendata --register` to copy the packaged application and plugin property
 sets into SQL Server. After registration, normal execution loads configuration
 from SQL Server when `application.use-database-properties=true`.

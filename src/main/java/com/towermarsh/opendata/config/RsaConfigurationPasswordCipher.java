@@ -6,23 +6,23 @@
 package com.towermarsh.opendata.config;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
+import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
+import java.security.cert.CertificateFactory;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 import javax.crypto.Cipher;
 
 /**
- * Encrypts bootstrap passwords with a repository-local RSA key pair.
+ * Encrypts bootstrap passwords with an RSA public certificate and decrypts
+ * them with the matching private PKCS#12 certificate store.
  *
  * @author Terry Curran
  * @version 2.0.0
@@ -35,33 +35,33 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     public static final String ENCRYPTED_PREFIX = "{enc}";
 
     private static final String TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
-    private static final int KEY_SIZE = 2048;
+    private static final char[] EMPTY_PASSWORD = new char[0];
 
-    private final Path publicKeyPath;
-    private final Path privateKeyPath;
+    private final Path certificatePath;
+    private final Path privateKeyStorePath;
 
     /**
-     * Creates the cipher using the default repository-local key file locations.
+     * Creates the cipher using the default repository-local certificate files.
      */
     public RsaConfigurationPasswordCipher() {
         this(
                 Path.of(System.getProperty("user.dir"), "src", "main", "resources", "config",
-                        "security", "opendata-config-public.key"),
+                        "security", "opendata-config-public.cer"),
                 Path.of(System.getProperty("user.dir"), "src", "main", "resources", "config",
-                        "security", "opendata-config-private.key"));
+                        "security", "opendata-config-private.pfx"));
     }
 
     /**
-     * Creates the cipher with explicit key file paths.
+     * Creates the cipher with explicit certificate paths.
      *
-     * @param publicKeyPath public key file path
-     * @param privateKeyPath private key file path
+     * @param certificatePath public certificate file path
+     * @param privateKeyStorePath PKCS#12 private key store file path
      */
     public RsaConfigurationPasswordCipher(
-            final Path publicKeyPath,
-            final Path privateKeyPath) {
-        this.publicKeyPath = Objects.requireNonNull(publicKeyPath, "publicKeyPath");
-        this.privateKeyPath = Objects.requireNonNull(privateKeyPath, "privateKeyPath");
+            final Path certificatePath,
+            final Path privateKeyStorePath) {
+        this.certificatePath = Objects.requireNonNull(certificatePath, "certificatePath");
+        this.privateKeyStorePath = Objects.requireNonNull(privateKeyStorePath, "privateKeyStorePath");
     }
 
     @Override
@@ -74,11 +74,10 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
             return plainText;
         }
         try {
-            ensureKeyPair();
             final var cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, readPublicKey());
             final var encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
-            return ENCRYPTED_PREFIX + Base64.getEncoder().encodeToString(encrypted);
+            return ENCRYPTED_PREFIX + java.util.Base64.getEncoder().encodeToString(encrypted);
         } catch (GeneralSecurityException | IOException exception) {
             throw new OpenDataConfigurationException("Unable to encrypt database password.", exception);
         }
@@ -91,10 +90,9 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
             return storedValue;
         }
         try {
-            ensureKeyPair();
             final var cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.DECRYPT_MODE, readPrivateKey());
-            final var decoded = Base64.getDecoder()
+            final var decoded = java.util.Base64.getDecoder()
                     .decode(storedValue.substring(ENCRYPTED_PREFIX.length()));
             return new String(cipher.doFinal(decoded), StandardCharsets.UTF_8);
         } catch (GeneralSecurityException | IOException exception) {
@@ -108,69 +106,58 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     }
 
     /**
-     * Creates the key pair when it does not already exist.
-     *
-     * @throws GeneralSecurityException on key generation failure
-     * @throws IOException on file write failure
-     */
-    private void ensureKeyPair() throws GeneralSecurityException, IOException {
-        if (Files.isRegularFile(publicKeyPath) && Files.isRegularFile(privateKeyPath)) {
-            return;
-        }
-        createParentDirectories(publicKeyPath);
-        createParentDirectories(privateKeyPath);
-        final var generator = KeyPairGenerator.getInstance("RSA");
-        generator.initialize(KEY_SIZE);
-        final KeyPair keyPair = generator.generateKeyPair();
-        writeKey(publicKeyPath, keyPair.getPublic().getEncoded());
-        writeKey(privateKeyPath, keyPair.getPrivate().getEncoded());
-    }
-
-    /**
-     * Writes one binary key in Base64 form.
-     *
-     * @param path destination path
-     * @param encoded encoded key bytes
-     * @throws IOException on write failure
-     */
-    private static void writeKey(final Path path, final byte[] encoded) throws IOException {
-        Files.writeString(path, Base64.getEncoder().encodeToString(encoded), StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Creates a parent directory when the path has one.
-     *
-     * @param path target file path
-     * @throws IOException on directory creation failure
-     */
-    private static void createParentDirectories(final Path path) throws IOException {
-        final var parent = path.toAbsolutePath().getParent();
-        if (parent != null) {
-            Files.createDirectories(parent);
-        }
-    }
-
-    /**
-     * Reads the public key.
+     * Reads the public key from the configured X.509 certificate.
      *
      * @return public key
-     * @throws IOException on read failure
-     * @throws GeneralSecurityException on key decode failure
+     * @throws IOException on file read failure
+     * @throws GeneralSecurityException on certificate decode failure
      */
     private PublicKey readPublicKey() throws IOException, GeneralSecurityException {
-        final var encoded = Base64.getDecoder().decode(Files.readString(publicKeyPath, StandardCharsets.UTF_8).trim());
-        return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(encoded));
+        validateExists(certificatePath, "public certificate");
+        try (InputStream input = Files.newInputStream(certificatePath)) {
+            final var certificateFactory = CertificateFactory.getInstance("X.509");
+            return certificateFactory.generateCertificate(input).getPublicKey();
+        }
     }
 
     /**
-     * Reads the private key.
+     * Reads the private key from the configured PKCS#12 certificate store.
      *
      * @return private key
-     * @throws IOException on read failure
-     * @throws GeneralSecurityException on key decode failure
+     * @throws IOException on file read failure
+     * @throws GeneralSecurityException on key-store failure
      */
     private PrivateKey readPrivateKey() throws IOException, GeneralSecurityException {
-        final var encoded = Base64.getDecoder().decode(Files.readString(privateKeyPath, StandardCharsets.UTF_8).trim());
-        return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(encoded));
+        validateExists(privateKeyStorePath, "private key store");
+        final var keyStore = KeyStore.getInstance("PKCS12");
+        try (InputStream input = Files.newInputStream(privateKeyStorePath)) {
+            keyStore.load(input, EMPTY_PASSWORD);
+        }
+        final var alias = StreamSupport.stream(
+                java.util.Spliterators.spliteratorUnknownSize(keyStore.aliases().asIterator(), 0),
+                false)
+                .findFirst()
+                .orElseThrow(() -> new OpenDataConfigurationException(
+                        "Private key store does not contain a certificate alias: " + privateKeyStorePath));
+        final var key = keyStore.getKey(alias, EMPTY_PASSWORD);
+        if (key instanceof PrivateKey privateKey) {
+            return privateKey;
+        }
+        throw new OpenDataConfigurationException(
+                "Private key store does not contain an RSA private key: " + privateKeyStorePath);
+    }
+
+    /**
+     * Verifies that one certificate file exists.
+     *
+     * @param path file path
+     * @param description human-readable description
+     */
+    private static void validateExists(final Path path, final String description) {
+        if (Files.isRegularFile(path)) {
+            return;
+        }
+        throw new OpenDataConfigurationException(
+                "OpenData configuration " + description + " was not found: " + path.toAbsolutePath());
     }
 }
