@@ -13,5 +13,6 @@ GO
 
 GRANT SELECT, INSERT, UPDATE ON SCHEMA::[core] TO [opendata_app];
 GRANT SELECT, INSERT, UPDATE ON SCHEMA::[openmeteo] TO [opendata_app];
+GRANT DELETE ON OBJECT::[core].[plugin_property] TO [opendata_app];
 -- sp_getapplock uses @DbPrincipal='public'; no application-schema EXECUTE grant is required.
 GO

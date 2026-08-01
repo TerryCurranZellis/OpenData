@@ -11,12 +11,17 @@
 
 ## Categories
 
-The classpath application resource holds database-pool, execution and logging
-settings. Plugin resources hold identity, endpoints, typed properties and
-credential references. `--file` provides invocation overrides.
+The bootstrap application resource now holds only the application version,
+database connection details, encrypted password, and the
+`application.use-database-properties` flag. When that flag is `false`, packaged
+plugin resources remain the source of truth. When it is `true`, application and
+plugin properties are loaded from SQL Server instead. `--file` still provides
+invocation overrides.
 
 ```text
-config/application.properties + application.<key> overrides
+config/application.properties (bootstrap only)
+    -> bootstrap SQL Server access
+    -> SQL Server [core].[application_property] + application.<key> overrides
     -> ApplicationRuntimeConfiguration
 config/plugins/index.properties
     -> PluginDescriptor list
@@ -31,6 +36,8 @@ run may use unscoped plugin entries; a multi-plugin run must use
 Keys are case-insensitive after normalisation. Named structures use
 `endpoint.<name>.*`, `property.<name>.*` and `credential.<name>.*`.
 
-The legacy `src/main/resources/application.properties` is not loaded by the
-current runtime. Its removal and the classpath database password are tracked as
-gaps. Database-backed plugin configuration and JSON exchange remain shelved.
+The version 2 runtime reads a writable bootstrap file at
+`src/main/resources/config/application.properties` before any database-backed
+configuration lookup. `--register` copies packaged application and plugin
+properties into the database and then switches the bootstrap file to
+database-first mode for future runs.

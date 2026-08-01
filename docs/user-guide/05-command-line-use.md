@@ -1,9 +1,9 @@
 # 5. Command-Line Use
 
 **Document ID:** USER-005  
-**Version:** 1.1  
+**Version:** 2.0  
 **Status:** Updated  
-**Baseline date:** 27 July 2026
+**Baseline date:** 01 August 2026
 
 ---
 
@@ -11,8 +11,8 @@
 
 ```text
 opendata --help
-opendata --version
 opendata --list-plugins
+opendata --register --file C:\OpenData\bootstrap.properties
 opendata --plugin ofgem --dry-run
 opendata --plugin openmeteo --file C:\OpenData\weather.properties
 ```
@@ -29,8 +29,7 @@ opendata --plugin openmeteo --file C:\OpenData\weather.properties
 | `-j`, `--parallelism` | Maximum concurrent plugins, 1–64 |
 | `--dry-run` | Acquisition and validation without persistent writes |
 | `-v`, `--verbose` | Detailed `FINE` logging |
+| `--register` | Copy packaged application and plugin properties into SQL Server |
 
-`ExecutionStatus` defines numeric status codes internally, but `Main` currently
-logs the final status instead of calling `System.exit(...)`. The shell therefore
-does not yet receive those application-specific exit codes; inspect the final
-application status and per-plugin summaries.
+`--register` is a standalone command and must not be combined with `--plugin`,
+`--parallelism`, or `--dry-run`.

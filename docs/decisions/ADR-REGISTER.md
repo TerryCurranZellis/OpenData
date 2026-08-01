@@ -66,6 +66,6 @@
 | [ADR-0044](ADR-0044-octopus-energy.md) | Implement Octopus Energy plugin | Proposed | Future work |
 | [ADR-0045](ADR-0045-documentation-delivery-baseline.md) | Standardise the documentation delivery baseline | Accepted | Implemented |
 | [ADR-0046](ADR-0046-manifest-driven-documentation-engine.md) | Use a manifest-driven documentation engine | Accepted | Implemented |
+| [ADR-0047](ADR-0047-database-backed-configuration-registration.md) | Register configuration in SQL Server and bootstrap from encrypted file settings | Accepted | Implemented for version 2 bootstrap |
 |  
 :::
-

@@ -13,7 +13,10 @@ monolith.
 
 ## Release status
 
-The current supported release is **1.0.0**, published as the completed seven-batch open-source baseline. See [RELEASE_NOTES.md](RELEASE_NOTES.md), [CHANGELOG.md](CHANGELOG.md), and the [final release checklist](docs/release/Final-Release-Checklist.md).
+The current development line is **2.0.0**, which introduces database-backed
+configuration registration and a typed Octopus parser. See
+[RELEASE_NOTES.md](RELEASE_NOTES.md), [CHANGELOG.md](CHANGELOG.md), and the
+[final release checklist](docs/release/Final-Release-Checklist.md).
 
 
 ## Capabilities
@@ -25,7 +28,8 @@ The current supported release is **1.0.0**, published as the completed seven-bat
 - Download and persist OpenMeteo historical daily weather.
 - Parse CSV, JSON, HTML-linked files, Excel workbooks and PDF text through shared
   infrastructure.
-- Use pooled SQL Server connections and plugin execution auditing.
+- Use pooled SQL Server connections, plugin execution auditing, and
+  database-backed configuration registration.
 - Generate technical and user manuals from Markdown, PlantUML and a
   configuration-driven documentation manifest.
 
@@ -53,7 +57,7 @@ classpath-aware launcher until executable packaging is completed. Do not use
 
 ## Configuration
 
-Runtime configuration is loaded from:
+Bootstrap and plugin configuration starts from:
 
 ```text
 src/main/resources/config/application.properties
@@ -61,7 +65,8 @@ src/main/resources/config/plugins/index.properties
 src/main/resources/config/plugins/<plugin-id>.properties
 ```
 
-An external `--file` may override application and plugin values. When several
+Run `--register` to copy application and plugin properties into SQL Server. An
+external `--file` may override application and plugin values. When several
 plugins share one override file, plugin settings must use the
 `plugin.<id>.<key>` prefix. Never commit real passwords or access tokens.
 
@@ -79,6 +84,9 @@ The complete configuration model is described in the
 
 # Validate an Ofgem run without writing data
 --plugin ofgem --dry-run
+
+# Register configuration in SQL Server
+--register --file C:\OpenData\bootstrap.properties
 
 # Run all configured plugins with bounded concurrency
 --plugin all --parallelism 2

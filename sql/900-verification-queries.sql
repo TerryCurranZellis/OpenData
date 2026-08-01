@@ -18,6 +18,8 @@ JOIN sys.partitions AS p
  AND p.index_id IN (0, 1)
 WHERE t.object_id IN
       (OBJECT_ID(N'[core].[PluginRun]'),
+       OBJECT_ID(N'[core].[application_property]'),
+       OBJECT_ID(N'[core].[plugin_property]'),
        OBJECT_ID(N'[openmeteo].[Location]'),
        OBJECT_ID(N'[openmeteo].[DailyWeather]'))
 GROUP BY t.schema_id, t.name
@@ -30,6 +32,22 @@ SELECT TOP (20)
     [RowsSkipped], [ErrorMessage]
 FROM [core].[PluginRun]
 ORDER BY [StartedAt] DESC;
+GO
+
+SELECT
+    [property_key],
+    [is_encrypted],
+    [updated_at]
+FROM [core].[application_property]
+ORDER BY [property_key];
+GO
+
+SELECT
+    [plugin_id],
+    [property_key],
+    [updated_at]
+FROM [core].[plugin_property]
+ORDER BY [plugin_id], [property_key];
 GO
 
 SELECT

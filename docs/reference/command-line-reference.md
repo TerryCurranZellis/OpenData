@@ -1,38 +1,35 @@
 # Command-Line Reference
 
 **Document ID:** REF-CLI-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Updated  
+**Baseline date:** 01 August 2026  
 **Minimum Java version:** 17
 
 ---
-
 
 ## Syntax
 
 ```text
 opendata --plugin <id|all> [--plugin <id>] [--file <settings>] [options]
+opendata --register [--file <bootstrap-settings>]
 ```
 
 | Option | Purpose |
 |---|---|
 | `-p`, `--plugin` | Select an id, repeat the option, use comma-separated ids, or use `all` |
-| `-f`, `--file` | Apply invocation overrides |
+| `-f`, `--file` | Apply invocation overrides or provide bootstrap database credentials for `--register` |
 | `-j`, `--parallelism` | Maximum concurrent plugins, from 1 to 64 |
 | `--dry-run` | Download and validate without database, audit or archive writes |
 | `-v`, `--verbose` | Enable `FINE` JUL output |
 | `-h`, `--help` | Help |
-| `--version` | Version |
+| `--about` | About dialog |
 | `--list-plugins` | Registry listing |
+| `--register` | Register application and plugin properties in SQL Server |
 
-`--plugin` is required for execution, not informational commands. `--file`
-requires `--plugin`. `all` cannot be combined with another id and a plugin may
-not be selected more than once.
-
-The default parallelism is `execution.max-parallel-plugins`; the actual worker
-count cannot exceed the number of selected plugins. Results retain selection
-order even when tasks complete in another order.
+`--plugin` is required for execution, not informational commands and not
+`--register`. `--register` cannot be combined with `--plugin`, `--parallelism`,
+or `--dry-run`.
 
 ## Examples
 
@@ -40,26 +37,11 @@ order even when tasks complete in another order.
 opendata --list-plugins
 opendata --plugin ofgem --dry-run
 opendata --plugin openmeteo --plugin ofgem --parallelism 2
-opendata --plugin openmeteo,ofgem
 opendata --plugin all --file C:\OpenData\run.properties
+opendata --register --file C:\OpenData\bootstrap.properties
 ```
-
-The current Maven artifact is not yet an executable JAR. `opendata` represents a
-classpath-aware launcher for `com.towermarsh.opendata.Main`.
 
 ## Outcomes
 
 The process logs one of `SUCCESS`, `PLUGIN_FAILURE`, `COMMAND_LINE_ERROR`,
-`CONFIGURATION_ERROR`, `INTERRUPTED` or `APPLICATION_FAILURE`. Lower layers do
-not call `System.exit`, and the current `main` method does not map these values
-to operating-system exit codes.
-
-## IDE and wrapper argument handling
-
-A normal Java launcher passes each token as a separate `String[]` element. OpenData also accepts an IDE or wrapper that supplies the complete argument line as one element, for example `"--plugin all --dry-run"`. Quoted values are preserved, so a setting such as `--file "C:\OpenData Files\run.properties"` remains one path.
-
-For NetBeans, enter the application arguments without adding quotes around the complete line:
-
-```text
---plugin all --dry-run
-```
+`CONFIGURATION_ERROR`, `INTERRUPTED` or `APPLICATION_FAILURE`.

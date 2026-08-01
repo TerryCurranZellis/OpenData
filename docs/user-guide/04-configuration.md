@@ -1,66 +1,74 @@
 # 4. Configuration
 
 **Document ID:** USER-004  
-**Version:** 1.1  
+**Version:** 2.0  
 **Status:** Updated  
-**Baseline date:** 27 July 2026
+**Baseline date:** 01 August 2026
 
 ---
 
-Built-in runtime defaults are packaged in `src/main/resources/config/application.properties`.
-Do not edit packaged defaults to store a secret. Create an external properties file
-and pass it with `--file`.
+`src/main/resources/config/application.properties` is now a bootstrap file.
+After `--register`, it should contain only:
 
-## Application runtime properties
+- `application.version`
+- `application.use-database-properties`
+- `database.url`
+- `database.user`
+- `database.password` (encrypted)
 
-The current runtime reads these application-level keys from the packaged resource
-and then overlays any matching `application.<key>` entries from the external
-properties file. Database write runs must supply `application.database.password`
-in the external file.
+## Runtime sources
 
-| Property key | Required | Description | Default/resource value |
-|---|---|---|---|
-| `application.database.driver-class` | Yes | JDBC driver class | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
-| `application.database.url` | Yes | SQL Server JDBC URL | `jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true` |
-| `application.database.user` | Yes | SQL Server login | `OpenData` |
-| `application.database.password` | Write runs only | SQL Server password supplied externally | none |
-| `application.database.pool.name` | Yes | Apache DBCP pool name | `OpenData` |
-| `application.database.pool.max-total` | No | Maximum pooled connections | `8` |
-| `application.database.pool.max-idle` | No | Maximum idle pooled connections | `8` |
-| `application.database.pool.min-idle` | No | Minimum idle pooled connections | `1` |
-| `application.database.pool.max-wait-seconds` | No | Wait time for a pooled connection | `30` |
-| `application.database.pool.validation-query` | No | Connection validation SQL | `SELECT 1` |
-| `application.execution.max-parallel-plugins` | No | Maximum concurrent plugin tasks | `4` |
-| `application.execution.shutdown-timeout-seconds` | No | Executor shutdown wait time | `30` |
-| `application.logging.directory` | No | Log directory | `logs` |
-| `application.logging.file-limit-bytes` | No | Size of each rotating log file | `10485760` |
-| `application.logging.file-count` | No | Number of retained log files | `10` |
-| `application.logging.append` | No | Append to existing log files | `true` |
+1. Bootstrap file `src/main/resources/config/application.properties`
+2. SQL Server tables `[core].[application_property]` and `[core].[plugin_property]`
+3. Optional `--file` overrides for one invocation
 
-## External override examples
+When `application.use-database-properties=true`, OpenData loads runtime and
+plugin properties from SQL Server by default and ignores the packaged plugin
+property files during normal execution.
 
-### Database, execution, and logging overrides
+## Bootstrap properties
+
+| Property key | Required | Description |
+|---|---|---|
+| `application.version` | Yes | Bootstrap version marker |
+| `application.use-database-properties` | Yes | Whether SQL Server is the default configuration source |
+| `database.url` | Yes | SQL Server JDBC URL |
+| `database.user` | Yes | SQL Server login |
+| `database.password` | Yes | SQL Server password; encrypted after registration |
+
+## Register configuration in SQL Server
+
+Use `--register` to copy packaged application and plugin properties into SQL
+Server and then switch future runs to database-backed configuration:
 
 ```properties
-application.database.******;databaseName=OpenData;encrypt=true;trustServerCertificate=true
-application.execution.max-parallel-plugins=2
-application.execution.shutdown-timeout-seconds=45
-application.logging.directory=C:\OpenData\logs
-application.logging.file-limit-bytes=20971520
+application.database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
+application.database.user=OpenData
+application.database.******
 ```
 
-### Single-plugin override file
+```text
+opendata --register --file C:\OpenData\bootstrap.properties
+```
 
-For a one-plugin run, plugin properties may be left unscoped:
+After registration, keep the bootstrap file restricted and out of Git when it
+contains environment-specific values.
+
+## Override scopes
+
+Application overrides always use `application.<key>`.
+
+Single-plugin runs may use unscoped plugin values:
 
 ```properties
-application.database.****** Multi-plugin override file
+application.database.******
+property.start-date.value=2025-01-01
+```
 
-For a multi-plugin run, scope every plugin setting with `plugin.<id>.<key>`:
+Multi-plugin runs must scope plugin values:
 
 ```properties
-application.database.****** `--file C:\OpenData\run.properties` to load the file. Restrict its file
-permissions and keep it out of Git.
-
-The separate `src/main/resources/application.properties` is a legacy resource and
-is not read by the current runtime.
+application.database.******
+plugin.openmeteo.property.start-date.value=2025-01-01
+plugin.ofgem.property.download.request-timeout.value=PT180S
+```

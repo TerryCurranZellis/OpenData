@@ -1,8 +1,8 @@
 # Octopus Energy Plugin Documentation
 
 **Document ID:** PLUGIN-OCTOPUS-INDEX-001  
-**Version:** 0.1  
-**Status:** Partial implementation — transform step complete; extract, load, and finalise are placeholders  
+**Version:** 2.0  
+**Status:** Partial implementation — transform step is typed and validated; extract, load, and finalise are placeholders  
 **Baseline date:** 01 Aug 2026
 
 The Octopus plugin imports personal Octopus Energy electricity and gas billing
@@ -39,18 +39,20 @@ directory paths must be configured before the plugin can run:
 | `working.directory` | Temporary directory used during processing |
 | `archive.directory` | Directory for archiving processed PDFs after a write run |
 
+All three properties are now declared as `PATH` values and are validated before
+the plugin runs.
+
 ## Data model
 
 The transform step produces two record types:
 
 - **`ElectricityRecord`** — one row per electricity tariff period per bill,
-  mapping to the `electric_data` target table. Fields include bill date, period,
-  tariff name, MPAN, meter ID, opening and closing readings, energy used (kWh),
-  unit rate, standing charge, and total cost.
+  using `LocalDate` and `BigDecimal` fields for bill dates, meter readings,
+  rates, and totals.
 
-- **`GasRecord`** — one row per gas tariff period per bill, mapping to the
-  `gas_data` target table. Fields mirror the electricity record with the
-  addition of consumption in cubic metres (m³) and MPRN in place of MPAN.
+- **`GasRecord`** — one row per gas tariff period per bill, also using typed
+  `LocalDate` and `BigDecimal` values, with the addition of consumption in
+  cubic metres (m³) and MPRN in place of MPAN.
 
 ## PDF parsing
 
@@ -60,11 +62,12 @@ interleaved on the same lines. `OctopusStatementParser` normalises this by
 joining all lines into a single string and collapsing whitespace runs before
 applying regex patterns to extract each field.
 
-The parser handles:
+The parser handles and validates:
 - Ordinal date suffixes (1st, 2nd, 3rd, 4th, …)
 - Abbreviated month names with optional trailing dot (Jan., Feb., …)
 - Multiple tariff periods per bill
 - Catch-up and adjustment bills with non-standard filenames
+- Required bill dates, tariff dates, meter readings, rates, and totals
 
 ## Exception handling
 

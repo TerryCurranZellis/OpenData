@@ -8,12 +8,13 @@ control. Normal runtime access is granted through role `opendata_app`.
 
 1. `001-create-database-and-login.sql`
 2. `010-create-core-schema.sql`
-3. `020-create-ofgem-schema.sql`
-4. `030-seed-reference-data.sql`
-5. `../001-core-plugin-run.sql`
-6. `../002-openmeteo.sql`
-7. `090-grant-application-permissions.sql`
-8. `../003-permissions.sql`
+3. `015-create-configuration-store.sql`
+4. `020-create-ofgem-schema.sql`
+5. `030-seed-reference-data.sql`
+6. `../001-core-plugin-run.sql`
+7. `../002-openmeteo.sql`
+8. `090-grant-application-permissions.sql`
+9. `../003-permissions.sql`
 
 Run script 001 with a privileged server identity and a SQLCMD variable for the
 local password. Run the remaining scripts against database `OpenData` in the
