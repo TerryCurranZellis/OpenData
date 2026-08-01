@@ -96,7 +96,10 @@ public final class ApplicationBootstrapPropertiesLoader {
                 .append("database.user=").append(values.get("database.user")).append(System.lineSeparator())
                 .append("database." + "pass" + "word=").append(values.get("database." + "pass" + "word")).append(System.lineSeparator());
         try {
-            Files.createDirectories(filePath.getParent());
+            final var parent = filePath.toAbsolutePath().getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             Files.writeString(filePath, builder.toString(), StandardCharsets.UTF_8);
         } catch (IOException exception) {
             throw new OpenDataConfigurationException("Unable to write application bootstrap properties.", exception);

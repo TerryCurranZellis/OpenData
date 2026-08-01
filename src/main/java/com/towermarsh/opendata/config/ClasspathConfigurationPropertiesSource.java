@@ -79,7 +79,9 @@ public final class ClasspathConfigurationPropertiesSource
                         "Plugin properties resource was not found: " + resourceName);
             }
             final var properties = new Properties();
-            properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
+            try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+                properties.load(reader);
+            }
             return properties.stringPropertyNames().stream()
                     .collect(Collectors.toMap(
                             ClasspathConfigurationPropertiesSource::normalise,

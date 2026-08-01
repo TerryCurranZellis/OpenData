@@ -117,8 +117,8 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
         if (Files.isRegularFile(publicKeyPath) && Files.isRegularFile(privateKeyPath)) {
             return;
         }
-        Files.createDirectories(publicKeyPath.getParent());
-        Files.createDirectories(privateKeyPath.getParent());
+        createParentDirectories(publicKeyPath);
+        createParentDirectories(privateKeyPath);
         final var generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(KEY_SIZE);
         final KeyPair keyPair = generator.generateKeyPair();
@@ -135,6 +135,19 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      */
     private static void writeKey(final Path path, final byte[] encoded) throws IOException {
         Files.writeString(path, Base64.getEncoder().encodeToString(encoded), StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Creates a parent directory when the path has one.
+     *
+     * @param path target file path
+     * @throws IOException on directory creation failure
+     */
+    private static void createParentDirectories(final Path path) throws IOException {
+        final var parent = path.toAbsolutePath().getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
     }
 
     /**
