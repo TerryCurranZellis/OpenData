@@ -7,10 +7,18 @@ package com.towermarsh.opendata.app;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
 import com.towermarsh.opendata.cli.CommandLineArgumentsProcessor;
+import com.towermarsh.opendata.config.ApplicationBootstrapProperties;
+import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
 import com.towermarsh.opendata.config.ApplicationRuntimeConfiguration;
+import com.towermarsh.opendata.config.ClasspathConfigurationPropertiesSource;
+import com.towermarsh.opendata.config.ConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.ConfigurationPropertiesSource;
+import com.towermarsh.opendata.config.ConfigurationRegistrationService;
+import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.OverrideConfiguration;
 import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
+import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.database.SQLServerResource;
 import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
@@ -71,8 +79,28 @@ public final class OpenDataApplication {
         }
 
         final var overrideConfiguration = OverrideConfiguration.load(arguments.overrideFile());
-        final var runtime = ApplicationRuntimeConfiguration.load(overrideConfiguration.applicationValues());
+        final ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
+        final var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
+        final var bootstrap = bootstrapLoader.load(overrideConfiguration.applicationValues());
+        if (arguments.registerRequested()) {
+            registerConfiguration(registry, bootstrap, bootstrapLoader, passwordCipher);
+            return ExecutionStatus.SUCCESS;
+        }
+
+        DatabaseResourceManager configurationDatabase = null;
+        final ConfigurationPropertiesSource propertiesSource;
+        if (bootstrap.useDatabaseProperties()) {
+            configurationDatabase = SQLServerResource.initialise(bootstrap.toDatabasePoolConfiguration());
+            propertiesSource = new JdbcConfigurationPropertiesSource(configurationDatabase);
+        } else {
+            propertiesSource = new ClasspathConfigurationPropertiesSource();
+        }
+
+        final var runtime = ApplicationRuntimeConfiguration.load(
+                propertiesSource,
+                overrideConfiguration.applicationValues());
         if (!arguments.dryRun() && runtime.database().password().isBlank()) {
+            closeDatabase(configurationDatabase);
             throw new OpenDataConfigurationException(
                     "application.database.password must be supplied for a database-writing run.");
         }
@@ -80,7 +108,7 @@ public final class OpenDataApplication {
 
         final var selected = new PluginSelectionResolver().resolve(arguments, registry);
         final var multiPluginRun = selected.size() > 1;
-        final var definitionLoader = new PropertiesPluginDefinitionLoader();
+        final var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
         final var plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(
                 descriptor,
@@ -94,13 +122,15 @@ public final class OpenDataApplication {
                 "Selected {0} plugin(s); parallelism={1}; dryRun={2}",
                 new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), arguments.dryRun()});
 
-        DatabaseResourceManager database = null;
+        DatabaseResourceManager database = configurationDatabase;
         try {
             final PluginRunAudit audit;
             if (arguments.dryRun()) {
+                closeDatabase(database);
                 database = new UnavailableDatabaseResourceManager();
                 audit = new NoOpPluginRunAudit();
             } else {
+                closeDatabase(database);
                 database = SQLServerResource.initialise(runtime.database());
                 audit = new JdbcPluginRunAudit(database);
             }
@@ -113,6 +143,38 @@ public final class OpenDataApplication {
             final var summary = coordinator.execute(plugins, parallelism, arguments.dryRun());
             logSummary(summary);
             return summary.allSuccessful() ? ExecutionStatus.SUCCESS : ExecutionStatus.PLUGIN_FAILURE;
+        } finally {
+            closeDatabase(database);
+        }
+    }
+
+    /**
+     * Registers classpath configuration in the database and rewrites the local
+     * bootstrap file to enable database-backed configuration for future runs.
+     *
+     * @param registry installed plugin registry
+     * @param bootstrap resolved bootstrap properties
+     * @param bootstrapLoader bootstrap properties loader
+     * @param passwordCipher password cipher
+     */
+    private static void registerConfiguration(
+            final ClasspathPluginRegistry registry,
+            final ApplicationBootstrapProperties bootstrap,
+            final ApplicationBootstrapPropertiesLoader bootstrapLoader,
+            final ConfigurationPasswordCipher passwordCipher) {
+        if (bootstrap.databasePassword().isBlank()) {
+            throw new OpenDataConfigurationException(
+                    "application.database.password must be supplied for --register.");
+        }
+        DatabaseResourceManager database = null;
+        try {
+            database = SQLServerResource.initialise(bootstrap.toDatabasePoolConfiguration());
+            new ConfigurationRegistrationService(
+                    new ClasspathConfigurationPropertiesSource(),
+                    new JdbcConfigurationPropertiesSource(database),
+                    bootstrapLoader,
+                    passwordCipher)
+                    .register(bootstrap, registry.list());
         } finally {
             closeDatabase(database);
         }

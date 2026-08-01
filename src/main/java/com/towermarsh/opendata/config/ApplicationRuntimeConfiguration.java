@@ -6,8 +6,6 @@
 package com.towermarsh.opendata.config;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.LinkedHashMap;
@@ -31,10 +29,10 @@ public record ApplicationRuntimeConfiguration(
         ExecutionConfiguration execution,
         LoggingConfiguration logging) {
 
-    /**
-     * location for configuration file
-     */
-    private static final String RESOURCE = "config/application.properties";
+    private static final String DEFAULT_DRIVER_CLASS = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    private static final String DEFAULT_POOL_NAME = "OpenData";
+    private static final ConfigurationPasswordCipher PASSWORD_CIPHER
+            = new RsaConfigurationPasswordCipher();
 
     /** 
      * Validates and normalises record components. 
@@ -52,14 +50,30 @@ public record ApplicationRuntimeConfiguration(
      * @return resolved runtime configuration
      */
     public static ApplicationRuntimeConfiguration load(final Map<String, String> overrides) {
-        final var values = loadResource();
+        return load(new ClasspathConfigurationPropertiesSource(), overrides);
+    }
+
+    /**
+     * Loads runtime configuration from one property source and overlays any
+     * invocation overrides.
+     *
+     * @param source configuration property source
+     * @param overrides application-level override values without the
+     * {@code application.} prefix
+     * @return resolved runtime configuration
+     */
+    public static ApplicationRuntimeConfiguration load(
+            final ConfigurationPropertiesSource source,
+            final Map<String, String> overrides) {
+        final var values = defaultPropertyValues();
+        values.putAll(Objects.requireNonNull(source, "source").loadApplicationProperties());
         values.putAll(Objects.requireNonNull(overrides, "overrides"));
         final var database = new DatabasePoolConfiguration(
-                required(values, "database.driver-class"),
+                values.getOrDefault("database.driver-class", DEFAULT_DRIVER_CLASS),
                 required(values, "database.url"),
                 required(values, "database.user"),
-                values.getOrDefault("database.password", ""),
-                required(values, "database.pool.name"),
+                PASSWORD_CIPHER.decrypt(values.getOrDefault("database.password", "")),
+                values.getOrDefault("database.pool.name", DEFAULT_POOL_NAME),
                 integer(values, "database.pool.max-total", 8),
                 integer(values, "database.pool.max-idle", 8),
                 integer(values, "database.pool.min-idle", 1),
@@ -77,24 +91,27 @@ public record ApplicationRuntimeConfiguration(
     }
 
     /**
-     * Loads the packaged run-time configuration resource.
+     * Returns built-in runtime defaults used when the bootstrap file only holds
+     * database access details.
      *
-     * @return normalised run=time property values
+     * @return default runtime properties
      */
-    private static Map<String, String> loadResource() {
-        final var classLoader = Thread.currentThread().getContextClassLoader();
-        try (var input = classLoader.getResourceAsStream(RESOURCE)) {
-            if (input == null) {
-                throw new OpenDataConfigurationException("Application resource not found: " + RESOURCE);
-            }
-            final var properties = new Properties();
-            properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
-            final Map<String, String> result = new LinkedHashMap<>();
-            properties.stringPropertyNames().forEach((var name) -> result.put(normalise(name), properties.getProperty(name).trim()));
-            return result;
-        } catch (IOException exception) {
-            throw new OpenDataConfigurationException("Unable to read " + RESOURCE, exception);
-        }
+    public static Map<String, String> defaultPropertyValues() {
+        final Map<String, String> result = new LinkedHashMap<>();
+        result.put("database.driver-class", DEFAULT_DRIVER_CLASS);
+        result.put("database.pool.name", DEFAULT_POOL_NAME);
+        result.put("database.pool.max-total", "8");
+        result.put("database.pool.max-idle", "8");
+        result.put("database.pool.min-idle", "1");
+        result.put("database.pool.max-wait-seconds", "30");
+        result.put("database.pool.validation-query", "SELECT 1");
+        result.put("execution.max-parallel-plugins", "4");
+        result.put("execution.shutdown-timeout-seconds", "30");
+        result.put("logging.directory", "logs");
+        result.put("logging.file-limit-bytes", "10485760");
+        result.put("logging.file-count", "10");
+        result.put("logging.append", "true");
+        return result;
     }
 
     /**

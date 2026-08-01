@@ -5,26 +5,24 @@
  */
 package com.towermarsh.opendata.plugin.octopus.transform.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * Immutable record holding one row of extracted gas billing data,
  * matching the column layout of {@code gas_data.csv}.
  *
- * <p>All fields are stored as {@code String} values (empty string when absent)
- * so they can be written directly to CSV without conversion or mapped into SQL
- * parameters by the DAO layer. Downstream analysis can then perform whatever
- * numeric conversions it requires.
- *
  * <h2>Example</h2>
  * <pre>
  *   GasRecord r = new GasRecord(
- *       "2022-01-05", "2021-12-07", "2022-01-05",
- *       "Octopus Exclusive 12M Fixed", "2021-12-04", "2022-01-03",
+ *       LocalDate.of(2022, 1, 5), LocalDate.of(2021, 12, 7), LocalDate.of(2022, 1, 5),
+ *       "Octopus Exclusive 12M Fixed", LocalDate.of(2021, 12, 4), LocalDate.of(2022, 1, 3),
  *       "3343444302", "E6E01319111907",
- *       "2021-12-04", "1664.2", "Smart meter reading",
- *       "2022-01-04", "1839.9", "Smart meter reading",
- *       "175.8", "1952.1", "2.98", "17.00", "5.27", "66.61");
+ *       LocalDate.of(2021, 12, 4), new BigDecimal("1664.2"), "Smart meter reading",
+ *       LocalDate.of(2022, 1, 4), new BigDecimal("1839.9"), "Smart meter reading",
+ *       new BigDecimal("175.8"), new BigDecimal("1952.1"), new BigDecimal("2.98"),
+ *       new BigDecimal("17.00"), new BigDecimal("5.27"), new BigDecimal("66.61"));
  * </pre>
  *
  * @param billDate                statement date in {@code yyyy-MM-dd} format
@@ -62,15 +60,73 @@ public record GasRecord(
         String mprn,
         String meterId,
         LocalDate startReadingDate,
-        double startReadingValue,
+        BigDecimal startReadingValue,
         String startReadingType,
         LocalDate endReadingDate,
-        double endReadingValue,
+        BigDecimal endReadingValue,
         String endReadingType,
-        double consumptionM3,
-        double energyUsedKwh,
-        double unitRatePKwh,
-        double standingChargeRatePDay,
-        double standingChargeTotalGbp,
-        double totalCostGbp) {
+        BigDecimal consumptionM3,
+        BigDecimal energyUsedKwh,
+        BigDecimal unitRatePKwh,
+        BigDecimal standingChargeRatePDay,
+        BigDecimal standingChargeTotalGbp,
+        BigDecimal totalCostGbp) {
+
+    /**
+     * Validates and normalises record components.
+     */
+    public GasRecord {
+        Objects.requireNonNull(billDate, "billDate");
+        Objects.requireNonNull(billPeriodStart, "billPeriodStart");
+        Objects.requireNonNull(billPeriodEnd, "billPeriodEnd");
+        tariffName = normaliseText(tariffName, "tariffName", false);
+        Objects.requireNonNull(tariffPeriodStart, "tariffPeriodStart");
+        Objects.requireNonNull(tariffPeriodEnd, "tariffPeriodEnd");
+        mprn = normaliseText(mprn, "mprn", true);
+        meterId = normaliseText(meterId, "meterId", true);
+        Objects.requireNonNull(startReadingDate, "startReadingDate");
+        Objects.requireNonNull(startReadingValue, "startReadingValue");
+        startReadingType = normaliseText(startReadingType, "startReadingType", false);
+        Objects.requireNonNull(endReadingDate, "endReadingDate");
+        Objects.requireNonNull(endReadingValue, "endReadingValue");
+        endReadingType = normaliseText(endReadingType, "endReadingType", false);
+        Objects.requireNonNull(consumptionM3, "consumptionM3");
+        Objects.requireNonNull(energyUsedKwh, "energyUsedKwh");
+        Objects.requireNonNull(unitRatePKwh, "unitRatePKwh");
+        Objects.requireNonNull(standingChargeRatePDay, "standingChargeRatePDay");
+        Objects.requireNonNull(standingChargeTotalGbp, "standingChargeTotalGbp");
+        Objects.requireNonNull(totalCostGbp, "totalCostGbp");
+        if (billPeriodStart.isAfter(billPeriodEnd)) {
+            throw new IllegalArgumentException("billPeriodStart must not be after billPeriodEnd");
+        }
+        if (tariffPeriodStart.isAfter(tariffPeriodEnd)) {
+            throw new IllegalArgumentException("tariffPeriodStart must not be after tariffPeriodEnd");
+        }
+        if (startReadingDate.isAfter(endReadingDate)) {
+            throw new IllegalArgumentException("startReadingDate must not be after endReadingDate");
+        }
+        if (!mprn.isBlank() && !mprn.matches("\\d+")) {
+            throw new IllegalArgumentException("mprn must be blank or numeric");
+        }
+    }
+
+    /**
+     * Normalises one textual value.
+     *
+     * @param value source value
+     * @param fieldName field name for error reporting
+     * @param blankAllowed whether blank values are allowed
+     * @return normalised value
+     */
+    private static String normaliseText(
+            final String value,
+            final String fieldName,
+            final boolean blankAllowed) {
+        Objects.requireNonNull(value, fieldName);
+        final var result = value.trim();
+        if (!blankAllowed && result.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " must not be blank");
+        }
+        return result;
+    }
 }

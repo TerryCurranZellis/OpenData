@@ -88,4 +88,17 @@ class CommandLineArgumentsProcessorTest {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--plugin", "all,openmeteo"}));
     }
+
+    @Test
+    void acceptsRegisterWithoutPluginSelection() {
+        final var arguments = processor.parse(new String[]{"--register"});
+        assertTrue(arguments.registerRequested());
+        assertTrue(arguments.pluginIds().isEmpty());
+    }
+
+    @Test
+    void rejectsRegisterCombinedWithPluginSelection() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--register", "--plugin", "ofgem"}));
+    }
 }

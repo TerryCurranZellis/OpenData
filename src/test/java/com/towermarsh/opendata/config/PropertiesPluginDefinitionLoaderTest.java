@@ -56,4 +56,19 @@ class PropertiesPluginDefinitionLoaderTest {
                 "stage",
                 definition.requireProperty("database.target-schema"));
     }
+
+    @Test
+    void loadsOctopusDefinitionWithoutEndpoints() {
+        final var loader = new PropertiesPluginDefinitionLoader();
+        final var definition = loader.load(
+                "octopus",
+                Map.of(
+                        "property.input.directory.value", "data/in",
+                        "property.working.directory.value", "data/work",
+                        "property.archive.directory.value", "data/archive"));
+
+        assertEquals("octopus", definition.id());
+        assertTrue(definition.endpoints().isEmpty());
+        assertEquals("data/in", definition.requireProperty("input.directory"));
+    }
 }

@@ -23,6 +23,7 @@ import java.util.OptionalInt;
  * @param helpRequested whether help output was requested
  * @param aboutRequested whether the graphical About window was requested
  * @param listPluginsRequested whether installed plugin listing was requested
+ * @param registerRequested whether configuration registration into the database was requested
  *
  * @author Terry Curran
  * @version 1.0.0
@@ -36,7 +37,8 @@ public record CommandLineArguments(
         boolean verbose,
         boolean helpRequested,
         boolean aboutRequested,
-        boolean listPluginsRequested) {
+        boolean listPluginsRequested,
+        boolean registerRequested) {
 
     /**
      * Validates and normalises record components.

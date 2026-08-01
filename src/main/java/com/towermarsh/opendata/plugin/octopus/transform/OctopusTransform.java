@@ -7,11 +7,7 @@ package com.towermarsh.opendata.plugin.octopus.transform;
 
 import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
-import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
-
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -49,18 +45,15 @@ public final class OctopusTransform {
 
         final var parser = new OctopusStatementParser(configuration.inputDirectory());
         try {
-            @SuppressWarnings("unchecked")
-            final Object[] both = parser.parseBoth();
-            final List<ElectricityRecord> electricityRecords = (List<ElectricityRecord>) both[0];
-            final List<GasRecord> gasRecords = (List<GasRecord>) both[1];
-
+            final var result = parser.parseAll();
             LOGGER.info(() -> "Octopus transform: %d electricity record(s), %d gas record(s)"
-                    .formatted(electricityRecords.size(), gasRecords.size()));
-
-            return new OctopusParseResult(electricityRecords, gasRecords);
+                    .formatted(result.electricityRecords().size(), result.gasRecords().size()));
+            return result;
         } catch (IOException e) {
             throw new PluginException("octopus", "Failed to parse PDF statement files in "
                     + configuration.inputDirectory(), e);
+        } catch (RuntimeException exception) {
+            throw new PluginException("octopus", "Failed to validate parsed Octopus statement data.", exception);
         }
     }
 }

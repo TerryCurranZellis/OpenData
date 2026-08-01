@@ -5,10 +5,10 @@
  */
 package com.towermarsh.opendata.config;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -17,9 +17,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 import com.towermarsh.opendata.config.model.AuthenticationType;
 import com.towermarsh.opendata.config.model.CredentialLocation;
@@ -48,28 +48,22 @@ import com.towermarsh.opendata.config.model.PluginPropertyType;
 public final class PropertiesPluginDefinitionLoader
         implements PluginDefinitionLoader {
 
-    /**
-     * Pattern to create path to plugin config
-     */
-    private static final String RESOURCE_PATTERN
-            = "config/plugins/%s.properties";
-
-    private final ClassLoader classLoader;
+    private final ConfigurationPropertiesSource source;
 
     /**
      * instantiate class
      */
     public PropertiesPluginDefinitionLoader() {
-        this(Thread.currentThread().getContextClassLoader());
+        this(new ClasspathConfigurationPropertiesSource());
     }
 
     /**
      * instantiate class
      *
-     * @param classLoader class to load
+     * @param source configuration property source
      */
-    public PropertiesPluginDefinitionLoader(final ClassLoader classLoader) {
-        this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
+    public PropertiesPluginDefinitionLoader(final ConfigurationPropertiesSource source) {
+        this.source = Objects.requireNonNull(source, "source");
     }
 
     /**
@@ -85,9 +79,7 @@ public final class PropertiesPluginDefinitionLoader
             final Map<String, String> overrides) {
 
         final var normalisedPluginId = normalise(pluginId);
-        final var resourceName = RESOURCE_PATTERN.formatted(normalisedPluginId);
-
-        final var values = loadRequiredResource(resourceName);
+        final var values = new LinkedHashMap<>(source.loadPluginProperties(normalisedPluginId));
         Objects.requireNonNull(overrides, "overrides")
                 .forEach((key, value)
                         -> values.put(normalise(key), value == null ? "" : value.trim()));
@@ -202,15 +194,18 @@ public final class PropertiesPluginDefinitionLoader
 
         names.forEach((var name) -> {
             final var prefix = "property." + name + ".";
+            final var propertyType = enumValue(
+                    values,
+                    prefix + "type",
+                    PluginPropertyType.class,
+                    PluginPropertyType.STRING);
+            final var propertyValue = values.getOrDefault(prefix + "value", "").trim();
+            validatePropertyValue(name, propertyType, propertyValue);
             final var definition
                     = new PluginPropertyDefinition(
                             name,
-                            values.getOrDefault(prefix + "value", "").trim(),
-                            enumValue(
-                                    values,
-                                    prefix + "type",
-                                    PluginPropertyType.class,
-                                    PluginPropertyType.STRING),
+                            propertyValue,
+                            propertyType,
                             getBoolean(values, prefix + "sensitive", false),
                             values.getOrDefault(prefix + "description", ""));
 
@@ -245,41 +240,6 @@ public final class PropertiesPluginDefinitionLoader
         });
 
         return result;
-    }
-
-    /**
-     * load resources
-     *
-     * @param resourceName resource name
-     * @return map of resource for plugin
-     */
-    private Map<String, String> loadRequiredResource(
-            final String resourceName) {
-
-        try (var input = classLoader.getResourceAsStream(resourceName)) {
-
-            if (input == null) {
-                throw new PluginDefinitionException(
-                        "Plugin properties resource was not found: "
-                        + resourceName);
-            }
-
-            final var properties = new Properties();
-            properties.load(new InputStreamReader(
-                    input,
-                    StandardCharsets.UTF_8));
-
-            return properties.stringPropertyNames().stream()
-                    .collect(Collectors.toMap(value -> PropertiesPluginDefinitionLoader.normalise(value),
-                            name -> properties.getProperty(name).trim(),
-                            (var first, var second) -> second,
-                            LinkedHashMap::new));
-        } catch (IOException exception) {
-            throw new PluginDefinitionException(
-                    "Unable to read plugin properties resource: "
-                    + resourceName,
-                    exception);
-        }
     }
 
     /**
@@ -491,6 +451,43 @@ public final class PropertiesPluginDefinitionLoader
         } catch (IllegalArgumentException exception) {
             throw new PluginDefinitionException(
                     "Invalid value for %s: %s".formatted(key, value),
+                    exception);
+        }
+    }
+
+    /**
+     * Validates one declared property value against its configured type.
+     *
+     * @param propertyName property name
+     * @param propertyType declared property type
+     * @param propertyValue raw property value
+     */
+    private static void validatePropertyValue(
+            final String propertyName,
+            final PluginPropertyType propertyType,
+            final String propertyValue) {
+        if (propertyValue.isBlank()) {
+            return;
+        }
+        try {
+            switch (propertyType) {
+                case STRING -> {
+                    return;
+                }
+                case INTEGER -> Integer.parseInt(propertyValue);
+                case LONG -> Long.parseLong(propertyValue);
+                case BOOLEAN -> getBoolean(Map.of(propertyName, propertyValue), propertyName, false);
+                case DECIMAL -> new BigDecimal(propertyValue);
+                case DURATION -> Duration.parse(propertyValue);
+                case PATH -> Path.of(propertyValue);
+                case URI -> URI.create(propertyValue);
+                default -> throw new PluginDefinitionException(
+                        "Unsupported property type for " + propertyName + ": " + propertyType);
+            }
+        } catch (RuntimeException exception) {
+            throw new PluginDefinitionException(
+                    "Property '%s' does not match declared type %s."
+                            .formatted(propertyName, propertyType),
                     exception);
         }
     }

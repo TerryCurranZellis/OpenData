@@ -149,6 +149,7 @@ public final class CommandLineArgumentsProcessor {
                 + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
                 + "  opendata --plugin openmeteo,ofgem" + System.lineSeparator()
                 + "  opendata --plugin all" + System.lineSeparator()
+                + "  opendata --register --file C:\\OpenData\\bootstrap.properties" + System.lineSeparator()
                 + "  opendata --about" + System.lineSeparator()
                 + "  opendata --plugin all --file C:\\OpenData\\run.properties" + System.lineSeparator(),
                 options,
@@ -214,6 +215,11 @@ public final class CommandLineArgumentsProcessor {
                 .longOpt("list-plugins")
                 .desc("List installed plugins.")
                 .get());
+        result.addOption(Option
+                .builder()
+                .longOpt("register")
+                .desc("Register application and plugin properties in the database.")
+                .get());
         return result;
     }
 
@@ -227,6 +233,7 @@ public final class CommandLineArgumentsProcessor {
         final var help = commandLine.hasOption("help");
         final var about = commandLine.hasOption("about");
         final var list = commandLine.hasOption("list-plugins");
+        final var register = commandLine.hasOption("register");
         final var informational = help || about || list;
         final List<String> rawIds = new ArrayList<>();
         final var optionValues = commandLine.getOptionValues("plugin");
@@ -247,11 +254,14 @@ public final class CommandLineArgumentsProcessor {
         if (uniqueIds.size() != rawIds.size()) {
             throw new IllegalArgumentException("A plugin was selected more than once.");
         }
-        if (!informational && rawIds.isEmpty()) {
+        if (!informational && !register && rawIds.isEmpty()) {
             throw new IllegalArgumentException("Missing required option: --plugin <id|all>.");
         }
-        if (commandLine.hasOption("file") && rawIds.isEmpty()) {
+        if (commandLine.hasOption("file") && rawIds.isEmpty() && !register) {
             throw new IllegalArgumentException("--file requires --plugin.");
+        }
+        if (register && (!rawIds.isEmpty() || commandLine.hasOption("parallelism") || commandLine.hasOption("dry-run"))) {
+            throw new IllegalArgumentException("--register cannot be combined with --plugin, --parallelism, or --dry-run.");
         }
         var parallelism = OptionalInt.empty();
         if (commandLine.hasOption("parallelism")) {
@@ -274,6 +284,7 @@ public final class CommandLineArgumentsProcessor {
                 commandLine.hasOption("verbose"),
                 help,
                 about,
-                list);
+                list,
+                register);
     }
 }

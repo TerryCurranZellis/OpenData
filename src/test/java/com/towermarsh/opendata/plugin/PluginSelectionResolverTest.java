@@ -40,7 +40,7 @@ public List<PluginDescriptor> list() {
             }
         };
         final var arguments = new CommandLineArguments(
-                List.of(), true, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
+                List.of(), true, Optional.empty(), OptionalInt.empty(), false, false, false, false, false, false);
         assertEquals(List.of(enabled), new PluginSelectionResolver().resolve(arguments, registry));
     }
 
@@ -49,7 +49,7 @@ public List<PluginDescriptor> list() {
         final var ofgem = descriptor("ofgem", true);
         final PluginRegistry registry = registry(ofgem);
         final var arguments = new CommandLineArguments(
-                List.of("ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
+                List.of("ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false, false);
         assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(arguments, registry));
     }
 
@@ -57,7 +57,7 @@ public List<PluginDescriptor> list() {
     void selectedDuplicatePluginIdsAreRejected() {
         final PluginRegistry registry = registry(descriptor("ofgem", true));
         final var arguments = new CommandLineArguments(
-                List.of("ofgem", "ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false);
+                List.of("ofgem", "ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false, false);
         assertThrows(PluginRegistryException.class, () -> new PluginSelectionResolver().resolve(arguments, registry));
     }
 

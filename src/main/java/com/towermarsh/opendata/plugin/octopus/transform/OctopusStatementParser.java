@@ -6,6 +6,7 @@
 package com.towermarsh.opendata.plugin.octopus.transform;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import com.towermarsh.opendata.plugin.octopus.extract.PdfTextExtractor;
 import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
 import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
@@ -13,10 +14,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -257,34 +261,47 @@ public final class OctopusStatementParser {
      *         {@code List<GasRecord>}; neither element is {@code null}
      * @throws IOException if the PDF cannot be read
      */
+    @Deprecated(since = "2.0.0", forRemoval = false)
     public static Object[] parseBothFromFile(Path pdfPath) throws IOException {
-        var rawText = PdfTextExtractor.extract(pdfPath);
+        final var result = parseAllFromFile(pdfPath);
+        return new Object[]{result.electricityRecords(), result.gasRecords()};
+    }
+
+    /**
+     * Parse both electricity and gas records from one PDF file and return a
+     * typed result.
+     *
+     * @param pdfPath path to the PDF file to parse
+     * @return combined typed parse result
+     * @throws IOException if the PDF cannot be read
+     */
+    public static OctopusParseResult parseAllFromFile(final Path pdfPath) throws IOException {
+        Objects.requireNonNull(pdfPath, "pdfPath");
+        final var rawText = PdfTextExtractor.extract(pdfPath);
         if (rawText.isBlank()) {
             logger.log(Level.INFO, "  Skipping empty file: {0}", pdfPath.getFileName());
-            return new Object[]{List.of(), List.of()};
+            return new OctopusParseResult(List.of(), List.of());
         }
-        var fullText = toJoinedText(rawText);
-
-        var period = getBillPeriod(fullText);
-        var billDate = !period[1].isEmpty() ? period[1] : period[0];
+        final var fullText = toJoinedText(rawText);
+        final var period = getBillPeriod(fullText);
+        final var billDate = !period[1].isEmpty() ? period[1] : period[0];
 
         logger.log(Level.INFO, "  Parsing {0}  bill period {1} to {2}",
                 new Object[]{pdfPath.getFileName(), period[0], period[1]});
 
-        List<ElectricityRecord> elecRecords = new ArrayList<>();
+        final List<ElectricityRecord> elecRecords = new ArrayList<>();
         for (var section : getElectricitySections(fullText)) {
             elecRecords.add(newElectricityRecord(section, billDate, period[0], period[1]));
         }
 
-        List<GasRecord> gasRecords = new ArrayList<>();
+        final List<GasRecord> gasRecords = new ArrayList<>();
         for (var section : getGasSections(fullText)) {
             gasRecords.add(newGasRecord(section, billDate, period[0], period[1]));
         }
 
         logger.log(Level.INFO, "  {0}  [elec: {1}, gas: {2}]",
                 new Object[]{pdfPath.getFileName(), elecRecords.size(), gasRecords.size()});
-
-        return new Object[]{elecRecords, gasRecords};
+        return new OctopusParseResult(elecRecords, gasRecords);
     }
 
     /**
@@ -359,9 +376,21 @@ public final class OctopusStatementParser {
      * @throws IOException if any PDF file cannot be read or its text cannot be
      * extracted
      */
+    @Deprecated(since = "2.0.0", forRemoval = false)
     public Object[] parseBoth() throws IOException {
-        List<ElectricityRecord> elecRecords = new ArrayList<>();
-        List<GasRecord> gasRecords = new ArrayList<>();
+        final var result = parseAll();
+        return new Object[]{result.electricityRecords(), result.gasRecords()};
+    }
+
+    /**
+     * Parse all matching PDF files and return a typed combined result.
+     *
+     * @return combined typed parse result
+     * @throws IOException if any PDF file cannot be read or parsed
+     */
+    public OctopusParseResult parseAll() throws IOException {
+        final List<ElectricityRecord> elecRecords = new ArrayList<>();
+        final List<GasRecord> gasRecords = new ArrayList<>();
 
         for (var entry : findPdfFiles()) {
             var billDate = entry.billDate();
@@ -388,7 +417,7 @@ public final class OctopusStatementParser {
                         period[1].isEmpty() ? "?" : period[1],
                         elecSections.size(), gasSections.size()});
         }
-        return new Object[]{elecRecords, gasRecords};
+        return new OctopusParseResult(elecRecords, gasRecords);
     }
 
     
@@ -580,6 +609,13 @@ public final class OctopusStatementParser {
         var prefix = sectionText.substring(parenPos - prefixLen, parenPos).stripTrailing();
         var nameMatcher = TARIFF_NAME.matcher(prefix);
         var tariffName = nameMatcher.find() ? nameMatcher.group(1).trim() : "";
+        if (tariffName.isBlank()) {
+            final var octopusIndex = prefix.lastIndexOf("Octopus");
+            final var separator = prefix.lastIndexOf("  ");
+            final var fallbackStart = octopusIndex >= 0 ? octopusIndex : (separator >= 0 ? separator + 2 : 0);
+            final var fallbackName = prefix.substring(fallbackStart).trim();
+            tariffName = fallbackName;
+        }
 
         return new String[]{tariffName, startDate, endDate};
     }
@@ -607,6 +643,56 @@ public final class OctopusStatementParser {
         }
         readings.sort(Comparator.comparing(MeterReading::date));
         return readings;
+    }
+
+    /**
+     * Converts one required ISO date string into a {@link LocalDate}.
+     *
+     * @param value ISO date text
+     * @param fieldName field name for error reporting
+     * @return parsed local date
+     */
+    private static LocalDate requiredDate(final String value, final String fieldName) {
+        return Optional.ofNullable(value)
+                .map(String::trim)
+                .filter(text -> !text.isBlank())
+                .map(LocalDate::parse)
+                .orElseThrow(() -> new IllegalArgumentException(
+                "Octopus field '%s' is required.".formatted(fieldName)));
+    }
+
+    /**
+     * Converts one required decimal string into a {@link BigDecimal}.
+     *
+     * @param value decimal text
+     * @param fieldName field name for error reporting
+     * @return parsed decimal value
+     */
+    private static BigDecimal requiredDecimal(final String value, final String fieldName) {
+        final var text = requiredText(value, fieldName);
+        try {
+            return new BigDecimal(text);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException(
+                    "Octopus field '%s' must be a decimal: %s".formatted(fieldName, text),
+                    exception);
+        }
+    }
+
+    /**
+     * Returns one required text field.
+     *
+     * @param value source value
+     * @param fieldName field name for error reporting
+     * @return trimmed non-blank text
+     */
+    private static String requiredText(final String value, final String fieldName) {
+        final var result = Optional.ofNullable(value).map(String::trim).orElse("");
+        if (result.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Octopus field '%s' is required.".formatted(fieldName));
+        }
+        return result;
     }
 
     // ── Section extraction ───────────────────────────────────────────────────
@@ -767,25 +853,25 @@ public final class OctopusStatementParser {
         }
 
         return new ElectricityRecord(
-                billDate, 
-                billPeriodStart, 
-                billPeriodEnd,
-                tariff[0], 
-                tariff[1], 
-                tariff[2],
-                mpan, 
+                requiredDate(billDate, "billDate"),
+                requiredDate(billPeriodStart, "billPeriodStart"),
+                requiredDate(billPeriodEnd, "billPeriodEnd"),
+                requiredText(tariff[0], "tariffName"),
+                requiredDate(tariff[1], "tariffPeriodStart"),
+                requiredDate(tariff[2], "tariffPeriodEnd"),
+                mpan,
                 meterId,
-                startReadDate, 
-                startReadValue, 
-                startReadType,
-                endReadDate, 
-                endReadValue, 
-                endReadType,
-                energyKwh, 
-                unitRate, 
-                scRate, 
-                scTotal, t
-                otalCost);
+                requiredDate(startReadDate, "startReadingDate"),
+                requiredDecimal(startReadValue, "startReadingValue"),
+                requiredText(startReadType, "startReadingType"),
+                requiredDate(endReadDate, "endReadingDate"),
+                requiredDecimal(endReadValue, "endReadingValue"),
+                requiredText(endReadType, "endReadingType"),
+                requiredDecimal(energyKwh, "energyUsedKwh"),
+                requiredDecimal(unitRate, "unitRatePKwh"),
+                requiredDecimal(scRate, "standingChargeRatePDay"),
+                requiredDecimal(scTotal, "standingChargeTotalGbp"),
+                requiredDecimal(totalCost, "totalCostGbp"));
     }
 
     /**
@@ -881,26 +967,26 @@ public final class OctopusStatementParser {
         }
 
         return new GasRecord(
-                billDate, 
-                billPeriodStart, 
-                billPeriodEnd,
-                tariff[0], 
-                tariff[1], 
-                tariff[2],
-                mprn, 
+                requiredDate(billDate, "billDate"),
+                requiredDate(billPeriodStart, "billPeriodStart"),
+                requiredDate(billPeriodEnd, "billPeriodEnd"),
+                requiredText(tariff[0], "tariffName"),
+                requiredDate(tariff[1], "tariffPeriodStart"),
+                requiredDate(tariff[2], "tariffPeriodEnd"),
+                mprn,
                 meterId,
-                startReadDate, 
-                startReadValue, 
-                startReadType,
-                endReadDate, 
-                endReadValue, 
-                endReadType,
-                consumptionM3,
-                energyKwh, 
-                unitRate, 
-                scRate, 
-                scTotal, 
-                totalCost);
+                requiredDate(startReadDate, "startReadingDate"),
+                requiredDecimal(startReadValue, "startReadingValue"),
+                requiredText(startReadType, "startReadingType"),
+                requiredDate(endReadDate, "endReadingDate"),
+                requiredDecimal(endReadValue, "endReadingValue"),
+                requiredText(endReadType, "endReadingType"),
+                requiredDecimal(consumptionM3, "consumptionM3"),
+                requiredDecimal(energyKwh, "energyUsedKwh"),
+                requiredDecimal(unitRate, "unitRatePKwh"),
+                requiredDecimal(scRate, "standingChargeRatePDay"),
+                requiredDecimal(scTotal, "standingChargeTotalGbp"),
+                requiredDecimal(totalCost, "totalCostGbp"));
     }
 
     // ── Inner helper types ───────────────────────────────────────────────────

@@ -105,7 +105,8 @@ public final class ConfigurationLoader {
         merged.forEach((key, resolved) -> values.put(key, resolved.value()));
 
         final var bootstrap = buildBootstrapConfig(values);
-        final var plugin = new PropertiesPluginDefinitionLoader(classLoader).load(pluginId, values);
+        final var plugin = new PropertiesPluginDefinitionLoader(
+                new ClasspathConfigurationPropertiesSource(classLoader)).load(pluginId, values);
 
         return new ApplicationConfig(
                 bootstrap,

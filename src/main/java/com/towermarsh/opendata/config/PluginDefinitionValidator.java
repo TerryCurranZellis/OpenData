@@ -43,9 +43,9 @@ public final class PluginDefinitionValidator {
                     "plugin.configuration-version must be at least 1.");
         }
 
-        if (definition.endpoints().isEmpty()) {
+        if (definition.endpoints().isEmpty() && definition.properties().isEmpty()) {
             throw new PluginDefinitionException(
-                    "Plugin must define at least one endpoint.");
+                    "Plugin must define at least one endpoint or one property.");
         }
 
         final Set<String> endpointNames = new HashSet<>();
