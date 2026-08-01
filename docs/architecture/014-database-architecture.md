@@ -60,10 +60,9 @@ insert sequence, protected by a location-scoped SQL Server application lock.
 ## Schema management
 
 Numbered SQL scripts are designed for ordered, repeatable execution.
-`core.schema_version` records the older Ofgem migration steps. The current
-scripts are split between `sql/` and `sql/sqlserver/`; use the documented
-combined order until one manifest replaces them. Live repeat-install acceptance
-is outstanding.
+`core.schema_version` records the older migration steps, while the repository
+stores the installation scripts in one ordered `/sql` folder. Live repeat-install
+acceptance is outstanding.
 
 The initial approach deliberately avoids adding Flyway or Liquibase. A migration
 tool can be adopted later if branching, rollback or multi-environment deployment

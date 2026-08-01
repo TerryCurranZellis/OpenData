@@ -17,7 +17,7 @@
 3. Run `opendata --register --file <bootstrap.properties>`.
 4. Confirm `src/main/resources/config/application.properties` now contains an
    encrypted database password and `application.use-database-properties=true`.
-5. Apply `sql/sqlserver/015-create-configuration-store.sql` and the permission
+5. Apply `sql/003-create-configuration-store.sql` and the permission
    grants before relying on database-backed configuration.
 6. Restrict the bootstrap file and the generated certificate files.
 7. Confirm logs do not contain the password or decrypted password value.

@@ -1,8 +1,8 @@
 # Bootstrap the OpenData SQL Server Database
 
 **Document ID:** GUIDE-DB-BOOTSTRAP-001  
-**Version:** 1.1  
-**Status:** Current transitional installation order  
+**Version:** 2.0  
+**Status:** Current  
 **Baseline date:** 26 July 2026
 
 ---
@@ -16,17 +16,15 @@
 
 ## Installation order
 
-1. `sql/sqlserver/001-create-database-and-login.sql`
-2. `sql/sqlserver/010-create-core-schema.sql`
-3. `sql/sqlserver/020-create-ofgem-schema.sql`
-4. `sql/sqlserver/030-seed-reference-data.sql`
-5. `sql/001-core-plugin-run.sql`
-6. `sql/002-openmeteo.sql`
-7. `sql/sqlserver/090-grant-application-permissions.sql`
-8. `sql/003-permissions.sql`
-
-This split is transitional. Both permission scripts are required for the current
-Ofgem and OpenMeteo runtime; a single migration manifest is an open gap.
+1. `sql/001-create-database-and-login.sql`
+2. `sql/002-create-core-schema.sql`
+3. `sql/003-create-configuration-store.sql`
+4. `sql/004-create-ofgem-schema.sql`
+5. `sql/005-seed-reference-data.sql`
+6. `sql/006-create-plugin-run-audit.sql`
+7. `sql/007-create-openmeteo-schema.sql`
+8. `sql/008-grant-application-permissions.sql`
+9. `sql/009-grant-shared-schema-permissions.sql`
 
 ## PowerShell example
 
@@ -35,18 +33,18 @@ Ofgem and OpenMeteo runtime; a single migration manifest is an open gap.
 New-ConfigurationCertificate
 
 sqlcmd -S localhost -E -b `
-  -i .\sql\sqlserver\001-create-database-and-login.sql `
+  -i .\sql\001-create-database-and-login.sql `
   -v OpenDataPassword="YOUR_LOCAL_PASSWORD"
 
 $scripts = @(
-    '.\sql\sqlserver\010-create-core-schema.sql',
-    '.\sql\sqlserver\015-create-configuration-store.sql',
-    '.\sql\sqlserver\020-create-ofgem-schema.sql',
-    '.\sql\sqlserver\030-seed-reference-data.sql',
-    '.\sql\001-core-plugin-run.sql',
-    '.\sql\002-openmeteo.sql',
-    '.\sql\sqlserver\090-grant-application-permissions.sql',
-    '.\sql\003-permissions.sql'
+    '.\sql\002-create-core-schema.sql',
+    '.\sql\003-create-configuration-store.sql',
+    '.\sql\004-create-ofgem-schema.sql',
+    '.\sql\005-seed-reference-data.sql',
+    '.\sql\006-create-plugin-run-audit.sql',
+    '.\sql\007-create-openmeteo-schema.sql',
+    '.\sql\008-grant-application-permissions.sql',
+    '.\sql\009-grant-shared-schema-permissions.sql'
 )
 $scripts | ForEach-Object {
     sqlcmd -S localhost -E -d OpenData -b -i $_

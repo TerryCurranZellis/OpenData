@@ -34,7 +34,7 @@ The broader evidence and documentation corrections are recorded in the
 | High | Executable distribution | Maven produces a library JAR without `Main-Class` or bundled dependencies | Select shade, assembly, jlink or launcher packaging and prove a clean invocation |
 | High | Process exit-code ownership | `Main` logs `ExecutionStatus` but does not map it to the operating-system result | Decide launcher versus `System.exit`, then test success, partial failure and fatal failure |
 | High | SQL Server acceptance | JDBC unit tests do not prove a clean live installation or write/rollback behaviour | Retained acceptance record for install, least privilege, plugin writes, idempotency and rollback |
-| Medium | SQL installation ordering | Core scripts are split between `sql/` and `sql/sqlserver/` | One ordered manifest or migration mechanism with repeatable clean-install test |
+| Medium | SQL installation ordering | Superseded by the consolidated ordered `/sql` deployment set introduced in version 2 | Retain a repeatable clean-install test for the ordered script set |
 | Medium | Parallel database APIs | Current runtime and older generic database configuration/repository abstractions coexist; the duplicate Ofgem repository stack is removed | Select the supported generic API and remove or explicitly retain compatibility classes |
 | Medium | ADR-0030 pool lifecycle variance | The accepted decision rejects a registered-driver singleton; the runtime uses one | Restore the decision or supersede it explicitly |
 | Medium | Generic ETL contracts | Stage interfaces exist but concrete plugins own their orchestration | ADR confirming extension-only contracts or implementation of a common pipeline |

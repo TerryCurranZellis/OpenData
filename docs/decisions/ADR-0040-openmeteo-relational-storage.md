@@ -41,7 +41,7 @@ Create `openmeteo.Location` and `openmeteo.DailyWeather`. Use an immutable
 
 ## Implementation notes
 
-Implemented by `sql/002-openmeteo.sql`, `load.OpenMeteoRepository` and
+Implemented by `sql/007-create-openmeteo-schema.sql`, `load.OpenMeteoRepository` and
 `config.OpenMeteoConfiguration`.
 
 This is the canonical uniquely numbered record for the decision originally

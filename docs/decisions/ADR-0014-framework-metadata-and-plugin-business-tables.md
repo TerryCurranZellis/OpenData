@@ -50,6 +50,6 @@ requires that isolation.
 
 ## Implementation notes
 
-Implemented by scripts `010-create-core-schema.sql` and
-`020-create-ofgem-schema.sql`. The application role receives permissions on both
+Implemented by scripts `sql/002-create-core-schema.sql` and
+`sql/004-create-ofgem-schema.sql`. The application role receives permissions on both
 schemas without owning either schema.

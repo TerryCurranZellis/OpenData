@@ -28,10 +28,9 @@ credential-reference model is not resolved at runtime.
 - application role: `opendata_app`;
 - database: `OpenData`.
 
-SQL scripts create the intended least-privilege role. The split permission
-scripts have not been accepted against a live SQL Server in this baseline, and
-the broader `GRANT ... ON SCHEMA::core` in `sql/003-permissions.sql` should be
-reviewed when the SQL manifests are consolidated.
+SQL scripts create the intended least-privilege role. The broader
+`GRANT ... ON SCHEMA::core` in `sql/009-grant-shared-schema-permissions.sql`
+should still be reviewed as the permission model evolves.
 
 ## Transport security
 
