@@ -39,7 +39,9 @@ public record ApplicationConfig(
         boolean dryRun,
         boolean verbose) {
 
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public ApplicationConfig {
         Objects.requireNonNull(bootstrap, "bootstrap");
         Objects.requireNonNull(plugin, "plugin");

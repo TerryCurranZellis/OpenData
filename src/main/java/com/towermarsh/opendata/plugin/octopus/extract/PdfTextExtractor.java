@@ -17,7 +17,9 @@ import java.nio.file.Path;
  * single string with the original line endings. Because Octopus Energy PDF
  * bills use a two-column layout, the extracted text interleaves the left and
  * right columns; callers must join and normalise the lines before applying
- * pattern-matching (see {@link OctopusStatementParser} for this processing).
+ * pattern-matching (see
+ * {@link com.towermarsh.opendata.plugin.octopus.transform.OctopusStatementParser}
+ * for this processing).
  *
  * <h2>Example</h2>
  * <pre>
