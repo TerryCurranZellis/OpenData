@@ -9,7 +9,7 @@ package com.towermarsh.opendata.exception;
  * Indicates an error downloading OpenData files.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public class DownloadException
         extends OpenDataException {

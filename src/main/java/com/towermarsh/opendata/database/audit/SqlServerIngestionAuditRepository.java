@@ -22,7 +22,7 @@ import java.util.Objects;
  * SQL Server implementation of the framework ingestion audit repository.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class SqlServerIngestionAuditRepository
         implements IngestionAuditRepository {

@@ -43,7 +43,7 @@ import com.towermarsh.opendata.config.model.PluginPropertyType;
  * take precedence.</p>
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class PropertiesPluginDefinitionLoader
         implements PluginDefinitionLoader {

@@ -14,7 +14,7 @@ package com.towermarsh.opendata.plugin;
  * @param skipped number of rows skipped
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record PluginMetrics(long read, long inserted, long updated, long skipped) {
     public static final PluginMetrics ZERO = new PluginMetrics(0, 0, 0, 0);

@@ -14,7 +14,7 @@ import java.util.Objects;
  * Compatibility facade used by repositories to borrow pooled connections.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class DatabaseConnectionManager implements AutoCloseable {
 

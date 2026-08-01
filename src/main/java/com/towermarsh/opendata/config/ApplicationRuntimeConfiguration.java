@@ -24,7 +24,7 @@ import java.util.Properties;
  * @param logging logging settings
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record ApplicationRuntimeConfiguration(
         DatabasePoolConfiguration database,

@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * {@link PluginException} with plugin name {@code "octopus"}.
  *
  * @author Terry Curran
- * @version 01 Aug 2026
+ * @version 1.0.0
  */
 public final class OctopusPlugin implements OpenDataPlugin {
 

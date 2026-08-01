@@ -14,7 +14,7 @@ import com.towermarsh.opendata.exception.ConfigurationException;
  * Performs framework-level validation common to every dataset plugin.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class StandardConfigurationValidator implements ConfigurationValidator {
 

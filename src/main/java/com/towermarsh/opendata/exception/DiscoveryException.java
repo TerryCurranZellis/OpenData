@@ -9,7 +9,7 @@ package com.towermarsh.opendata.exception;
  * Indicates that a dataset link could not be discovered or selected safely.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public class DiscoveryException extends OpenDataException {
 

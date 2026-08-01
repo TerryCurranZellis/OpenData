@@ -16,7 +16,7 @@ import java.util.Objects;
  * @param selectLastMatchingLink whether the final matching link is selected
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record LinkDiscoveryDefinition(
         String cssSelector,

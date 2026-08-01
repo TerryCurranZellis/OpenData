@@ -25,7 +25,7 @@ import java.util.OptionalInt;
  * @param listPluginsRequested whether installed plugin listing was requested
  *
  * @author Terry Curran
- * @version 28 July 2026
+ * @version 1.0.0
  */
 public record CommandLineArguments(
         List<String> pluginIds,

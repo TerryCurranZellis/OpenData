@@ -22,7 +22,7 @@ import java.util.UUID;
  * @param dryRun whether the plugin is executing in dry-run mode
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record PluginExecutionContext(
         UUID runId,

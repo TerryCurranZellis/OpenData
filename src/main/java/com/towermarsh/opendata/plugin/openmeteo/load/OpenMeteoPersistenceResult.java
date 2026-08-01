@@ -11,7 +11,7 @@ package com.towermarsh.opendata.plugin.openmeteo.load;
  * @param skipped number of skipped rows
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record OpenMeteoPersistenceResult(long inserted, long updated, long skipped) {
     /** Validates and normalises record components. */

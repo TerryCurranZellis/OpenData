@@ -13,7 +13,7 @@ import java.util.Map;
  * Performs basic data quality validation.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class DataQualityValidator
         implements Validator {

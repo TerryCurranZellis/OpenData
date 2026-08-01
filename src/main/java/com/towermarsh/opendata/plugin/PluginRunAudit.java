@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /** Persists generic plugin-run lifecycle information.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public interface PluginRunAudit {
 

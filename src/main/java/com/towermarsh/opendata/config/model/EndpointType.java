@@ -9,7 +9,7 @@ package com.towermarsh.opendata.config.model;
  * Purpose and retrieval behaviour of a configured endpoint.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public enum EndpointType {
 

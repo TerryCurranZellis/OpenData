@@ -17,7 +17,7 @@ import java.util.List;
  * @param timezone timezone of record
  * @param daily this is a daily record
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record OpenMeteoResponse(

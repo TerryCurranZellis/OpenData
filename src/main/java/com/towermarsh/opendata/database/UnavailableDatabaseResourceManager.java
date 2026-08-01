@@ -12,7 +12,7 @@ import java.sql.Connection;
  * defect.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 

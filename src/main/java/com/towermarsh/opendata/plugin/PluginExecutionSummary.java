@@ -15,7 +15,7 @@ import java.util.Objects;
  * @param results completed results for the selected plugins
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record PluginExecutionSummary(List<PluginRunResult> results) {
     /** Validates and normalises record components. */

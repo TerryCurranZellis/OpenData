@@ -47,7 +47,7 @@ package com.towermarsh.opendata.plugin.octopus.transform.model;
  * @param totalCostGbp            total electricity charge including VAT (£) as a string
  * 
  * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
- * @version 15 Mar 2026
+ * @version 1.0.0
  */
 public record ElectricityRecord(
         String billDate,

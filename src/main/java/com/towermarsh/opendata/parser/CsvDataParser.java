@@ -28,7 +28,7 @@ import org.apache.commons.csv.CSVRecord;
  * lines.</p>
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class CsvDataParser implements DataParser {
 

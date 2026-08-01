@@ -19,7 +19,7 @@ package com.towermarsh.opendata.exception;
  * </pre>
  *
  * @author Terry Curran
- * @version 01 Aug 2026
+ * @version 1.0.0
  */
 public class PluginException extends OpenDataException {
 

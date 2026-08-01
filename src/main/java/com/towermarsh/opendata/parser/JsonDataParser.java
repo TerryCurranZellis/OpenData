@@ -18,7 +18,7 @@ import java.util.Map;
  * Parser for JSON datasets.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class JsonDataParser
         implements DataParser {

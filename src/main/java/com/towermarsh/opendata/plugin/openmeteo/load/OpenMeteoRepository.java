@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Transactional and idempotent SQL Server writer for Open-Meteo daily data.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class OpenMeteoRepository {
     private final DatabaseResourceManager database;

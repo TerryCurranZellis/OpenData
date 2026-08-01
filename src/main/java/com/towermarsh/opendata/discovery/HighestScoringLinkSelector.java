@@ -20,7 +20,7 @@ import java.util.Objects;
  * file after a publisher changes its page.</p>
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class HighestScoringLinkSelector implements DiscoveredLinkSelector {
 

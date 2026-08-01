@@ -38,7 +38,7 @@ class PluginExecutionCoordinatorTest {
             @Override
             /**
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public Connection getConnection() throws SQLException {
                 throw new SQLException("not used");

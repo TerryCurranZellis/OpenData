@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** Names non-daemon plugin worker threads for logs and diagnostics.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class PluginThreadFactory implements ThreadFactory {
     private final AtomicInteger sequence = new AtomicInteger();

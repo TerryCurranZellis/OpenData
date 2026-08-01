@@ -13,7 +13,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
  * Loads a structured plugin definition from a storage-specific representation.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public interface PluginDefinitionLoader {
 

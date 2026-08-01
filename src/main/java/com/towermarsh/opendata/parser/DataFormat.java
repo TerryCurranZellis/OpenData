@@ -13,7 +13,7 @@ import java.util.Objects;
  * Tabular and structured file formats understood by the parser factory.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public enum DataFormat {
 

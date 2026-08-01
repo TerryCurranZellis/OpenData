@@ -12,7 +12,7 @@ import java.util.List;
  * Finds dataset links on HTML pages.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public interface HtmlLinkDiscoverer {
 

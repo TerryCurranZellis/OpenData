@@ -19,7 +19,7 @@ import com.towermarsh.opendata.config.model.BootstrapConfig;
  * Loads application bootstrap configuration from the classpath.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class BootstrapConfigurationLoader {
 

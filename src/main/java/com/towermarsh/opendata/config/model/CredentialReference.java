@@ -18,7 +18,7 @@ import java.util.Objects;
  * @param parameterName header, query parameter or cookie name
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record CredentialReference(
         String name,

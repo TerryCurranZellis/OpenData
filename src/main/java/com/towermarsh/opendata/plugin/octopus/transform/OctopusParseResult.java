@@ -22,7 +22,7 @@ import java.util.Objects;
  * @param gasRecords          transformed gas billing records; never {@code null}
  *
  * @author Terry Curran
- * @version 01 Aug 2026
+ * @version 1.0.0
  */
 public record OctopusParseResult(
         List<ElectricityRecord> electricityRecords,

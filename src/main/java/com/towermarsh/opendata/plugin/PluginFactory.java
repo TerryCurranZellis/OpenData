@@ -10,7 +10,7 @@ package com.towermarsh.opendata.plugin;
  *
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 @FunctionalInterface
 public interface PluginFactory {

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /** Runs each selected plugin as an isolated task on a bounded executor.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class PluginExecutionCoordinator {
     private static final Logger LOGGER = Logger.getLogger(PluginExecutionCoordinator.class.getName());

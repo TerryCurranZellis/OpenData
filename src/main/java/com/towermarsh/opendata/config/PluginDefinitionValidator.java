@@ -16,7 +16,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
  * Validates structural and cross-reference rules for plugin definitions.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class PluginDefinitionValidator {
 

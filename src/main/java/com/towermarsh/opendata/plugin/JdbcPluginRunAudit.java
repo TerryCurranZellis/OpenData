@@ -18,7 +18,7 @@ import java.util.UUID;
 
 /** SQL Server implementation of the generic plugin-run audit.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class JdbcPluginRunAudit implements PluginRunAudit {
     private static final String INSERT_SQL = """

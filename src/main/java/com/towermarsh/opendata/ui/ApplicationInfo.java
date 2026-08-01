@@ -15,7 +15,7 @@ import java.util.Optional;
  * to {@code development}.</p>
  *
  * @author Terry Curran
- * @version 28 July 2026
+ * @version 1.0.0
  */
 public record ApplicationInfo(
         String productName,

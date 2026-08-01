@@ -32,7 +32,7 @@ import java.util.Objects;
 
 /** Transactional SQL Server persistence for one Ofgem workbook.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class OfgemPersistenceRepository {
     private final DatabaseResourceManager database;

@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /** Creates configured plugin classes named in plugin properties.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class ReflectionPluginFactory implements PluginFactory {
 

@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Provides pooled JDBC resources to repositories.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public interface DatabaseResourceManager extends AutoCloseable {
 

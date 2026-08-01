@@ -12,7 +12,7 @@ import java.util.List;
  * Selects one download link from a set of discovered candidates.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public interface DiscoveredLinkSelector {
 

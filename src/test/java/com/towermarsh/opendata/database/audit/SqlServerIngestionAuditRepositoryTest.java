@@ -22,7 +22,7 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension./**
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 class)
 @MockitoSettings(strictness = Strictness.LENIENT)

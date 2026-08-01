@@ -22,7 +22,7 @@ import java.util.Objects;
  * @param validationQuery SQL query used to validate pooled connections
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record DatabasePoolConfiguration(
         String driverClass,

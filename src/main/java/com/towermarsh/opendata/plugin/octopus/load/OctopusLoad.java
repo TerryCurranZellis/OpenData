@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * records reported as skipped.
  *
  * @author Terry Curran
- * @version 01 Aug 2026
+ * @version 1.0.0
  */
 public final class OctopusLoad {
 

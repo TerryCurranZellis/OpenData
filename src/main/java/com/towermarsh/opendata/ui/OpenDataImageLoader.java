@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
  * Loads and scales the packaged OpenData splash image.
  *
  * @author Terry Curran
- * @version 28 July 2026
+ * @version 1.0.0
  */
 final class OpenDataImageLoader {
 

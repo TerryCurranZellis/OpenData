@@ -26,7 +26,7 @@ import java.util.Objects;
  * @param weatherDescription human-readable weather description
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record DailyWeatherRecord(
         LocalDate observationDate,

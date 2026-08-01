@@ -41,7 +41,7 @@ import org.apache.poi.ss.util.CellReference;
  * row numbers, while retaining the known C:J output-column meanings.</p>
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class OfgemPriceCapWorkbookExtractor {
 

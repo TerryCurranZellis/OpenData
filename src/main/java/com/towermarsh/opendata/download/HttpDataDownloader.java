@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * the final path.</p>
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class HttpDataDownloader implements DataDownloader {
 

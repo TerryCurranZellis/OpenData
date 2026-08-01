@@ -32,7 +32,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * never shared between plugin threads.</p>
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class SQLServerResource implements DatabaseResourceManager {
 

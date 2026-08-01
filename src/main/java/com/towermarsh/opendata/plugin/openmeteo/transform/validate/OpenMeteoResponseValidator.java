@@ -12,7 +12,7 @@ import java.util.Objects;
 
 /** Validates the parallel daily arrays returned by Open-Meteo.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class OpenMeteoResponseValidator {
 

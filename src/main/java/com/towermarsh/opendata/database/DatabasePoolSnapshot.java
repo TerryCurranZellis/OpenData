@@ -13,7 +13,7 @@ package com.towermarsh.opendata.database;
  * @param closed whether the pool has been closed
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record DatabasePoolSnapshot(
         int activeConnections,

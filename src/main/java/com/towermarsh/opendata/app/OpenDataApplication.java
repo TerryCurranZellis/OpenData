@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * plugin execution.
  *
  * @author Terry Curran
- * @version 28 July 2026
+ * @version 1.0.0
  */
 public final class OpenDataApplication {
 

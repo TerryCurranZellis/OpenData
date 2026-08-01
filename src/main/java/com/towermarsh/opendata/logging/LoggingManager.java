@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 @SuppressWarnings("ClassWithMultipleLoggers")
 public final class LoggingManager {

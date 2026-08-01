@@ -26,7 +26,7 @@ import org.apache.commons.cli.ParseException;
  * Parses and validates the OpenData command line.
  *
  * @author terry curran
- * @version 28 July 2026
+ * @version 1.0.0
  */
 public final class CommandLineArgumentsProcessor {
 

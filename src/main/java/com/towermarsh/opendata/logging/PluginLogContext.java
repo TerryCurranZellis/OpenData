@@ -14,7 +14,7 @@ import java.util.UUID;
  *
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class PluginLogContext {
 

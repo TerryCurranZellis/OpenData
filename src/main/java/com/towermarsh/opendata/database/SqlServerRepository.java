@@ -15,7 +15,7 @@ import java.util.Map;
  * SQL Server implementation of the database repository.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class SqlServerRepository
         implements DatabaseRepository {

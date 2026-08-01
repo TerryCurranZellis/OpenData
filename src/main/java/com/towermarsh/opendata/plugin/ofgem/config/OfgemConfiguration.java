@@ -21,7 +21,7 @@ import java.util.Objects;
  * @param archiveDirectory directory containing archived workbooks
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record OfgemConfiguration(
         PluginEndpointDefinition publicationEndpoint,

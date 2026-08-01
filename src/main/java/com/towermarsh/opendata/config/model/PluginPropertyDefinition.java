@@ -17,7 +17,7 @@ import java.util.Objects;
  * @param description optional description
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record PluginPropertyDefinition(
         String name,

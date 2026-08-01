@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * audit records without inspecting the stack trace.
  *
  * @author Terry Curran
- * @version 01 Aug 2026
+ * @version 1.0.0
  */
 public final class OctopusInitialise {
 

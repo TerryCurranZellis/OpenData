@@ -11,7 +11,7 @@ import com.towermarsh.opendata.exception.OpenDataException;
  * Indicates that OpenMeteo download or response processing failed.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class OpenMeteoException extends OpenDataException {
 

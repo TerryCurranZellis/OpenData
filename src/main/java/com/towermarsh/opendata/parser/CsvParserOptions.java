@@ -18,7 +18,7 @@ import java.util.Objects;
  * @param ignoreEmptyLines whether empty lines are ignored
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record CsvParserOptions(
         Charset charset,

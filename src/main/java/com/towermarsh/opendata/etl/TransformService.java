@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Performs transformation of extracted data.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class TransformService {
 

@@ -18,7 +18,7 @@ import java.util.Objects;
  * @param maximumBytes maximum accepted response size, or zero for unlimited
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record HttpDownloadOptions(
         Duration connectTimeout,

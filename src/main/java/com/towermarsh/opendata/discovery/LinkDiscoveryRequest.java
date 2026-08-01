@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * @param textPattern optional regular expression applied to link text and title
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record LinkDiscoveryRequest(
         URI pageUri,

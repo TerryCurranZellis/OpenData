@@ -9,7 +9,7 @@ package com.towermarsh.opendata.config.model;
  * Authentication mechanisms supported by endpoint definitions.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public enum AuthenticationType {
 

@@ -29,7 +29,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
  * @param verbose whether verbose logging is requested
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record ApplicationConfig(
         BootstrapConfig bootstrap,

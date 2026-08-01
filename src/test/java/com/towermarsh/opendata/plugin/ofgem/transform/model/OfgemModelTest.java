@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 class OfgemModelTest {
  @Test void periodTrimsName() { var p=new OfgemPriceCapPeriod(" Jul-Sep 2026 ",LocalDate.of(2026,7,1),LocalDate.of(2026,9,30),12,true); assertEquals("Jul-Sep 2026",p.periodName()); }

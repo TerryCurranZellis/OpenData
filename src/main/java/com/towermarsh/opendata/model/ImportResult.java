@@ -9,7 +9,7 @@ package com.towermarsh.opendata.model;
  * Represents the outcome of an import operation.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class ImportResult {
 

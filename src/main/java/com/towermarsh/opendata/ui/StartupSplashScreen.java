@@ -20,7 +20,7 @@ import javax.swing.Timer;
  * Displays the OpenData startup splash for at least four seconds.
  *
  * @author Terry Curran
- * @version 28 July 2026
+ * @version 1.0.0
  */
 public final class StartupSplashScreen {
 

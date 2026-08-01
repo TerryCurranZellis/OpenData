@@ -9,7 +9,7 @@ package com.towermarsh.opendata.app;
  * Final status reported by one OpenData process invocation.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public enum ExecutionStatus {
 

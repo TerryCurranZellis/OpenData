@@ -21,7 +21,7 @@ import java.util.UUID;
  * @param errorMessage optional error message recorded for the run
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record PluginRunResult(
         String pluginId,

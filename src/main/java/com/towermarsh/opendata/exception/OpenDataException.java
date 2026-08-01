@@ -10,7 +10,7 @@ package com.towermarsh.opendata.exception;
  *
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public class OpenDataException extends Exception {
 

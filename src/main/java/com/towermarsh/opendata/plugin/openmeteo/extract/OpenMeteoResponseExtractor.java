@@ -14,7 +14,7 @@ import java.util.Objects;
  * Parses raw Open-Meteo JSON into the API response model.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class OpenMeteoResponseExtractor {
 

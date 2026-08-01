@@ -15,7 +15,7 @@ import java.util.Objects;
  * @param definition resolved plugin definition for the current execution
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record ResolvedPlugin(PluginDescriptor descriptor, PluginDefinition definition) {
     /** Validates and normalises record components. */

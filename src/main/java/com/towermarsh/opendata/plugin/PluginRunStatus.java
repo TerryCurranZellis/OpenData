@@ -7,7 +7,7 @@ package com.towermarsh.opendata.plugin;
 
 /** Database and process status for one plugin task.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public enum PluginRunStatus {
 

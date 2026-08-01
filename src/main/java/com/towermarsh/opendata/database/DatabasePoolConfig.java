@@ -22,7 +22,7 @@ import java.util.Properties;
  * @param validationQueryTimeoutSeconds timeout for the validation query in seconds
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record DatabasePoolConfig(
         int initialSize,

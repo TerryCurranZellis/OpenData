@@ -9,7 +9,7 @@ package com.towermarsh.opendata.cli;
  * Raised when command-line arguments are invalid.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class CommandLineProcessingException extends RuntimeException {
 

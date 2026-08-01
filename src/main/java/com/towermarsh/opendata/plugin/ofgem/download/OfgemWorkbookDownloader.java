@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 /** Ofgem-specific discovery, download, and optional source-file archiving.  *
 * @author Terry Curran
-* @version 17 July 2026
+* @version 1.0.0
 */
 public final class OfgemWorkbookDownloader {
     private static final Logger LOGGER =

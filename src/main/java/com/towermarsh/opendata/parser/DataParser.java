@@ -15,7 +15,7 @@ import java.util.Map;
  * Defines a common interface for data parsers.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  *
  *
  */

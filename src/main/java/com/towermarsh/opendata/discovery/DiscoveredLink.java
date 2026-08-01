@@ -20,7 +20,7 @@ import java.util.Objects;
  * @param extension lower-case filename extension without a leading dot
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record DiscoveredLink(
         URI pageUri,

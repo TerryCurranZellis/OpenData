@@ -16,7 +16,7 @@ import java.util.Objects;
  * @param append whether existing log files are appended to
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record LoggingConfiguration(Path directory, int fileLimitBytes, int fileCount, boolean append) {
     /** 

@@ -13,7 +13,7 @@ import java.util.Objects;
  * Creates the framework parser appropriate to a downloaded file.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class DataParserFactory {
 

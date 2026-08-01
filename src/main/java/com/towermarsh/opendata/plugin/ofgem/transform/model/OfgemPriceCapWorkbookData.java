@@ -14,7 +14,7 @@ import java.util.Objects;
  * @param levels extracted price-cap level records
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record OfgemPriceCapWorkbookData(
         OfgemPriceCapPeriod period,

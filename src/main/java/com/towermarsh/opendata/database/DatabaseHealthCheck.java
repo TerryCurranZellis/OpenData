@@ -13,7 +13,7 @@ import java.util.Objects;
  * Performs a lightweight SQL Server identity and database check.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class DatabaseHealthCheck {
 

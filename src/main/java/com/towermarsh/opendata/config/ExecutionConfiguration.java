@@ -14,7 +14,7 @@ import java.util.Objects;
  * @param shutdownTimeout maximum time to wait for plugin shutdown
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record ExecutionConfiguration(int maxParallelPlugins, Duration shutdownTimeout) {
     /** 

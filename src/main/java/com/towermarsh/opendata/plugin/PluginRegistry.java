@@ -15,7 +15,7 @@ import java.util.Optional;
  * A later database-backed implementation can implement the same interface.</p>
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public interface PluginRegistry {
 

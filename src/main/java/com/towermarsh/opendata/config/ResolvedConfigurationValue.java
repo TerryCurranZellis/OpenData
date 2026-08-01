@@ -12,7 +12,7 @@ package com.towermarsh.opendata.config;
  * @param source source that supplied the value
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record ResolvedConfigurationValue(
         String value,

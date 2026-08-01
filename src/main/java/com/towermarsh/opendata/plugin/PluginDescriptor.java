@@ -18,7 +18,7 @@ import java.util.Objects;
  * @param configurationVersion plugin configuration version
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record PluginDescriptor(
         String id,

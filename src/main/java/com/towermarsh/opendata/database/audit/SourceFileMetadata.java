@@ -20,7 +20,7 @@ import java.util.Objects;
  * @param downloadedAt time when the file was downloaded
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record SourceFileMetadata(
         URI sourceUri,

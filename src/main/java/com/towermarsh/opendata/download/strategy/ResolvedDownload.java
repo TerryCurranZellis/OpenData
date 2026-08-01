@@ -22,7 +22,7 @@ import java.util.Optional;
  * @param completedAtUtc completion timestamp
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public record ResolvedDownload(
         URI requestedUri,

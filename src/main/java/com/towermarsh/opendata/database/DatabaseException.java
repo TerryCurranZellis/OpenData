@@ -9,7 +9,7 @@ package com.towermarsh.opendata.database;
  * Unchecked exception signalling an irrecoverable database operation failure.
  *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public class DatabaseException extends RuntimeException {
 

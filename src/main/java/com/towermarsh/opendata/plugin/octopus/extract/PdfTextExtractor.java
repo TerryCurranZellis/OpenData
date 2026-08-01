@@ -29,7 +29,7 @@ import java.nio.file.Path;
  * </pre>
  *
  * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
- * @version 15 Mar 2026
+ * @version 1.0.0
  */
 public final class PdfTextExtractor {
 

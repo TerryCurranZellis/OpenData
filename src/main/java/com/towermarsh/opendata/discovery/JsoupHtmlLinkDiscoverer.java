@@ -24,7 +24,7 @@ import org.jsoup.nodes.Element;
  * Jsoup implementation of HTML link discovery.
   *
  * @author Terry Curran
- * @version 17 July 2026
+ * @version 1.0.0
  */
 public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
 
