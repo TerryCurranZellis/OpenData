@@ -107,10 +107,8 @@ plugin/octopus/
 
 1. **Extract step**: implement download of new PDFs from an email account or
    cloud storage provider.
-2. **Load step**: implement database MERGE operations for electricity and gas
-   records.
+2. **Load step**: implement the transaction-safe insert/update logic for
+   `octopus.electric_data` and `octopus.gas_data`.
 3. **Finalise step**: implement PDF archiving and working-directory cleanup.
 4. **Configuration**: populate the three directory paths in `octopus.properties`
    for each environment.
-5. **Database schema**: define target tables (`electric_data`, `gas_data`) and
-   the SQL MERGE scripts.

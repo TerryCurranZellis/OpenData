@@ -23,8 +23,9 @@
 5. `sql/005-seed-reference-data.sql`
 6. `sql/006-create-plugin-run-audit.sql`
 7. `sql/007-create-openmeteo-schema.sql`
-8. `sql/008-grant-application-permissions.sql`
-9. `sql/009-grant-shared-schema-permissions.sql`
+8. `sql/007a-create-octopus-schema.sql`
+9. `sql/008-grant-application-permissions.sql`
+10. `sql/009-grant-shared-schema-permissions.sql`
 
 ## PowerShell example
 
@@ -43,6 +44,7 @@ $scripts = @(
     '.\sql\005-seed-reference-data.sql',
     '.\sql\006-create-plugin-run-audit.sql',
     '.\sql\007-create-openmeteo-schema.sql',
+    '.\sql\007a-create-octopus-schema.sql',
     '.\sql\008-grant-application-permissions.sql',
     '.\sql\009-grant-shared-schema-permissions.sql'
 )
@@ -56,12 +58,14 @@ $scripts | ForEach-Object {
 ```sql
 USE OpenData;
 SELECT * FROM core.schema_version ORDER BY version;
-SELECT name FROM sys.schemas WHERE name IN ('core', 'ofgem', 'openmeteo');
+SELECT name FROM sys.schemas WHERE name IN ('core', 'ofgem', 'openmeteo', 'octopus');
 SELECT name FROM sys.database_principals WHERE name IN ('OpenData', 'opendata_app');
 SELECT dataset_code, plugin_id, enabled FROM core.dataset;
 SELECT OBJECT_ID(N'core.application_property') AS application_property_object;
 SELECT OBJECT_ID(N'core.plugin_property') AS plugin_property_object;
 SELECT OBJECT_ID(N'core.PluginRun') AS plugin_run_object;
+SELECT OBJECT_ID(N'octopus.electric_data') AS octopus_electric_data_object;
+SELECT OBJECT_ID(N'octopus.gas_data') AS octopus_gas_data_object;
 SELECT OBJECT_ID(N'openmeteo.DailyWeather') AS daily_weather_object;
 ```
 

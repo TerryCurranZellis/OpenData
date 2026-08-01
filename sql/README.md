@@ -10,8 +10,9 @@ order:
 5. `005-seed-reference-data.sql`
 6. `006-create-plugin-run-audit.sql`
 7. `007-create-openmeteo-schema.sql`
-8. `008-grant-application-permissions.sql`
-9. `009-grant-shared-schema-permissions.sql`
+8. `007a-create-octopus-schema.sql`
+9. `008-grant-application-permissions.sql`
+10. `009-grant-shared-schema-permissions.sql`
 
 Supply the login password only through the SQLCMD variable. The application
 connects to database `OpenData` as user `OpenData`. `010-verification-queries.sql`

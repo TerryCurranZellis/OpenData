@@ -48,6 +48,13 @@
 | `openmeteo.Location` | Stable location key, name, coordinates and timezone |
 | `openmeteo.DailyWeather` | Daily temperature, daylight and weather-code facts |
 
+## `octopus` schema
+
+| Table | Primary purpose |
+|---|---|
+| `octopus.electric_data` | Electricity bill line facts keyed by statement date, tariff period and meter identifiers |
+| `octopus.gas_data` | Gas bill line facts keyed by statement date, tariff period and meter identifiers |
+
 ## Natural and surrogate keys
 
 - datasets use a stable dataset code;
@@ -55,6 +62,7 @@
 - dimension tables use stable short codes;
 - price-cap facts use a composite dimensional primary key;
 - `core.PluginRun` uses a UUID; ingestion provenance uses identity keys;
+- Octopus billing facts use composite natural keys and retain the last plugin run identifier;
 - source files carry a SHA-256 value for provenance and duplicate analysis.
 
 See the [Ofgem data dictionary](ofgem-price-cap-data-dictionary.md).
