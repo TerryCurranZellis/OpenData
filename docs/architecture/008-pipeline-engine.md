@@ -24,7 +24,8 @@ The application-level sequence is implemented:
 Inside a task, the root provider facade owns only workflow ordering. Concrete
 work is separated into plugin-local `download`, `extract`, `transform`,
 `transform.validate` and `load` packages. Ofgem and OpenMeteo implement this
-same structural pipeline while retaining source-specific types and rules.
+same structural pipeline end to end, while Octopus already follows it with
+placeholder extract/load/finalise implementations.
 
 `ExtractService`, `TransformService` and `LoadService` remain reusable stage
 contracts. They are not composed by a generic `PipelineEngine` in the current

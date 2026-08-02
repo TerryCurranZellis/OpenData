@@ -30,10 +30,11 @@ data into SQL Server.
 
 CLI, structured configuration, classpath plugin registration, reflection-based
 plugin construction, bounded execution, contextual logging and pooled database
-access are implemented. Ofgem and OpenMeteo are executable reference plugins.
-The reusable ETL interfaces remain contracts rather than a generic runtime
-pipeline. Database-backed plugin configuration, internal scheduling and a
-production secret provider are not implemented.
+access are implemented. Ofgem and OpenMeteo are executable reference plugins,
+and Octopus is registered with a typed transform pipeline but placeholder
+extract/load/finalise stages. The reusable ETL interfaces remain contracts
+rather than a generic runtime pipeline. Database-backed plugin configuration,
+internal scheduling and a production secret provider are not implemented.
 
 ## Constraint
 

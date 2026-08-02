@@ -49,4 +49,4 @@ Independent plugins normally require no mutual exclusion. Add a narrow SQL Serve
 
 ## Registry
 
-After adapting the class, ensure its plugin properties name the implementation and that the id appears in `config/plugins/index.properties`. `--plugin all` includes only enabled descriptors.
+After adapting the class, ensure its plugin properties name the implementation and that the id appears in `src/main/resources/config/plugins/index.properties`. `--plugin all` includes only enabled descriptors.

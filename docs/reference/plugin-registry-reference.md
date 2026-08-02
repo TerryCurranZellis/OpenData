@@ -15,12 +15,13 @@ src/main/resources/config/plugins/
     index.properties
     ofgem.properties
     openmeteo.properties
+    octopus.properties
 ```
 
 The index contains:
 
 ```properties
-plugins=ofgem,openmeteo
+plugins=ofgem,openmeteo,octopus
 ```
 
 Each id must have a corresponding `<id>.properties` file, and its `plugin.id`
@@ -40,14 +41,15 @@ JAR. Output is tab-separated:
 ```text
 ofgem       enabled    Ofgem Energy Price Cap
 openmeteo   enabled    OpenMeteo Historical Weather
+octopus     enabled    Octopus Energy Billing
 ```
 
 The command queries `PluginRegistry`; hard-coded listing text is prohibited.
 
 ## Adding a plugin
 
-1. Add `config/plugins/<plugin-id>.properties`.
-2. Add the id to `config/plugins/index.properties`.
+1. Add `src/main/resources/config/plugins/<plugin-id>.properties`.
+2. Add the id to `src/main/resources/config/plugins/index.properties`.
 3. Add the Java implementation named by `plugin.implementation-class`.
 4. Add registry, selection and plugin tests.
 5. Update the plugin, user and operations documentation.

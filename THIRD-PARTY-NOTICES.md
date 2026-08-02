@@ -1,7 +1,7 @@
 # OpenData Third-Party Software Notices
 
 **Project:** OpenData  
-**Project version:** 1.0.0  
+**Project version:** 2.0.0  
 **Notice reviewed:** 31 July 2026  
 **Project copyright:** Copyright 2026 Terry Curran
 

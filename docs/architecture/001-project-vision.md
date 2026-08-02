@@ -28,10 +28,12 @@ transformation, not changes throughout the framework.
 
 ## Current baseline
 
-CSV, JSON, XLS/XLSX, static HTML link discovery, SQL Server and manually invoked
-runs are implemented foundations. Ofgem and OpenMeteo are the installed plugins.
-Graphical administration, distributed services, browser automation, internal
-scheduling and database-managed plugin definitions are deferred or shelved.
+CSV, JSON, XLS/XLSX, static HTML link discovery, SQL Server and manually
+invoked runs are implemented foundations. Ofgem and OpenMeteo are the current
+executable reference plugins, and Octopus is partially implemented through a
+typed PDF transform stage. Graphical administration, distributed services,
+browser automation, internal scheduling and database-managed plugin definitions
+are deferred or shelved.
 
 Ofgem can retain its source workbook when write-mode archiving is enabled.
 OpenMeteo does not currently archive the raw JSON response, so raw-data
@@ -45,6 +47,6 @@ code.
 
 ## Success criteria
 
-Ofgem and OpenMeteo execute through the same lifecycle, plugins can be added
-without modifying `Main`, and format differences are handled by reusable
-strategies and parsers.
+Ofgem and OpenMeteo execute through the same lifecycle, Octopus already fits the
+same plugin-registration model, plugins can be added without modifying `Main`,
+and format differences are handled by reusable strategies and parsers.

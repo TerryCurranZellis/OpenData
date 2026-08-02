@@ -10,6 +10,9 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
@@ -33,12 +36,15 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      * Prefix used to mark encrypted values.
      */
     public static final String ENCRYPTED_PREFIX = "{enc}";
+    public static final String KEYSTORE_PASSWORD_PROPERTY = "opendata.config.keystore.password";
+    public static final String KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE = "OPENDATA_CONFIG_KEYSTORE_PASSWORD";
 
     private static final String TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
     private static final char[] EMPTY_PASSWORD = new char[0];
 
     private final Path certificatePath;
     private final Path privateKeyStorePath;
+    private final char[] privateKeyStorePassword;
 
     /**
      * Creates the cipher using the default repository-local certificate files.
@@ -48,7 +54,8 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
                 Path.of(System.getProperty("user.dir"), "src", "main", "resources", "config",
                         "security", "opendata-config-public.cer"),
                 Path.of(System.getProperty("user.dir"), "src", "main", "resources", "config",
-                        "security", "opendata-config-private.pfx"));
+                        "security", "opendata-config-private.pfx"),
+                resolvePrivateKeyStorePassword());
     }
 
     /**
@@ -60,8 +67,25 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     public RsaConfigurationPasswordCipher(
             final Path certificatePath,
             final Path privateKeyStorePath) {
+        this(certificatePath, privateKeyStorePath, resolvePrivateKeyStorePassword());
+    }
+
+    /**
+     * Creates the cipher with explicit certificate paths and PKCS#12 password.
+     *
+     * @param certificatePath public certificate file path
+     * @param privateKeyStorePath PKCS#12 private key store file path
+     * @param privateKeyStorePassword PKCS#12 password, or {@code null} when none is used
+     */
+    public RsaConfigurationPasswordCipher(
+            final Path certificatePath,
+            final Path privateKeyStorePath,
+            final char[] privateKeyStorePassword) {
         this.certificatePath = Objects.requireNonNull(certificatePath, "certificatePath");
         this.privateKeyStorePath = Objects.requireNonNull(privateKeyStorePath, "privateKeyStorePath");
+        this.privateKeyStorePassword = privateKeyStorePassword == null
+                ? null
+                : privateKeyStorePassword.clone();
     }
 
     /**
@@ -144,9 +168,36 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      */
     private PrivateKey readPrivateKey() throws IOException, GeneralSecurityException {
         validateExists(privateKeyStorePath, "private key store");
+        Exception lastFailure = null;
+        for (char[] candidatePassword : candidateKeyStorePasswords()) {
+            try {
+                return loadPrivateKey(candidatePassword);
+            } catch (GeneralSecurityException | IOException exception) {
+                lastFailure = exception;
+            }
+        }
+        throw new OpenDataConfigurationException(
+                "Unable to read OpenData private key store. "
+                + "Set "
+                + KEYSTORE_PASSWORD_PROPERTY
+                + " or "
+                + KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE
+                + " when the PKCS#12 file is password protected.",
+                lastFailure);
+    }
+
+    /**
+     * Reads the private key with one candidate PKCS#12 password.
+     *
+     * @param keyStorePassword candidate password, or {@code null} for no password
+     * @return private key
+     * @throws IOException on file read failure
+     * @throws GeneralSecurityException on key-store failure
+     */
+    private PrivateKey loadPrivateKey(final char[] keyStorePassword) throws IOException, GeneralSecurityException {
         final var keyStore = KeyStore.getInstance("PKCS12");
         try (var input = Files.newInputStream(privateKeyStorePath)) {
-            keyStore.load(input, EMPTY_PASSWORD);
+            keyStore.load(input, keyStorePassword);
         }
         final var alias = StreamSupport.stream(
                 spliteratorUnknownSize(keyStore.aliases().asIterator(), 0),
@@ -154,12 +205,63 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
                 .findFirst()
                 .orElseThrow(() -> new OpenDataConfigurationException(
                         "Private key store does not contain a certificate alias: " + privateKeyStorePath));
-        final var key = keyStore.getKey(alias, EMPTY_PASSWORD);
+        final var key = keyStore.getKey(alias, keyStorePassword);
         if (key instanceof PrivateKey privateKey) {
             return privateKey;
         }
         throw new OpenDataConfigurationException(
                 "Private key store does not contain an RSA private key: " + privateKeyStorePath);
+    }
+
+    /**
+     * Returns candidate PKCS#12 passwords in priority order.
+     *
+     * @return candidate passwords
+     */
+    private List<char[]> candidateKeyStorePasswords() {
+        final List<char[]> candidates = new ArrayList<>();
+        addCandidatePassword(candidates, privateKeyStorePassword);
+        addCandidatePassword(candidates, null);
+        addCandidatePassword(candidates, EMPTY_PASSWORD);
+        return candidates;
+    }
+
+    /**
+     * Adds one unique candidate password.
+     *
+     * @param candidates candidate list
+     * @param candidate candidate password
+     */
+    private static void addCandidatePassword(final List<char[]> candidates, final char[] candidate) {
+        final var exists = candidates.stream().anyMatch(existing -> samePassword(existing, candidate));
+        if (!exists) {
+            candidates.add(candidate == null ? null : candidate.clone());
+        }
+    }
+
+    /**
+     * Compares two password arrays.
+     *
+     * @param left first password
+     * @param right second password
+     * @return true when both values match
+     */
+    private static boolean samePassword(final char[] left, final char[] right) {
+        return left == right || left != null && right != null && Arrays.equals(left, right);
+    }
+
+    /**
+     * Resolves the PKCS#12 password from the JVM property first, then the environment.
+     *
+     * @return resolved password, or {@code null} when none is configured
+     */
+    private static char[] resolvePrivateKeyStorePassword() {
+        final var propertyValue = System.getProperty(KEYSTORE_PASSWORD_PROPERTY);
+        if (propertyValue != null) {
+            return propertyValue.toCharArray();
+        }
+        final var environmentValue = System.getenv(KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE);
+        return environmentValue == null ? null : environmentValue.toCharArray();
     }
 
     /**

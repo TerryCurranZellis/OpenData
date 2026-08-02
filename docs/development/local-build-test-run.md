@@ -45,9 +45,10 @@ packaging are implemented and tested.
 ## Minimum verification
 
 1. run the full unit suite;
-2. list both registered plugins;
-3. dry-run each plugin separately;
-4. dry-run both with parallelism two;
+2. list all registered plugins;
+3. dry-run Ofgem and OpenMeteo separately, and exercise Octopus with local PDF
+   fixtures when its input directories are configured;
+4. dry-run Ofgem and OpenMeteo together with parallelism two;
 5. validate and render documentation;
 6. for persistence changes, run the SQL Server acceptance matrix.
 

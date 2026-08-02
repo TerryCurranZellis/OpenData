@@ -12,20 +12,21 @@
 
 | Source | Purpose |
 |---|---|
-| `config/application.properties` | Minimal bootstrap file used to reach SQL Server |
-| `config/plugins/index.properties` | Installed plugin list used by `--register` and plugin discovery |
-| `config/plugins/<id>.properties` | File-backed plugin definitions used before registration and by `--register` |
+| Classpath `config/application.properties` (`src/main/resources/config/application.properties`) | Minimal bootstrap file used to reach SQL Server |
+| Classpath `config/plugins/index.properties` (`src/main/resources/config/plugins/index.properties`) | Installed plugin list used by `--register` and plugin discovery |
+| Classpath `config/plugins/<id>.properties` (`src/main/resources/config/plugins/<id>.properties`) | File-backed plugin definitions used before registration and by `--register` |
 | `[core].[application_property]` | Database-backed runtime properties used after registration |
 | `[core].[plugin_property]` | Database-backed plugin properties used after registration |
 | `--file <path>` | Invocation-only overrides |
 
 ## Bootstrap file
 
-`config/application.properties` should contain only:
+The packaged bootstrap file at `src/main/resources/config/application.properties`
+contains only:
 
 ```properties
 application.version=2.0.0
-application.use-database-properties=true
+application.use-database-properties=false
 database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
 database.user=OpenData
 database.******
@@ -61,7 +62,8 @@ plugin.ofgem.property.download.request-timeout.value=PT180S
 
 ## Registration
 
-Generate the certificate material first with `scripts/New-ConfigurationCertificate.ps1`.
-Run `opendata --register` to copy the packaged application and plugin property
-sets into SQL Server. After registration, normal execution loads configuration
-from SQL Server when `application.use-database-properties=true`.
+Generate the certificate material first with
+`scripts/New-ConfigurationCertificate.ps1`. Run `opendata --register` to copy
+the packaged application and plugin property sets into SQL Server. After
+registration, normal execution loads configuration from SQL Server when
+`application.use-database-properties=true`.

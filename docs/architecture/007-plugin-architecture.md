@@ -19,9 +19,10 @@ access, clock and dry-run state.
 
 ## Phase 1 definition and registry
 
-Each plugin uses `config/plugins/<id>.properties`, parsed into a storage-neutral
-`PluginDefinition`. An explicit `index.properties` lists installed ids because
-classpath directory scanning is unreliable inside JARs.
+Each plugin uses the classpath resource `config/plugins/<id>.properties`
+(`src/main/resources/config/plugins/<id>.properties` in the repository), parsed
+into a storage-neutral `PluginDefinition`. An explicit `index.properties` lists
+installed ids because classpath directory scanning is unreliable inside JARs.
 
 `ReflectionPluginFactory` creates the implementation class using a
 `PluginDefinition` constructor when present, otherwise a no-argument

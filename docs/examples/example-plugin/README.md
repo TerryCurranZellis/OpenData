@@ -6,7 +6,7 @@ This folder contains copyable templates for a new properties-based OpenData plug
 
 1. Copy the Java package into `src/main/java/com/towermarsh/opendata/plugin/example`.
 2. Copy `example.properties` into `src/main/resources/config/plugins`.
-3. Add `example` to the comma-separated `plugins` value in `config/plugins/index.properties`.
+3. Add `example` to the comma-separated `plugins` value in `src/main/resources/config/plugins/index.properties`.
 4. Replace the placeholder endpoint, transformation, validation and repository logic.
 5. Add unit tests for configuration, transformation, persistence and dry-run behaviour.
 6. Verify registration with `--list-plugins`, then run `--plugin example --dry-run`.

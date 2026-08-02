@@ -17,9 +17,12 @@
 
 :::
 
-All plugins are registered in `config/plugins/index.properties`, can be selected
-together, support dry runs and return standard metrics. Their domain models
-remain independent. All use the package structure described in
+All plugins are registered in
+`src/main/resources/config/plugins/index.properties`, can be selected together,
+support dry runs and return standard metrics. Their domain models remain
+independent. Ofgem and OpenMeteo are the current fully wired reference plugins;
+Octopus currently stops after the typed transform stage. All use the package
+structure described in
 [Adding a plugin](../guides/adding-a-plugin.md); new implementations should start
 from the [Java template](../templates/plugin-java/README.md).
 
