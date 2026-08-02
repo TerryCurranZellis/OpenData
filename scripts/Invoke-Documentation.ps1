@@ -938,7 +938,6 @@ function Invoke-Documentation {
 
     Add-Type -AssemblyName System.IO.Compression
     Add-Type -AssemblyName System.IO.Compression.FileSystem
-
     $wordNamespace = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
     $stream = [IO.File]::Open(
       $Path,
@@ -949,7 +948,6 @@ function Invoke-Documentation {
       $stream,
       [IO.Compression.ZipArchiveMode]::Update,
     $false)
-
     try {
       $entry = $archive.GetEntry('word/settings.xml')
       if ($null -eq $entry) {
@@ -972,7 +970,6 @@ function Invoke-Documentation {
       } finally {
         $entryStream.Dispose()
       }
-
       $xml = New-Object -TypeName System.Xml.XmlDocument
       $xml.PreserveWhitespace = $true
       $xml.LoadXml($settingsXml)
@@ -982,14 +979,13 @@ function Invoke-Documentation {
       if ($null -eq $settingsNode) {
         throw ('The DOCX settings could not be read: {0}' -f $Path)
       }
-
       $updateFields = $settingsNode.SelectSingleNode('./w:updateFields', $namespaces)
       if ($null -eq $updateFields) {
         $updateFields = $xml.CreateElement('w', 'updateFields', $wordNamespace)
         $null = $settingsNode.PrependChild($updateFields)
       }
-      $updateFields.SetAttribute('val', $wordNamespace, 'true')
-
+      $null = $updateFields.SetAttribute('val', $wordNamespace, 'true')
+      
       $entryStream = $entry.Open()
       try {
         $entryStream.SetLength(0)
@@ -1282,7 +1278,9 @@ function Invoke-Documentation {
       if ($LASTEXITCODE -ne 0) {
         throw ('Pandoc failed while building {0} {1} output.' -f $Manifest.Id, $item)
       }
-      Write-Output -InputObject ('Created {0}' -f $output)
+      $Size = (Get-item -path $Output).Length
+      Write-Output -InputObject ('Created {0}, {1} bytes' -f $output,$size)
+      
     }
   }
 
@@ -1342,4 +1340,4 @@ function Invoke-Documentation {
 }
 $ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
 
-Invoke-Documentation -Action All -ProjectRoot $ProjectRoot -Format Docx -RenderDiagrams -FailOnWarning
+Invoke-Documentation -Action All -ProjectRoot $ProjectRoot -Format Docx -RenderDiagrams -FailOnWarning -verbose
