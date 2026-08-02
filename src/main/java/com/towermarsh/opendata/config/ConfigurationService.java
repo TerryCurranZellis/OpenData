@@ -54,7 +54,7 @@ public final class ConfigurationService {
      * @return resolved configuration
      */
     public ApplicationConfig resolve(final CommandLineArguments arguments) {
-        final ApplicationConfig configuration = loader.load(arguments);
+        final var configuration = loader.load(arguments);
         validators.forEach(validator -> validator.validate(configuration));
         return configuration;
     }

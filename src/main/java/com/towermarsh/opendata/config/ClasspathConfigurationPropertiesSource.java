@@ -49,11 +49,20 @@ public final class ClasspathConfigurationPropertiesSource
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
     }
 
+    /**
+     * @inheritdoc
+     * @return 
+     */
     @Override
     public Map<String, String> loadApplicationProperties() {
         return loadRequiredResource(APPLICATION_RESOURCE, true);
     }
 
+    /**
+     * @inheritdoc
+     * @param pluginId
+     * @return 
+     */
     @Override
     public Map<String, String> loadPluginProperties(final String pluginId) {
         final var resourceName = PLUGIN_RESOURCE_PATTERN.formatted(normalise(pluginId));

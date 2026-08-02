@@ -7,7 +7,6 @@ package com.towermarsh.opendata.config;
 
 import java.time.Duration;
 
-import com.towermarsh.opendata.config.model.BootstrapConfig;
 import com.towermarsh.opendata.exception.ConfigurationException;
 
 /**
@@ -20,7 +19,7 @@ public final class StandardConfigurationValidator implements ConfigurationValida
 
     /**
      * validate the configuration
-     *
+     * @inheritdoc
      * @param configuration configuration to validate
      */
     @Override

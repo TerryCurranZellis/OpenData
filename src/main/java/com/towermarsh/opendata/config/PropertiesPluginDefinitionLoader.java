@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.config;
 
 import java.net.URI;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;

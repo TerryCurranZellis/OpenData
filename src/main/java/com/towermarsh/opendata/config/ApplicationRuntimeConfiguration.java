@@ -5,14 +5,12 @@
  */
 package com.towermarsh.opendata.config;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 
 /**
  * Application-level settings loaded before plugin execution.

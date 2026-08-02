@@ -16,7 +16,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.CertificateFactory;
 import java.util.Objects;
-import java.util.Optional;
+import static java.util.Spliterators.spliteratorUnknownSize;
 import java.util.stream.StreamSupport;
 import javax.crypto.Cipher;
 
@@ -64,6 +64,11 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
         this.privateKeyStorePath = Objects.requireNonNull(privateKeyStorePath, "privateKeyStorePath");
     }
 
+    /**
+     * @inheritdoc
+     * @param plainText
+     * @return 
+     */
     @Override
     public String encrypt(final String plainText) {
         Objects.requireNonNull(plainText, "plainText");
@@ -83,6 +88,11 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
         }
     }
 
+    /**
+     * @inheritdoc
+     * @param storedValue
+     * @return 
+     */
     @Override
     public String decrypt(final String storedValue) {
         Objects.requireNonNull(storedValue, "storedValue");
@@ -100,6 +110,11 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
         }
     }
 
+    /**
+     * @inheritdoc
+     * @param storedValue
+     * @return 
+     */
     @Override
     public boolean isEncrypted(final String storedValue) {
         return storedValue != null && storedValue.startsWith(ENCRYPTED_PREFIX);
@@ -130,11 +145,11 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     private PrivateKey readPrivateKey() throws IOException, GeneralSecurityException {
         validateExists(privateKeyStorePath, "private key store");
         final var keyStore = KeyStore.getInstance("PKCS12");
-        try (InputStream input = Files.newInputStream(privateKeyStorePath)) {
+        try (var input = Files.newInputStream(privateKeyStorePath)) {
             keyStore.load(input, EMPTY_PASSWORD);
         }
         final var alias = StreamSupport.stream(
-                java.util.Spliterators.spliteratorUnknownSize(keyStore.aliases().asIterator(), 0),
+                spliteratorUnknownSize(keyStore.aliases().asIterator(), 0),
                 false)
                 .findFirst()
                 .orElseThrow(() -> new OpenDataConfigurationException(
