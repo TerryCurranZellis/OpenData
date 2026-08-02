@@ -43,6 +43,19 @@ class RsaConfigurationPasswordCipherTest {
         assertEquals("secret-value", decryptingCipher.decrypt(encrypted));
     }
 
+
+    @Test
+    void decryptsWithDefaultOpenDataPrivateKeyStorePassword() throws Exception {
+        final var certificatePath = temporaryDirectory.resolve("opendata-config-public.cer");
+        final var privateKeyStorePath = temporaryDirectory.resolve("opendata-config-private.pfx");
+        createCertificatePair(privateKeyStorePath, certificatePath, "nopassword");
+
+        final var cipher = new RsaConfigurationPasswordCipher(certificatePath, privateKeyStorePath);
+        final var encrypted = cipher.encrypt("database-secret");
+
+        assertEquals("database-secret", cipher.decrypt(encrypted));
+    }
+
     private static void createCertificatePair(
             final Path privateKeyStorePath,
             final Path certificatePath,
