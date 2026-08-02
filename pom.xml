@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.towermarsh</groupId>
     <artifactId>opendata</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <name>OpenData Processing Framework</name>
     <description>Java framework for downloading, validating and importing OpenData sources.</description>
 
