@@ -30,8 +30,9 @@ The plugin follows the five-step ETL pattern:
 
 ## Configuration
 
-The plugin is registered in `config/plugins/octopus.properties`. Three
-directory paths must be configured before the plugin can run:
+The plugin is registered in
+`src/main/resources/config/plugins/octopus.properties`. Three directory paths
+must be configured before the plugin can run:
 
 | Property | Description |
 |----------|-------------|

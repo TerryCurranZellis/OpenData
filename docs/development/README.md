@@ -9,6 +9,7 @@
 ---
 
 - [Local build, test and run](local-build-test-run.md)
+- [Build, CI and release guide](Build-CI-and-Release-Guide.md)
 - [Dependency management](dependency-management.md)
 - [Release and versioning](release-and-versioning.md)
 - [Adding a plugin](../guides/adding-a-plugin.md)

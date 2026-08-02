@@ -11,10 +11,10 @@
 ## Credential rule
 
 The target rule is that secrets are never committed to Git, copied into example
-files, written to logs or stored in execution snapshots. The current
-`config/application.properties` violates that rule by containing a development
-database password. The unused `src/main/resources/application.properties` also
-contains obsolete credential material.
+files, written to logs or stored in execution snapshots. The maintained
+bootstrap resource at `src/main/resources/config/application.properties`
+currently leaves `database.password` blank in Git, but any environment-specific
+override file still requires the same protection.
 
 `OverrideConfiguration` can supply
 `application.database.password` from a protected external properties file.
@@ -55,7 +55,7 @@ cell references are retained as non-secret lineage metadata.
 ## Required production hardening
 
 - protected credential provider;
-- removal and rotation of tracked credential values;
+- continued exclusion of live credentials from tracked configuration;
 - trusted SQL Server certificate;
 - bounded downloads on active plugin paths;
 - restricted network path to SQL Server;

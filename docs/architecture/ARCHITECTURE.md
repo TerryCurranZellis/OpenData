@@ -9,9 +9,10 @@
 ---
 
 The numbered documents describe the current modular-monolith architecture.
-Concrete Ofgem and OpenMeteo flows execute through a bounded plugin coordinator;
-documents distinguish that implementation from reusable framework contracts and
-deferred work.
+Concrete Ofgem and OpenMeteo flows execute through a bounded plugin
+coordinator, and the partially implemented Octopus flow uses the same registry
+and pipeline boundaries; documents distinguish that implementation from reusable
+framework contracts and deferred work.
 
 ::: {.docx-linear-table}
 

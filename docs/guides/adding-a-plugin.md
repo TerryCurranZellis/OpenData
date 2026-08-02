@@ -58,7 +58,7 @@ closing the logical connection.
 1. Choose a stable lowercase id.
 2. Add `src/main/resources/config/plugins/<id>.properties`.
 3. Set `plugin.implementation-class` to the root plugin facade.
-4. Add the id to `config/plugins/index.properties`.
+4. Add the id to `src/main/resources/config/plugins/index.properties`.
 5. Define endpoints, typed properties and credential references.
 6. Never add provider selection to `Main`.
 

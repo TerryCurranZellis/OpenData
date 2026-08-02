@@ -13,10 +13,11 @@ monolith.
 
 ## Release status
 
-The current development line is **2.0.0**, which introduces database-backed
-configuration registration and a typed Octopus parser. See
-[RELEASE_NOTES.md](RELEASE_NOTES.md), [CHANGELOG.md](CHANGELOG.md), and the
-[final release checklist](docs/release/Final-Release-Checklist.md).
+The current documentation and runtime-configuration baseline is **2.0.0**,
+which introduces database-backed configuration registration and a typed Octopus
+parser. The Maven project version remains **1.0.0** until the next tagged
+release. See [RELEASE_NOTES.md](RELEASE_NOTES.md), [CHANGELOG.md](CHANGELOG.md),
+and the [final release checklist](docs/release/Final-Release-Checklist.md).
 
 
 ## Capabilities
@@ -26,6 +27,8 @@ configuration registration and a typed Octopus parser. See
 - Perform side-effect-free dry runs.
 - Discover and process Ofgem price-cap workbooks.
 - Download and persist OpenMeteo historical daily weather.
+- Parse Octopus Energy statement PDFs into typed electricity and gas billing
+  records; extract, load and finalise remain in progress.
 - Parse CSV, JSON, HTML-linked files, Excel workbooks and PDF text through shared
   infrastructure.
 - Use pooled SQL Server connections, plugin execution auditing, and
@@ -122,8 +125,11 @@ See [`docs/development/Java-Quality-Guide.md`](docs/development/Java-Quality-Gui
 | User guide | [docs/user-guide/README.md](docs/user-guide/README.md) |
 | Architecture | [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) |
 | Development | [docs/development/README.md](docs/development/README.md) |
+| Build, CI and release | [docs/development/Build-CI-and-Release-Guide.md](docs/development/Build-CI-and-Release-Guide.md) |
 | Operations | [docs/operations/README.md](docs/operations/README.md) |
 | Reference | [docs/reference/README.md](docs/reference/README.md) |
+| Standards | [docs/standards/README.md](docs/standards/README.md) |
+| Plugins | [docs/plugins/README.md](docs/plugins/README.md) |
 | ADR register | [docs/decisions/ADR-REGISTER.md](docs/decisions/ADR-REGISTER.md) |
 | Adding a plugin | [docs/guides/adding-a-plugin.md](docs/guides/adding-a-plugin.md) |
 | Documentation framework | [docs/README.md](docs/README.md) |

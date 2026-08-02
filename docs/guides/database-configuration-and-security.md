@@ -15,8 +15,9 @@
 2. Create a local bootstrap override file containing `application.database.url`,
    `application.database.user`, and `application.database.password`.
 3. Run `opendata --register --file <bootstrap.properties>`.
-4. Confirm `src/main/resources/config/application.properties` now contains an
-   encrypted database password and `application.use-database-properties=true`.
+4. Confirm `src/main/resources/config/application.properties` now contains the
+   environment's encrypted database password and
+   `application.use-database-properties=true`.
 5. Apply `sql/003-create-configuration-store.sql` and the permission
    grants before relying on database-backed configuration.
 6. Restrict the bootstrap file and the generated certificate files.

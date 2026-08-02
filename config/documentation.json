@@ -5,7 +5,7 @@
   "author": "OpenData Framework Project",
   "language": "en-GB",
   "dateFormat": "dd MMMM yyyy",
-  "projectVersion": "1.0.0",
+  "projectVersion": "2.0.0",
 
   "sourceDirectory": "docs",
   "buildDirectory": "docs/build",
@@ -31,7 +31,7 @@
 
   "diagramSourceDirectory": "docs/diagrams/source",
   "diagramOutputDirectory": "docs/diagrams/generated",
-  "plantUmlJar": "tools/plantuml-asl-1.2026.6.jar",
+  "plantUmlJar": "tools/plantuml.jar",
 
   "landscapeFilter": "docs/_filters/landscape.lua",
   "tocFilter": "docs/_filters/document-toc.lua",

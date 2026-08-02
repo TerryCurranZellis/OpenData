@@ -21,7 +21,9 @@ A release candidate requires:
 - no preview runtime dependencies unless explicitly accepted;
 - executable-package and exit-code verification;
 - clean/repeat database installation;
-- Ofgem and OpenMeteo dry and write runs;
+- Ofgem and OpenMeteo dry and write runs, plus an Octopus dry run with
+  representative local PDF fixtures when that plugin is part of the release
+  scope;
 - rollback, idempotency and least-privilege tests;
 - documentation validation and successful PlantUML rendering;
 - resolved critical gaps or explicit release waivers.

@@ -19,13 +19,13 @@ plugin properties are loaded from SQL Server instead. `--file` still provides
 invocation overrides.
 
 ```text
-config/application.properties (bootstrap only)
+src/main/resources/config/application.properties (bootstrap only)
     -> bootstrap SQL Server access
     -> SQL Server [core].[application_property] + application.<key> overrides
     -> ApplicationRuntimeConfiguration
-config/plugins/index.properties
+src/main/resources/config/plugins/index.properties
     -> PluginDescriptor list
-config/plugins/<id>.properties + plugin overrides
+src/main/resources/config/plugins/<id>.properties + plugin overrides
     -> PluginDefinition
 ```
 

@@ -8,7 +8,8 @@
 ---
 
 `src/main/resources/config/application.properties` is now a bootstrap file.
-After `--register`, it should contain only:
+The packaged repository default is a bootstrap file. After `--register`, it
+should contain only:
 
 - `application.version`
 - `application.use-database-properties`
@@ -24,7 +25,8 @@ After `--register`, it should contain only:
 
 When `application.use-database-properties=true`, OpenData loads runtime and
 plugin properties from SQL Server by default and ignores the packaged plugin
-property files during normal execution.
+property files during normal execution. The repository default remains `false`
+until registration is completed for an environment.
 
 ## Bootstrap properties
 

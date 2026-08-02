@@ -42,10 +42,10 @@ branch and its Java, resource and SQL files.
 - the CLI record under `cli` and `ExecutionStatus` are the only current
   command-line/status models; their unused `app` predecessors were removed;
 - provider-specific classes are owned entirely by `plugin.ofgem` or
-  `plugin.openmeteo`; the root provider class is the workflow facade;
+  `plugin.openmeteo`; Octopus follows the same boundary but still has placeholder
+  extract/load/finalise steps; the root provider class is the workflow facade;
 - `ApplicationRuntimeConfiguration` reads
-  `config/application.properties`. The separate classpath
-  `application.properties` is legacy and unused.
+  `src/main/resources/config/application.properties`.
 - The active database path uses `DatabasePoolConfiguration`,
   `DatabaseResourceManager` and plugin persistence repositories. Older
   `DatabasePoolConfig`, `DatabaseConnectionManager` and generic repository
