@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [2.0.0] - 2026-08-01
+
+### Added
+
+  - Encryption for database password using security certificaate
+  - Adding code for Octopus Energy statement
+
+### Changed
+
+  - store configuration details in the database
+
 ### Added
 
 - Per-document manifests for the Technical User Guide, Administrator Guide, Developer Guide and API Reference.
