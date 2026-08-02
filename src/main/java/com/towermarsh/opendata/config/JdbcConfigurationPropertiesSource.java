@@ -24,7 +24,7 @@ public final class JdbcConfigurationPropertiesSource
         implements ConfigurationPropertiesSource {
 
     private static final String SELECT_APPLICATION_SQL = """
-            SELECT [property_key], [property_value]
+            SELECT [property_key], [property_value], [is_encrypted]
               FROM [core].[application_property]
              ORDER BY [property_key]
             """;
@@ -153,7 +153,13 @@ public final class JdbcConfigurationPropertiesSource
                 var resultSet = statement.executeQuery()) {
             final Map<String, String> values = new LinkedHashMap<>();
             while (resultSet.next()) {
-                values.put(resultSet.getString(1), resultSet.getString(2));
+                final var key = resultSet.getString(1);
+                final var value = resultSet.getString(2);
+                final var encrypted = resultSet.getBoolean(3);
+                values.put(key, encrypted && value != null
+                        && !value.startsWith(RsaConfigurationPasswordCipher.ENCRYPTED_PREFIX)
+                        ? RsaConfigurationPasswordCipher.ENCRYPTED_PREFIX + value
+                        : value);
             }
             return values;
         } catch (SQLException exception) {
