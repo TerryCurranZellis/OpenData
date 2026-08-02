@@ -17,7 +17,9 @@ import com.towermarsh.opendata.ui.AboutDialog;
 import com.towermarsh.opendata.ui.ApplicationInfo;
 import com.towermarsh.opendata.ui.StartupSplashScreen;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
@@ -35,9 +37,13 @@ public final class OpenData {
     private OpenData() {
     }
 
+    @SuppressWarnings("NonConstantLogger")
+    private static Logger logger = Logger.getLogger(OpenData.class.getName());
+
     /**
      * Starts the application without terminating the JVM explicitly.
      *
+     * @verions 2.0.0 add code to change console setting
      * @param args the command line argument array
      */
     public static void main(final String[] args) {
@@ -45,8 +51,8 @@ public final class OpenData {
         final var processor = new CommandLineArgumentsProcessor();
         final var splash = new StartupSplashScreen();
         var status = ExecutionStatus.NOT_STARTED;
-        var logger = Logger.getLogger(OpenData.class.getName());
         try {
+            enableUTF8Console();
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
             final var arguments = processor.parse(args);
@@ -60,7 +66,7 @@ public final class OpenData {
         } catch (CommandLineProcessingException exception) {
             status = ExecutionStatus.COMMAND_LINE_ERROR;
             logger.log(Level.SEVERE, "Command-line error: {0}", messageFor(exception));
-            processor.printHelp(new PrintWriter(System.err, true));
+            processor.printHelp(new PrintWriter(System.err, true, StandardCharsets.UTF_8));
         } catch (PluginDefinitionException | OpenDataConfigurationException exception) {
             status = ExecutionStatus.CONFIGURATION_ERROR;
             logger.log(Level.SEVERE, "Configuration error: {0}", messageFor(exception));
@@ -100,5 +106,18 @@ public final class OpenData {
         return message == null || message.isBlank()
                 ? current.getClass().getSimpleName()
                 : message;
+    }
+
+    /**
+     * Redirect {@link System#out} and {@link System#err} to UTF-8 so that
+     * characters render correctly on Windows consoles.
+     */
+    private static void enableUTF8Console() {
+        try {
+            System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
+            System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            logger.log(Level.INFO, "UTF‑8 console could not be enabled", e);
+        }
     }
 }

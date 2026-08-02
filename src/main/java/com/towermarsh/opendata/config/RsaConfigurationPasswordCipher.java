@@ -37,7 +37,7 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      */
     public static final String ENCRYPTED_PREFIX = "{enc}";
     public static final String KEYSTORE_PASSWORD_PROPERTY = "opendata.config.keystore.password";
-    public static final String KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE = "OPENDATA_CONFIG_KEYSTORE_PASSWORD";
+    public static final String KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE = "nopassword";
 
     private static final String TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
     private static final char[] EMPTY_PASSWORD = new char[0];

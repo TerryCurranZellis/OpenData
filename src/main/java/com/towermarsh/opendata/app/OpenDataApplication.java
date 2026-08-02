@@ -34,6 +34,7 @@ import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
 import com.towermarsh.opendata.plugin.ResolvedPlugin;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,7 @@ public final class OpenDataApplication {
             final CommandLineArgumentsProcessor processor) throws IOException, InterruptedException {
         final var registry = new ClasspathPluginRegistry();
         if (arguments.helpRequested()) {
-            processor.printHelp(new PrintWriter(System.out, true));
+            processor.printHelp(new PrintWriter(System.out, true, StandardCharsets.UTF_8));
             return ExecutionStatus.SUCCESS;
         }
         if (arguments.listPluginsRequested()) {

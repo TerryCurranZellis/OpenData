@@ -82,17 +82,22 @@ function New-ConfigurationCertificate {
       }
       $certificate = New-SelfSignedCertificate @Parameters
             
-      $null = Export-Certificate  -Cert $certificate -FilePath $publicCertificatePath
+      Export-Certificate  -Cert $certificate -FilePath $publicCertificatePath
 
       $pfxParameters = @{
         Cert = $certificate
         FilePath = $privateStorePath
-        Password = (ConvertTo-SecureString -String ' ' -AsPlainText -Force)
+        Password = (ConvertTo-SecureString -String 'nopassword' -AsPlainText -Force)
       }
       $null = Export-PfxCertificate @pfxParameters 
 
       if ($RemoveFromStore)
       {
+      <#
+        Get-ChildItem -Path Cert:\LocalMachine\My |
+            Where-Object { $_.Subject -eq 'CN=OpenData Configuration Encryption' } |
+            Remove-Item
+      #>
         Remove-Item -Path ('Cert:\LocalMachine\My' + $certificate.Thumbprint) -Force
       }
 
