@@ -32,12 +32,17 @@ an encrypted password.
 - The PFX password protects access to the private key; it is not the encryption
   key itself.
 - The supplied development PFX password is `nopassword`.
-- A deployment can override the PFX password with the JVM property
-  `opendata.config.keystore.password` or environment variable
-  `OPENDATA_CONFIG_KEYSTORE_PASSWORD`.
+- The current runtime accepts a replacement PFX password through the JVM
+  property `opendata.config.keystore.password`.
+- The previously documented `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment
+  variable is not honoured by the uploaded Java baseline: the implementation
+  currently looks for an environment variable literally named `nopassword`.
+  This is a release-blocking implementation defect, not a supported secret-input
+  mechanism.
 
-The supplied certificate pair and default password are development conveniences.
-For production:
+The supplied certificate pair, tracked private key, plaintext bootstrap
+password and default PFX password are development artefacts and must not be
+published as a production-ready credential model. For production:
 
 1. generate a deployment-specific certificate and private key;
 2. use a strong, separately protected PFX password;

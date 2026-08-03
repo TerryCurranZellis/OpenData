@@ -1,9 +1,9 @@
 # OpenData 2.0.0 Quick Start
 
-**Document ID:** GUIDE-QUICKSTART-001  
-**Version:** 2.0  
-**Status:** Current  
-**Baseline date:** 2 August 2026
+**Document ID:** GUIDE-QUICKSTART-001
+**Version:** 2.0
+**Status:** Current
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -38,15 +38,16 @@ src/main/resources/config/security
 ```
 
 The supplied development PFX password is `nopassword`. For another PFX password,
-set one of:
-
-```powershell
-$env:OPENDATA_CONFIG_KEYSTORE_PASSWORD = '<pfx-password>'
-```
+use the JVM system property:
 
 ```text
 -Dopendata.config.keystore.password=<pfx-password>
 ```
+
+Do not rely on `OPENDATA_CONFIG_KEYSTORE_PASSWORD` in this baseline. The Java
+constant currently causes the runtime to look for an environment variable named
+`nopassword`; that defect must be fixed and tested before an environment variable
+can be documented as supported.
 
 ## 4. Set the initial bootstrap properties
 
@@ -99,21 +100,28 @@ octopus
 
 ## 7. Dry-run plugins
 
+Dry-run Ofgem and OpenMeteo separately before combining them:
+
 ```text
 --plugin ofgem --dry-run
 --plugin openmeteo --dry-run
---plugin octopus --dry-run
+--plugin ofgem,openmeteo --dry-run --parallelism 2
 ```
 
-For Octopus, place test PDFs outside source control in
+Do not use `--plugin octopus --dry-run` or `--plugin all --dry-run` as acceptance
+commands in the current source baseline. `OctopusExtract` still reads the
+processed-file ledger while the framework supplies an unavailable database
+resource during plugin dry run, so execution fails before PDF parsing.
+
+For Octopus acceptance, place disposable test PDFs outside source control in
 `C:\Attachments\octopus` using names such as:
 
 ```text
 octopus-energy-statement-2026-07-31.pdf
 ```
 
-A dry run must not create run-audit rows, write business tables, mark statements
-completed or archive source PDFs.
+Use a test database and explicit archive directory for a controlled write run
+until the Octopus dry-run defect is corrected.
 
 ## 8. First write run
 

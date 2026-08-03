@@ -1,39 +1,45 @@
 # Ofgem Price-Cap Data Model
 
-**Document ID:** PLUGIN-OFGEM-MODEL-001  
-**Version:** 1.1  
-**Baseline date:** 24 July 2026
+**Document ID:** PLUGIN-OFGEM-MODEL-001
+**Version:** 2.0
+**Status:** Implemented primary annual-cap model
+**Baseline date:** 3 August 2026
+
+---
 
 ## Java records
 
 | Record | Purpose |
 |---|---|
-| `OfgemPriceCapPeriod` | Effective period and source-column metadata |
-| `OfgemPriceCapLevel` | One dimensional annual amount and lineage |
-| `OfgemPriceCapWorkbookData` | Complete immutable extraction result |
+| `OfgemPriceCapPeriod` | Effective period, display text, current flag and source-column metadata |
+| `OfgemPriceCapLevel` | One dimensional annual GBP amount with worksheet/cell lineage |
+| `OfgemPriceCapWorkbookData` | Immutable complete extraction result |
 | `OfgemPersistenceResult` | Inserted, updated and skipped load counts |
 
-## Repository boundary
-
-`plugin.ofgem.load.OfgemPersistenceRepository` owns provenance, period upsert,
-fact replacement and the explicit transaction. It is the only current Ofgem
-repository; the earlier disconnected repository interface/implementation pair
-has been removed.
-
-## Keys
-
-The fact key is:
+## Fact key
 
 ```text
-period + region + payment method + tariff type + consumption basis + VAT flag
+period
++ region
++ payment method
++ tariff type
++ consumption basis
++ VAT inclusion flag
 ```
 
-The key prevents duplicate values for the same published interpretation while
-allowing VAT-inclusive and VAT-exclusive outputs to coexist where the workbook
-provides both.
+The composite key permits VAT-inclusive and VAT-exclusive interpretations where
+published while preventing duplicate values for the same dimensional meaning.
+
+## Persistence ownership
+
+`plugin.ofgem.load.OfgemPersistenceRepository` owns all provider SQL and the
+explicit transaction. It also creates the domain ingestion/source-file
+provenance used by the Ofgem schema. The coordinator's `core.PluginRun` remains a
+separate framework audit identity.
 
 ## Extension rule
 
-Do not add standing-charge or unit-rate columns to `price_cap_level`. Create a new
-fact with its own unit, dimensions and source semantics. Component values use the
-reserved component tables after their extraction rules are implemented.
+Do not add standing-charge or unit-rate columns to `price_cap_level`. Those are
+different measures and require separate facts with their own units and mapping
+rules. The reserved component tables may be used only after component extraction
+semantics are implemented and documented.

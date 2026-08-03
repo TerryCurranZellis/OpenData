@@ -1,32 +1,32 @@
 @startuml
-skinparam monochrome true
 title OpenMeteo Plugin Pipeline and Persistence
 participant OpenMeteoPlugin as Plugin
-participant OpenMeteoDownloader as Download
-participant OpenMeteoResponseExtractor as Extract
-participant OpenMeteoResponseValidator as Validate
-participant OpenMeteoTransformer as Transform
+participant "initialise.OpenMeteoInitialise" as Initialise
+participant "extract.OpenMeteoDownloader" as Download
+participant "transform.OpenMeteoResponseExtractor" as Extract
+participant "transform.validate.OpenMeteoResponseValidator" as Validate
+participant "transform.OpenMeteoTransformer" as Transform
 participant "load.OpenMeteoRepository" as Load
-database SQLServer
+database "OpenData SQL Server" as SQLServer
 
-Plugin -> Download : download(date range)
-Download --> Plugin : raw JSON
-Plugin -> Extract : extract(JSON)
-Extract --> Plugin : OpenMeteoResponse
-Plugin -> Validate : validate(response)
-Validate --> Plugin : validated response
-Plugin -> Transform : transform(response)
-Transform --> Plugin : List<DailyWeatherRecord>
+Plugin -> Initialise : execute(context)
+Initialise -> Download : download(resolved date range)
+Download --> Initialise : raw JSON
+Initialise -> Extract : parse JSON
+Extract --> Initialise : response arrays
+Initialise -> Validate : validate aligned daily values
+Validate --> Initialise : validated response
+Initialise -> Transform : create DailyWeatherRecord values
+Transform --> Initialise : records
 alt dry run
-  Plugin --> Plugin : read/skipped metrics
+  Initialise --> Plugin : read/skipped metrics
 else write run
-  Plugin -> Load : save(records, runId)
-  Load -> SQLServer : BEGIN TRANSACTION
-  Load -> SQLServer : sp_getapplock(location key)
+  Initialise -> Load : save(configuration, records, runId)
+  Load -> SQLServer : BEGIN + location applock
   Load -> SQLServer : upsert Location
-  Load -> SQLServer : stage, update and insert daily rows
-  Load -> SQLServer : COMMIT data transaction
-  Load -> SQLServer : remove temporary/session state
-  Load --> Plugin : inserted/updated/skipped
+  Load -> SQLServer : stage, update, insert daily rows
+  Load -> SQLServer : COMMIT and restore session state
+  Load --> Initialise : inserted/updated/skipped
+  Initialise --> Plugin : metrics
 end
 @enduml

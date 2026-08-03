@@ -1,9 +1,9 @@
 # 5. Command-Line Use
 
-**Document ID:** USER-005  
-**Version:** 2.0  
-**Status:** Updated  
-**Baseline date:** 01 August 2026
+**Document ID:** USER-005
+**Version:** 2.0
+**Status:** Updated
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -18,7 +18,7 @@ opendata --plugin openmeteo --file C:\OpenData\weather.properties
 ```
 
 `opendata` means the classpath-aware launcher configured for
-`com.towermarsh.opendata.Main`.
+`com.towermarsh.opendata.OpenData`.
 
 ## Options
 

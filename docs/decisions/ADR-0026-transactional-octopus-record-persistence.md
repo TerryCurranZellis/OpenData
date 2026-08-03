@@ -1,36 +1,39 @@
-# ADR-0026: Persist Octopus bill records as one transaction
+# ADR-0026: Persist Octopus statement records as one transaction
 
-- **Status:** Shelved
+- **Status:** Accepted and implemented
 - **Date:** 2026-07-23
-- **Shelved:** 2026-07-24
+- **Implemented:** 2026-08-03
 - **Decision owners:** OpenData maintainers
 
 ## Context
 
-One bill can produce gas, electricity and adjustment records. Persisting only
-some of them would make a source document appear partly processed.
+One source PDF can produce multiple electricity and gas records. Persisting only
+part of the parsed statement would create an inconsistent source state.
 
 ## Decision
 
-When the Octopus plugin is implemented, persist all records and source-document
-metadata for one PDF inside one database transaction. Mark or move the email only
-after database commit. Any persistence error rolls back the entire bill.
+Persist the complete parsed batch and its processed-file ledger entries in one
+SQL Server transaction. Mark a source file `COMPLETED` only inside that
+transaction. Move the local PDF only after commit.
 
 ## Consequences
 
 ### Positive
 
-- one bill is complete or absent;
-- retry and mailbox-state rules are simpler;
-- audit records align with the source document.
+- the database batch is complete or rolled back;
+- a source is not marked complete without its business rows;
+- repeated input has a deterministic ledger check;
+- recovery from SQL failure is straightforward.
 
 ### Negative or limiting
 
-- one category failure prevents all categories being saved;
-- filesystem and IMAP actions cannot join the SQL transaction;
-- recovery status is needed for failures after database commit.
+- one invalid record prevents the complete batch from committing;
+- filesystem archive cannot be atomic with SQL Server;
+- post-commit archive failure needs operational recovery.
 
-## Implementation notes
+## Implementation
 
-Shelved with the Octopus plugin. ADR-0035 applies the same atomic replacement
-principle to the implemented Ofgem period load.
+`OctopusPersistenceRepository.save` disables auto-commit, inserts/updates all
+electricity and gas records, marks every batch statement completed, commits once
+and rolls back on SQL or runtime failure. `OctopusFinalise` performs the archive
+move after successful return from the load stage.

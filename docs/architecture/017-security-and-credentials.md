@@ -1,9 +1,9 @@
 # Security and Credentials
 
-**Document ID:** ARCH-017  
-**Version:** 2.0  
-**Status:** Encryption implemented; source-baseline remediation required  
-**Baseline date:** 3 August 2026  
+**Document ID:** ARCH-017
+**Version:** 2.0
+**Status:** Encryption implemented; source-baseline remediation required
+**Baseline date:** 3 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -29,9 +29,13 @@ are equally important.
 - `--register` stores the encrypted password in both
   `core.application_property` and the rewritten bootstrap file.
 
-A PKCS#12 password can be supplied through the configured Java system property
-or environment lookup. That mechanism must not be documented as a managed
-secret provider; it is a local password input only.
+A PKCS#12 password can be supplied through the Java system property
+`opendata.config.keystore.password`. The intended environment-variable path is
+currently defective: `KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE` is set to
+`nopassword`, so the runtime does not read the documented
+`OPENDATA_CONFIG_KEYSTORE_PASSWORD` name. This must be corrected and tested
+before that environment interface is claimed. Neither mechanism is a managed
+secret provider; both are local password inputs.
 
 ## Critical baseline finding
 

@@ -1,9 +1,9 @@
 # Database Schema Reference
 
-**Document ID:** REF-DB-SCHEMA-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Document ID:** REF-DB-SCHEMA-001
+**Version:** 2.0
+**Status:** Baseline
+**Baseline date:** 3 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -23,6 +23,8 @@
 |---|---|
 | `core.PluginRun` | UUID runtime task status and read/write metrics |
 | `core.schema_version` | Installed logical migration versions |
+| `core.application_property` | Database-backed runtime application properties and encryption marker |
+| `core.plugin_property` | Database-backed property values by plugin id |
 | `core.dataset` | Dataset/plugin registration |
 | `core.ingestion_run` | Run status, timing, counters and message |
 | `core.source_file` | Source URI, filename, size, media type and SHA-256 |
@@ -52,6 +54,7 @@
 
 | Table | Primary purpose |
 |---|---|
+| `octopus.statement_file` | Completed source-file ledger keyed uniquely by filename and SHA-256 |
 | `octopus.electric_data` | Electricity bill line facts keyed by statement date, tariff period and meter identifiers |
 | `octopus.gas_data` | Gas bill line facts keyed by statement date, tariff period and meter identifiers |
 

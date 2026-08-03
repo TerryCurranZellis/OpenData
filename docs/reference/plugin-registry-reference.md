@@ -1,9 +1,9 @@
 # Plugin Registry Reference
 
-**Document ID:** REF-REGISTRY-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Document ID:** REF-REGISTRY-001
+**Version:** 2.0
+**Status:** Version 2.0.0 implementation reference
+**Baseline date:** 3 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -24,9 +24,16 @@ The index contains:
 plugins=ofgem,openmeteo,octopus
 ```
 
-Each id must have a corresponding `<id>.properties` file, and its `plugin.id`
-must match the indexed id. The definition also identifies its implementation
-class. `ClasspathPluginRegistry` orders the resulting descriptors by id.
+Each id must have a corresponding definition and matching `plugin.id`.
+`ClasspathPluginRegistry` uses the index for installed implementation metadata
+and orders descriptors by id.
+
+## Configuration-source distinction
+
+The installed implementation registry remains classpath-backed. Plugin property
+values can be loaded from packaged files or `core.plugin_property` through
+`JdbcConfigurationPropertiesSource` after registration. Database-backed
+properties do not create a dynamic plugin marketplace or load arbitrary classes.
 
 ## Listing plugins
 
@@ -34,9 +41,9 @@ class. `ClasspathPluginRegistry` orders the resulting descriptors by id.
 opendata --list-plugins
 ```
 
-`opendata` represents a classpath-aware launcher for
-`com.towermarsh.opendata.Main`; the current Maven artifact is not an executable
-JAR. Output is tab-separated:
+`opendata` denotes a classpath-aware launcher for
+`com.towermarsh.opendata.OpenData`; the current POM does not produce a complete
+executable/fat JAR. Output is tab-separated and supplied by the registry:
 
 ```text
 ofgem       enabled    Ofgem Energy Price Cap
@@ -44,15 +51,13 @@ openmeteo   enabled    OpenMeteo Historical Weather
 octopus     enabled    Octopus Energy Billing
 ```
 
-The command queries `PluginRegistry`; hard-coded listing text is prohibited.
-
 ## Adding a plugin
 
-1. Add `src/main/resources/config/plugins/<plugin-id>.properties`.
-2. Add the id to `src/main/resources/config/plugins/index.properties`.
-3. Add the Java implementation named by `plugin.implementation-class`.
-4. Add registry, selection and plugin tests.
-5. Update the plugin, user and operations documentation.
-
-The explicit classpath index is the current accepted mechanism. A
-database-backed registry remains shelved.
+1. Add `config/plugins/<plugin-id>.properties`.
+2. Add the id to `index.properties`.
+3. Add the implementation class named by `plugin.implementation-class`.
+4. Follow the plugin-local initialise/extract/transform/load/finalise packages.
+5. Add registry, selection, dry-run and provider tests.
+6. Apply any provider schema and least-privilege grants.
+7. Update plugin, operator, reference and data-source documentation.
+8. Re-run `--register` when database-backed properties are in use.

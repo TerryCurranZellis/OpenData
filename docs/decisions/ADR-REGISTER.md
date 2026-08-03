@@ -1,9 +1,9 @@
 # Architecture Decision Register
 
-**Document ID:** ADR-REGISTER-001  
-**Version:** 1.4  
-**Status:** Baseline  
-**Baseline date:** 31 July 2026  
+**Document ID:** ADR-REGISTER-001
+**Version:** 2.0
+**Status:** Baseline
+**Baseline date:** 3 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -45,7 +45,7 @@
 | [ADR-0025 Config DB](ADR-0025-database-plugin-configuration-json.md) | Move plugin definitions to database JSON later | Shelved | Legacy duplicate number |
 | [ADR-0025 Octopus](ADR-0025-octopus-email-bill-plugin.md) | Introduce the Octopus email bill plugin | Shelved | Legacy duplicate number; future work |
 | [ADR-0026 OpenMeteo](ADR-0026-openmeteo-reference-plugin.md) | Use OpenMeteo as the API reference plugin | Accepted | Legacy duplicate number |
-| [ADR-0026 Octopus TX](ADR-0026-transactional-octopus-record-persistence.md) | Persist one Octopus bill atomically | Accepted | Legacy duplicate number; future work |
+| [ADR-0026 Octopus TX](ADR-0026-transactional-octopus-record-persistence.md) | Persist one Octopus statement batch atomically | Accepted | Implemented; legacy duplicate number |
 | [ADR-0027](ADR-0027-idempotent-email-attachment-processing.md) | Make email attachment processing idempotent | Accepted | Future work |
 | [ADR-0028](ADR-0028-openmeteo-historical-weather-plugin.md) | Integrate historical OpenMeteo acquisition | Accepted | Runtime and persistence implemented |
 | [ADR-0029](ADR-0029-web-file-discovery-and-tabular-parsing.md) | Use shared discovery and tabular parsing | Accepted | Implemented in Phase 2 |
@@ -63,9 +63,9 @@
 | [ADR-0041](ADR-0041-contextual-jul-for-concurrent-plugins.md) | Add task context to `java.util.logging` | Accepted | Implemented |
 | [ADR-0042](ADR-0042-side-effect-free-dry-run.md) | Keep dry runs free of persistent side effects | Accepted | Implemented |
 | [ADR-0043](ADR-0043-plugin-local-pipeline-packages.md) | Organise provider code as plugin-local pipeline packages | Accepted | Implemented |
-| [ADR-0044](ADR-0044-octopus-energy.md) | Implement Octopus Energy plugin | Proposed | Future work |
+| [ADR-0044](ADR-0044-octopus-energy.md) | Process local Octopus Energy statement PDFs | Accepted | Write path implemented; dry-run correction pending |
 | [ADR-0045](ADR-0045-documentation-delivery-baseline.md) | Standardise the documentation delivery baseline | Accepted | Implemented |
 | [ADR-0046](ADR-0046-manifest-driven-documentation-engine.md) | Use a manifest-driven documentation engine | Accepted | Implemented |
 | [ADR-0047](ADR-0047-database-backed-configuration-registration.md) | Register configuration in SQL Server and bootstrap from encrypted file settings | Accepted | Implemented for version 2 bootstrap |
-|  
+|
 :::

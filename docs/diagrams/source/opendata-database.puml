@@ -8,6 +8,22 @@ skinparam BorderColor #4A5568
 skinparam BackgroundColor white
 title OpenData SQL Server schemas
 
+entity "core.application_property" as ApplicationProperty {
+  * property_key : varchar(200) <<PK>>
+  --
+  property_value : nvarchar(max)
+  is_encrypted : bit
+  updated_at : datetime2
+}
+
+entity "core.plugin_property" as PluginProperty {
+  * plugin_id : varchar(100) <<PK>>
+  * property_key : varchar(200) <<PK>>
+  --
+  property_value : nvarchar(max)
+  updated_at : datetime2
+}
+
 entity "core.PluginRun" as PluginRun {
   * RunId : uniqueidentifier <<PK>>
   --
@@ -95,6 +111,47 @@ entity "ofgem.price_cap_level" as Level {
   ingestion_run_id : bigint <<FK>>
 }
 
+entity "octopus.statement_file" as StatementFile {
+  * statement_file_id : bigint <<PK>>
+  --
+  file_name : nvarchar
+  sha256 : char(64)
+  statement_date : date
+  status : varchar
+  last_run_id : uniqueidentifier <<FK>>
+}
+
+entity "octopus.electric_data" as ElectricData {
+  * bill_date : date <<PK>>
+  * tariff_period_start : date <<PK>>
+  * tariff_period_end : date <<PK>>
+  * tariff_name : nvarchar <<PK>>
+  * mpan : varchar <<PK>>
+  * meter_id : varchar <<PK>>
+  * start_reading_date : date <<PK>>
+  * end_reading_date : date <<PK>>
+  --
+  energy_used_kwh : decimal
+  total_cost_gbp : decimal
+  last_run_id : uniqueidentifier <<FK>>
+}
+
+entity "octopus.gas_data" as GasData {
+  * bill_date : date <<PK>>
+  * tariff_period_start : date <<PK>>
+  * tariff_period_end : date <<PK>>
+  * tariff_name : nvarchar <<PK>>
+  * mprn : varchar <<PK>>
+  * meter_id : varchar <<PK>>
+  * start_reading_date : date <<PK>>
+  * end_reading_date : date <<PK>>
+  --
+  consumption_m3 : decimal
+  energy_used_kwh : decimal
+  total_cost_gbp : decimal
+  last_run_id : uniqueidentifier <<FK>>
+}
+
 Location ||--o{ Weather
 PluginRun ||--o{ Weather : LastRunId
 Dataset ||--o{ IngestionRun
@@ -104,4 +161,19 @@ SourceFile |o--o{ IngestionError
 SourceFile ||--o{ Period
 Period ||--o{ Level
 IngestionRun ||--o{ Level
+PluginRun ||--o{ StatementFile : last_run_id
+PluginRun ||--o{ ElectricData : last_run_id
+PluginRun ||--o{ GasData : last_run_id
+note right of ApplicationProperty
+Registered application settings;
+password row may be encrypted.
+end note
+note right of PluginProperty
+Registered definitions and
+properties by plugin id.
+end note
+note right of StatementFile
+Unique (file_name, sha256)
+completed-file ledger.
+end note
 @enduml

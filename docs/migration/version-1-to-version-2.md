@@ -1,9 +1,9 @@
 # Upgrade from OpenData 1.x to 2.0.0
 
-**Document ID:** MIGRATION-2.0-001  
-**Version:** 2.0  
-**Status:** Current  
-**Baseline date:** 2 August 2026
+**Document ID:** MIGRATION-2.0-001
+**Version:** 2.0
+**Status:** Current
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -31,9 +31,13 @@ configuration tables, plugin-run audit objects and plugin schemas, including
 
 ## 3. Prepare certificate resources
 
-Provide the matching public `.cer` and private `.pfx` files. The repository's
-`nopassword` PFX password is for development only. Establish deployment-specific
-file permissions, password storage, backup and rotation.
+Provide the matching public `.cer` and private `.pfx` files outside the source
+tree. The repository's `nopassword` PFX password is for development only. The
+current runtime accepts a replacement through the JVM property
+`opendata.config.keystore.password`; the intended
+`OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment-variable route is defective in
+this baseline. Establish deployment-specific file permissions, password storage,
+backup and rotation.
 
 ## 4. Prepare the bootstrap file
 
@@ -72,9 +76,12 @@ the shared plugin exception handler. Preserve additional packages under
 
 ## 8. Validate plugins
 
-Dry-run each plugin separately before a write run. For Octopus, use copies of
-representative statements outside source control and test duplicate, changed-file,
-transaction failure and archive behaviour.
+Dry-run Ofgem and OpenMeteo separately and together before write runs. Do not
+use Octopus or `all` dry run as an acceptance command in this source baseline:
+Octopus extract still queries the completed-file ledger through the unavailable
+dry-run database resource. For Octopus, use copies of representative statements
+outside source control, an isolated test database and explicit archive directory;
+test duplicate, changed-file, transaction failure and archive behaviour.
 
 ## Rollback
 

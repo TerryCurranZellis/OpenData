@@ -1,115 +1,126 @@
-# Octopus Energy Plugin Documentation
+# Octopus Energy Statement Plugin
 
-**Document ID:** PLUGIN-OCTOPUS-INDEX-001  
-**Version:** 2.0  
-**Status:** Partial implementation — transform step is typed and validated; extract, load, and finalise are placeholders  
-**Baseline date:** 01 Aug 2026
+**Document ID:** PLUGIN-OCTOPUS-INDEX-001
+**Version:** 2.0
+**Status:** Write path implemented; dry-run defect and live acceptance pending
+**Baseline date:** 3 August 2026
 
-The Octopus plugin imports personal Octopus Energy electricity and gas billing
-records from statement PDF files into the OpenData database schema.
+---
 
-## Overview
+**Plugin id:** `octopus`
+**Implementation:** `com.towermarsh.opendata.plugin.octopus.OctopusPlugin`
+**Dataset id:** `octopus-energy-billing`
 
-Unlike the Ofgem and OpenMeteo plugins, which download data from a public HTTP
-endpoint, the Octopus plugin processes locally stored PDF files. Octopus Energy
-bills arrive as email attachments named
-`octopus-energy-statement-YYYY-MM-DD.pdf`; these must be saved to the
-configured input directory before the plugin is run.
+## Purpose and source boundary
 
-## Pipeline steps
+The plugin imports personal Octopus Energy electricity and gas billing records
+from PDF statements already present in a local directory. Version 2.0.0 does not
+connect to an Octopus account, call an Octopus API, read email or download
+attachments. Those remain separate future source-adapter options.
 
-The plugin follows the five-step ETL pattern:
+Only files named as follows are candidates:
 
-| Step | Package | Class | Status |
-|------|---------|-------|--------|
-| Initialise | `initialise` | `OctopusInitialise` | Implemented — orchestrates pipeline |
-| Extract | `extract` | `OctopusExtract` | **Placeholder** — lists existing PDFs; download not yet implemented |
-| Transform | `transform` | `OctopusTransform` → `OctopusStatementParser` | Implemented |
-| Load | `load` | `OctopusLoad` | **Placeholder** — dry-run pass-through; database write not yet implemented |
-| Finalise | `finalise` | `OctopusFinalise` | **Placeholder** — logs statistics; file archiving not yet implemented |
+```text
+octopus-energy-statement-YYYY-MM-DD.pdf
+```
 
-## Configuration
+The date in the filename is parsed as the statement date and candidates are
+processed in date/name order.
 
-The plugin is registered in
-`src/main/resources/config/plugins/octopus.properties`. Three directory paths
-must be configured before the plugin can run:
+## Active pipeline
 
-| Property | Description |
-|----------|-------------|
-| `input.directory` | Directory containing `octopus-energy-statement-YYYY-MM-DD.pdf` files |
-| `working.directory` | Temporary directory used during processing |
-| `archive.directory` | Directory for archiving processed PDFs after a write run |
+| Stage | Active class | Implemented behaviour |
+|---|---|---|
+| Initialise | `initialise.OctopusInitialise` | Controls extract, transform, load and finalise with a completion flag |
+| Extract | `extract.OctopusExtract` | Validates input directory, lists matching PDFs, calculates SHA-256, checks completed-file ledger and extracts PDF text |
+| Transform | `transform.OctopusTransform` / `OctopusStatementParser` | Parses electricity and gas tariff-period records from statement text |
+| Load | `load.OctopusLoad` / `OctopusPersistenceRepository` | Transactionally inserts/updates facts and marks source files completed |
+| Finalise | `finalise.OctopusFinalise` | Reports metrics and moves successfully committed PDFs to the archive directory |
 
-All three properties are now declared as `PATH` values and are validated before
-the plugin runs.
+## Duplicate and changed-file handling
 
-## Data model
+`octopus.statement_file` has a unique `(file_name, sha256)` key. Extraction reads
+all `COMPLETED` keys and skips only a file whose lower-cased name and SHA-256 both
+match a completed row. A file with the same name but different content is
+selected again.
 
-The transform step produces two record types:
-
-- **`ElectricityRecord`** — one row per electricity tariff period per bill,
-  using `LocalDate` and `BigDecimal` fields for bill dates, meter readings,
-  rates, and totals.
-
-- **`GasRecord`** — one row per gas tariff period per bill, also using typed
-  `LocalDate` and `BigDecimal` values, with the addition of consumption in
-  cubic metres (m³) and MPRN in place of MPAN.
+The ledger is marked `COMPLETED` in the same SQL transaction as the electricity
+and gas records. Files are moved after commit. An archive failure therefore does
+not roll back committed data; it is logged as a warning and requires operational
+cleanup.
 
 ## PDF parsing
 
-Octopus Energy bills use a two-column page layout. When text is extracted from
-the PDF by Apache PDFBox 3.x (`PdfTextExtractor`), the two columns are
-interleaved on the same lines. `OctopusStatementParser` normalises this by
-joining all lines into a single string and collapsing whitespace runs before
-applying regex patterns to extract each field.
+PDF text is extracted before the statement parser identifies:
 
-The parser handles and validates:
-- Ordinal date suffixes (1st, 2nd, 3rd, 4th, …)
-- Abbreviated month names with optional trailing dot (Jan., Feb., …)
-- Multiple tariff periods per bill
-- Catch-up and adjustment bills with non-standard filenames
-- Required bill dates, tariff dates, meter readings, rates, and totals
+- bill period and tariff periods;
+- tariff name;
+- MPAN or MPRN and meter id;
+- opening and closing meter readings and reading types;
+- electricity kWh or gas cubic metres/kWh;
+- unit rate and standing-charge values;
+- total electricity or gas charge.
 
-## Exception handling
+The parser contains layout-specific regular expressions for Octopus's statement
+text and two-column extraction effects. A materially changed statement layout
+may require parser and fixture updates. It must fail rather than invent missing
+financial values.
 
-All exceptions raised within the plugin steps are wrapped in
-`com.towermarsh.opendata.exception.PluginException` with plugin name
-`"octopus"`. Plugin-specific exception types are not used; all error conditions
-are expressed through the global exception hierarchy.
+## Transaction and natural keys
 
-## Code location
+One extraction batch is committed in one transaction. Existing records are
+updated when their composite natural key is found; otherwise they are inserted.
+The electricity key includes bill date, tariff period, tariff name, MPAN, meter,
+and reading dates. The gas key uses the corresponding MPRN fields.
 
-All provider-specific code is under
-`com.towermarsh.opendata.plugin.octopus`:
+## Configuration
 
-```
-plugin/octopus/
-├── OctopusPlugin.java          — main plugin entry point
-├── initialise/
-│   ├── OctopusConfiguration.java  — typed configuration record
-│   └── OctopusInitialise.java     — pipeline orchestrator
-├── extract/
-│   ├── OctopusExtract.java        — extract step (placeholder)
-│   └── PdfTextExtractor.java      — Apache PDFBox text extraction utility
-├── transform/
-│   ├── OctopusStatementParser.java — regex-based PDF text parser
-│   ├── OctopusTransform.java       — transform step orchestrator
-│   ├── OctopusParseResult.java     — combined result holder
-│   └── model/
-│       ├── ElectricityRecord.java
-│       └── GasRecord.java
-├── load/
-│   └── OctopusLoad.java           — load step (placeholder)
-└── finalise/
-    └── OctopusFinalise.java       — finalise step (placeholder)
+| Property | Packaged value | Requirement |
+|---|---|---|
+| `input.directory` | `C:\Attachments\octopus` | Must exist and contain matching PDFs |
+| `working.directory` | blank | Present in typed configuration but currently unused by the pipeline |
+| `archive.directory` | blank | Must be set explicitly for a write run; blank becomes the process working directory |
+
+All three properties are present in the plugin definition, so the current typed
+configuration accepts blank working/archive values as `Path.of("")`. Operators
+must override the archive path rather than relying on that unsafe default.
+
+Example single-plugin override:
+
+```properties
+property.input.directory.value=C:\Attachments\octopus
+property.working.directory.value=C:\OpenData\work\octopus
+property.archive.directory.value=C:\OpenData\archive\octopus
 ```
 
-## Outstanding work
+Database-backed configuration stores the same property keys in
+`core.plugin_property`.
 
-1. **Extract step**: implement download of new PDFs from an email account or
-   cloud storage provider.
-2. **Load step**: implement the transaction-safe insert/update logic for
-   `octopus.electric_data` and `octopus.gas_data`.
-3. **Finalise step**: implement PDF archiving and working-directory cleanup.
-4. **Configuration**: populate the three directory paths in `octopus.properties`
-   for each environment.
+## Current dry-run defect
+
+Do **not** use this as an acceptance command in the current source baseline:
+
+```text
+opendata --plugin octopus --dry-run
+```
+
+Although `OctopusLoad` and `OctopusFinalise` avoid writes during a dry run,
+`OctopusExtract` still calls `OctopusProcessedFileRepository` to read the
+completed-file ledger. The framework intentionally supplies
+`UnavailableDatabaseResourceManager` during plugin dry-run execution, so the run
+fails before parsing. This is a Java implementation defect, not a configuration
+requirement. `--plugin all --dry-run` is affected for the same reason.
+
+## Write-run prerequisites
+
+1. Apply `sql/007a-create-octopus-schema.sql` and the relevant grants.
+2. Configure explicit input and archive directories.
+3. Protect both directories because statements contain personal billing data.
+4. Ensure every candidate PDF follows the supported filename convention.
+5. Run the plugin in normal mode and inspect `core.PluginRun`,
+   `octopus.statement_file`, `octopus.electric_data`, `octopus.gas_data` and the
+   archive directory.
+
+See [plugin reference](../../reference/octopus-plugin.md),
+[schema reference](../../reference/octopus-schema.md) and
+[architecture](../../architecture/027-octopus-energy-statement-architecture.md).

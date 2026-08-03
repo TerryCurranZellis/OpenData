@@ -30,7 +30,9 @@ See the [2.0.0 release notes](RELEASE_NOTES.md),
   in `application.properties` after registration.
 - Select one plugin, several plugins, or all enabled plugins.
 - Execute selected plugins concurrently with bounded parallelism.
-- Perform side-effect-free dry runs without database writes or run-audit rows.
+- Perform side-effect-free dry runs for Ofgem and OpenMeteo without database
+  writes or run-audit rows. The current Octopus extract stage has a documented
+  dry-run defect because it still reads the processed-file ledger.
 - Process Ofgem Energy Price Cap workbooks.
 - Download and persist Open-Meteo historical daily weather data.
 - Discover local Octopus Energy statement PDFs, exclude completed files by
@@ -112,12 +114,18 @@ file with `application.use-database-properties=true`. Subsequent starts decrypt
 the bootstrap password with the private key from the PKCS#12 file before loading
 runtime configuration from the database.
 
-The supplied development PFX uses `nopassword`. Override it with either:
+The supplied development PFX uses `nopassword`. The uploaded Java baseline
+reliably accepts a replacement password through the JVM system property:
 
 ```text
 -Dopendata.config.keystore.password=<pfx-password>
-OPENDATA_CONFIG_KEYSTORE_PASSWORD=<pfx-password>
 ```
+
+The previously documented `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment
+variable is **not honoured by the current code** because the environment-variable
+constant is incorrectly set to `nopassword`. Treat that as an implementation
+defect; do not depend on the environment-variable form until the Java code is
+corrected and tested.
 
 Replace the supplied development certificate and password before a production
 installation. See the
@@ -130,8 +138,8 @@ installation. See the
 --list-plugins
 --register
 --plugin ofgem --dry-run
---plugin openmeteo
---plugin octopus --dry-run
+--plugin openmeteo --dry-run
+--plugin octopus
 --plugin all --parallelism 3
 --plugin openmeteo,ofgem --file C:\OpenData\run.properties
 ```

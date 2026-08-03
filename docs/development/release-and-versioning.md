@@ -1,8 +1,8 @@
 # Release and Versioning
 
-**Document ID:** DEV-RELEASE-001  
-**Version:** 2.0  
-**Status:** Current release process  
+**Document ID:** DEV-RELEASE-001
+**Version:** 2.0
+**Status:** Current release process
 **Baseline date:** 2 August 2026
 
 ---
@@ -23,11 +23,16 @@ A Version 2.0.0 release candidate requires:
 - successful `--register` from a plain bootstrap password;
 - successful restart using the encrypted bootstrap password;
 - least-privilege verification for the application principal;
-- Ofgem, OpenMeteo and Octopus dry runs;
+- successful Ofgem and OpenMeteo dry runs, separately and together;
+- correction and verification of the Octopus dry-run database dependency, or an
+  explicit release waiver plus controlled Octopus write-mode acceptance;
 - representative write-mode, rollback and idempotency tests;
 - duplicate and changed-file tests for Octopus statements;
-- confirmation that private keys, credentials, customer PDFs and database
-  backups are absent from release artefacts; and
+- confirmation that private keys, plaintext credentials, customer PDFs and
+  database backups are absent from Git history and release artefacts;
+- correction and verification of the broken
+  `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment-variable path, or removal of
+  that interface from release claims; and
 - resolved critical gaps or an explicit documented release waiver.
 
 ## Procedure

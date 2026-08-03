@@ -1,9 +1,9 @@
 # 3. SQL Server Setup
 
-**Document ID:** USER-003  
-**Version:** 2.0  
-**Status:** Version 2.0.0 procedure  
-**Baseline date:** 2 August 2026
+**Document ID:** USER-003
+**Version:** 2.0
+**Status:** Version 2.0.0 procedure
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -37,9 +37,14 @@ src/main/resources/config/security/opendata-config-public.cer
 src/main/resources/config/security/opendata-config-private.pfx
 ```
 
-The repository's development PFX uses `nopassword`. Replace the certificate pair
-and password for a production installation and restrict the private file to the
-application identity.
+The repository's development PFX uses `nopassword`. The current Java runtime
+accepts a different password through
+`-Dopendata.config.keystore.password=<value>`. The previously documented
+`OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment variable is not honoured by this
+baseline because the code looks for an environment variable literally named
+`nopassword`. Replace the certificate pair and password for a production
+installation, keep the private key outside the source tree, and restrict it to
+the application identity.
 
 ## Before registration
 

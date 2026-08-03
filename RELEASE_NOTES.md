@@ -1,7 +1,7 @@
 # OpenData 2.0.0
 
-**Release status:** Development and release-candidate baseline  
-**Documentation baseline:** 2 August 2026  
+**Release status:** Development and release-candidate baseline
+**Documentation baseline:** 2 August 2026
 **Licence:** Apache License 2.0
 
 OpenData 2.0.0 is a major architectural release. It replaces the broad
@@ -30,11 +30,14 @@ local-file workflow for Octopus Energy PDF statements.
   file before opening the configuration database connection.
 - Certificate resources can be loaded from the source tree or packaged
   classpath.
-- The supplied development PFX password is `nopassword`; deployments can override
-  it with `-Dopendata.config.keystore.password` or
-  `OPENDATA_CONFIG_KEYSTORE_PASSWORD`.
-- Production installations should replace the development certificate and PFX
-  password.
+- The supplied development PFX password is `nopassword`. The current runtime
+  accepts an override through `-Dopendata.config.keystore.password`.
+- The previously documented `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment
+  variable is not honoured by this source baseline because of an implementation
+  constant mismatch.
+- Production installations must replace the development certificate and PFX
+  password and remove the tracked private key and plaintext bootstrap credential
+  before release.
 
 ### Standard plugin lifecycle
 

@@ -4,34 +4,34 @@ actor Operator
 participant OpenDataApplication as Application
 participant PluginExecutionCoordinator as Coordinator
 participant OfgemPlugin as Plugin
-participant OfgemWorkbookDownloader as Downloader
-participant OfgemPriceCapWorkbookExtractor as Extractor
-participant OfgemWorkbookDataValidator as Validator
+participant "initialise.OfgemInitialise" as Initialise
+participant "extract.OfgemWorkbookDownloader" as Downloader
+participant "transform.OfgemPriceCapWorkbookExtractor" as Extractor
+participant "transform.validate.OfgemWorkbookDataValidator" as Validator
 participant "load.OfgemPersistenceRepository" as Repository
+participant "finalise.OfgemFinalise" as Finalise
 database "OpenData SQL Server" as Database
 
-Operator -> Application : --plugin ofgem
+Operator -> Application : --plugin ofgem [--dry-run]
 Application -> Coordinator : execute(resolved plugin)
-Coordinator -> Database : INSERT core.PluginRun
 Coordinator -> Plugin : execute(context)
-Plugin -> Downloader : discover and download workbook
-Downloader --> Plugin : ResolvedDownload
-Plugin -> Extractor : extract(workbook)
-Extractor --> Plugin : period and cap levels
-Plugin -> Validator : validate(workbook data)
-Validator --> Plugin : validated data
+Plugin -> Initialise : execute(context)
+Initialise -> Downloader : discover and download workbook
+Downloader --> Initialise : ResolvedDownload
+Initialise -> Extractor : extract(local XLSX)
+Extractor --> Initialise : period and cap levels
+Initialise -> Validator : validate workbook data
+Validator --> Initialise : validated data
 alt dry run
-  Plugin --> Coordinator : read/skipped metrics
+  Initialise --> Coordinator : read/skipped metrics
 else write run
-  Plugin -> Downloader : optional archive
-  Plugin -> Repository : persist(download, workbook data)
-  Repository -> Database : BEGIN
-  Repository -> Database : ingestion/source provenance
-  Repository -> Database : period upsert and fact replacement
+  Initialise -> Repository : persist(download, data)
+  Repository -> Database : BEGIN + provenance + period/facts
   Repository -> Database : COMMIT
-  Repository --> Plugin : inserted/updated/skipped
-  Plugin --> Coordinator : metrics
-  Coordinator -> Database : UPDATE core.PluginRun
+  Repository --> Initialise : inserted/updated/skipped
+  Initialise -> Finalise : archive successful workbook
+  Finalise --> Initialise : complete
+  Initialise --> Coordinator : metrics
 end
 Coordinator --> Application : summary
 @enduml

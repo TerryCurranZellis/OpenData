@@ -1,9 +1,9 @@
 # PlantUML Diagram Index
 
-**Document ID:** DIAG-INDEX-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 baseline  
-**Baseline date:** 2 August 2026
+**Document ID:** DIAG-INDEX-001
+**Version:** 2.0
+**Status:** Version 2.0.0 baseline
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -24,6 +24,7 @@ under `docs/diagrams` or another legacy subdirectory.
 | Plugin registry | `plugin-registry.puml` | [image](generated/plugin-registry.svg) |
 | Command-line flow | `command-line-flow.puml` | [image](generated/command-line-flow.svg) |
 | Configuration loading | `configuration-loading-sequence.puml` | [image](generated/configuration-loading-sequence.svg) |
+| Configuration registration | `configuration-registration-sequence.puml` | [image](generated/configuration-registration-sequence.svg) |
 | Plugin execution | `plugin-execution-sequence.puml` | [image](generated/plugin-execution-sequence.svg) |
 | Parallel execution | `plugin-parallel-execution.puml` | [image](generated/plugin-parallel-execution.svg) |
 | Plugin pipeline | `pipeline-sequence.puml` | [image](generated/pipeline-sequence.svg) |
@@ -38,6 +39,8 @@ under `docs/diagrams` or another legacy subdirectory.
 | Run state | `ingestion-run-state.puml` | [image](generated/ingestion-run-state.svg) |
 | OpenMeteo data model | `openmeteo-data-model.puml` | [image](generated/openmeteo-data-model.svg) |
 | OpenMeteo persistence | `openmeteo-persistence.puml` | [image](generated/openmeteo-persistence.svg) |
+| Octopus statement processing | `octopus-statement-processing.puml` | [image](generated/octopus-statement-processing.svg) |
+| Octopus data model | `octopus-data-model.puml` | [image](generated/octopus-data-model.svg) |
 | Documentation generation | `documentation-generation-flow.puml` | [image](generated/documentation-generation-flow.svg) |
 | Manifest-driven documentation engine | `manifest-driven-documentation-engine.puml` | [image](generated/manifest-driven-documentation-engine.svg) |
 

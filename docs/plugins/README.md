@@ -1,45 +1,50 @@
 # Plugin Documentation
 
-**Document ID:** PLUGIN-INDEX-001  
-**Version:** 1.2  
-**Status:** Baseline  
-**Baseline date:** 01 Aug 2026
+**Document ID:** PLUGIN-INDEX-001
+**Version:** 2.0
+**Status:** Version 2.0.0 implementation baseline
+**Baseline date:** 3 August 2026
 
 ---
 
 ::: {.docx-linear-table}
 
-| Plugin | Source type | Persistence | Status |
+| Plugin | Source type | Persistence | Current status |
 |---|---|---|---|
-| [Ofgem](ofgem/README.md) | HTML discovery and XLSX | Transactional period replacement | Implemented; live write acceptance pending |
-| [OpenMeteo](openmeteo/README.md) | JSON API | Idempotent location/date upsert | Implemented; live write acceptance pending |
-| [Octopus](octopus/README.md) | Local PDF files | Electricity and gas billing records | Partial — transform implemented; extract, load, finalise are placeholders |
+| [Ofgem](ofgem/README.md) | HTML discovery and XLSX | Transactional period replacement with source lineage | Implemented; live SQL acceptance pending |
+| [OpenMeteo](openmeteo/README.md) | Historical JSON API | Idempotent location/date upsert | Implemented; live SQL acceptance pending |
+| [Octopus](octopus/README.md) | Local PDF statements | Transactional electricity/gas upsert plus processed-file ledger | Write path implemented; dry-run defect and live SQL acceptance pending |
 
 :::
 
-All plugins are registered in
-`src/main/resources/config/plugins/index.properties`, can be selected together,
-support dry runs and return standard metrics. Their domain models remain
-independent. Ofgem and OpenMeteo are the current fully wired reference plugins;
-Octopus currently stops after the typed transform stage. All use the package
-structure described in
-[Adding a plugin](../guides/adding-a-plugin.md); new implementations should start
-from the [Java template](../templates/plugin-java/README.md).
+All installed plugins are listed in
+`src/main/resources/config/plugins/index.properties`, are constructed through the
+reflection factory, return `PluginMetrics` and use plugin-local pipeline packages.
+Their business models remain independent.
 
-## Plugin pipeline pattern
-
-Each plugin implements a five-step ETL pipeline:
+## Active pipeline pattern
 
 | Step | Package | Responsibility |
-|------|---------|----------------|
-| Initialise | `initialise` | Load and validate configuration; call remaining steps in order |
-| Extract | `extract` | Download source data and make it available for transformation |
-| Transform | `transform` | Parse or convert raw data into typed records; validate |
-| Load | `load` | Persist records to the database (dry-run: log and skip) |
-| Finalise | `finalise` | Clean up temporary files; report final statistics |
+|---|---|---|
+| Initialise | `initialise` | Build typed configuration and control stage order |
+| Extract | `extract` | Acquire or read source data |
+| Transform | `transform` | Parse, validate and create typed records |
+| Load | `load` | Persist transactionally or return dry-run metrics |
+| Finalise | `finalise` | Archive/cleanup successful source artefacts and report completion |
 
-All exceptions raised within plugin steps must use
-`com.towermarsh.opendata.exception.PluginException` (or another subclass of
-`OpenDataException`), not plugin-specific exception types. The `PluginException`
-carries the plugin name so failures can be identified in logs without examining
-the stack trace.
+The active classes are those imported by each plugin's `initialise` class. Some
+Ofgem and OpenMeteo compatibility classes with similar names remain in older
+`config`, `download` or `extract` locations; new code should not copy those
+parallel paths.
+
+## Dry-run status
+
+Ofgem and OpenMeteo complete end-to-end dry runs without plugin database writes.
+Octopus does not currently complete a dry run: `OctopusExtract` reads
+`octopus.statement_file` before the load-stage dry-run branch, while the
+framework supplies an unavailable database resource. Until the Java defect is
+fixed, do not use `--plugin octopus --dry-run` or `--plugin all --dry-run` as an
+acceptance command.
+
+New implementations should start from the
+[example plugin](../examples/example-plugin/README.md).

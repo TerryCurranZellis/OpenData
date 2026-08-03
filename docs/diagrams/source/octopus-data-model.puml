@@ -1,0 +1,57 @@
+@startuml
+!pragma layout smetana
+title Octopus Energy Data Model
+entity "core.PluginRun" as Run {
+  * RunId : uniqueidentifier
+  --
+  PluginId : nvarchar
+  Status : varchar
+}
+entity "octopus.statement_file" as File {
+  * statement_file_id : bigint
+  --
+  file_name : nvarchar
+  sha256 : char(64)
+  statement_date : date
+  status : varchar
+  last_run_id : uniqueidentifier <<FK>>
+}
+entity "octopus.electric_data" as Electric {
+  * bill_date : date
+  * tariff_period_start : date
+  * tariff_period_end : date
+  * tariff_name : nvarchar
+  * mpan : varchar
+  * meter_id : varchar
+  * start_reading_date : date
+  * end_reading_date : date
+  --
+  energy_used_kwh : decimal
+  unit_rate_p_kwh : decimal
+  total_cost_gbp : decimal
+  last_run_id : uniqueidentifier <<FK>>
+}
+entity "octopus.gas_data" as Gas {
+  * bill_date : date
+  * tariff_period_start : date
+  * tariff_period_end : date
+  * tariff_name : nvarchar
+  * mprn : varchar
+  * meter_id : varchar
+  * start_reading_date : date
+  * end_reading_date : date
+  --
+  consumption_m3 : decimal
+  energy_used_kwh : decimal
+  unit_rate_p_kwh : decimal
+  total_cost_gbp : decimal
+  last_run_id : uniqueidentifier <<FK>>
+}
+Run ||--o{ File
+Run ||--o{ Electric
+Run ||--o{ Gas
+note right of File
+Unique source identity:
+(file_name, sha256)
+end note
+@enduml

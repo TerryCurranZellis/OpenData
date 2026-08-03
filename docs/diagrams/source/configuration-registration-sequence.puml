@@ -1,0 +1,31 @@
+@startuml
+title Configuration Registration
+actor Operator
+participant OpenDataApplication as Application
+participant ApplicationBootstrapPropertiesLoader as Bootstrap
+participant RsaConfigurationPasswordCipher as Cipher
+participant SQLServerResource as Database
+participant ConfigurationRegistrationService as Register
+participant ClasspathConfigurationPropertiesSource as Files
+participant JdbcConfigurationPropertiesSource as Jdbc
+
+Operator -> Application : --register [--file bootstrap.properties]
+Application -> Bootstrap : load and decrypt bootstrap
+Bootstrap -> Cipher : decrypt when necessary
+Cipher --> Bootstrap : database password
+Application -> Database : initialise bootstrap connection
+Application -> Register : register(bootstrap, installed plugins)
+Register -> Files : load application and plugin properties
+Files --> Register : property maps
+Register -> Cipher : encrypt database password
+Cipher --> Register : {enc}Base64 value
+Register -> Jdbc : upsert application properties
+Jdbc -> Database : core.application_property
+loop each installed plugin
+  Register -> Jdbc : upsert plugin properties
+  Jdbc -> Database : core.plugin_property
+end
+Register -> Bootstrap : store(useDatabaseProperties=true)
+Bootstrap -> Cipher : encrypt password for local bootstrap
+Bootstrap --> Operator : registration completed
+@enduml

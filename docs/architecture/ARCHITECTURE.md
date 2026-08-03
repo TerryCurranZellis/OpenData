@@ -1,9 +1,9 @@
 # OpenData Architecture Manual
 
-**Document ID:** ARCH-INDEX-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026  
+**Document ID:** ARCH-INDEX-001
+**Version:** 2.0
+**Status:** Version 2.0.0 implementation baseline
+**Baseline date:** 3 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -49,6 +49,8 @@ release issue, not a future architecture feature.
 | [023](023-operational-failure-and-recovery.md) | Operational Failure and Recovery |
 | [024](024-architecture-traceability.md) | Architecture Traceability |
 | [025](025-manifest-driven-documentation-engine.md) | Manifest-Driven Documentation Engine |
+| [026](026-openmeteo-historical-weather-architecture.md) | OpenMeteo Historical Weather Architecture |
+| [027](027-octopus-energy-statement-architecture.md) | Octopus Energy Statement Architecture |
 
 :::
 

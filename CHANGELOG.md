@@ -23,8 +23,10 @@ semantic versioning.
 - RSA OAEP encryption of the bootstrap database password using an X.509 public
   certificate and PKCS#12 private key store.
 - Source-tree and classpath lookup for configuration certificate resources.
-- PFX password override through `opendata.config.keystore.password` and
-  `OPENDATA_CONFIG_KEYSTORE_PASSWORD`.
+- PFX password override through the JVM system property
+  `opendata.config.keystore.password`. The intended
+  `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment-variable path remains defective
+  in the current source baseline.
 - Standard plugin packages: `initialise`, `extract`, `transform`, `load` and
   `finalise`.
 - Central plugin exception handling without plugin-local exception hierarchies.
