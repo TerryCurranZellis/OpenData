@@ -1,106 +1,61 @@
 # Contributing to OpenData
 
-Thank you for considering a contribution to OpenData. Contributions may include
-code, tests, documentation, SQL scripts, diagrams and new data-source plugins.
+Thank you for contributing code, tests, documentation, SQL, diagrams or data-source
+plugins.
 
 ## Before starting
 
-For a substantial change, open an issue first so the intended behaviour,
-architecture and documentation impact can be agreed. Security vulnerabilities
-must not be reported publicly; follow [SECURITY.md](SECURITY.md).
+Use an issue or design discussion for substantial changes. Report vulnerabilities
+privately through `SECURITY.md`, not through a public issue. By submitting work,
+you confirm that you have the right to contribute it under Apache 2.0.
 
-By submitting a contribution, you agree that it may be distributed under the
-[Apache License 2.0](LICENSE.md).
+## Development baseline
 
-## Development environment
+- Java 17 compatibility.
+- Maven 3.9 or later.
+- SQL Server for registration and persistence integration testing.
+- PowerShell 5.1 or later for repository scripts.
+- Pandoc and PlantUML only when rebuilding generated manuals/diagrams.
 
-| Component | Minimum or recommended version |
-|---|---|
-| Java | 17 LTS compatibility |
-| Maven | 3.9 or later |
-| Git | Current supported version |
-| SQL Server | Required for registration and persistence integration tests |
-| PowerShell | 5.1 or later for project scripts |
-| Pandoc | Required only for generated manuals |
-| PlantUML | Required only for rendered diagrams |
+Apache NetBeans is the maintainer's primary IDE but is not required.
 
-Apache NetBeans is the maintainer's primary IDE, but no IDE-specific workflow is
-required.
-
-## Workflow
+## Change workflow
 
 1. Branch from the current `main` baseline.
-2. Make the smallest coherent change that solves the issue.
-3. Add or update deterministic tests.
-4. Update affected documentation, examples, ADRs, data-source notices and
-   diagrams.
-5. Run the relevant build and documentation checks.
-6. Submit a pull request describing the problem, solution, compatibility impact
-   and verification performed.
+2. Make the smallest coherent change.
+3. Add deterministic tests and synthetic fixtures.
+4. Update affected architecture, user, operations, reference, ADR, licence and
+   data-source documentation.
+5. Run available build, quality and documentation checks.
+6. Submit a pull request listing compatibility impact, evidence and unavailable
+   environment-dependent tests.
 
-Do not commit credentials, PFX passwords, private keys, Octopus statement PDFs,
-downloaded source datasets, database backups, generated build output or local IDE
-state.
+## Mandatory safety rules
 
-## Plugin architecture
+Never commit live credentials, private deployment keys, PFX passwords, customer
+statements, extracted personal data, database backups or unredacted logs. The
+current development certificate/bootstrap artifacts are known release blockers
+and must not be copied into a production distribution.
 
-A plugin belongs under `com.towermarsh.opendata.plugin.<id>` and uses these
-standard packages:
+New or updated dependencies require a licence/security review and an update to
+`THIRD-PARTY-NOTICES.md`. New or changed providers/endpoints require a review of
+`DATA-SOURCE-NOTICES.md`.
 
-```text
-initialise
-extract
-transform
-load
-finalise
-```
+## Plugin structure
 
-`transform` may contain additional packages such as `model` and `validate` where
-source-specific complexity requires them. The root plugin class should remain a
-thin framework entry point. Plugins must use the shared exception handling
-boundary rather than introducing a plugin-local exception hierarchy.
+Plugins reside below `com.towermarsh.opendata.plugin.<id>` and use the common
+lifecycle packages `initialise`, `extract`, `transform`, `load` and `finalise`.
+The plugin root remains a thin framework entry point. Use shared exception and
+logging boundaries and transactional persistence where file completion depends
+on a successful database commit.
 
-## Build and test
+## Verification
 
-```powershell
-mvn clean verify
-```
+Run `mvn clean verify` and the documented documentation validation/build steps.
+Where SQL Server is available also verify clean schema installation,
+registration, encrypted restart, valid dry runs, representative write runs,
+rollback and idempotency. Do not claim an environment-dependent check passed when
+it was not run.
 
-Where SQL Server is available, also test schema installation, `--register`, an
-encrypted bootstrap restart, dry runs, write-mode processing and rollback or
-idempotency behaviour. A pull request must state which checks were performed and
-which environment-dependent checks were not available.
-
-## Coding expectations
-
-- Target Java 17.
-- Use four spaces, UTF-8 and no tab indentation.
-- Keep public types focused and document public APIs with JavaDoc.
-- Prefer immutable values and constructor injection.
-- Use `java.util.logging` for application logging.
-- Never log credentials, private keys, PFX passwords, complete connection strings
-  or unredacted customer statement data.
-- Keep database writes transactional where file completion depends on persistence.
-
-Detailed rules are maintained under [`docs/standards/`](docs/standards/README.md).
-
-## Documentation and diagrams
-
-Documentation is part of the change. Follow
-[`docs/Documentation-Standards.md`](docs/Documentation-Standards.md).
-PlantUML sources belong in `docs/diagrams/source`; Markdown references the
-corresponding SVG under `docs/diagrams/generated`. Do not hand-edit generated SVG
-files in the normal development workflow.
-
-When a provider, endpoint, customer-document format or dependency changes, review
-`DATA-SOURCE-NOTICES.md` and `THIRD-PARTY-NOTICES.md`.
-
-## Review and acceptance
-
-A contribution is complete only when required checks pass, review comments are
-resolved, migrations are documented, and user, operational and architecture
-documentation agree with the implemented behaviour.
-
-## Community conduct
-
-All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
+Detailed standards are under `docs/standards/` and the release evidence model is
+under `docs/governance/`.

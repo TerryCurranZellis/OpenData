@@ -1,477 +1,160 @@
 # OpenData Data Source Notices
 
-**Project:** OpenData  
 **Project version:** 2.0.0  
-**Notice reviewed:** 2 August 2026  
-**Project copyright:** Copyright 2026 Terry Curran
+**Review date:** 3 August 2026
 
 ## Purpose
 
-OpenData downloads, transforms and stores information obtained from external
-data providers. Those data are not owned by the OpenData project and are not
-licensed under the Apache License, Version 2.0 merely because OpenData processes
-them.
+OpenData software is licensed under Apache 2.0. Data downloaded, read or stored by
+OpenData is not automatically covered by that licence. Each operator remains
+responsible for the provider terms, attribution, privacy, retention and permitted
+use that apply to the data they process.
 
-This document:
+## Source summary
 
-- identifies the external data sources used by the current OpenData plugins;
-- records the applicable data licences and service-access terms;
-- provides attribution wording for reports, applications and redistributed
-  datasets;
-- distinguishes source data from OpenData's transformations; and
-- records limitations that downstream users must preserve.
+| Plugin | Source | Acquisition in Version 2.0.0 | Rights/handling summary |
+|---|---|---|---|
+| `ofgem` | Ofgem Energy Price Cap publications | Public web discovery and workbook download | Crown copyright material is generally reusable under the Open Government Licence unless marked otherwise |
+| `openmeteo` | Open-Meteo Historical Weather API | HTTPS API request | API data are offered under CC BY 4.0; service-plan terms and underlying-dataset attribution also apply |
+| `octopus` | Customer-provided Octopus Energy statement PDFs | Local directory only | Private customer documents; no redistribution licence is granted by OpenData |
 
-Provider terms can change independently of OpenData. The current terms must be
-reviewed whenever a plugin, endpoint, data product or release is changed.
+## Ofgem Energy Price Cap material
 
-## Current data sources
+### Source and ownership
 
-| OpenData plugin | Data provider | Data product | Access method | Principal reuse terms |
-|---|---|---|---|---|
-| `ofgem` | Office of Gas and Electricity Markets (Ofgem) | Energy Price Cap — Final levelised cap rates model | Ofgem public website and downloadable XLSX workbook | Crown copyright; reusable under the Open Government Licence v3.0 unless otherwise stated |
-| `openmeteo` | OpenMeteo GmbH / Open-Meteo.com | Historical Weather API daily weather data | `https://archive-api.open-meteo.com/v1/archive` | API data under Creative Commons Attribution 4.0 International; separate API service terms also apply |
-| `octopus` | Octopus Energy Limited | Customer electricity and gas billing statement PDFs | User-supplied local files | Private customer documents; supplier terms, copyright, privacy and account obligations apply; no public-data redistribution licence is asserted |
+OpenData obtains Energy Price Cap workbooks from Ofgem's public website. Ofgem
+states that material on its website is subject to Crown copyright unless
+otherwise indicated and may be reused under the Open Government Licence. Ofgem
+logos and third-party material are excluded from that general permission.
 
-## Ofgem Energy Price Cap data
+Official references:
 
-### Source
+- https://www.ofgem.gov.uk/copyright
+- https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
 
-The OpenData `ofgem` plugin begins at Ofgem's official Energy Price Cap
-publication page and discovers the current workbook whose link text identifies
-the **Final levelised cap rates model**.
+### Attribution
 
-Official source:
+Where Ofgem material is reproduced or redistributed, use an attribution such as:
 
-<https://www.ofgem.gov.uk/energy-regulation/domestic-and-non-domestic/energy-pricing-rules/energy-price-cap>
+> Contains public sector information licensed under the Open Government Licence v3.0. Source: Ofgem Energy Price Cap publication.
 
-Ofgem normally updates the price-cap information every three months. Workbook
-names, publication periods and download URLs can therefore change.
+Do not imply Ofgem endorsement. Preserve the workbook's source URL, retrieval
+time, publication/period details and file hash in operational provenance where
+available.
 
-### Rights and licence
+### Limitations
 
-Ofgem states that material on its website is subject to Crown copyright unless
-otherwise indicated and that Crown copyright information, excluding logos, may
-be reused under the Open Government Licence.
-
-The relevant licence is:
-
-**Open Government Licence, version 3.0**
-
-<https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/>
-
-The Open Government Licence permits copying, publishing, adapting, exploiting
-and combining the information, including commercially, subject to its
-conditions.
-
-The principal conditions relevant to OpenData are:
-
-- acknowledge Ofgem as the information provider and identify the source;
-- provide a link to the Open Government Licence where reasonably practicable;
-- do not imply official status, sponsorship or endorsement;
-- do not mislead others or misrepresent the information or its source;
-- do not use Ofgem or Crown logos unless separately authorised; and
-- obtain separate permission for material identified as third-party copyright.
-
-A downloaded workbook must be checked for any workbook-specific copyright,
-licensing or third-party notices. The general Ofgem website permission does not
-override rights expressly assigned to another party.
-
-### OpenData processing
-
-OpenData may:
-
-- discover and download the published XLSX workbook;
-- archive the original source file;
-- select and interpret workbook sheets and cells;
-- evaluate or read spreadsheet formula results;
-- normalise names, dates, regions, payment methods and units;
-- map source values into SQL Server columns; and
-- combine records from multiple publication periods.
-
-These operations create an OpenData transformation of the Ofgem source. They
-do not make Ofgem responsible for the transformed records.
-
-### Required attribution
-
-The following attribution should accompany Ofgem-derived records when they are
-displayed, exported, published or redistributed:
-
-> Contains public sector information published by Ofgem and licensed under the
-> Open Government Licence v3.0, except where otherwise stated. OpenData has
-> transformed the source workbook; Ofgem has not reviewed or endorsed the
-> transformed data.
-
-For a specific publication, include the price-cap period and retrieval date
-where practical, for example:
-
-> Source: Ofgem, Final levelised cap rates model, 1 July to 30 September 2026,
-> retrieved 31 July 2026. Licensed under the Open Government Licence v3.0.
-> Data transformed by OpenData; no Ofgem endorsement is implied.
-
-The period in that example must be replaced with the period represented by the
-actual workbook.
-
-### Data limitations
-
-Ofgem price-cap figures are regulatory source information. They are not a
-quotation for an individual household and should not be represented as the
-exact amount a particular customer will pay. Applicable rates can depend on
-region, fuel, meter type, payment method, tariff status and the period in
-force.
-
-OpenData does not warrant that a downloaded workbook is complete, current,
-error-free or suitable for a particular financial or regulatory decision.
+Price-cap publications can be revised, restructured or contain third-party
+material. Operators must review the specific publication and must not assume that
+logos, branding or every workbook cell are Crown copyright.
 
 ## Open-Meteo historical weather data
 
-### Source
+### Licence and service terms
 
-The OpenData `openmeteo` plugin calls:
+Open-Meteo states that API data are offered under Creative Commons Attribution
+4.0 International (CC BY 4.0). Attribution must identify Open-Meteo, link to the
+service/licence and indicate changes where applicable.
 
-<https://archive-api.open-meteo.com/v1/archive>
+The free/open-access endpoint is subject to service terms, including
+non-commercial-use and request-rate conditions. Commercial, high-volume or
+service-level use may require an appropriate subscription. Operators must verify
+the current terms for their deployment rather than treating project inclusion as
+permission for every use.
 
-It requests daily historical weather values for configured coordinates and
-dates. The current implementation requests daily maximum, minimum and mean
-temperature, sunrise, sunset, daylight duration and weather code.
+Official references:
 
-The plugin does not currently specify a particular reanalysis model. Open-Meteo
-therefore applies its default **Best Match** selection. At the date of this
-notice, Open-Meteo documents that Best Match combines ECMWF IFS, ERA5 and
-ERA5-Land data seamlessly.
+- https://open-meteo.com/en/licence
+- https://open-meteo.com/en/terms
+- https://open-meteo.com/en/pricing
 
-Historical Weather API documentation:
+### Attribution
 
-<https://open-meteo.com/en/docs/historical-weather-api>
+A suitable display attribution is:
 
-### Data origins
+> Weather data by Open-Meteo.com, licensed under CC BY 4.0.
 
-Open-Meteo's Historical Weather API uses reanalysis and modelled weather data.
-Its documented sources include:
-
-- ECMWF Integrated Forecasting System data;
-- ERA5 reanalysis data;
-- ERA5-Land reanalysis data; and
-- Copernicus Climate Change Service data supporting the reanalysis products.
-
-Reanalysis data combine observations from sources such as weather stations,
-aircraft, buoys, radar and satellites with numerical weather models. The
-returned values are therefore gridded estimates and should not be described as
-direct measurements from a weather station at the requested coordinates.
-
-The exact model mix can vary with date, location, API defaults and changes made
-by Open-Meteo. For reproducible scientific use, the selected model and query
-parameters should be fixed and recorded explicitly.
-
-### Data licence
-
-Open-Meteo states that its API data are offered under:
-
-**Creative Commons Attribution 4.0 International (CC BY 4.0)**
-
-<https://creativecommons.org/licenses/by/4.0/>
-
-The licence permits sharing and adaptation, including commercial reuse,
-provided that users:
-
-- give appropriate credit;
-- provide a link to the licence;
-- indicate whether changes were made;
-- do not suggest endorsement by the licensor; and
-- do not apply additional legal or technical restrictions that prevent others
-  from exercising the licensed rights.
-
-Open-Meteo's licence page also requires a link next to any place where
-Open-Meteo data are displayed.
-
-Official licence information:
-
-<https://open-meteo.com/en/licence>
-
-### Required attribution
-
-Where Open-Meteo data are displayed in a user interface, report, export,
-dashboard or other output, include a visible link such as:
-
-> [Weather data by Open-Meteo.com](https://open-meteo.com/) — licensed under
-> [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Data transformed
-> by OpenData.
-
-For plain-text or printed output:
-
-> Weather data by Open-Meteo.com, licensed under CC BY 4.0. OpenData transformed
-> the API response into daily database records. No endorsement is implied.
-
-Where space permits, identify the principal underlying datasets:
-
-> Weather data by Open-Meteo.com using ECMWF IFS, ERA5 and ERA5-Land sources,
-> licensed under CC BY 4.0. Data transformed by OpenData.
-
-Open-Meteo also recommends the following citation for academic or research use:
-
-> Zippenfenig, P. (2023). Open-Meteo.com Weather API [Computer software].
-> Zenodo. <https://doi.org/10.5281/ZENODO.7970649>
+For redistributed datasets, also include the request URL/parameters, access date,
+transformations and any attribution required by the selected underlying weather
+model or dataset. Open-Meteo documents underlying sources on its licence and API
+pages; requirements can differ by endpoint and model.
 
 ### OpenData processing
 
-OpenData may:
+OpenData requests configured daily historical variables, validates the response
+and stores relational records. Stored values may be transformed by type
+conversion, unit handling, validation and database normalisation. Those changes
+must not be presented as unmodified provider data.
 
-- request data for configured coordinates and date ranges;
-- receive JSON from the Historical Weather API;
-- parse and validate the response;
-- convert timestamps and dates to the configured timezone;
-- map weather variables and weather codes into database columns;
-- store daily records in SQL Server; and
-- update previously stored records.
-
-These are modifications or transformations for CC BY 4.0 purposes and must be
-identified when the resulting data are redistributed.
-
-### Free API service terms
-
-The CC BY 4.0 data licence and the terms for accessing Open-Meteo's hosted API
-are separate matters.
-
-At the date of this notice, Open-Meteo's free/open-access API service:
-
-- is limited to non-commercial use;
-- permits fewer than 10,000 API calls per day;
-- permits fewer than 5,000 API calls per hour;
-- permits fewer than 600 API calls per minute; and
-- may block applications or IP addresses that misuse the service.
-
-Open-Meteo identifies commercial products, subscription-supported services,
-advertising-supported services, promotional activity and undisclosed research
-at commercial organisations as examples of commercial use.
-
-A commercial OpenData deployment must not assume that the public free endpoint
-is permitted merely because CC BY 4.0 permits commercial reuse of data already
-obtained. Commercial or higher-volume API access requires the appropriate
-Open-Meteo subscription, customer endpoint and credentials.
-
-Official terms:
-
-<https://open-meteo.com/en/terms>
-
-The service terms and limits may change. They must be reviewed before each
-release and before any deployment changes from personal or non-commercial use
-to commercial use.
-
-### Data limitations
-
-Open-Meteo provides its service and data without guarantees of accuracy,
-completeness, uninterrupted availability or suitability for a specific
-purpose.
-
-Historical Weather API values are modelled gridded estimates. They may differ
-from nearby weather-station observations because of model resolution,
-elevation, terrain, coastlines, local microclimates, model updates and
-statistical processing.
-
-OpenData does not warrant that Open-Meteo data are suitable for safety-critical,
-medical, legal, insurance, engineering or emergency-response decisions.
-
+Open-Meteo provides data without a guarantee of accuracy, completeness or
+continuous availability. OpenData likewise does not make weather data suitable
+for safety-critical decisions.
 
 ## Octopus Energy customer statements
 
-### Source and acquisition
+### Source boundary
 
-The OpenData `octopus` plugin processes PDF statements that the customer has
-already obtained from Octopus Energy and placed in a configured local directory.
-Version 2.0.0 defaults to `C:\Attachments\octopus` and accepts filenames matching
-`octopus-energy-statement-YYYY-MM-DD.pdf`.
+Version 2.0.0 scans locally supplied files matching the configured Octopus PDF
+pattern. It does not sign in to the Octopus website, scrape the customer portal,
+read email, or use the Octopus API to download statements.
 
-The plugin does not log in to the Octopus Energy website, scrape account pages,
-call the Octopus Energy API, or download statements directly. Octopus Energy
-publishes instructions for customers to view and save previous bills through the
-Octopus app or online account. Direct API extraction is outside the current
-implementation.
+Octopus Energy publishes APIs for customers and partner organisations, but API
+use and statement-download capability require separate technical and terms
+assessment. The existence of an API is not evidence that billing-statement PDFs
+can or should be downloaded through it.
 
-### Rights and permitted use
+Official references:
 
-An Octopus statement is a customer account document, not an OpenData public
-dataset. OpenData does not claim that statement content is licensed for public
-redistribution. Use and retention can be governed by the customer's energy-supply
-contract, Octopus Energy terms, copyright, data-protection law and the rights of
-other people identified in the statement.
+- https://developer.octopus.energy/
+- https://octopus.energy/policies/terms-of-use/
+- https://octopus.energy/policies/
 
-A user should process only statements they are authorised to access. The Apache
-License 2.0 covering OpenData software does not grant rights to publish, sell or
-redistribute statement content, Octopus branding or account data.
+### Customer rights and confidentiality
 
-Official Octopus Energy material relevant to customer use includes:
+A customer may process their own statements for personal record keeping, subject
+to their contract and applicable law. OpenData does not grant a licence to
+publish, redistribute or commercialise statement layouts, Octopus branding or
+another person's account information.
 
-- domestic customer terms and conditions: <https://octopus.energy/policies/terms-and-conditions/>;
-- website and app terms of use: <https://octopus.energy/policies/terms-of-use/>;
-- privacy policy: <https://octopus.energy/policies/privacy-policy/>; and
-- customer guidance for obtaining previous bills: <https://octopus.energy/payment-support/>.
+Statements and extracted records can contain names, addresses, account numbers,
+meter identifiers, tariff details, payment information, consumption and billing
+history. Treat source PDFs, database rows, logs, backups and test fixtures as
+confidential personal data.
 
-Terms can change. Users must review the terms applying to their own account and
-intended use.
+### Required controls
 
-### OpenData processing
+- Use only statements the operator is authorised to process.
+- Keep input, archive and failure directories access controlled.
+- Do not commit PDFs, extracted text or live account data.
+- Redact examples before sharing them.
+- Define retention and deletion periods for PDFs and database records.
+- Do not use Octopus names or logos in a way that implies endorsement.
+- Review website/API terms before adding any automated acquisition feature.
 
-For each matching local PDF, OpenData may:
+## Provenance minimum
 
-- read the filename and statement date;
-- calculate a SHA-256 fingerprint;
-- compare the filename and fingerprint with `octopus.statement_file`;
-- extract text from the PDF;
-- transform electricity and gas sections into records;
-- load the records and completion ledger in one transaction; and
-- archive the source PDF after a successful non-dry-run commit.
+For each external acquisition or local customer document, retain as applicable:
 
-A statement may contain electricity data, gas data, both, or no supported
-records. The independent statement ledger prevents completion from depending on
-which fuel sections happen to be present.
+- provider and dataset/document type;
+- source URL or controlled local origin;
+- retrieval or receipt timestamp;
+- original filename and cryptographic hash;
+- requested parameters, period and location;
+- plugin and application version;
+- transformation/validation result; and
+- load/run identifier.
 
-### Privacy and security
+## Combined attribution example
 
-Statements can contain personal, account, meter, tariff, payment, consumption and
-address information. They must be treated as sensitive customer records.
+A report containing both provider datasets may state:
 
-- Do not commit PDFs or extracted fixtures to a public repository.
-- Restrict the input, working and archive directories.
-- Protect database tables and backups containing extracted records.
-- Do not publish unredacted logs, screenshots or test output.
-- Define retention and secure-disposal rules appropriate to the deployment.
-- Obtain consent or another lawful basis before processing another person's
-  statements.
+> Ofgem material contains public sector information licensed under the Open Government Licence v3.0. Weather data by Open-Meteo.com are licensed under CC BY 4.0. OpenData is an independent project and is not endorsed by either provider.
 
-### Attribution and trademarks
-
-Where the provider must be identified, use factual wording such as:
-
-> Source document: customer billing statement issued by Octopus Energy. Processed
-> locally by OpenData. OpenData is an independent project and is not affiliated
-> with, sponsored by or endorsed by Octopus Energy.
-
-Do not reproduce Octopus Energy logos or imply official status without separate
-permission. Provider names are used only to identify the statement source and
-compatible plugin.
-
-## Combined attribution
-
-Where an OpenData product displays information from both current providers, the
-following concise statement may be used:
-
-> Data sources: Ofgem energy price-cap information, licensed under the Open
-> Government Licence v3.0; and weather data by Open-Meteo.com, licensed under
-> CC BY 4.0. OpenData has transformed the source data. Neither provider
-> endorses OpenData or its outputs.
-
-The Open-Meteo text should remain a working hyperlink in digital output.
-
-## Provenance records
-
-To support attribution, auditing and reproducibility, OpenData releases and
-stored datasets should preserve, where available:
-
-- provider name;
-- dataset or publication name;
-- source landing-page URL;
-- resolved download or API URL;
-- source publication period or requested date range;
-- retrieval timestamp;
-- source-file name and cryptographic checksum;
-- request parameters, excluding secrets;
-- selected API model or default-selection status;
-- source licence identifier;
-- plugin ID and OpenData version;
-- transformation or schema version; and
-- whether records were subsequently corrected or replaced.
-
-Archiving the original Ofgem workbook is useful for auditability. Raw API
-responses or sufficient request metadata should be retained for Open-Meteo
-where storage, privacy and provider terms permit.
-
-## Redistribution requirements
-
-When OpenData-derived data are exported or redistributed:
-
-1. retain the applicable provider attribution;
-2. include links to the OGL or CC BY 4.0 licence;
-3. identify material transformations made by OpenData;
-4. preserve source and retrieval metadata where practicable;
-5. do not use provider names or logos in a way that suggests endorsement;
-6. do not remove workbook-specific or response-specific notices;
-7. do not relicense source data solely under the OpenData Apache 2.0 software
-   licence; and
-8. ensure any downstream application continues to satisfy the provider's
-   current terms.
-
-The OpenData source code, database schema and transformation logic can remain
-under Apache License 2.0. The imported records retain their source-data terms.
-
-## Provider names and trademarks
-
-“Ofgem”, “Open-Meteo”, “ECMWF”, “ERA5”, “ERA5-Land” and related provider names
-are used only to identify sources, services and data products.
-
-No OpenData plugin, document, database or output is sponsored, certified,
-approved or endorsed by Ofgem, OpenMeteo GmbH, ECMWF, the Copernicus Climate
-Change Service or any other underlying provider.
-
-Provider logos should not be copied into OpenData or its generated outputs
-without separate permission.
+Do not include Octopus customer information in public combined datasets unless a
+separate lawful basis, permission, redaction and disclosure review exist.
 
 ## Maintenance
 
-Review this document whenever:
-
-- a data-source plugin is added, removed or changed;
-- an endpoint, workbook, API product or underlying model changes;
-- new variables or datasets are requested;
-- source data are used commercially;
-- an API subscription or authentication method changes;
-- a provider updates its copyright, licence, attribution or service terms;
-- a transformed dataset is published outside the local OpenData database; or
-- an OpenData release is prepared.
-
-The review should confirm:
-
-- the source URL still identifies the intended official provider;
-- the current licence and version;
-- the exact attribution statement;
-- any requirement to identify modifications;
-- commercial-use restrictions;
-- request and rate limits;
-- third-party content exceptions;
-- warranty and liability wording; and
-- whether the provider requires attribution at every display location.
-
-Where this document conflicts with a provider's current official terms, the
-provider's terms control.
-
-## Official references
-
-### Ofgem and public-sector information
-
-- Ofgem Energy Price Cap:
-  <https://www.ofgem.gov.uk/energy-regulation/domestic-and-non-domestic/energy-pricing-rules/energy-price-cap>
-- Ofgem copyright and disclaimer:
-  <https://www.ofgem.gov.uk/c-ofgem-2026>
-- Open Government Licence v3.0:
-  <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/>
-- OGL attribution guidance:
-  <https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/open-government-licence/copyright-notices-attribution-statements/>
-
-### Open-Meteo and weather data
-
-- Open-Meteo Historical Weather API:
-  <https://open-meteo.com/en/docs/historical-weather-api>
-- Open-Meteo licence:
-  <https://open-meteo.com/en/licence>
-- Open-Meteo terms:
-  <https://open-meteo.com/en/terms>
-- Creative Commons Attribution 4.0:
-  <https://creativecommons.org/licenses/by/4.0/>
-- Open-Meteo recommended software citation:
-  <https://doi.org/10.5281/ZENODO.7970649>
-
-
-### Octopus Energy
-
-- Customer terms: <https://octopus.energy/policies/terms-and-conditions/>
-- Website and app terms: <https://octopus.energy/policies/terms-of-use/>
-- Privacy policy: <https://octopus.energy/policies/privacy-policy/>
-- Obtaining previous bills: <https://octopus.energy/payment-support/>
+Review these notices whenever a source URL, API plan, endpoint, workbook,
+statement format, provider term, attribution rule or plugin acquisition method
+changes. Provider terms can change independently of an OpenData release.

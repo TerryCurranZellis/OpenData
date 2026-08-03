@@ -2,89 +2,87 @@
 
 ## Supported versions
 
-| Version | Supported |
+| Version | Status |
 |---|---|
-| `2.0.x` development and release-candidate baseline | Yes |
-| `1.0.x` | Security fixes only when explicitly backported |
-| Historical development snapshots | No |
+| 2.0.0 development/release-candidate baseline | Security fixes and review are active |
+| 1.0.0 historical release record | Upgrade is recommended |
+| Earlier development snapshots | Not supported |
 
-Support periods may be refined when Version 2.0.0 is formally tagged.
+Version 2.0.0 must not be described as production-ready until the mandatory
+release blockers in the final release checklist are resolved or formally waived.
 
 ## Reporting a vulnerability
 
-Do not open a public issue for a suspected vulnerability. Send a private report
-to `terry.curran@towermarsh.co.uk` with the subject `OpenData security report`.
+Do not open a public issue containing exploit details, credentials, private keys
+or customer data. Send a private report to `terry.curran@towermarsh.co.uk` with
+the subject `OpenData security report`.
 
-Include the affected version or commit, component, configuration, reproduction
-steps, likely impact and any suggested remediation. Do not attach live database
-credentials, private keys, customer statements or unredacted personal data.
+Include the affected version/commit, component, reproduction steps, impact and
+suggested remediation. Use synthetic or redacted evidence.
 
-## Version 2.0.0 credential model
+## Known Version 2.0.0 security blockers
 
-OpenData needs database credentials before it can load runtime configuration from
-SQL Server. The bootstrap file therefore contains the database URL, username and
-an encrypted password.
+The reviewed source baseline contains development credentials and behaviours
+that require remediation before production release:
 
-- Registration encrypts the password using the public key in
-  `opendata-config-public.cer`.
-- Startup decrypts `{enc}` values using the private key in
-  `opendata-config-private.pfx`.
-- The PFX password protects access to the private key; it is not the encryption
-  key itself.
-- The supplied development PFX password is `nopassword`.
-- The current runtime accepts a replacement PFX password through the JVM
-  property `opendata.config.keystore.password`.
-- The previously documented `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment
-  variable is not honoured by the uploaded Java baseline: the implementation
-  currently looks for an environment variable literally named `nopassword`.
-  This is a release-blocking implementation defect, not a supported secret-input
-  mechanism.
+1. `src/main/resources/config/application.properties` contains a database
+   password value.
+2. A private PKCS#12 key store is tracked beneath
+   `src/main/resources/config/security`.
+3. The bundled PFX uses the development password `nopassword`.
+4. The intended `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment-variable path is
+   defective; the runtime currently looks for an environment variable literally
+   named `nopassword`.
+5. The development JDBC URL uses `trustServerCertificate=true`, which encrypts
+   traffic without authenticating the SQL Server certificate.
+6. The SQL Server JDBC dependency is a preview build and requires explicit
+   release approval or replacement with a verified stable version.
 
-The supplied certificate pair, tracked private key, plaintext bootstrap
-password and default PFX password are development artefacts and must not be
-published as a production-ready credential model. For production:
+Documentation of a blocker does not remove it. Rotate any credential that has
+been committed or used, remove deployment private keys from distributable source,
+correct and test secret input, and validate SQL Server trust before release.
 
-1. generate a deployment-specific certificate and private key;
-2. use a strong, separately protected PFX password;
-3. restrict read access to the PFX to the application identity;
-4. do not commit replacement private keys or passwords;
-5. establish certificate rotation and recovery procedures; and
-6. test that an unavailable or incorrect private key fails closed.
+## Credential model
 
-RSA encryption protects the stored bootstrap value. It does not protect a
-password after decryption in application memory, replace operating-system access
-controls, or eliminate the need for SQL Server transport security and least
-privilege.
+Registration encrypts the bootstrap database password with the public certificate
+and startup decrypts `{enc}` values using the private key. RSA encryption protects
+the value at rest in the properties file; it does not protect the password after
+decryption, replace filesystem permissions, or provide key rotation.
 
-## Sensitive data
+Production controls must include:
 
-Octopus Energy statements and their extracted records can contain names,
-addresses, account references, meter identifiers, tariff details, payment data,
-consumption and billing history. Deployments must:
+- deployment-specific public/private keys;
+- a strong PFX password supplied through a tested secret channel;
+- private-key access limited to the application identity;
+- backup, rotation, expiry and recovery procedures;
+- least-privilege SQL Server credentials;
+- validated TLS with `trustServerCertificate=false`; and
+- failure-closed tests for unavailable, wrong or expired keys.
 
-- restrict access to input, working, archive and failure directories;
-- exclude statement PDFs and extracted fixtures from source control;
-- protect the Octopus tables and database backups;
-- avoid logging full statement text or personal identifiers;
-- securely dispose of temporary files;
-- define a retention policy for source PDFs and extracted records; and
-- redact data before sharing logs, screenshots or test evidence.
+## Customer and operational data
 
-## General security expectations
+Octopus statements can contain personal and financial information. Protect input,
+archive, failure, log and backup locations. Do not log complete statement text,
+credentials, connection strings, private keys or unredacted identifiers. Use
+synthetic fixtures for tests and documentation wherever possible.
 
-- Use a least-privilege SQL Server account.
-- Replace `trustServerCertificate=true` with validated certificate trust outside
-  controlled development environments.
-- Keep Java, dependencies, SQL Server and build tooling patched.
-- Validate remote locations, downloaded content and local input filenames.
-- Treat plugins, property rows, certificates and configuration files as trusted
-  deployment inputs.
-- Keep writable directories outside locations served publicly.
-- Test database and certificate backup and restoration.
-- Review dependency and data-source notices for each release.
+Ofgem and Open-Meteo datasets are less sensitive but still require integrity,
+provenance and attribution controls. Validate downloaded content, retain hashes
+and do not trust remote filenames or content types without checking them.
+
+## Dependency and build security
+
+- Build from a clean, reviewed commit.
+- Pin direct dependency and build-plugin versions.
+- Inspect the resolved dependency graph and vulnerability results.
+- Treat preview dependencies as explicit release risks.
+- Protect release credentials and signing material outside the repository.
+- Verify generated archive contents and SHA-256 checksums.
+- Never publish local configuration, customer files, database backups or private
+  deployment keys.
 
 ## Disclosure and credit
 
-Validated reports will be credited in release notes unless the reporter requests
-anonymity. The maintainer will coordinate remediation and disclosure according
-to the risk and availability of a verified fix.
+Validated reports may be credited in release notes unless the reporter requests
+anonymity. Disclosure timing must prioritise a verified fix and protection of
+users and customer data.

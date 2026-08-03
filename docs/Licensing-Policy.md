@@ -1,32 +1,63 @@
 # Licensing Policy
 
-OpenData is distributed under the Apache License, Version 2.0.
+**Baseline:** OpenData 2.0.0  
+**Reviewed:** 3 August 2026
 
-## Canonical files
+OpenData source and project-authored documentation are distributed under the
+Apache License, Version 2.0, except where a file explicitly states otherwise.
 
-- `LICENSE` contains the canonical plain-text licence.
-- `LICENSE.md` is retained for compatibility with existing documentation links.
-- `NOTICE` contains project attribution and third-party notice guidance.
+## Canonical repository files
 
-## Source file headers
+- `LICENSE` — canonical Apache 2.0 text.
+- `LICENSE.md` — Markdown copy retained for documentation links.
+- `NOTICE` — project notice and attribution pointer.
+- `THIRD-PARTY-NOTICES.md` — software dependency/tooling inventory.
+- `DATA-SOURCE-NOTICES.md` — external data, service and customer-document terms.
 
-Java, PowerShell and SQL source files use this ownership and SPDX declaration:
+## Source headers
+
+Project-authored Java, PowerShell and SQL source should use:
 
 ```text
 Copyright © 2026 Terry Curran
 SPDX-License-Identifier: Apache-2.0
 ```
 
-The concise SPDX header avoids copying the full licence into every source file.
+A missing header does not automatically change the repository licence, but
+release review should correct inconsistent headers.
 
 ## Contributions
 
-Unless explicitly stated otherwise, contributions submitted to this repository are accepted under the Apache License, Version 2.0, in accordance with `CONTRIBUTING.md`. Contributors must have the right to submit their work.
+Contributors must have the right to submit their work. Unless explicitly agreed
+otherwise, contributions are accepted under Apache 2.0 as described in
+`CONTRIBUTING.md`. Do not copy code, examples, diagrams, data or documentation
+from another source merely because it is publicly visible.
 
-## Third-party material
+## Third-party software
 
-Third-party code, libraries, data and documentation retain their own copyright and licence terms. Maven dependencies are not relicensed by this project. Any bundled third-party material requiring attribution must be recorded in `NOTICE` or an adjacent licence file.
+Dependencies are not relicensed by OpenData. A binary distribution must preserve
+upstream licences and notices. A shaded or combined executable requires a
+resolved licence inventory and manual review before publication.
 
-## Package namespace
+## External data and customer documents
 
-The Java package namespace `com.towermarsh.opendata` is retained for compatibility. Its presence is a technical identifier and does not replace or alter the copyright statement.
+Ofgem and Open-Meteo data retain provider licences and attribution requirements.
+Octopus statements remain private customer documents. They are not OpenData
+sample data and must not be included in source or public release archives.
+
+## Names and marks
+
+`com.towermarsh.opendata` is a technical namespace. Provider and vendor names are
+used only to identify interoperability or provenance. Their names and marks
+remain the property of their owners and must not be used to imply endorsement.
+
+## Release evidence
+
+For every public release retain:
+
+- the reviewed licence/notice files;
+- the resolved dependency inventory;
+- a list of bundled third-party artifacts;
+- source-data attribution review;
+- archive-content and secret scans; and
+- any approved licence or security waiver.

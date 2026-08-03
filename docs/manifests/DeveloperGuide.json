@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 2.0.0 developer, quality and plugin extension baseline"
+    "revisionSummary": "Version 2.0.0 baseline including governance, compliance, attribution and privacy controls"
   },
   "sections": [
     "shared/introduction.md",
@@ -38,6 +38,10 @@
     "architecture/024-architecture-traceability.md",
     "decisions/README.md",
     "decisions/ADR-REGISTER.md",
+    "governance/README.md",
+    "governance/data-and-privacy-governance.md",
+    "governance/dependency-and-attribution-management.md",
+    "governance/release-compliance-checklist.md",
     "shared/glossary.md",
     "shared/licence.md",
     "shared/third-party-notices.md",

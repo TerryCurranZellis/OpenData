@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Administrator guide",
     "audience": "Database, platform and operations administrators",
-    "revisionSummary": "Version 2.0.0 registration, operations, monitoring, recovery and security baseline"
+    "revisionSummary": "Version 2.0.0 baseline including governance, compliance, attribution and privacy controls"
   },
   "sections": [
     "shared/introduction.md",
@@ -24,6 +24,10 @@
     "reference/database-configuration.md",
     "reference/database-schema-reference.md",
     "reference/ingestion-audit-reference.md",
+    "governance/README.md",
+    "governance/data-and-privacy-governance.md",
+    "governance/dependency-and-attribution-management.md",
+    "governance/release-compliance-checklist.md",
     "shared/glossary.md",
     "shared/licence.md",
     "shared/third-party-notices.md",

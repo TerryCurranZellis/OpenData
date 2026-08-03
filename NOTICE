@@ -1,13 +1,16 @@
 OpenData
 Copyright 2026 Terry Curran
 
-This product is licensed under the Apache License, Version 2.0.
-See LICENSE.md for the complete licence terms.
+This product includes software developed by the Apache Software Foundation and
+other third parties identified in THIRD-PARTY-NOTICES.md.
 
-OpenData includes or depends on third-party open-source libraries. Their
-copyright notices and licence terms remain the property of their respective
-owners and are distributed through the normal Maven dependency metadata and
-artefacts.
+OpenData is licensed under the Apache License, Version 2.0. Third-party software
+and external data retain their own licences, copyright notices and terms.
 
-“OpenData” is a project name used to identify this software and does not imply
-endorsement by any public data provider whose data may be processed by plugins.
+Ofgem and Open-Meteo source/attribution requirements, and the confidential status
+of customer-provided Octopus Energy statements, are recorded in
+DATA-SOURCE-NOTICES.md.
+
+The names Ofgem, Open-Meteo, Octopus Energy, Microsoft, Apache and other third
+parties are the property of their respective owners. Their inclusion identifies
+interoperability or data provenance and does not imply sponsorship or endorsement.

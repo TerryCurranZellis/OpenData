@@ -2,23 +2,24 @@
 
 ## Scope
 
-Batch 6 improves Maven build controls, continuous integration, documentation validation and release automation.
+Batch 6 updates governance, licensing, third-party software, external data,
+privacy, contribution and security documentation for OpenData 2.0.0. It does not
+change Java, SQL, Maven, PowerShell or runtime configuration.
 
-## Implemented changes
+## Completed work
 
-- Added Maven Enforcer rules for Java 17, Maven 3.9 or later, dependency convergence and explicit plugin versions.
-- Added JaCoCo coverage reporting and Maven dependency analysis.
-- Added a general build-and-quality GitHub Actions workflow.
-- Replaced the broken documentation workflow command with wrappers around the existing documentation generator.
-- Added tagged and manually dispatched GitHub release automation.
-- Added local documentation validation, documentation build and release packaging scripts.
-- Added a PlantUML source describing the CI and release flow.
-- Added developer guidance for local builds, CI and releases.
+- Reconciled direct dependency versions with the reviewed `pom.xml`.
+- Distinguished software licences from provider data/service terms.
+- Added explicit Ofgem, Open-Meteo and Octopus rights/handling guidance.
+- Recorded the preview SQL Server JDBC driver as a release decision.
+- Consolidated known credential, private-key, TLS and secret-input blockers.
+- Added governance, privacy, attribution and release-compliance chapters.
+- Added a governance/compliance diagram and included governance chapters in the
+  generated guide manifests.
 
-## Compatibility
+## Evidence boundary
 
-Static-analysis enforcement remains advisory for ordinary local and CI builds through `quality.failOnViolation=false`. Tagged releases explicitly enable strict enforcement. This allows existing findings to be corrected without making normal development unusable.
-
-## Validation performed
-
-The Maven POM, JSON documentation manifest, GitHub workflow YAML syntax and ZIP structure were checked structurally. Maven, PowerShell, Pandoc and PlantUML execution must also be run in the developer or GitHub Actions environment.
+Official provider/upstream pages were reviewed on 3 August 2026. Provider terms
+can change independently; release operators must recheck them at publication.
+The batch does not constitute legal advice and does not certify a binary
+redistribution whose resolved dependency contents were not available.

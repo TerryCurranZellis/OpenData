@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "API and configuration reference",
     "audience": "Plugin developers, integrators and support engineers",
-    "revisionSummary": "Version 2.0.0 plugin API, configuration, schema and format reference"
+    "revisionSummary": "Version 2.0.0 baseline including governance, compliance, attribution and privacy controls"
   },
   "sections": [
     "shared/introduction.md",
@@ -38,6 +38,10 @@
     "plugins/ofgem/workbook-mapping.md",
     "plugins/openmeteo/README.md",
     "plugins/octopus/README.md",
+    "governance/README.md",
+    "governance/data-and-privacy-governance.md",
+    "governance/dependency-and-attribution-management.md",
+    "governance/release-compliance-checklist.md",
     "shared/glossary.md",
     "shared/licence.md",
     "shared/third-party-notices.md",
