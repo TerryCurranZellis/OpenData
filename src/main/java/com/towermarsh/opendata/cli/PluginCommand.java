@@ -12,14 +12,24 @@ package com.towermarsh.opendata.cli;
  * @version 2.0.0
  */
 public enum PluginCommand {
-    /** Execute the selected enabled plugins. */
+    /** 
+     * Execute the selected enabled plugins. 
+     */
     RUN,
-    /** Register or replace the selected plugin definitions. */
+    /** 
+     * Register or replace the selected plugin definitions. 
+     */
     REGISTER,
-    /** Remove the selected plugins from the persistent registry. */
+    /** 
+     * Remove the selected plugins from the persistent registry. 
+     */
     UNREGISTER,
-    /** Mark the selected registered plugins as enabled. */
+    /** 
+     * Mark the selected registered plugins as enabled. 
+     */
     ENABLE,
-    /** Mark the selected registered plugins as disabled. */
+    /** 
+     * Mark the selected registered plugins as disabled. 
+     */
     DISABLE
 }

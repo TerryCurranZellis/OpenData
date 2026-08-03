@@ -89,9 +89,7 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     }
 
     /**
-     * @inheritdoc
-     * @param plainText
-     * @return 
+     * {@inheritdoc}
      */
     @Override
     public String encrypt(final String plainText) {
@@ -113,9 +111,7 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     }
 
     /**
-     * @inheritdoc
-     * @param storedValue
-     * @return 
+     * {@inheritdoc}
      */
     @Override
     public String decrypt(final String storedValue) {
@@ -135,9 +131,7 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     }
 
     /**
-     * @inheritdoc
-     * @param storedValue
-     * @return 
+     * {@inheritdoc}
      */
     @Override
     public boolean isEncrypted(final String storedValue) {

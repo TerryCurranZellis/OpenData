@@ -17,6 +17,7 @@ import com.towermarsh.opendata.database.DatabaseResourceManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class JdbcPluginRegistryTest {
     private ResultSet resultSet;
 
     @BeforeEach
-    void prepareConnection() {
+    void prepareConnection() throws SQLException {
         when(database.getConnection()).thenReturn(connection);
     }
 

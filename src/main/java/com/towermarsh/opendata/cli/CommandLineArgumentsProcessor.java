@@ -30,10 +30,18 @@ import org.apache.commons.cli.ParseException;
  */
 public final class CommandLineArgumentsProcessor {
 
+    /**
+     * the application
+     */
     private static final String APPLICATION_NAME = "OpenData";
+    /**
+     * command line options
+     */
     private final Options options = createOptions();
 
-    /** Creates a command-line processor. */
+    /** 
+     * Creates a command-line processor. 
+     */
     public CommandLineArgumentsProcessor() {
     }
 
@@ -97,10 +105,20 @@ public final class CommandLineArgumentsProcessor {
         return tokens.toArray(String[]::new);
     }
 
+    /**
+     * check if a string contains white space
+     * @param value string to check
+     * @return true or false
+     */
     private static boolean containsWhitespace(final String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
+    /**
+     * add token to the list
+     * @param tokens token list
+     * @param token token to add
+     */
     private static void addToken(final List<String> tokens, final StringBuilder token) {
         if (!token.isEmpty()) {
             tokens.add(token.toString());
@@ -152,6 +170,10 @@ public final class CommandLineArgumentsProcessor {
         writer.flush();
     }
 
+    /**
+     * create all the command line options
+     * @return the available command line options
+     */
     private static Options createOptions() {
         final var result = new Options();
         result.addOption(Option.builder("p")
@@ -301,6 +323,11 @@ public final class CommandLineArgumentsProcessor {
                 command);
     }
 
+    /**
+     * find the plugins on the command line
+     * @param commandLine the commandline
+     * @return 
+     */
     private static List<String> parsePluginIds(final CommandLine commandLine) {
         final List<String> rawIds = new ArrayList<>();
         final var optionValues = commandLine.getOptionValues("plugin");
@@ -317,6 +344,11 @@ public final class CommandLineArgumentsProcessor {
         return rawIds;
     }
 
+    /**
+     * count the number of information arguments
+     * @param values information arguments
+     * @return number of information arguments
+     */
     private static int booleanCount(final boolean... values) {
         var count = 0;
         for (var value : values) {
