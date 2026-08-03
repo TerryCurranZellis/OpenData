@@ -10,8 +10,8 @@ participant "transform.OctopusStatementParser" as Parser
 participant "load.OctopusPersistenceRepository" as Repository
 participant "finalise.OctopusFinalise" as Finalise
 database "OpenData SQL Server" as Database
-folder "Input PDFs" as Input
-folder "Archive" as Archive
+collections "Input PDFs" as Input
+collections "Archive" as Archive
 
 Operator -> Plugin : --plugin octopus
 Plugin -> Initialise : execute(context)

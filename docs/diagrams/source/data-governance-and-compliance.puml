@@ -2,20 +2,24 @@
 !theme plain
 title OpenData data governance and compliance
 left to right direction
-rectangle "Source or dependency change" as Change
-rectangle "Licence / terms review" as Review
-rectangle "Security and privacy classification" as Classify
-rectangle "Documentation and notices" as Notices
-rectangle "Build / runtime evidence" as Evidence
-rectangle "Release decision" as Decision
-diamond "Mandatory controls satisfied?" as Gate
+hide empty description
+
+state "Source or dependency change" as Change
+state "Licence / terms review" as Review
+state "Security and privacy classification" as Classify
+state "Documentation and notices" as Notices
+state "Build / runtime evidence" as Evidence
+state "Release decision" as Decision
+state Gate <<choice>>
+
 Change --> Review
 Review --> Classify
 Classify --> Notices
 Notices --> Evidence
-Evidence --> Gate
+Evidence --> Gate : Mandatory controls satisfied?
 Gate --> Decision : yes
 Gate --> Change : no / remediate
+
 note bottom of Gate
 Checklists are not evidence by themselves.
 Unresolved blockers require an explicit decision.

@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 #Requires -Version 5.1
 
-$Path = 'C:\Users\terry\Documents\NetBeansProjects\opendata\scripts'
+$Path = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
 
 
 $ErrorActionPreference = 'Stop'
