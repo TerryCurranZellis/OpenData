@@ -2,7 +2,7 @@
 
 **Project:** OpenData  
 **Project version:** 2.0.0  
-**Notice reviewed:** 31 July 2026  
+**Notice reviewed:** 2 August 2026  
 **Project copyright:** Copyright 2026 Terry Curran
 
 ## Purpose of this document
@@ -227,12 +227,16 @@ processed by OpenData plugins.
 
 Data obtained from providers such as Ofgem or Open-Meteo remains subject to the
 provider's current data licence, attribution requirements, API terms and usage
-policies. Those obligations should be recorded separately in a
-`DATA-SOURCE-NOTICES.md` file and reviewed whenever a plugin or data source is
-added or changed.
+policies. Octopus Energy PDF statements are user-supplied customer documents, not
+publicly licensed datasets, and can contain personal and financial information.
+Those obligations are recorded separately in `DATA-SOURCE-NOTICES.md` and must be
+reviewed whenever a plugin, endpoint or source-document type changes.
 
-Use of a provider's name identifies the source or intended integration only and
-does not imply sponsorship or endorsement of OpenData.
+Octopus Energy Limited is a data provider and statement issuer, not a software
+dependency. Its name is used only to identify compatible customer statements.
+OpenData is independent and is not affiliated with, sponsored by or endorsed by
+Octopus Energy, Ofgem or Open-Meteo. Provider names and logos remain subject to
+their owners' rights.
 
 ## Official licence references
 

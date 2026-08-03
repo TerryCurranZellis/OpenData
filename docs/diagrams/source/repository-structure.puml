@@ -1,0 +1,35 @@
+@startuml
+!pragma layout smetana
+title OpenData Repository Structure
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+folder "OpenData" {
+  folder "src" {
+    folder "main/java" as MainJava
+    folder "main/resources/config" as Resources
+    folder "test/java" as Tests
+  }
+  folder "sql" as Sql
+  folder "docs" {
+    folder "architecture / guides / plugins" as Markdown
+    folder "diagrams/source" as Puml
+    folder "diagrams/generated" as Svg
+    folder "manifests" as Manifests
+  }
+  folder "config" as Config
+  folder "scripts" as Scripts
+  folder ".github" as Github
+  folder "tools" as Tools
+}
+
+MainJava --> Tests : verified by
+Resources --> MainJava : bootstrap and registration definitions
+Sql --> MainJava : database contract
+Puml --> Svg : rendered
+Markdown --> Manifests : composed by
+Manifests --> Scripts : existing documentation engine
+Config --> Scripts
+Github --> Scripts
+Tools --> Scripts
+@enduml

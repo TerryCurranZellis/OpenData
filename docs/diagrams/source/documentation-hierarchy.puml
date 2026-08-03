@@ -1,0 +1,41 @@
+@startuml
+!pragma layout smetana
+title OpenData Documentation Hierarchy
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+folder "Repository entry points" {
+  file "README.md" as Readme
+  file "RELEASE_NOTES.md" as Release
+  file "SECURITY.md" as Security
+  file "Notices" as Notices
+}
+
+folder "docs" {
+  folder "user-guide" as User
+  folder "architecture" as Architecture
+  folder "plugins" as Plugins
+  folder "development" as Development
+  folder "operations" as Operations
+  folder "reference" as Reference
+  folder "decisions" as Decisions
+  folder "release / migration" as ReleaseDocs
+  folder "diagrams" as Diagrams
+  folder "manifests" as Manifests
+}
+
+Readme --> User
+Readme --> Architecture
+Release --> ReleaseDocs
+Security --> Operations
+Notices --> Reference
+User --> Manifests
+Architecture --> Manifests
+Plugins --> Manifests
+Development --> Manifests
+Operations --> Manifests
+Reference --> Manifests
+Decisions --> Architecture
+Diagrams --> User
+Diagrams --> Architecture
+@enduml

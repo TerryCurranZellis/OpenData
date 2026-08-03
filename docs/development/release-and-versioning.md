@@ -1,44 +1,48 @@
 # Release and Versioning
 
 **Document ID:** DEV-RELEASE-001  
-**Version:** 1.0  
-**Status:** Proposed release process  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Current release process  
+**Baseline date:** 2 August 2026
 
 ---
 
 ## Version source
 
-The Maven project version is the build version. Packaged runtime output should
-obtain the same value from the JAR manifest. An unpackaged IDE run reports
-`development`.
+The Maven project version is the build version. Version 2.0.0 is the current code
+and documentation baseline. Release notes and the Git tag must use the same
+version.
 
 ## Release gate
 
-A release candidate requires:
+A Version 2.0.0 release candidate requires:
 
-- clean `mvn test` and package output on Java 17;
-- no preview runtime dependencies unless explicitly accepted;
-- executable-package and exit-code verification;
-- clean/repeat database installation;
-- Ofgem and OpenMeteo dry and write runs, plus an Octopus dry run with
-  representative local PDF fixtures when that plugin is part of the release
-  scope;
-- rollback, idempotency and least-privilege tests;
-- documentation validation and successful PlantUML rendering;
-- resolved critical gaps or explicit release waivers.
+- clean `mvn clean verify` output on Java 17 compatibility;
+- documentation validation and successful diagram rendering;
+- clean/repeat SQL Server installation;
+- successful `--register` from a plain bootstrap password;
+- successful restart using the encrypted bootstrap password;
+- least-privilege verification for the application principal;
+- Ofgem, OpenMeteo and Octopus dry runs;
+- representative write-mode, rollback and idempotency tests;
+- duplicate and changed-file tests for Octopus statements;
+- confirmation that private keys, credentials, customer PDFs and database
+  backups are absent from release artefacts; and
+- resolved critical gaps or an explicit documented release waiver.
 
 ## Procedure
 
-1. update the Maven version and change log;
-2. freeze ADR statuses and the documentation baseline date;
+1. update the Maven version, changelog and release notes;
+2. freeze ADR statuses and documentation baseline dates;
 3. run the release gate from a clean checkout;
-4. tag the exact verified commit;
-5. publish checksums with the application package;
-6. retain the test evidence and database schema version.
+4. create the source and application artefacts and checksums;
+5. tag the exact verified commit as `v2.0.0`;
+6. publish artefacts and notices; and
+7. retain test, dependency, database and documentation evidence.
 
 ## Compatibility
 
-Patch releases must preserve documented CLI and schema behaviour. A breaking CLI,
-plugin-property or database change requires migration notes and an appropriate
-version increment.
+Patch releases preserve documented CLI and schema behaviour. Breaking CLI,
+configuration, plugin-contract or database changes require migration notes and
+an appropriate semantic-version increment. Historical Version 1.0.0 release
+records remain unchanged.

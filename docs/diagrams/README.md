@@ -1,9 +1,9 @@
 # PlantUML Diagram Index
 
 **Document ID:** DIAG-INDEX-001  
-**Version:** 1.4  
-**Status:** Baseline  
-**Baseline date:** 31 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 baseline  
+**Baseline date:** 2 August 2026
 
 ---
 
@@ -13,6 +13,10 @@ under `docs/diagrams` or another legacy subdirectory.
 
 | Diagram | Canonical source file | Rendered SVG |
 |---|---|---|
+| Project overview | `project-overview.puml` | [image](generated/project-overview.svg) |
+| Repository structure | `repository-structure.puml` | [image](generated/repository-structure.svg) |
+| Version evolution | `version-evolution.puml` | [image](generated/version-evolution.svg) |
+| Documentation hierarchy | `documentation-hierarchy.puml` | [image](generated/documentation-hierarchy.svg) |
 | Architecture overview | `architecture-overview.puml` | [image](generated/architecture-overview.svg) |
 | System context | `system-context.puml` | [image](generated/system-context.svg) |
 | Component architecture | `component-architecture.puml` | [image](generated/component-architecture.svg) |

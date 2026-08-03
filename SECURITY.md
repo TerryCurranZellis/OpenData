@@ -2,55 +2,84 @@
 
 ## Supported versions
 
-OpenData is currently preparing its first public release. Until a supported
-release is published, security fixes are applied to the current `main` branch.
-
 | Version | Supported |
 |---|---|
-| `main` development branch | Yes |
-| Unreleased local archives or historical snapshots | No |
+| `2.0.x` development and release-candidate baseline | Yes |
+| `1.0.x` | Security fixes only when explicitly backported |
+| Historical development snapshots | No |
 
-This table will be replaced with version-specific support periods when formal
-releases begin.
+Support periods may be refined when Version 2.0.0 is formally tagged.
 
 ## Reporting a vulnerability
 
 Do not open a public issue for a suspected vulnerability. Send a private report
 to `terry.curran@towermarsh.co.uk` with the subject `OpenData security report`.
 
-Include, where possible:
+Include the affected version or commit, component, configuration, reproduction
+steps, likely impact and any suggested remediation. Do not attach live database
+credentials, private keys, customer statements or unredacted personal data.
 
-- the affected version, commit or branch;
-- the component and configuration involved;
-- steps to reproduce the issue;
-- expected and observed behaviour;
-- the likely impact;
-- a proof of concept that does not expose real credentials or personal data;
-- any suggested remediation.
+## Version 2.0.0 credential model
 
-You should receive an acknowledgement within five working days. The maintainer
-will assess the report, may request clarification, and will coordinate a fix and
-disclosure date appropriate to the risk. Please allow reasonable time for a fix
-before publishing details.
+OpenData needs database credentials before it can load runtime configuration from
+SQL Server. The bootstrap file therefore contains the database URL, username and
+an encrypted password.
 
-## Security expectations
+- Registration encrypts the password using the public key in
+  `opendata-config-public.cer`.
+- Startup decrypts `{enc}` values using the private key in
+  `opendata-config-private.pfx`.
+- The PFX password protects access to the private key; it is not the encryption
+  key itself.
+- The supplied development PFX password is `nopassword`.
+- A deployment can override the PFX password with the JVM property
+  `opendata.config.keystore.password` or environment variable
+  `OPENDATA_CONFIG_KEYSTORE_PASSWORD`.
 
-OpenData processes external files and writes to SQL Server. Deployments must:
+The supplied certificate pair and default password are development conveniences.
+For production:
 
-- keep database credentials outside source control;
-- use least-privilege database accounts;
-- validate remote locations and downloaded content;
-- restrict writable work, archive and log directories;
-- review logs before sharing them;
-- keep Java, Maven dependencies, SQL Server and build tooling patched;
-- treat plugins and configuration files as trusted code and configuration;
-- test backups and restoration before production use.
+1. generate a deployment-specific certificate and private key;
+2. use a strong, separately protected PFX password;
+3. restrict read access to the PFX to the application identity;
+4. do not commit replacement private keys or passwords;
+5. establish certificate rotation and recovery procedures; and
+6. test that an unavailable or incorrect private key fails closed.
 
-The current repository is not yet declared production-ready. Known security and
-release gaps are tracked in the documentation review records.
+RSA encryption protects the stored bootstrap value. It does not protect a
+password after decryption in application memory, replace operating-system access
+controls, or eliminate the need for SQL Server transport security and least
+privilege.
+
+## Sensitive data
+
+Octopus Energy statements and their extracted records can contain names,
+addresses, account references, meter identifiers, tariff details, payment data,
+consumption and billing history. Deployments must:
+
+- restrict access to input, working, archive and failure directories;
+- exclude statement PDFs and extracted fixtures from source control;
+- protect the Octopus tables and database backups;
+- avoid logging full statement text or personal identifiers;
+- securely dispose of temporary files;
+- define a retention policy for source PDFs and extracted records; and
+- redact data before sharing logs, screenshots or test evidence.
+
+## General security expectations
+
+- Use a least-privilege SQL Server account.
+- Replace `trustServerCertificate=true` with validated certificate trust outside
+  controlled development environments.
+- Keep Java, dependencies, SQL Server and build tooling patched.
+- Validate remote locations, downloaded content and local input filenames.
+- Treat plugins, property rows, certificates and configuration files as trusted
+  deployment inputs.
+- Keep writable directories outside locations served publicly.
+- Test database and certificate backup and restoration.
+- Review dependency and data-source notices for each release.
 
 ## Disclosure and credit
 
 Validated reports will be credited in release notes unless the reporter requests
-anonymity. Reports that concern unsupported third-party systems or cannot be
-reproduced may be closed with an explanation.
+anonymity. The maintainer will coordinate remediation and disclosure according
+to the risk and availability of a verified fix.

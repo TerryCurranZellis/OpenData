@@ -7,7 +7,7 @@ code, tests, documentation, SQL scripts, diagrams and new data-source plugins.
 
 For a substantial change, open an issue first so the intended behaviour,
 architecture and documentation impact can be agreed. Security vulnerabilities
-must not be reported in public issues; follow [SECURITY.md](SECURITY.md).
+must not be reported publicly; follow [SECURITY.md](SECURITY.md).
 
 By submitting a contribution, you agree that it may be distributed under the
 [Apache License 2.0](LICENSE.md).
@@ -16,41 +16,60 @@ By submitting a contribution, you agree that it may be distributed under the
 
 | Component | Minimum or recommended version |
 |---|---|
-| Java | 17 LTS |
+| Java | 17 LTS compatibility |
 | Maven | 3.9 or later |
 | Git | Current supported version |
-| SQL Server | Required for persistence integration tests |
+| SQL Server | Required for registration and persistence integration tests |
 | PowerShell | 5.1 or later for project scripts |
 | Pandoc | Required only for generated manuals |
 | PlantUML | Required only for rendered diagrams |
 
-Apache NetBeans is the primary development IDE, but no IDE-specific workflow is
+Apache NetBeans is the maintainer's primary IDE, but no IDE-specific workflow is
 required.
 
 ## Workflow
 
-1. Fork or branch from the current `main` branch.
-2. Use a focused branch name such as `feature/example-plugin` or
-   `fix/command-line-parsing`.
-3. Make the smallest coherent change that solves the issue.
-4. Add or update tests.
-5. Update affected documentation, examples, ADRs and diagrams.
-6. Run the validation commands below.
-7. Submit a pull request describing the problem, solution and verification.
+1. Branch from the current `main` baseline.
+2. Make the smallest coherent change that solves the issue.
+3. Add or update deterministic tests.
+4. Update affected documentation, examples, ADRs, data-source notices and
+   diagrams.
+5. Run the relevant build and documentation checks.
+6. Submit a pull request describing the problem, solution, compatibility impact
+   and verification performed.
 
-Do not commit credentials, database passwords, downloaded source datasets,
-generated build output or local IDE state.
+Do not commit credentials, PFX passwords, private keys, Octopus statement PDFs,
+downloaded source datasets, database backups, generated build output or local IDE
+state.
+
+## Plugin architecture
+
+A plugin belongs under `com.towermarsh.opendata.plugin.<id>` and uses these
+standard packages:
+
+```text
+initialise
+extract
+transform
+load
+finalise
+```
+
+`transform` may contain additional packages such as `model` and `validate` where
+source-specific complexity requires them. The root plugin class should remain a
+thin framework entry point. Plugins must use the shared exception handling
+boundary rather than introducing a plugin-local exception hierarchy.
 
 ## Build and test
 
 ```powershell
-mvn clean test
-mvn package
+mvn clean verify
 ```
 
-Where SQL Server is available, also run the relevant database bootstrap and
-plugin integration checks. A pull request must state which checks were run and
-which could not be run.
+Where SQL Server is available, also test schema installation, `--register`, an
+encrypted bootstrap restart, dry runs, write-mode processing and rollback or
+idempotency behaviour. A pull request must state which checks were performed and
+which environment-dependent checks were not available.
 
 ## Coding expectations
 
@@ -59,60 +78,29 @@ which could not be run.
 - Keep public types focused and document public APIs with JavaDoc.
 - Prefer immutable values and constructor injection.
 - Use `java.util.logging` for application logging.
-- Do not log credentials, access tokens, full connection strings or sensitive
-  source data.
-- Translate low-level failures at package boundaries using the project exception
-  hierarchy.
-- Keep plugin-specific code below `com.towermarsh.opendata.plugin.<id>`.
+- Never log credentials, private keys, PFX passwords, complete connection strings
+  or unredacted customer statement data.
+- Keep database writes transactional where file completion depends on persistence.
 
-Detailed requirements are maintained in
-[`docs/standards/`](docs/standards/README.md).
-
-## Tests
-
-Tests should be deterministic and should not depend on live internet services
-unless explicitly marked as integration tests. Cover normal behaviour, boundary
-conditions and expected failures. Bug fixes should normally include a regression
-test that fails before the fix and passes afterwards.
+Detailed rules are maintained under [`docs/standards/`](docs/standards/README.md).
 
 ## Documentation and diagrams
 
-Documentation is part of the change, not a later activity. Follow
+Documentation is part of the change. Follow
 [`docs/Documentation-Standards.md`](docs/Documentation-Standards.md).
+PlantUML sources belong in `docs/diagrams/source`; Markdown references the
+corresponding SVG under `docs/diagrams/generated`. Do not hand-edit generated SVG
+files in the normal development workflow.
 
-PlantUML source files belong in `docs/diagrams/source`. Markdown must reference
-the corresponding generated SVG under `docs/diagrams/generated`, not the
-`.puml` source. Do not hand-edit generated SVG files.
-
-## Commit and pull-request guidance
-
-Write imperative commit subjects, for example:
-
-```text
-Fix parsing of single-element command lines
-Add example plugin configuration template
-```
-
-A pull request should include:
-
-- a concise description of the problem and solution;
-- linked issues or ADRs;
-- compatibility or migration implications;
-- tests and validation performed;
-- screenshots only when they clarify documentation or UI output;
-- a checklist of documentation and licence-header changes.
-
-Keep unrelated refactoring out of a functional pull request unless it is needed
-to implement the change safely.
+When a provider, endpoint, customer-document format or dependency changes, review
+`DATA-SOURCE-NOTICES.md` and `THIRD-PARTY-NOTICES.md`.
 
 ## Review and acceptance
 
-Reviewers may request changes for correctness, security, maintainability,
-architecture, tests, documentation or licensing. A contribution is complete only
-when required checks pass, review comments are resolved and the documentation
-matches the implemented behaviour.
+A contribution is complete only when required checks pass, review comments are
+resolved, migrations are documented, and user, operational and architecture
+documentation agree with the implemented behaviour.
 
 ## Community conduct
 
-All participation is governed by the
-[Code of Conduct](CODE_OF_CONDUCT.md).
+All participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).

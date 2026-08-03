@@ -1,75 +1,83 @@
+# Changelog
+
+All notable changes to OpenData are documented in this file. The project follows
+semantic versioning.
+
 ## [Unreleased]
 
-## [2.0.0] - 2026-08-01
+### Planned
+
+- Additional plugins and data sources.
+- Possible Octopus Energy API extraction after API capabilities and terms are
+  separately evaluated.
+- Executable packaging with an explicit main class and dependency strategy.
+
+## [2.0.0] - Unreleased
 
 ### Added
 
-  - Encryption for database password using security certificaate
-  - Adding code for Octopus Energy statement
+- Database-backed application and plugin configuration registration.
+- `--register` control command.
+- Minimal bootstrap configuration containing only version, database mode,
+  database URL, database username and database password.
+- RSA OAEP encryption of the bootstrap database password using an X.509 public
+  certificate and PKCS#12 private key store.
+- Source-tree and classpath lookup for configuration certificate resources.
+- PFX password override through `opendata.config.keystore.password` and
+  `OPENDATA_CONFIG_KEYSTORE_PASSWORD`.
+- Standard plugin packages: `initialise`, `extract`, `transform`, `load` and
+  `finalise`.
+- Central plugin exception handling without plugin-local exception hierarchies.
+- Octopus Energy local PDF discovery and batch processing.
+- Octopus statement-file ledger with filename and SHA-256 duplicate prevention.
+- Transactional Octopus electricity, gas and file-ledger persistence.
+- Successful-statement archiving after non-dry-run processing.
+- Per-document manifests for the Technical User Guide, Administrator Guide,
+  Developer Guide and API Reference.
+- Shared document front matter and manifest-driven document composition.
 
 ### Changed
 
-  - store configuration details in the database
+- Runtime configuration is loaded from SQL Server after bootstrap when database
+  mode is enabled.
+- Root plugin classes are thin framework entry points; plugin-specific initialise
+  classes control execution flow.
+- Extract stages obtain data and pass it to transform stages rather than mixing
+  acquisition, transformation and persistence.
+- Documentation generation builds every discovered document manifest.
+- Front matter is assembled before the table of contents in generated formats.
+- Documentation and release material now identify Version 2.0.0 as the active
+  architectural baseline.
 
-### Added
+### Fixed
 
-- Per-document manifests for the Technical User Guide, Administrator Guide, Developer Guide and API Reference.
-- Shared cover, copyright and revision-history Markdown.
-- A format-aware TOC filter and manifest-driven documentation architecture.
-- ADR-0045 and ADR-0046, migration notes and a documentation-engine change log.
-
-### Changed
-
-- Refactored the documentation builder into a generic manifest processor.
-- `Invoke-Documentation -Action All` now discovers and builds every manifest.
-- Front matter is assembled before the table of contents in HTML, DOCX and PDF.
-- HTML and PDF writer-generated title blocks are suppressed so the cover remains first.
-- DOCX output requests automatic refresh of the native Word TOC field.
-- Azure Pipelines now validates and builds every discovered manifest through maintained wrappers.
-- `documentation.json` now contains global settings and inherited defaults only.
-- PlantUML and documentation scripts no longer contain unconditional local-machine invocations.
-- The legacy branding patch is now a safe no-op compatibility stub.
-- The configured PlantUML JAR path now matches `tools/plantuml.jar`.
+- PFX password handling no longer treats `nopassword` as an environment-variable
+  name.
+- Certificate lookup works from both the development source tree and packaged
+  classpath resources.
+- Octopus files are not recorded as completed unless their associated database
+  transaction commits.
 
 ### Removed
 
-- The combined `docs/manifest.json` from the maintained build path.
-- Hard-coded Technical/User document branching and the global Pandoc `--toc` option.
+- Plugin-specific exception packages from the standard plugin architecture.
+- The combined documentation manifest from the maintained build path.
+- Hard-coded Technical/User document branching in the documentation engine.
 
 ## [1.0.0] - 2026-07-29
 
 ### Added
 
-- Configuration-driven documentation framework and reusable templates.
-- Repository governance, contribution, security and licensing standards.
-- Standard Apache 2.0 source headers and licensing policy.
-- Checkstyle, PMD, SpotBugs, Javadoc and JaCoCo quality tooling.
-- GitHub Actions workflows for build, documentation and tagged releases.
-- Documentation validation, local release packaging and release checksums.
-- Final generated technical documentation and user guide packages.
-
-### Changed
-
-- Documentation generation now uses `documentation.json` and `docs/manifest.json`.
-- Build and release processes now enforce Java 17, Maven 3.9 and version consistency.
-- Repository documentation and onboarding material were reorganised for public use.
-
-### Fixed
-
-- Removed machine-specific execution paths from utility scripts.
-- Corrected documentation workflow references to missing scripts.
-- Added missing package documentation and completed diagram inventory metadata.
-
-## [0.1.0] - 2026-07-22
-
-### Added
-
 - Initial Java 17 modular-monolith framework.
 - Properties-based plugin registry and command-line processing.
-- SQL Server persistence direction and database scripts.
 - Ofgem and OpenMeteo reference plugins.
-- Architecture, ADR, guide, operations and reference documentation.
+- Concurrent plugin execution and side-effect-free dry runs.
+- SQL Server persistence, connection pooling and plugin-run auditing.
+- Configuration-driven documentation framework and reusable templates.
+- Repository governance, contribution, security and licensing standards.
+- Checkstyle, PMD, SpotBugs, Javadoc and JaCoCo quality tooling.
+- GitHub Actions build, documentation and tagged-release automation.
 
-[Unreleased]: https://github.com/TerryCurranZellis/OpenData/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/TerryCurranZellis/OpenData/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v2.0.0
 [1.0.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v1.0.0
-[0.1.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v0.1.0

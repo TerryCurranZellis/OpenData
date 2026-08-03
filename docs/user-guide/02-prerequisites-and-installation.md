@@ -1,35 +1,58 @@
 # 2. Prerequisites and Installation
 
 **Document ID:** USER-002  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 baseline  
+**Baseline date:** 2 August 2026
 
 ---
 
 ## Required software
 
 - JDK 17 or later;
-- Maven;
-- SQL Server for database-writing runs;
-- NetBeans or another classpath-aware Java launcher;
-- outbound HTTPS access to Ofgem and Open-Meteo.
+- Maven 3.9 or later;
+- Microsoft SQL Server for registration and database-writing runs;
+- Apache NetBeans or another classpath-aware Java launcher;
+- PowerShell 5.1 or later for supplied scripts; and
+- outbound HTTPS access for Ofgem and OpenMeteo.
+
+Pandoc and PlantUML are required only when rebuilding generated documentation.
 
 ## Build
 
 From the repository root:
 
 ```powershell
-mvn clean test
+mvn clean verify
 mvn package
 ```
 
-The current `opendata-1.0.0.jar` is not a self-contained executable. In NetBeans,
-set the main class to `com.towermarsh.opendata.Main` and the working directory to
-the repository root.
+The build creates `target/opendata-2.0.0.jar`. It does not currently include all
+runtime dependencies or a `Main-Class` manifest entry. In NetBeans, configure:
 
-## First check
+```text
+Main class: com.towermarsh.opendata.OpenData
+Working directory: repository root
+```
 
-Run the application with `--list-plugins`. The output should show `ofgem` and
-`openmeteo` as enabled. Then dry-run each plugin before configuring database
-writes.
+Keeping the repository root as the working directory allows the development run
+to find bootstrap and security resources under `src/main/resources`.
+
+## Local directories
+
+Create writable directories required by the enabled plugins. For Octopus, the
+Version 2.0.0 default input directory is:
+
+```text
+C:\Attachments\octopus
+```
+
+Restrict access because statement files can contain personal and financial data.
+Do not place real statements under the repository directory.
+
+## First application check
+
+Before database registration, run `--help` and `--list-plugins` from the configured
+launcher. The plugin list should include `ofgem`, `openmeteo` and `octopus`.
+Continue with [SQL Server setup](03-sql-server-setup.md) and then the
+[quick start](../guides/quick-start.md).

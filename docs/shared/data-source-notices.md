@@ -2,7 +2,7 @@
 
 **Project:** OpenData  
 **Project version:** 2.0.0  
-**Notice reviewed:** 31 July 2026  
+**Notice reviewed:** 2 August 2026  
 **Project copyright:** Copyright 2026 Terry Curran
 
 ## Purpose
@@ -30,6 +30,7 @@ reviewed whenever a plugin, endpoint, data product or release is changed.
 |---|---|---|---|---|
 | `ofgem` | Office of Gas and Electricity Markets (Ofgem) | Energy Price Cap — Final levelised cap rates model | Ofgem public website and downloadable XLSX workbook | Crown copyright; reusable under the Open Government Licence v3.0 unless otherwise stated |
 | `openmeteo` | OpenMeteo GmbH / Open-Meteo.com | Historical Weather API daily weather data | `https://archive-api.open-meteo.com/v1/archive` | API data under Creative Commons Attribution 4.0 International; separate API service terms also apply |
+| `octopus` | Octopus Energy Limited | Customer electricity and gas billing statement PDFs | User-supplied local files | Private customer documents; supplier terms, copyright, privacy and account obligations apply; no public-data redistribution licence is asserted |
 
 ## Ofgem Energy Price Cap data
 
@@ -269,6 +270,85 @@ statistical processing.
 OpenData does not warrant that Open-Meteo data are suitable for safety-critical,
 medical, legal, insurance, engineering or emergency-response decisions.
 
+
+## Octopus Energy customer statements
+
+### Source and acquisition
+
+The OpenData `octopus` plugin processes PDF statements that the customer has
+already obtained from Octopus Energy and placed in a configured local directory.
+Version 2.0.0 defaults to `C:\Attachments\octopus` and accepts filenames matching
+`octopus-energy-statement-YYYY-MM-DD.pdf`.
+
+The plugin does not log in to the Octopus Energy website, scrape account pages,
+call the Octopus Energy API, or download statements directly. Octopus Energy
+publishes instructions for customers to view and save previous bills through the
+Octopus app or online account. Direct API extraction is outside the current
+implementation.
+
+### Rights and permitted use
+
+An Octopus statement is a customer account document, not an OpenData public
+dataset. OpenData does not claim that statement content is licensed for public
+redistribution. Use and retention can be governed by the customer's energy-supply
+contract, Octopus Energy terms, copyright, data-protection law and the rights of
+other people identified in the statement.
+
+A user should process only statements they are authorised to access. The Apache
+License 2.0 covering OpenData software does not grant rights to publish, sell or
+redistribute statement content, Octopus branding or account data.
+
+Official Octopus Energy material relevant to customer use includes:
+
+- domestic customer terms and conditions: <https://octopus.energy/policies/terms-and-conditions/>;
+- website and app terms of use: <https://octopus.energy/policies/terms-of-use/>;
+- privacy policy: <https://octopus.energy/policies/privacy-policy/>; and
+- customer guidance for obtaining previous bills: <https://octopus.energy/payment-support/>.
+
+Terms can change. Users must review the terms applying to their own account and
+intended use.
+
+### OpenData processing
+
+For each matching local PDF, OpenData may:
+
+- read the filename and statement date;
+- calculate a SHA-256 fingerprint;
+- compare the filename and fingerprint with `octopus.statement_file`;
+- extract text from the PDF;
+- transform electricity and gas sections into records;
+- load the records and completion ledger in one transaction; and
+- archive the source PDF after a successful non-dry-run commit.
+
+A statement may contain electricity data, gas data, both, or no supported
+records. The independent statement ledger prevents completion from depending on
+which fuel sections happen to be present.
+
+### Privacy and security
+
+Statements can contain personal, account, meter, tariff, payment, consumption and
+address information. They must be treated as sensitive customer records.
+
+- Do not commit PDFs or extracted fixtures to a public repository.
+- Restrict the input, working and archive directories.
+- Protect database tables and backups containing extracted records.
+- Do not publish unredacted logs, screenshots or test output.
+- Define retention and secure-disposal rules appropriate to the deployment.
+- Obtain consent or another lawful basis before processing another person's
+  statements.
+
+### Attribution and trademarks
+
+Where the provider must be identified, use factual wording such as:
+
+> Source document: customer billing statement issued by Octopus Energy. Processed
+> locally by OpenData. OpenData is an independent project and is not affiliated
+> with, sponsored by or endorsed by Octopus Energy.
+
+Do not reproduce Octopus Energy logos or imply official status without separate
+permission. Provider names are used only to identify the statement source and
+compatible plugin.
+
 ## Combined attribution
 
 Where an OpenData product displays information from both current providers, the
@@ -387,3 +467,11 @@ provider's terms control.
   <https://creativecommons.org/licenses/by/4.0/>
 - Open-Meteo recommended software citation:
   <https://doi.org/10.5281/ZENODO.7970649>
+
+
+### Octopus Energy
+
+- Customer terms: <https://octopus.energy/policies/terms-and-conditions/>
+- Website and app terms: <https://octopus.energy/policies/terms-of-use/>
+- Privacy policy: <https://octopus.energy/policies/privacy-policy/>
+- Obtaining previous bills: <https://octopus.energy/payment-support/>

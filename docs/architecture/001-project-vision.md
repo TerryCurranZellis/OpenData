@@ -1,52 +1,70 @@
 # Project Vision
 
 **Document ID:** ARCH-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Version 2.0.0 baseline  
+**Baseline date:** 2 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-
 ## Vision
 
-OpenData provides a reusable foundation for collecting public data from
-independent publishers without creating a separate application for every source.
-A new source should normally require a plugin definition and source-specific
-transformation, not changes throughout the framework.
+OpenData provides a reusable, auditable foundation for acquiring data from
+independent sources and loading consistent records into a local SQL Server
+database. A new source should normally require a plugin and source-specific
+transformation, not changes throughout the application.
+
+![OpenData project overview](../diagrams/generated/project-overview.svg)
+
+## Version 2.0.0 direction
+
+Version 2.0.0 establishes the long-term configuration and plugin foundation:
+
+- the local application property file contains only database bootstrap details;
+- application and plugin configuration is registered and maintained in SQL
+  Server;
+- the bootstrap password is protected with a certificate-backed RSA mechanism;
+- plugins use an explicit five-phase lifecycle;
+- common infrastructure owns command-line processing, concurrency, logging,
+  database access, auditing and exception boundaries; and
+- plugin packages own source-specific acquisition, transformation, persistence
+  and cleanup.
 
 ## Goals
 
-- support APIs, direct files and HTML publication pages;
-- preserve original source artefacts for audit and reprocessing;
-- validate before persistence;
-- isolate dataset rules from reusable infrastructure;
-- provide repeatable command-line execution;
-- remain understandable to a small development team;
-- keep documentation beside the code.
+- support APIs, direct files, publication pages and user-supplied documents;
+- preserve source identity and processing provenance;
+- prevent accidental duplicate processing;
+- validate data before persistence;
+- isolate provider rules from reusable infrastructure;
+- support repeatable single-plugin and bounded multi-plugin execution;
+- keep secrets and personal data out of logs and source control;
+- maintain documentation beside the code; and
+- remain understandable and maintainable by a small development team.
 
-## Current baseline
+## Current plugins
 
-CSV, JSON, XLS/XLSX, static HTML link discovery, SQL Server and manually
-invoked runs are implemented foundations. Ofgem and OpenMeteo are the current
-executable reference plugins, and Octopus is partially implemented through a
-typed PDF transform stage. Graphical administration, distributed services,
-browser automation, internal scheduling and database-managed plugin definitions
-are deferred or shelved.
+| Plugin | Purpose |
+|---|---|
+| Ofgem | Acquire and persist Energy Price Cap workbook data |
+| OpenMeteo | Acquire and persist historical daily weather data |
+| Octopus | Process local customer statement PDFs into electricity and gas records |
 
-Ofgem can retain its source workbook when write-mode archiving is enabled.
-OpenMeteo does not currently archive the raw JSON response, so raw-data
-preservation remains plugin-specific rather than universal.
+Octopus is deliberately local-file based in Version 2.0.0. Direct account or API
+integration remains a future option and is not part of the current release
+baseline.
 
 ## Principles
 
-Java 17 minimum; records for immutable values; configuration before custom code;
-interfaces at infrastructure boundaries; raw-data preservation; documentation as
-code.
+Java 17 compatibility; immutable values where practical; configuration before
+custom code; explicit infrastructure boundaries; transactional persistence;
+least privilege; source and run provenance; side-effect-free dry runs; and
+documentation as code.
 
 ## Success criteria
 
-Ofgem and OpenMeteo execute through the same lifecycle, Octopus already fits the
-same plugin-registration model, plugins can be added without modifying `Main`,
-and format differences are handled by reusable strategies and parsers.
+Version 2.0.0 succeeds when a clean installation can create the database,
+register configuration, restart using the encrypted bootstrap password, list and
+run all installed plugins, avoid duplicate Octopus statement processing, and
+produce documentation that accurately describes the implemented system.

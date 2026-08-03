@@ -1,15 +1,15 @@
 # OpenData User Guide
 
 **Document ID:** USER-INDEX-001  
-**Version:** 1.0  
-**Status:** Pre-production baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Version 2.0.0 baseline  
+**Baseline date:** 2 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-This guide explains installation, configuration and routine use of the Ofgem and
-OpenMeteo plugins.
+This guide explains installation, database registration, configuration and
+routine use of the Ofgem, OpenMeteo and Octopus plugins.
 
 1. [Introduction](01-introduction.md)
 2. [Prerequisites and installation](02-prerequisites-and-installation.md)
@@ -23,8 +23,11 @@ OpenMeteo plugins.
 10. [Logs, audit and troubleshooting](10-logs-audit-and-troubleshooting.md)
 11. [Maintenance and security](11-maintenance-and-security.md)
 
-The generated user manual includes the complete repository
-[Apache License 2.0](../../LICENSE.md) as Appendix A.
+For the shortest setup path, begin with the
+[Version 2.0.0 quick start](../guides/quick-start.md). The Octopus plugin-specific
+chapter will be expanded in the plugin documentation batch; the current public
+entry points describe its implemented local-file behaviour accurately.
 
-OpenData is under active development. Complete the
-[release acceptance gates](../roadmap/README.md) before production use.
+The generated user manual includes the complete repository Apache License 2.0 as
+an appendix. Provider data and customer statements retain their separate rights,
+terms and privacy requirements.

@@ -32,7 +32,7 @@ branch and its Java, resource and SQL files.
 ## Important consistency notes
 
 - Maven compilation uses `release=17`.
-- Maven project version is `1.0.0`.
+- Maven project version is `2.0.0`.
 - `--version` prints the JAR implementation version when a manifest supplies it;
   otherwise it prints `development`.
 - The POM does not yet create an executable JAR or bundle runtime dependencies.

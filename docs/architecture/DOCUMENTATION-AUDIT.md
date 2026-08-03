@@ -21,7 +21,7 @@ gap list is now
 | Scheduling support | Internal scheduler deferred; use external scheduling |
 | Database independent | Repository abstraction exists; SQL Server is the only current implementation |
 | Complete ETL pipeline | Concrete plugin flows execute; generic ETL stage contracts are not the active runtime coordinator |
-| Current version 0.1.0 | Maven version is 1.0.0; runtime reports the manifest version or `development` |
+| Current version 0.1.0 | Maven version is 2.0.0; runtime reports the manifest version or `development` |
 | Only original package list | Added current `cli` package and current configuration service design |
 
 ## Documents that should be treated as target-state material
