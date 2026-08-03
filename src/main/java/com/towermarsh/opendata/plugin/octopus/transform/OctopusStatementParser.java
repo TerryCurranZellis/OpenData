@@ -267,6 +267,43 @@ public final class OctopusStatementParser {
         return new Object[]{result.electricityRecords(), result.gasRecords()};
     }
 
+
+    /**
+     * Parses one already-extracted statement. The statement date is supplied
+     * by the filename-aware extract step, so the PDF is not read a second time.
+     *
+     * @param rawText extracted PDF text
+     * @param sourceName source filename for logging
+     * @param statementDate statement date parsed from the filename
+     * @return electricity and gas records from the statement
+     */
+    public static OctopusParseResult parseExtracted(
+            final String rawText,
+            final String sourceName,
+            final LocalDate statementDate) {
+        Objects.requireNonNull(rawText, "rawText");
+        Objects.requireNonNull(sourceName, "sourceName");
+        Objects.requireNonNull(statementDate, "statementDate");
+        if (rawText.isBlank()) {
+            logger.log(Level.INFO, "  Skipping empty file: {0}", sourceName);
+            return new OctopusParseResult(List.of(), List.of(), List.of());
+        }
+        final String fullText = toJoinedText(rawText);
+        final String[] period = getBillPeriod(fullText);
+        final String billDate = statementDate.toString();
+        final List<ElectricityRecord> electricity = new ArrayList<>();
+        for (String section : getElectricitySections(fullText)) {
+            electricity.add(newElectricityRecord(section, billDate, period[0], period[1]));
+        }
+        final List<GasRecord> gas = new ArrayList<>();
+        for (String section : getGasSections(fullText)) {
+            gas.add(newGasRecord(section, billDate, period[0], period[1]));
+        }
+        logger.log(Level.INFO, "  {0} [electricity: {1}, gas: {2}]",
+                new Object[]{sourceName, electricity.size(), gas.size()});
+        return new OctopusParseResult(electricity, gas, List.of());
+    }
+
     /**
      * Parse both electricity and gas records from one PDF file and return a
      * typed result.
@@ -280,7 +317,7 @@ public final class OctopusStatementParser {
         final var rawText = PdfTextExtractor.extract(pdfPath);
         if (rawText.isBlank()) {
             logger.log(Level.INFO, "  Skipping empty file: {0}", pdfPath.getFileName());
-            return new OctopusParseResult(List.of(), List.of());
+            return new OctopusParseResult(List.of(), List.of(), List.of());
         }
         final var fullText = toJoinedText(rawText);
         final var period = getBillPeriod(fullText);
@@ -301,7 +338,7 @@ public final class OctopusStatementParser {
 
         logger.log(Level.INFO, "  {0}  [elec: {1}, gas: {2}]",
                 new Object[]{pdfPath.getFileName(), elecRecords.size(), gasRecords.size()});
-        return new OctopusParseResult(elecRecords, gasRecords);
+        return new OctopusParseResult(elecRecords, gasRecords, List.of());
     }
 
     /**
@@ -417,7 +454,7 @@ public final class OctopusStatementParser {
                         period[1].isEmpty() ? "?" : period[1],
                         elecSections.size(), gasSections.size()});
         }
-        return new OctopusParseResult(elecRecords, gasRecords);
+        return new OctopusParseResult(elecRecords, gasRecords, List.of());
     }
 
     
@@ -431,7 +468,7 @@ public final class OctopusStatementParser {
             electricity.addAll(result.electricityRecords());
             gas.addAll(result.gasRecords());
         }
-        return new OctopusParseResult(electricity, gas);
+        return new OctopusParseResult(electricity, gas, List.of());
     }
 
     // ── File discovery ───────────────────────────────────────────────────────

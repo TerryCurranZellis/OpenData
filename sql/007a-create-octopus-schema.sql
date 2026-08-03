@@ -13,6 +13,32 @@ BEGIN
 END;
 GO
 
+
+IF OBJECT_ID(N'[octopus].[statement_file]', N'U') IS NULL
+BEGIN
+    CREATE TABLE [octopus].[statement_file]
+    (
+        [statement_file_id] bigint IDENTITY(1,1) NOT NULL,
+        [file_name] nvarchar(260) NOT NULL,
+        [statement_date] date NOT NULL,
+        [sha256] char(64) NOT NULL,
+        [size_bytes] bigint NOT NULL,
+        [status] varchar(20) NOT NULL,
+        [last_run_id] uniqueidentifier NOT NULL,
+        [processed_at] datetime2(3) NOT NULL,
+        [failure_message] nvarchar(2000) NULL,
+        CONSTRAINT [PK_octopus_statement_file] PRIMARY KEY ([statement_file_id]),
+        CONSTRAINT [UQ_octopus_statement_file_name_hash] UNIQUE ([file_name], [sha256]),
+        CONSTRAINT [FK_octopus_statement_file_run] FOREIGN KEY ([last_run_id]) REFERENCES [core].[PluginRun] ([RunId]),
+        CONSTRAINT [CK_octopus_statement_file_status] CHECK ([status] IN ('COMPLETED','FAILED')),
+        CONSTRAINT [CK_octopus_statement_file_size] CHECK ([size_bytes] >= 0)
+    );
+    CREATE INDEX [IX_octopus_statement_file_completed]
+        ON [octopus].[statement_file] ([status], [statement_date], [file_name])
+        INCLUDE ([sha256], [processed_at]);
+END;
+GO
+
 IF OBJECT_ID(N'[octopus].[electric_data]', N'U') IS NULL
 BEGIN
     CREATE TABLE [octopus].[electric_data]
@@ -168,6 +194,6 @@ IF NOT EXISTS (
 )
 BEGIN
     INSERT INTO [core].[schema_version] ([version], [description])
-    VALUES ('080', N'Create Octopus electricity and gas billing tables');
+    VALUES ('080', N'Create Octopus statement-file ledger and electricity/gas billing tables');
 END;
 GO

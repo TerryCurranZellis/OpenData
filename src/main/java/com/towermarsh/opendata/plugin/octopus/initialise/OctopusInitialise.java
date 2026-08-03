@@ -13,7 +13,7 @@ import com.towermarsh.opendata.plugin.octopus.load.OctopusLoad;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusTransform;
 
-import java.nio.file.Path;
+import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -87,16 +87,18 @@ public final class OctopusInitialise {
         LOGGER.info(() -> "Octopus initialise: starting pipeline (dryRun=%s)"
                 .formatted(context.dryRun()));
 
-        List<Path> pdfFiles = List.of();
-        OctopusParseResult parseResult = new OctopusParseResult(List.of(), List.of());
+        List<ExtractedOctopusStatement> statements = List.of();
+        OctopusParseResult parseResult = new OctopusParseResult(List.of(), List.of(), List.of());
         PluginMetrics metrics = PluginMetrics.ZERO;
+        boolean completed = false;
         try {
-            pdfFiles = extractor.extract(configuration);
-            parseResult = transformer.transform(pdfFiles);
+            statements = extractor.extract(configuration, context);
+            parseResult = transformer.transform(statements);
             metrics = loader.load(parseResult, configuration, context);
+            completed = true;
             return metrics;
         } finally {
-            finaliser.finalise(configuration, pdfFiles, parseResult, metrics);
+            finaliser.finalise(configuration, statements, parseResult, metrics, context.dryRun(), completed);
         }
     }
 }

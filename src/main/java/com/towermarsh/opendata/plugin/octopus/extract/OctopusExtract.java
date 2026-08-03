@@ -1,77 +1,112 @@
 /*
  * Copyright © 2026 Terry Curran
- *
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.towermarsh.opendata.plugin.octopus.extract;
 
+import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
-
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-/**
- * Extract step for the Octopus plugin.
- *
- * <p><b>Placeholder implementation.</b> In a full implementation this step
- * would be responsible for:
- * <ol>
- *   <li>Connecting to an email account, cloud storage, or other source to
- *       discover new Octopus Energy statement PDFs.</li>
- *   <li>Downloading the PDFs into the configured input directory.</li>
- *   <li>Verifying that each downloaded file is a valid, readable PDF.</li>
- * </ol>
- *
- * <p>The current placeholder implementation simply lists the PDF files that
- * are already present in the input directory without attempting any download.
- * This allows the downstream transform and load steps to be exercised without
- * a live email or cloud connection.
- *
- * <p>Text extraction from the PDFs is handled by {@link PdfTextExtractor} and
- * is used inside the transform step via {@link com.towermarsh.opendata.plugin.octopus.transform.OctopusStatementParser}.
- *
- * @author Terry Curran
- * @version 2.0.0
- */
+/** Discovers, filters and reads local Octopus Energy statement PDFs. */
 public final class OctopusExtract {
-
     private static final Logger LOGGER = Logger.getLogger(OctopusExtract.class.getName());
-    private static final String PDF_SUFFIX = ".pdf";
+    private static final Pattern FILE_PATTERN = Pattern.compile(
+            "^octopus-energy-statement-(\\d{4}-\\d{2}-\\d{2})\\.pdf$",
+            Pattern.CASE_INSENSITIVE);
 
     /**
-     * Returns a list of PDF files available in the configured input directory.
-     *
-     * <p><b>Placeholder:</b> a full implementation would download new PDFs
-     * before returning this list.
-     *
-     * @param configuration Octopus plugin configuration
-     * @return list of PDF file paths found in the input directory; never
-     *         {@code null}; may be empty if no PDFs are present
-     * @throws IOException if the input directory cannot be read
+     * Reads all new statement files as one extraction batch.
+     * A file is considered already processed only when both its name and SHA-256
+     * hash match a completed row in {@code octopus.statement_file}.
      */
-    public List<Path> extract(final OctopusConfiguration configuration)
-            throws IOException {
+    public List<ExtractedOctopusStatement> extract(
+            final OctopusConfiguration configuration,
+            final PluginExecutionContext context) throws IOException {
         Objects.requireNonNull(configuration, "configuration");
+        Objects.requireNonNull(context, "context");
+        final Path inputDirectory = configuration.inputDirectory();
+        if (!Files.isDirectory(inputDirectory)) {
+            throw new IOException("Octopus input directory does not exist or is not a directory: " + inputDirectory);
+        }
 
-        final Path inputDir = configuration.inputDirectory();
-        LOGGER.info(() -> "Octopus extract: scanning for PDF files in " + inputDir);
-
-        try (Stream<Path> stream = Files.list(inputDir)) {
-            final List<Path> pdfs = stream
-                    .filter(p -> p.getFileName().toString()
-                            .toLowerCase(java.util.Locale.ROOT).endsWith(PDF_SUFFIX))
-                    .sorted()
+        final Set<String> processed = context.dryRun()
+                ? new OctopusProcessedFileRepository(context.database()).findProcessedFileKeys()
+                : new OctopusProcessedFileRepository(context.database()).findProcessedFileKeys();
+        final List<Path> candidates;
+        try (Stream<Path> files = Files.list(inputDirectory)) {
+            candidates = files.filter(Files::isRegularFile)
+                    .filter(path -> FILE_PATTERN.matcher(path.getFileName().toString()).matches())
+                    .sorted(Comparator.comparing(OctopusExtract::statementDate)
+                            .thenComparing(path -> path.getFileName().toString()))
                     .toList();
+        }
 
-            LOGGER.info(() -> "Octopus extract: found %d PDF file(s)".formatted(pdfs.size()));
-            return pdfs;
-        } catch (IOException e) {
-            throw new IOException("Failed to list PDF files in input directory: " + inputDir, e);
+        final List<ExtractedOctopusStatement> extracted = new ArrayList<>();
+        int skipped = 0;
+        for (Path path : candidates) {
+            final String fileName = path.getFileName().toString();
+            final String hash = sha256(path);
+            if (processed.contains(OctopusProcessedFileRepository.key(fileName, hash))) {
+                skipped++;
+                continue;
+            }
+            extracted.add(new ExtractedOctopusStatement(
+                    path,
+                    fileName,
+                    statementDate(path),
+                    hash,
+                    Files.size(path),
+                    PdfTextExtractor.extract(path)));
+        }
+        final int skippedCount = skipped;
+        LOGGER.info(() -> "Octopus extract: discovered %d matching PDF(s), selected %d new/changed file(s), skipped %d completed file(s)"
+                .formatted(candidates.size(), extracted.size(), skippedCount));
+        return List.copyOf(extracted);
+    }
+
+    static LocalDate statementDate(final Path path) {
+        final Matcher matcher = FILE_PATTERN.matcher(path.getFileName().toString());
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Invalid Octopus statement filename: " + path.getFileName());
+        }
+        try {
+            return LocalDate.parse(matcher.group(1));
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("Invalid statement date in filename: " + path.getFileName(), exception);
+        }
+    }
+
+    private static String sha256(final Path path) throws IOException {
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            try (InputStream input = Files.newInputStream(path)) {
+                final byte[] buffer = new byte[8192];
+                int count;
+                while ((count = input.read(buffer)) >= 0) {
+                    if (count > 0) digest.update(buffer, 0, count);
+                }
+            }
+            return HexFormat.of().formatHex(digest.digest());
+        } catch (NoSuchAlgorithmException exception) {
+            throw new IllegalStateException("SHA-256 is unavailable", exception);
         }
     }
 }
