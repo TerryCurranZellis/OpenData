@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Example provider source acquisition. */
+/** Provider acquisition helpers called by the example extract stage. */
 package com.towermarsh.opendata.plugin.example.download;

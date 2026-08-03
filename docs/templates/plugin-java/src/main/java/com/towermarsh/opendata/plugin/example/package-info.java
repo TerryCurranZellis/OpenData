@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Example provider plugin; copy and rename this package for a new plugin. */
+/** Example provider plugin; copy and rename for a new integration. */
 package com.towermarsh.opendata.plugin.example;

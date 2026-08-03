@@ -1,20 +1,31 @@
 # HTML Link Discovery Reference
 
 **Document ID:** REF-HTML-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Static HTML discovery implemented  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
+`HtmlLinkDiscoveryStrategy` downloads a landing page with Java `HttpClient`,
+then delegates deterministic parsing to `HtmlLinkResolver`. The resolved file is
+downloaded by `DirectHttpDownloadStrategy`.
 
-`HtmlLinkDiscoveryStrategy` downloads the landing page, then
-`HtmlLinkResolver` selects candidate elements with CSS, applies href and
-optional text regular expressions, resolves relative URLs and chooses the first
-or last match according to configuration. No match is a download failure.
+`HtmlLinkResolver`:
+
+1. parses HTML using Jsoup and the landing-page base URI;
+2. selects elements using the configured CSS selector;
+3. matches the raw `href` against a regular expression;
+4. optionally matches visible link text;
+5. resolves relative links; and
+6. chooses the first or last match.
+
+No match is a `DownloadException`. The resolver does not reject multiple matches
+unless configuration makes first/last selection safe.
 
 The separate `JsoupHtmlLinkDiscoverer` and `HighestScoringLinkSelector`
-contracts remain available for callers that need scored discovery; the current
-Ofgem plugin uses the configured first/last resolver. Browser automation is
-modelled but not implemented.
+abstractions support scored candidate selection for callers that need it.
+
+Browser automation and HTML-table strategy values exist in the configuration
+model but do not have an executable shared implementation in this baseline.

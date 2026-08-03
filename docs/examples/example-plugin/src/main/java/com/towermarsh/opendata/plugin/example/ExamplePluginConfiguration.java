@@ -8,13 +8,29 @@ package com.towermarsh.opendata.plugin.example;
 import com.towermarsh.opendata.config.model.PluginDefinition;
 import java.net.URI;
 import java.time.Duration;
+import java.util.Objects;
 
-/** Typed configuration template derived from a plugin definition. */
-public record ExamplePluginConfiguration(URI endpoint, Duration requestTimeout, String targetSchema) {
-    public static ExamplePluginConfiguration from(final PluginDefinition definition) {
-        final URI endpoint = definition.requireEndpoint("source").uri();
-        final int timeoutSeconds = Integer.parseInt(definition.requireProperty("request-timeout-seconds"));
-        final String targetSchema = definition.requireProperty("database.target-schema");
-        return new ExamplePluginConfiguration(endpoint, Duration.ofSeconds(timeoutSeconds), targetSchema);
+/** Typed values derived from the generic plugin definition. */
+public record ExamplePluginConfiguration(
+        URI endpoint,
+        Duration requestTimeout) {
+
+    public ExamplePluginConfiguration {
+        Objects.requireNonNull(endpoint, "endpoint");
+        Objects.requireNonNull(requestTimeout, "requestTimeout");
+        if (requestTimeout.isZero() || requestTimeout.isNegative()) {
+            throw new IllegalArgumentException(
+                    "requestTimeout must be positive");
+        }
+    }
+
+    public static ExamplePluginConfiguration from(
+            final PluginDefinition definition) {
+        Objects.requireNonNull(definition, "definition");
+        return new ExamplePluginConfiguration(
+                definition.requireEndpoint("source").uri(),
+                Duration.ofSeconds(Integer.parseInt(
+                        definition.requireProperty(
+                                "request-timeout-seconds"))));
     }
 }

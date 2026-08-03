@@ -1,39 +1,66 @@
 # Security Standard
 
 **Document ID:** STD-SECURITY-001  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 target standard with known release blockers  
+**Baseline date:** 3 August 2026
 
 ---
 
-## Secrets
+## Secrets and key material
 
-- Passwords, tokens and private keys MUST NOT be committed.
-- Logs, exception messages and generated documentation MUST NOT expose secrets.
-- Override files containing secrets MUST have access restricted to the runtime
-  identity.
-- Classpath defaults MUST contain a blank password or a non-secret reference.
+- Passwords, tokens, private keys and customer data MUST NOT be committed.
+- Logs, exceptions, diagnostics and generated manuals MUST NOT expose secrets.
+- Bootstrap and override files containing secrets MUST be restricted to the
+  runtime identity.
+- Classpath defaults MUST contain blank secrets or non-secret references.
+- A public certificate MAY be distributed; the private key MUST be provisioned
+  separately and protected.
 
-The current classpath password violates the target rule and is tracked as a
-critical gap.
+The uploaded Version 2.0.0 baseline contains a plaintext bootstrap credential and
+a private PFX under the source tree. This violates the target standard and is a
+release blocker requiring removal from history, replacement and credential/key
+rotation.
+
+## Configuration encryption
+
+RSA encryption protects the stored database password from casual disclosure; it
+does not make a source-controlled private key safe. The private key, certificate
+password and encrypted value require separate access controls.
+
+The implemented external PFX-password mechanism is the JVM system property used
+by the code. The documented environment-variable name is not dependable in the
+current implementation and must not be presented as a supported control until
+the Java constant is corrected and tested.
 
 ## Database
 
-- The application MUST use a least-privilege database principal.
+- Use a least-privilege application principal.
 - Production TLS MUST validate a certificate trusted by the JVM.
-- Plugins MUST use parameterised SQL for data values.
-- Configurable SQL identifiers MUST be allow-list validated.
-- Transactions MUST be bounded and rolled back on failure.
+- Use parameterised SQL for values and allow-list validated identifiers.
+- Bound transactions and roll back on failure.
+- Never retain a pooled connection on a plugin object.
+- Registration and bootstrap-file updates should be treated as a coordinated
+  administrative change; the current implementation is not atomic across the
+  database and file rewrite.
 
 ## Network and files
 
-Use HTTPS, explicit timeouts and bounded downloads. Treat publisher files as
-untrusted input. Working/archive directories must not allow untrusted users to
-replace files consumed by the application.
+Use HTTPS, explicit timeouts and bounded downloads. Treat publisher files,
+workbooks, JSON, CSV and PDFs as untrusted input. Working and archive directories
+must prevent untrusted replacement of files consumed by OpenData. Archive
+movement after database commit must be monitored because a filesystem failure
+cannot roll back committed rows.
+
+## Credential-reference model
+
+Plugin definitions can describe API-key, basic, bearer, OAuth, form and cookie
+credential references, but no runtime secret-provider implementation resolves
+them. Do not create a credential-dependent production plugin until that boundary
+is implemented, reviewed and tested for redaction.
 
 ## Dependency and release controls
 
 Review dependency advisories and licences. Preview dependencies require explicit
-acceptance. Release evidence must not contain secrets or production source data
-unless access is controlled.
+acceptance. Release artefacts and retained evidence must exclude secrets,
+private keys, customer statements and database backups.

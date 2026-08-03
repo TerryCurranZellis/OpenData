@@ -7,12 +7,16 @@ package com.towermarsh.opendata.plugin.example;
 
 import java.util.List;
 
-/** Template transformation stage. Replace this placeholder with real parsing and validation. */
+/** Placeholder transformation; replace with real parsing and validation. */
 public final class ExampleTransformer {
+
     public List<ExampleRecord> transform(final String payload) {
         if (payload == null || payload.isBlank()) {
-            return List.of();
+            throw new IllegalArgumentException(
+                    "Example source returned no data");
         }
-        return List.of(new ExampleRecord("replace-me", payload));
+        return List.of(new ExampleRecord(
+                "replace-me",
+                payload));
     }
 }

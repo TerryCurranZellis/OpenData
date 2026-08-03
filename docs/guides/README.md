@@ -1,7 +1,7 @@
 # OpenData Guides
 
 **Document ID:** GUIDE-INDEX-001  
-**Version:** 2.0  
+**Version:** 2.1  
 **Status:** Version 2.0.0 documentation index  
 **Baseline date:** 3 August 2026
 
@@ -20,10 +20,13 @@
 
 - [Adding a plugin](adding-a-plugin.md)
 - [Adding a CSV plugin](adding-a-csv-plugin.md)
+- [Adding a JSON plugin](adding-a-json-plugin.md)
 - [Adding an Excel plugin](adding-an-excel-plugin.md)
 - [Adding HTML link discovery](adding-html-link-discovery.md)
+- [Configuring API credentials](configuring-api-credentials.md)
 - [Plugin contract migration](plugin-contract-migration.md)
 
-Use the [User Guide](../user-guide/README.md) for routine operation and the
-[Administrator Guide sources](../operations/README.md) for monitoring, recovery
-and security procedures.
+Use the [Java plugin template](../templates/plugin-java/README.md) for the
+standard five-stage package layout and the
+[compact example plugin](../examples/example-plugin/README.md) for copyable
+registration, configuration and code samples.

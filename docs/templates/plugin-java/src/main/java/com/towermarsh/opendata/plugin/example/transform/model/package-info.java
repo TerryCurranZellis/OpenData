@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Typed example provider domain records. */
+/** Immutable example provider records. */
 package com.towermarsh.opendata.plugin.example.transform.model;

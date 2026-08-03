@@ -1,19 +1,47 @@
 # Adding HTML Link Discovery
 
 **Document ID:** GUIDE-HTML-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Version 2.0.0 developer procedure  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
+Prefer a stable API or direct file URI. Use HTML discovery only when the
+publisher exposes a changing file link from a stable landing page.
 
-Prefer API/direct file. Configure stable page, narrow selector, href and text
-patterns, relative URL resolution and deterministic tests.
+## Configuration
 
-`HtmlLinkResolver` fails on no match and chooses the configured first or last
-match when several links match. Narrow the rules enough that this choice is
-safe. Use `HighestScoringLinkSelector` when scored candidates and tie rejection
-are required. Browser automation is modelled but not implemented and should not
-be selected for static HTML.
+A landing-page endpoint uses:
+
+```properties
+endpoint.source.type=LANDING_PAGE
+endpoint.source.url=https://example.invalid/downloads
+endpoint.source.method=GET
+endpoint.source.format=HTML
+endpoint.source.strategy=HTML_LINK_DISCOVERY
+endpoint.source.link-discovery.css-selector=a[href]
+endpoint.source.link-discovery.href-pattern=(?i).*\.xlsx$
+endpoint.source.link-discovery.text-pattern=(?i).*latest.*
+endpoint.source.link-discovery.select-last=false
+```
+
+`HtmlLinkResolver` applies the CSS selector, matches the raw `href`, optionally
+matches visible text, resolves relative links and returns the first or last
+matching URI. No match is a download failure.
+
+## Safety and maintainability
+
+- Use the narrowest stable CSS selector.
+- Anchor regular expressions where practical.
+- Avoid relying solely on page order.
+- Reject ambiguous matches when the publisher page can contain multiple valid
+  files; the separate scoring abstractions may be more appropriate.
+- Test relative, absolute, redirected, missing and multiple links with local
+  HTML fixtures.
+
+Browser automation, authenticated API download and HTML-table extraction are
+represented in configuration enums but do not have an executable shared
+strategy in the current baseline. Do not select them merely because the enum
+value exists.

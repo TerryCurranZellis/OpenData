@@ -5,17 +5,22 @@
  */
 package com.towermarsh.opendata.plugin.example.extract;
 
+import com.towermarsh.opendata.exception.DownloadException;
 import com.towermarsh.opendata.model.DataFile;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
+import com.towermarsh.opendata.plugin.example.download.ExampleDownloader;
 import java.util.Objects;
 
-/** Reads the downloaded example representation without applying business rules. */
+/** Obtains the example source representation. */
 public final class ExampleExtractor {
 
-    public List<String> extract(final DataFile source) throws IOException {
-        Objects.requireNonNull(source, "source");
-        return List.copyOf(Files.readAllLines(source.getFilePath()));
+    private final ExampleDownloader downloader;
+
+    public ExampleExtractor(final ExampleDownloader downloader) {
+        this.downloader = Objects.requireNonNull(
+                downloader, "downloader");
+    }
+
+    public DataFile extract() throws DownloadException {
+        return downloader.download();
     }
 }

@@ -1,36 +1,69 @@
 # Testing Standard
 
 **Document ID:** STD-TEST-001  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 engineering baseline  
+**Baseline date:** 3 August 2026  
+**Minimum Java version:** 17
 
 ---
 
-## Required levels
+## Test levels
 
-| Level | Purpose |
-|---|---|
-| Unit | Value objects, parsing rules, selection, validation and error handling |
-| Component | Plugin flow with controlled HTTP/files and repository substitutes |
-| Integration | Real SQL Server schema, permissions, transactions and pooling |
-| Acceptance | End-to-end dry and write runs using representative sources |
+| Level | Purpose | Typical environment |
+|---|---|---|
+| Unit | Value objects, parsing, selection, validation and failure paths | JUnit/Mockito, no network or database |
+| Component | Complete plugin flow with controlled files, HTTP clients or repository substitutes | Local deterministic fixtures |
+| Integration | Real SQL Server schema, permissions, transactions and pooling | Isolated database |
+| Acceptance | End-to-end registration and plugin runs using representative sources | Release-like environment |
 
-## Rules
+Mock JDBC tests are unit or component tests, not SQL Server integration tests.
 
-- Every defect fix MUST have a focused regression test where practical.
-- Concurrency tests MUST prove overlap, failure isolation, ordered results and
-  interruption behaviour.
-- Repository tests MUST cover commit, rollback, unchanged rows and cleanup of
-  pooled-session state.
-- Parser fixtures MUST include a representative publisher file and malformed
-  boundary cases.
-- Mock JDBC tests MUST NOT be described as SQL Server integration tests.
-- Time-dependent code SHOULD use an injected `Clock`.
-- Tests MUST NOT depend on production passwords or mutable external state.
+## Required coverage by change type
 
-## Acceptance evidence
+### Plugin configuration
 
-Record Java/Maven versions, commit, SQL Server version, schema scripts, commands,
-run ids, row counts and failures injected. A passing unit suite alone is
-insufficient for a production release.
+Test required properties, defaults, invalid values, endpoint selection and
+case-normalised property names.
+
+### Extract and parser code
+
+Use representative source fixtures and malformed boundary cases. Cover HTTP
+status errors, interruption, file-size limits, missing headings, unusual
+encodings, formula cells, empty datasets and duplicate records where relevant.
+
+### Load and repository code
+
+Cover commit, rollback, repeat load, unchanged rows, partial failure,
+idempotency, accurate metrics and restoration of pooled connection state.
+Database constraints and transaction locks require real SQL Server tests.
+
+### Parallel execution
+
+Prove actual overlap, bounded worker count, result ordering, failure isolation,
+interruption handling and no shared JDBC connection.
+
+### Dry run
+
+A dry run MUST prove absence of writes, archive moves and other persistent side
+effects. It should not require a database unless a documented read-only dry-run
+contract has been implemented. The current Octopus dry-run defect is therefore a
+known failure, not an acceptable pattern for new plugins.
+
+## Determinism
+
+Time-dependent code SHOULD use the `Clock` from
+`PluginExecutionContext`. Tests MUST NOT depend on production passwords,
+customer statements, mutable public endpoints or a developer's working
+directory.
+
+## Regression and evidence
+
+Every defect fix MUST include a focused regression test where practical. Release
+evidence records the commit, Java/Maven versions, SQL Server version, installed
+scripts, commands, run IDs, row counts, injected failures and resulting
+transaction state.
+
+The current Maven build produces JaCoCo reports but does not enforce a coverage
+threshold. Review changed-code coverage rather than treating report generation
+as a quality gate.

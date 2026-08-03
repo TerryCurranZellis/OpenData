@@ -1,19 +1,34 @@
 # Excel Parsing Reference
 
 **Document ID:** REF-EXCEL-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Implemented  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
+`ExcelDataParser` uses Apache POI `WorkbookFactory` and supports XLS and XLSX.
 
-Apache POI `WorkbookFactory` handles XLS/XLSX. `ExcelParserOptions` selects a
-worksheet by name or zero-based index, the header and first data rows, formula
-evaluation and whether completely blank rows are omitted.
+## `ExcelParserOptions`
 
-`DataFormatter` with the UK locale supplies display strings. Blank headings are
-named `COLUMN_<n>` and duplicate headings receive a numeric suffix. The generic
-parser does not archive files; the Ofgem plugin archives its downloaded workbook
-in write mode when configured to do so.
+| Setting | Default |
+|---|---|
+| Sheet name | blank |
+| Sheet index | `0` |
+| Header row | `0` |
+| First data row | `1` |
+| Evaluate formulas | `true` |
+| Skip completely blank rows | `true` |
+
+A non-blank sheet name takes precedence. Row and sheet indexes are zero-based,
+and the first data row must be after the header row.
+
+Cells are returned as UK-locale display text. Blank headings become
+`COLUMN_<n>`. Repeated heading text receives `_2`, `_3` and later suffixes.
+Rows become `Map<String,String>` values.
+
+The generic parser does not interpret provider units, dates or identifiers,
+filter hidden rows, join sheets, preserve formula expressions, archive files or
+perform database work. Complex publisher workbooks require a provider-specific
+extractor.

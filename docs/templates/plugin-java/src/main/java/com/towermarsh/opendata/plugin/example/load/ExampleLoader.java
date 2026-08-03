@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/** Owns the example plugin's SQL and transaction boundary. */
+/** Owns the example provider's future SQL transaction. */
 public final class ExampleLoader {
+
     private final DatabaseResourceManager database;
 
     public ExampleLoader(final DatabaseResourceManager database) {
@@ -25,8 +26,10 @@ public final class ExampleLoader {
         Objects.requireNonNull(records, "records");
         Objects.requireNonNull(runId, "runId");
 
-        // TODO Obtain a connection from database, write within one transaction,
-        // roll back on failure, and return accurate inserted/updated/skipped counts.
-        throw new UnsupportedOperationException("Implement the example transactional load");
+        // TODO Use database.getConnection(), disable auto-commit, write
+        // parameterised batches, commit, roll back on failure and restore
+        // connection state before closing.
+        throw new UnsupportedOperationException(
+                "Implement the example transactional load");
     }
 }

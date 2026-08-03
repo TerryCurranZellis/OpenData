@@ -1,52 +1,58 @@
-# Migrating an existing plugin to concurrent execution
+# Migrating a Plugin to the Version 2.0.0 Contract
 
-Each enabled plugin must implement the thread-confined `OpenDataPlugin` contract:
+**Document ID:** GUIDE-PLUGIN-MIGRATION-001  
+**Version:** 2.0  
+**Status:** Current migration guide  
+**Baseline date:** 3 August 2026  
+**Minimum Java version:** 17
+
+---
+
+## Required contract
+
+Every executable plugin implements:
 
 ```java
-public final class ExamplePlugin implements OpenDataPlugin {
-    private final ExampleConfiguration configuration;
-
-    public ExamplePlugin(final PluginDefinition definition) {
-        this.configuration = ExampleConfiguration.from(definition);
-    }
-
-    @Override
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
-        final var records = download(configuration);
-        if (context.dryRun()) {
-            return new PluginMetrics(records.size(), 0, 0, records.size());
-        }
-        final var result = new ExampleRepository(context.database()).save(
-                records,
-                context.runId());
-        return new PluginMetrics(
-                records.size(),
-                result.inserted(),
-                result.updated(),
-                result.skipped());
-    }
-}
+PluginMetrics execute(PluginExecutionContext context) throws Exception;
 ```
 
-## Rules
+`ReflectionPluginFactory` constructs the implementation class using a public
+`PluginDefinition` constructor when available, otherwise a public no-argument
+constructor.
 
-1. Keep plugin state immutable and confined to one execution object.
-2. Do not use static mutable fields for run state.
-3. Borrow a pooled JDBC connection inside each repository operation; never retain it on the plugin.
-4. Own and finish the transaction in the repository that borrowed the connection.
-5. Use database constraints and transaction-scoped locks for shared rows rather than JVM-wide `synchronized` blocks.
-6. Honour interruption and restore the interrupted flag when catching `InterruptedException`.
-7. Return accurate read, insert, update and skip counts.
-8. Do not log passwords, tokens, complete connection strings containing secrets, or sensitive plugin properties.
+## Migration steps
 
-## Existing download-only entry points
+1. Move provider code below
+   `com.towermarsh.opendata.plugin.<plugin-id>`.
+2. Create a thin root `OpenDataPlugin` facade.
+3. Move typed configuration and orchestration into `initialise`.
+4. Separate source acquisition/decoding, transformation/validation, load and
+   finalise responsibilities.
+5. Replace shared mutable run state with method-local or execution-confined
+   state.
+6. Receive database, run ID, clock and dry-run state from
+   `PluginExecutionContext`.
+7. Borrow a JDBC connection inside load/repository work; never retain it.
+8. Return accurate `PluginMetrics`.
+9. Add classpath properties and registry index entry.
+10. Register the definition into SQL Server and test ordinary runtime loading.
 
-A legacy method such as `execute()` or `download()` can remain for tests and library callers. The coordinator only invokes `execute(PluginExecutionContext)`.
+## Dry-run migration
 
-## Database concurrency
+A dry run must complete extract, transform and validation while skipping load,
+archive movement and all persistent side effects. Do not read a database ledger
+through `context.database()` in dry run unless the framework contract has first
+been changed to provide a supported read-only resource.
 
-Independent plugins normally require no mutual exclusion. Add a narrow SQL Server application lock only when two runs can alter the same logical dataset. Include the plugin id and stable dataset key in the lock resource, use `LockOwner='Transaction'`, and keep the transaction short.
+## Concurrency
 
-## Registry
+Do not add JVM-wide synchronisation merely because plugins run in parallel.
+Use database uniqueness, isolation and a narrow transaction-owned application
+lock when two tasks can modify the same logical dataset. Restore the interrupt
+flag after `InterruptedException`.
 
-After adapting the class, ensure its plugin properties name the implementation and that the id appears in `src/main/resources/config/plugins/index.properties`. `--plugin all` includes only enabled descriptors.
+## Compatibility cleanup
+
+Remove obsolete download-only entry points once no tests or callers require
+them. Remove duplicate provider `config` or `download` packages after the active
+five-stage implementation and tests have been confirmed.

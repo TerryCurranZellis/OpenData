@@ -1,30 +1,46 @@
 # Batch 5 Implementation Notes
 
-## Scope
+**Completed:** 3 August 2026  
+**Scope:** Developer, quality, plugin-extension and API-reference documentation
 
-Batch 5 introduces a practical Java quality baseline without unexpectedly breaking the established build.
+## Updated
 
-## Changes
+- Developer documentation index, repository layout, local build procedure,
+  dependency policy, build/CI guidance and Java quality guide.
+- Coding, testing, security, documentation and plugin-package standards.
+- Plugin authoring guides for CSV, JSON, Excel, static HTML discovery,
+  credentials and Version 2.0.0 contract migration.
+- Plugin API, plugin properties, download/discovery and generic parser
+  references.
+- Developer Guide and API Reference manifests.
+- Architecture testing-and-quality chapter.
+- Compact example plugin and structural Java plugin template.
 
-- Added Maven Checkstyle, SpotBugs, PMD and Javadoc plugins.
-- Bound static analysis to Maven's `verify` phase.
-- Added the `quality.failOnViolation` Maven property, defaulting to `false` for baseline adoption.
-- Added strict execution using `-Dquality.failOnViolation=true`.
-- Added Checkstyle and PMD rules under `config/quality/`.
-- Added `scripts/Invoke-Code-Quality.ps1`.
-- Added missing package documentation for the UI and Octopus extraction packages.
-- Added `docs/development/Java-Quality-Guide.md`.
+## Added
 
-## Review findings
+- JSON plugin guide and JSON parser reference.
+- Plugin API reference.
+- Download/discovery reference.
+- Plugin development lifecycle PlantUML source and SVG.
 
-The merged Batch 4 source contained 207 Java files and 29 test files. Production packages were generally well organised and wildcard imports were not found. Two production packages containing source files did not have `package-info.java`; both have been corrected.
+## Important implementation variances retained
 
-A small number of direct `System.out` or `System.err` calls remain. They are not automatically changed in this batch because command-line output can be intentional and should be reviewed in context before replacement with logging.
+- Static analysis and dependency findings are advisory by default because
+  `quality.failOnViolation=false`.
+- Maven Enforcer is present only as commented POM configuration.
+- JaCoCo has no minimum coverage gate.
+- The current JAR is not self-contained or directly executable.
+- Classpath property changes require registration before database-backed runtime
+  use.
+- Credential references are modelled, but runtime secret resolution is absent.
+- Several format/strategy enum values are modelled without executable shared
+  implementations.
+- Octopus dry run remains invalid because extract accesses the unavailable
+  dry-run database resource.
+- Tracked bootstrap credentials and private-key material remain release blockers.
 
-## Validation limitations
+## Exclusions
 
-The source archive, XML configuration and documentation references were validated structurally. Maven was unavailable in the processing environment, so `mvn clean verify` could not be executed here. It must be run after integration on a machine with Java 17 and Maven installed.
-
-## Diagrams
-
-No additional PlantUML diagram is required. This batch adds development controls and quality configuration rather than changing runtime architecture or data flow.
+No production Java, SQL, PowerShell, Maven, workflow or runtime configuration
+files were changed. Java files in this archive exist only below `docs` as
+maintained documentation examples and templates.

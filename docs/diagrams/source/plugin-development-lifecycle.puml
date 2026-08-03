@@ -1,0 +1,45 @@
+@startuml
+title OpenData plugin development lifecycle
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam activity {
+  BackgroundColor #F7F7F7
+  BorderColor #444444
+  DiamondBackgroundColor #FFFFFF
+  DiamondBorderColor #444444
+}
+
+start
+:Define publisher, dataset,\nlicence and business key;
+:Create ADR and source notice\nwhen required;
+:Copy Java plugin template;
+:Implement typed configuration\nand five-stage lifecycle;
+fork
+  :Add classpath plugin properties\nand registry index entry;
+fork again
+  :Add ordered SQL, constraints,\npermissions and verification;
+fork again
+  :Add unit, component and\nSQL Server tests;
+fork again
+  :Add user, operator, reference\nand diagram documentation;
+end fork
+:Run --register in an\nisolated environment;
+:Run dry-run tests\n(no persistent side effects);
+if (Write mode implemented?) then (yes)
+  :Run write, repeat-load,\nrollback and recovery tests;
+else (no)
+  :Keep write mode failing safely;
+endif
+:Run mvn clean verify;
+:Review strict quality reports;
+:Validate links, manifests,\ndiagrams and generated manuals;
+if (All release gates pass?) then (yes)
+  :Merge and include in release evidence;
+  stop
+else (no)
+  :Correct code, SQL, tests\nor documentation;
+  :Repeat verification and gates;
+  stop
+endif
+@enduml

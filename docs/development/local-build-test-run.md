@@ -1,9 +1,9 @@
 # Local Build, Test and Run
 
-**Document ID:** DEV-BUILD-001
-**Version:** 2.0
-**Status:** Current
-**Baseline date:** 3 August 2026
+**Document ID:** DEV-BUILD-001  
+**Version:** 2.1  
+**Status:** Current Version 2.0.0 developer procedure  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
@@ -14,24 +14,33 @@
 - Maven 3.9 or later;
 - Git;
 - NetBeans or another Java IDE;
-- SQL Server for configuration registration and write-mode integration tests;
-- Windows PowerShell 5.1, Pandoc and PlantUML for the documentation toolchain;
-- XeLaTeX plus `rsvg-convert` or Inkscape for PDF output.
+- SQL Server for registration, runtime configuration and write-mode tests;
+- Windows PowerShell 5.1 for repository automation;
+- Pandoc and PlantUML for documentation generation;
+- XeLaTeX plus `rsvg-convert` or Inkscape for PDF generation.
 
-## Build
+The minimum Maven version is documented but the current Maven Enforcer block is
+commented out, so developers must verify their environment explicitly.
+
+## Build and quality
 
 ```powershell
 mvn clean test
-mvn package
+mvn clean verify
 ```
 
-The unit suite covers CLI parsing, configuration, discovery, download/parsing,
-pool setup, repositories and plugin coordination. JDBC mock tests do not prove
-that SQL Server scripts, permissions or transactions work on a real server.
+Strict quality review:
 
-## Run
+```powershell
+.\scripts\Invoke-Code-Quality.ps1 -Strict
+```
 
-The current POM creates a non-executable library JAR. Configure the IDE to run:
+Normal `verify` runs the static-analysis tools in advisory mode. Inspect reports
+even when Maven succeeds.
+
+## Run from an IDE
+
+The current POM creates a non-executable library JAR. Configure the IDE with:
 
 ```text
 Main class: com.towermarsh.opendata.OpenData
@@ -39,39 +48,38 @@ Working directory: repository root
 Arguments: --plugin ofgem,openmeteo --dry-run --parallelism 2
 ```
 
-Do not publish `java -jar` instructions until `Main-Class` and dependency
-packaging are implemented and tested.
+Do not publish `java -jar` instructions until the manifest and dependency
+packaging have been implemented and tested.
 
-## Minimum verification
+## Minimum developer verification
 
-1. run the full unit suite;
-2. list all registered plugins;
-3. dry-run Ofgem and OpenMeteo separately;
-4. dry-run Ofgem and OpenMeteo together with parallelism two;
-5. validate Octopus with disposable local PDF fixtures, an isolated test
-   database and explicit archive directory in write mode;
-6. validate and render documentation;
-7. for persistence changes, run the SQL Server acceptance matrix.
+1. run the complete unit suite;
+2. execute strict static analysis and review every finding;
+3. list registered plugins;
+4. run Ofgem and OpenMeteo dry runs separately;
+5. run them together with parallelism two;
+6. test Octopus with disposable statement fixtures, an isolated database and an
+   explicit archive directory in write mode;
+7. validate documentation and render diagrams; and
+8. run the SQL Server acceptance matrix for persistence or configuration
+   changes.
 
-The current Octopus extract stage reads its completed-file ledger even in dry
-run and therefore fails against the framework's unavailable dry-run database
-resource. Do not use `--plugin octopus --dry-run` or `--plugin all --dry-run`
-until that Java defect is corrected.
+The current Octopus extractor reads its processed-file ledger during dry run.
+The framework supplies an unavailable database resource in dry-run mode, so
+`--plugin octopus --dry-run` and `--plugin all --dry-run` are not valid
+verification commands until the defect is corrected.
 
-## Generated and local files
+## Testing documentation examples
 
-Do not commit passwords, local override files, logs, working downloads, database
+The Java files under `docs/templates/plugin-java` and
+`docs/examples/example-plugin` are documentation templates and are not compiled
+by the project build. When they are changed, copy them into a temporary package
+below `src/main/java`, add a temporary properties resource, compile, then remove
+the temporary files. This prevents examples drifting away from the current
+framework API.
+
+## Local and generated files
+
+Do not commit passwords, local override files, logs, downloads, database
 backups, customer PDFs, private PFX files or generated manuals unless repository
 policy explicitly identifies an output as maintained.
-
-### NetBeans command-line arguments
-
-In **Project Properties > Run > Arguments**, enter the arguments directly:
-
-```text
---plugin ofgem,openmeteo --dry-run --parallelism 2
-```
-
-Do not wrap the complete line in an additional pair of quotes. The parser
-tolerates wrappers that nevertheless deliver the whole line as one Java
-argument, including quoted file paths containing spaces.

@@ -10,14 +10,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
-/** Enforces cross-record rules after example transformation. */
+/** Enforces response-level and cross-record rules. */
 public final class ExampleValidator {
 
-    public List<ExampleRecord> validate(final List<ExampleRecord> records) {
+    public List<ExampleRecord> validate(
+            final List<ExampleRecord> records) {
         Objects.requireNonNull(records, "records");
         if (records.isEmpty()) {
-            throw new IllegalArgumentException("The example source produced no records");
+            throw new IllegalArgumentException(
+                    "The example source produced no records");
         }
+
         final var values = new HashSet<String>();
         for (var record : records) {
             if (!values.add(record.value())) {

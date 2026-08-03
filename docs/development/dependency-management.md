@@ -1,48 +1,64 @@
 # Dependency Management
 
 **Document ID:** DEV-DEPENDENCY-001  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 implementation baseline  
+**Baseline date:** 3 August 2026  
+**Minimum Java version:** 17
 
 ---
 
 ## Policy
 
 Prefer Java 17 APIs when they provide the required behaviour. Add a library when
-it materially reduces parser, protocol, pooling or test risk. Record a durable
-technology choice in an ADR.
+it materially reduces protocol, parser, database, security or test risk. Record
+a durable technology choice in an ADR and update third-party notices when the
+dependency set changes.
 
 ## Current runtime dependencies
 
 | Dependency | Purpose |
 |---|---|
 | Apache Commons CLI | Command-line parsing |
-| Jackson Databind | JSON parsing |
-| Apache Commons CSV | CSV parsing |
+| Jackson Databind | Generic JSON parsing and OpenMeteo response handling |
+| Apache Commons CSV | Standards-compliant CSV parsing |
 | Jsoup | Static HTML link discovery |
-| Apache POI | XLS/XLSX parsing |
+| Apache POI OOXML | XLS and XLSX workbook parsing |
 | Apache Commons DBCP | JDBC connection pooling |
 | Microsoft JDBC Driver | SQL Server access |
-| Log4j-to-JUL bridge | Route dependency Log4j API calls to JUL |
+| Apache PDFBox | Octopus Energy PDF text extraction |
+| Log4j-to-JUL bridge | Route dependency Log4j API calls into JUL |
 
-JUnit Jupiter and Mockito are test-scoped.
+JUnit Jupiter, Mockito and Mockito's JUnit integration are test-scoped.
+
+## Version ownership
+
+Dependency and plugin versions are declared in `pom.xml`. Do not duplicate an
+operational dependency version in documentation unless a release record needs an
+immutable historical value. The POM is the authoritative current version source.
 
 ## Update procedure
 
-1. read the release notes and Java-version requirements;
-2. check licence compatibility and known security advisories;
+1. read the library release notes and Java-version requirements;
+2. review licence compatibility and known security advisories;
 3. update one related dependency family at a time;
-4. run unit, dry-run and relevant SQL Server tests;
-5. update `pom.xml`, documentation and ADRs together;
-6. record the change in `docs/ChangeLog.md`.
+4. run `mvn clean verify` and inspect advisory quality reports;
+5. run affected parser, plugin and SQL Server acceptance tests;
+6. update the POM, notices, documentation and ADRs together; and
+7. record the change in `CHANGELOG.md`.
 
-Preview dependencies, including the current preview SQL Server JDBC driver, must
-be replaced by stable releases before a production baseline unless a specific
-ADR accepts the risk.
+## Release concerns
 
-## Logging constraint
+The current SQL Server JDBC dependency is a preview build. A production release
+must either replace it with a stable compatible driver or explicitly accept the
+risk in release evidence and an ADR.
 
-Application code uses `java.util.logging`. A dependency must not cause the
-project to adopt another application logging API. Bridges must route dependency
-messages into JUL.
+Application code uses `java.util.logging`. Adding a library must not silently
+introduce another application logging API. When a dependency uses the Log4j API,
+the existing bridge routes those messages into JUL.
+
+## Dependency analysis caveat
+
+Maven dependency analysis is bound to `verify`, but warnings only fail when
+`quality.failOnViolation=true`. Review ordinary build output even when the build
+returns success.

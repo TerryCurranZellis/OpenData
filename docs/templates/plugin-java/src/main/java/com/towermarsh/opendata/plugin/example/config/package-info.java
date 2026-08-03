@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Typed example provider configuration. */
+/** Typed configuration helpers used by the example initialise stage. */
 package com.towermarsh.opendata.plugin.example.config;

@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Example provider transactional persistence. */
+/** Example dry-run policy and transactional persistence stage. */
 package com.towermarsh.opendata.plugin.example.load;

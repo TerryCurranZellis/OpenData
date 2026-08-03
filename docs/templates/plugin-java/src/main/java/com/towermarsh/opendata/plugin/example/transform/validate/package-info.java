@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Cross-record validation for transformed example data. */
+/** Response-level and cross-record validation for the example provider. */
 package com.towermarsh.opendata.plugin.example.transform.validate;

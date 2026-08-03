@@ -1,9 +1,9 @@
 # Repository Structure
 
 **Document ID:** DEV-REPOSITORY-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 baseline  
-**Baseline date:** 2 August 2026
+**Version:** 2.1  
+**Status:** Version 2.0.0 implementation baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -13,20 +13,19 @@
 
 | Path | Purpose |
 |---|---|
-| `src/main/java` | Application, infrastructure and plugin source code |
-| `src/main/resources/config` | Bootstrap properties, plugin registration definitions and development certificate resources |
-| `src/test/java` | Unit and integration-oriented test source |
-| `sql` | Ordered SQL Server installation, schema, permissions and verification scripts |
-| `docs` | Authoritative Markdown, PlantUML, manifests and documentation assets |
+| `src/main/java` | Application, framework infrastructure and provider plugins |
+| `src/main/resources/config` | Bootstrap defaults, registry definitions and current certificate resources |
+| `src/test/java` | Unit and mock-based component tests |
+| `sql` | Ordered SQL Server installation, schemas, permissions and verification |
+| `docs` | Authoritative Markdown, PlantUML, manifests, examples and templates |
 | `config` | Documentation and code-quality configuration |
-| `scripts` | Existing build, documentation, certificate and release automation |
-| `.github` | GitHub Actions and repository automation |
-| `tools` | Local tool placement guidance; third-party binaries are not committed by default |
+| `scripts` | Build, documentation, certificate, quality and release automation |
+| `.github/workflows` | Build, documentation and release workflows |
+| `tools` | Local third-party tool placement guidance |
 
 ## Java package layout
 
-Reusable framework packages sit directly under
-`com.towermarsh.opendata`, including:
+Framework packages sit below `com.towermarsh.opendata`, including:
 
 ```text
 app
@@ -41,34 +40,48 @@ logging
 model
 parser
 plugin
+ui
 validation
 ```
 
-Source-specific code belongs under:
+Provider-specific code belongs below:
 
 ```text
 com.towermarsh.opendata.plugin.<plugin-id>
 ```
 
-Each plugin uses:
+The Version 2.0.0 target package structure is:
 
 ```text
-initialise
-extract
-transform
-load
-finalise
+<plugin-id>
+├── initialise
+├── extract
+├── transform
+│   ├── model
+│   └── validate
+├── load
+└── finalise
 ```
 
-Additional transform subpackages such as `model` and `validate` are permitted.
-The shared `exception` package owns the exception hierarchy; plugins do not create
-separate exception packages.
+The root plugin class implements `OpenDataPlugin` and delegates orchestration to
+the `initialise` stage. Temporary compatibility packages such as provider-local
+`config` or `download` may still exist in the current source; new code should
+not expand those duplicates.
 
-## Documentation layout
+All production packages currently contain `package-info.java`. The shared
+`exception` package owns framework exception types; plugin-specific errors are
+translated at the plugin boundary rather than creating an unrelated exception
+hierarchy.
 
-Canonical diagram sources are stored in `docs/diagrams/source`; rendered SVGs
-are stored in `docs/diagrams/generated`. Generated manuals belong under the
-configured documentation build directory and are not authoritative source.
+## Documentation examples
 
-Version 1.0.0 release records and implementation notes remain in the repository
-as history. Current operational documents identify Version 2.0.0.
+`docs/templates/plugin-java` is the structural template for new provider code.
+`docs/examples/example-plugin` is a compact copyable API example including registry
+and properties snippets. Neither tree is compiled by Maven, so example changes
+require an explicit temporary compile check.
+
+## Generated content
+
+PlantUML source lives under `docs/diagrams/source`; maintained SVG output lives
+under `docs/diagrams/generated`. Generated manuals belong under the configured
+build directory and are not authoritative Markdown source.

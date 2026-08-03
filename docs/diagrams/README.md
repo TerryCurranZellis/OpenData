@@ -1,7 +1,7 @@
 # PlantUML Diagram Index
 
 **Document ID:** DIAG-INDEX-001
-**Version:** 2.0
+**Version:** 2.1
 **Status:** Version 2.0.0 baseline
 **Baseline date:** 3 August 2026
 
@@ -28,6 +28,7 @@ under `docs/diagrams` or another legacy subdirectory.
 | Plugin execution | `plugin-execution-sequence.puml` | [image](generated/plugin-execution-sequence.svg) |
 | Parallel execution | `plugin-parallel-execution.puml` | [image](generated/plugin-parallel-execution.svg) |
 | Plugin pipeline | `pipeline-sequence.puml` | [image](generated/pipeline-sequence.svg) |
+| Plugin development lifecycle | `plugin-development-lifecycle.puml` | [image](generated/plugin-development-lifecycle.svg) |
 | Dataset lifecycle | `dataset-lifecycle.puml` | [image](generated/dataset-lifecycle.svg) |
 | Download strategies | `download-strategy-classes.puml` | [image](generated/download-strategy-classes.svg) |
 | Database architecture | `database-architecture.puml` | [image](generated/database-architecture.svg) |

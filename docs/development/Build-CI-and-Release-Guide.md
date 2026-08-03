@@ -1,59 +1,75 @@
 # Build, CI and Release Guide
 
-**Document ID:** DEV-BUILD-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 baseline  
-**Baseline date:** 2 August 2026
+**Document ID:** DEV-CI-001  
+**Version:** 2.1  
+**Status:** Version 2.0.0 implementation baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
-OpenData uses Maven and repository automation to apply repeatable build, test,
-quality, documentation and release checks.
-
 ![Build, documentation and release pipeline](../diagrams/generated/ci-release-pipeline.svg)
 
-## Local verification
+## Local build stages
 
 ```powershell
+mvn clean test
 mvn clean verify
-.\scripts\Validate-Documentation.ps1 -FailOnWarning
 ```
 
-For strict quality enforcement:
+`verify` compiles, runs unit tests, executes Checkstyle, SpotBugs and PMD,
+creates a JaCoCo report and performs dependency analysis. Static and dependency
+findings are advisory unless strict mode is enabled:
 
 ```powershell
 mvn clean verify -Dquality.failOnViolation=true
 ```
 
-Where SQL Server is available, also verify schema installation, configuration
-registration, encrypted-password restart, dry runs, write runs and transaction
-rollback behaviour.
+Documentation checks are separate:
 
-## Continuous integration
+```powershell
+.\scripts\Validate-Documentation.ps1 -FailOnWarning
+.\scripts\Build-Documentation.ps1 -RenderDiagrams
+```
 
-The GitHub workflows compile and test the project, execute configured quality
-tools, validate documentation and build documentation outputs. Environment-bound
-SQL Server and live-provider acceptance tests remain release-operator checks
-unless a suitable secured CI service is configured.
+## GitHub workflows
 
-## Version 2.0.0 release preparation
+The repository contains build, documentation and release workflows.
 
-A release tag must use `vMAJOR.MINOR.PATCH`, and the numeric part must match
-`pom.xml`, release notes, runtime configuration and generated documentation.
+- The build workflow runs Java 17 and `mvn clean verify`, then uploads available
+  test and quality reports.
+- The documentation workflow validates and generates maintained manuals.
+- The release workflow packages tagged or manually dispatched releases.
+
+Ordinary CI inherits `quality.failOnViolation=false`; a green build does not
+prove that static-analysis reports are empty. SQL Server and live-provider
+acceptance tests are not supplied by the standard hosted workflow.
+
+## Release preparation
+
+A release candidate must satisfy the
+[final release checklist](../release/Final-Release-Checklist.md), including:
+
+- strict Java quality review;
+- clean documentation validation and diagram rendering;
+- clean and repeat SQL Server installation;
+- registration and encrypted-password restart;
+- plugin dry/write, rollback and idempotency evidence;
+- dependency and licence review; and
+- proof that credentials, private keys, statements and database backups are not
+  present in release artefacts.
+
 Prepare a local package with:
 
 ```powershell
 .\scripts\New-ReleasePackage.ps1 -Version 2.0.0
 ```
 
-Before tagging:
+The current Maven JAR has no executable `Main-Class` manifest and does not bundle
+runtime dependencies. It must not be described as a self-contained executable.
 
-1. complete the [final release checklist](../release/Final-Release-Checklist.md);
-2. update `CHANGELOG.md` and `RELEASE_NOTES.md` with the actual release date;
-3. confirm the working tree is clean;
-4. retain dependency, database, certificate and acceptance-test evidence; and
-5. verify that no credentials, private keys or customer statements are included
-   in release artefacts.
+## Evidence retention
 
-The current Maven JAR is not a self-contained executable. Do not describe it as
-one in a public release unless packaging is changed and independently verified.
+Retain the verified commit, Java and Maven versions, dependency report, test and
+quality reports, SQL Server version and scripts, documentation outputs,
+checksums and release approval. Redact or exclude secrets and customer source
+data.

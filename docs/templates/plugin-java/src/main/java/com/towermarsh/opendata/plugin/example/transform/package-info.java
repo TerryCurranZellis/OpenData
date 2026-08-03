@@ -3,5 +3,5 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-/** Example provider transformation. */
+/** Provider-specific transformation from extracted source to domain records. */
 package com.towermarsh.opendata.plugin.example.transform;
