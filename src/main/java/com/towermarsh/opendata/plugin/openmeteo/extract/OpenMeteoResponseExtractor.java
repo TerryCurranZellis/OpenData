@@ -7,7 +7,7 @@ package com.towermarsh.opendata.plugin.openmeteo.extract;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
+import com.towermarsh.opendata.exception.PluginException;
 import java.util.Objects;
 
 /**
@@ -38,14 +38,14 @@ public final class OpenMeteoResponseExtractor {
      *
      * @param json raw JSON payload
      * @return parsed API response
-     * @throws OpenMeteoException if the payload cannot be parsed
+     * @throws com.towermarsh.opendata.exception.PluginException
      */
-    public OpenMeteoResponse extract(final String json) throws OpenMeteoException {
+    public OpenMeteoResponse extract(final String json) throws PluginException {
         Objects.requireNonNull(json, "json");
         try {
             return objectMapper.readValue(json, OpenMeteoResponse.class);
         } catch (JsonProcessingException exception) {
-            throw new OpenMeteoException(
+            throw new PluginException( "Open-Meteo",
                     "Unable to parse the Open-Meteo response",
                     exception);
         }

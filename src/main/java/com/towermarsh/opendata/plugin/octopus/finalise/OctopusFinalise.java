@@ -17,7 +17,12 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Archives successfully loaded source statements and reports batch statistics. */
+/** 
+ * Archives successfully loaded source statements and reports batch statistics. 
+ *
+ * @author Terry Curran
+ * @version 2.0.0
+ */
 public final class OctopusFinalise {
     private static final Logger LOGGER = Logger.getLogger(OctopusFinalise.class.getName());
 
@@ -38,8 +43,8 @@ public final class OctopusFinalise {
         if (dryRun || !completed || statements.isEmpty()) return;
         try {
             Files.createDirectories(configuration.archiveDirectory());
-            for (ExtractedOctopusStatement statement : statements) {
-                final Path target = configuration.archiveDirectory().resolve(statement.fileName());
+            for (var statement : statements) {
+                final var target = configuration.archiveDirectory().resolve(statement.fileName());
                 Files.move(statement.path(), target, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException exception) {

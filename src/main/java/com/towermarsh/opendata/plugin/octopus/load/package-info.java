@@ -10,7 +10,9 @@
  * Dry-run execution logs records without writing to the database.
  *
  * <ul>
- * <li>{@link OctopusLoad} – load step (placeholder; full persistence pending)</li>
+ * <li>{@link OctopusLoad}</li>
+ * <li>{@link OctopusPersistenceRepository}</li>
+ * <li>{@link OctopusPersistenceResult}</li>
  * </ul>
  */
 package com.towermarsh.opendata.plugin.octopus.load;

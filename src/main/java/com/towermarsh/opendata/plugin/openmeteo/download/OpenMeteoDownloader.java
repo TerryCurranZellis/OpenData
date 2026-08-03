@@ -5,8 +5,8 @@
  */
 package com.towermarsh.opendata.plugin.openmeteo.download;
 
+import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
-import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -27,8 +27,15 @@ import java.util.logging.Logger;
  */
 public final class OpenMeteoDownloader {
 
+    /**
+     * logger
+     */
     private static final Logger LOGGER
             = Logger.getLogger(OpenMeteoDownloader.class.getName());
+    
+    /**
+     * required columns form data
+     */
     private static final String DAILY_VARIABLES = String.join(",",
             "temperature_2m_max",
             "temperature_2m_min",
@@ -67,9 +74,9 @@ public final class OpenMeteoDownloader {
      * Downloads weather history for the configured default date range.
      *
      * @return raw JSON response
-     * @throws OpenMeteoException if the API call fails
+     * @throws com.towermarsh.opendata.exception.PluginException
      */
-    public String download() throws OpenMeteoException {
+    public String download() throws PluginException {
         final var today = LocalDate.now(configuration.timezone());
         final var range = configuration.resolveDateRange(today);
         return download(range.startDate(), range.endDate());
@@ -81,10 +88,10 @@ public final class OpenMeteoDownloader {
      * @param startDate inclusive start date
      * @param endDate inclusive end date
      * @return raw JSON response
-     * @throws OpenMeteoException if the API call fails
+     * @throws com.towermarsh.opendata.exception.PluginException
      */
     public String download(final LocalDate startDate, final LocalDate endDate)
-            throws OpenMeteoException {
+            throws PluginException {
         Objects.requireNonNull(startDate, "startDate");
         Objects.requireNonNull(endDate, "endDate");
         if (startDate.isAfter(endDate)) {
@@ -102,16 +109,16 @@ public final class OpenMeteoDownloader {
                     HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new OpenMeteoException("Open-Meteo request was interrupted", exception);
+            throw new PluginException("Open-Meteo", "request was interrupted", exception);
         } catch (IOException exception) {
-            throw new OpenMeteoException(
+            throw new PluginException("Open-Meteo", 
                     "Unable to call the Open-Meteo archive API",
                     exception);
         }
 
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            throw new OpenMeteoException(
-                    "Open-Meteo returned HTTP %d: %s"
+            throw new PluginException(
+                    "Open-Meteo", "returned HTTP %d: %s"
                             .formatted(response.statusCode(), abbreviated(response.body())));
         }
         return response.body();
