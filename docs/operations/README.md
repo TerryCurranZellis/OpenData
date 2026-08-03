@@ -1,9 +1,9 @@
 # Operations Documentation
 
 **Document ID:** OPS-INDEX-001  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -11,7 +11,12 @@
 - [Monitoring and diagnostics](monitoring-and-diagnostics.md)
 - [Backup and recovery](backup-and-recovery.md)
 - [Logging and connection-pool operations](logging-and-pool.md)
+- [Database troubleshooting](../guides/database-troubleshooting.md)
 
-These procedures describe the current command-line runtime. Internal scheduling
-is deferred; invoke the application through an external scheduler only after
-packaging and exit-code gaps are resolved.
+The operational lifecycle is summarised below.
+
+![OpenData operational lifecycle](../diagrams/generated/operational-lifecycle.svg)
+
+Internal scheduling is deferred. External scheduling should remain disabled for
+production use until packaging and operating-system exit-code propagation are
+implemented or the scheduler has a tested log-based success check.

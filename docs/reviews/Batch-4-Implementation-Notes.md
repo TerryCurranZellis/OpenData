@@ -1,25 +1,42 @@
 # Batch 4 Implementation Notes
 
-## Purpose
+**Completed:** 3 August 2026  
+**Scope:** Complete user and administrator operations documentation
 
-Standardise OpenData licensing and source-file ownership declarations for an open-source release.
+## Updated
 
-## Changes completed
+- Full Version 2.0.0 user guide, including installation, registration,
+  configuration, CLI, plugins, parallelism, dry run, troubleshooting and
+  maintenance.
+- Administrator runbook, logging/pool operations, monitoring, backup and
+  recovery.
+- SQL Server bootstrap, database security and database troubleshooting guides.
+- Command-line, configuration, database-configuration and audit references.
+- Technical User Guide and Administrator Guide manifests and documentation
+  indexes.
 
-- Added the canonical root `LICENSE` file while retaining `LICENSE.md` for compatibility.
-- Confirmed Apache License, Version 2.0 as the project licence.
-- Standardised headers in 230 Java files, 5 PowerShell files and 10 SQL files.
-- Used `Copyright © 2026 Terry Curran` and `SPDX-License-Identifier: Apache-2.0`.
-- Added `docs/Licensing-Policy.md`.
-- Updated project metadata and documentation references.
-- Preserved `com.towermarsh.opendata` because changing a Java namespace would be a breaking technical migration, not a licensing correction.
+## Added
 
-## Diagram assessment
+- Dedicated Octopus Energy statement user chapter.
+- Operational lifecycle PlantUML source and rendered SVG.
 
-No PlantUML diagram was required. Licensing ownership and attribution are policy concerns and do not introduce a new system architecture or execution flow.
+## Important implementation variances recorded
 
-## Validation
+- The Maven JAR is not self-contained and has no `Main-Class` manifest entry.
+- Bootstrap and certificate paths are coupled to the repository source tree and
+  `user.dir`.
+- Registration is not atomic across SQL Server updates and the bootstrap-file
+  rewrite.
+- `ExecutionStatus` numeric codes are not propagated to the operating system.
+- Octopus dry run and therefore `all --dry-run` are not usable.
+- Octopus archive movement happens after database commit and can fail without
+  rolling back persisted records.
+- `working.directory` is currently unused and blank Octopus archive paths resolve
+  to the process working directory.
+- The keystore environment-variable constant is incorrect; the JVM system
+  property is the only dependable external PFX-password mechanism.
+- Tracked bootstrap credentials/private-key material remain release blockers.
 
-- All targeted Java, PowerShell and SQL files were checked for the canonical SPDX identifier.
-- The project manifest JSON was parsed after modification.
-- The release archive structure was checked after creation.
+## Exclusions
+
+No Java, SQL, PowerShell, workflow or build files were changed.

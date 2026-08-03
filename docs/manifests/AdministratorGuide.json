@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Administrator guide",
     "audience": "Database, platform and operations administrators",
-    "revisionSummary": "Initial manifest-driven administrator guide"
+    "revisionSummary": "Version 2.0.0 registration, operations, monitoring, recovery and security baseline"
   },
   "sections": [
     "shared/introduction.md",
@@ -19,13 +19,15 @@
     "operations/monitoring-and-diagnostics.md",
     "operations/backup-and-recovery.md",
     "guides/database-troubleshooting.md",
+    "reference/command-line-reference.md",
+    "reference/configuration-reference.md",
     "reference/database-configuration.md",
     "reference/database-schema-reference.md",
     "reference/ingestion-audit-reference.md",
     "shared/glossary.md",
-	"shared/licence.md",
+    "shared/licence.md",
     "shared/third-party-notices.md",
-	"shared/data-source-notices.md",
+    "shared/data-source-notices.md",
     "shared/acknowledgements.md"
   ]
 }

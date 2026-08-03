@@ -1,26 +1,34 @@
 # Reference Documentation
 
 **Document ID:** REF-INDEX-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
-**Minimum Java version:** 17
+**Version:** 2.0  
+**Status:** Version 2.0.0 documentation index  
+**Baseline date:** 3 August 2026
 
 ---
 
-- [Command-Line Reference](command-line-reference.md)
-- [Configuration Reference](configuration-reference.md)
-- [Plugin Properties Reference](plugin-properties-reference.md)
-- [Plugin Registry Reference](plugin-registry-reference.md)
-- [Database Configuration](database-configuration.md)
-- [Database Schema](database-schema-reference.md)
-- [Ingestion Audit](ingestion-audit-reference.md)
-- [Supported Data Formats](supported-data-formats.md)
-- [CSV Parsing Reference](csv-parsing.md)
-- [Excel Parsing Reference](excel-parsing.md)
-- [HTML Link Discovery Reference](html-link-discovery.md)
-- [Ofgem Plugin Reference](ofgem-plugin.md)
-- [Ofgem Configuration Reference](ofgem-plugin-configuration.md)
-- [Ofgem Price-Cap Data Dictionary](ofgem-price-cap-data-dictionary.md)
-- [OpenMeteo Plugin Reference](openmeteo-plugin.md)
-- [OpenMeteo Schema](openmeteo-schema.md)
+## Runtime and configuration
+
+- [Command-line reference](command-line-reference.md)
+- [Configuration reference](configuration-reference.md)
+- [Database configuration](database-configuration.md)
+- [Plugin registry reference](plugin-registry-reference.md)
+- [Plugin properties reference](plugin-properties-reference.md)
+
+## Database and audit
+
+- [Database schema reference](database-schema-reference.md)
+- [Ingestion audit reference](ingestion-audit-reference.md)
+- [Ofgem data dictionary](ofgem-price-cap-data-dictionary.md)
+- [OpenMeteo schema](openmeteo-schema.md)
+- [Octopus schema](octopus-schema.md)
+
+## Plugins and formats
+
+- [Ofgem plugin](ofgem-plugin.md)
+- [OpenMeteo plugin](openmeteo-plugin.md)
+- [Octopus plugin](octopus-plugin.md)
+- [Supported data formats](supported-data-formats.md)
+- [CSV parsing](csv-parsing.md)
+- [Excel parsing](excel-parsing.md)
+- [HTML link discovery](html-link-discovery.md)

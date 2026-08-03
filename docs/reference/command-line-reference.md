@@ -2,8 +2,8 @@
 
 **Document ID:** REF-CLI-001  
 **Version:** 2.0  
-**Status:** Updated  
-**Baseline date:** 01 August 2026  
+**Status:** Version 2.0.0 implementation reference  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
@@ -13,42 +13,42 @@
 ```text
 opendata --plugin <id|all> [--plugin <id>] [--file <settings>] [options]
 opendata --register [--file <bootstrap-settings>]
+opendata --help | --list-plugins | --about
 ```
 
 | Option | Purpose |
 |---|---|
-| `-p`, `--plugin` | Select an id, repeat the option, use comma-separated ids, or use `all` |
-| `-f`, `--file` | Apply invocation overrides or provide bootstrap database credentials for `--register` |
-| `-j`, `--parallelism` | Maximum concurrent plugins, from 1 to 64 |
-| `--dry-run` | Download and validate without database, audit or archive writes |
-| `-v`, `--verbose` | Enable `FINE` JUL output |
-| `-h`, `--help` | Help |
-| `--about` | About dialog |
-| `--list-plugins` | Registry listing |
-| `--register` | Register application and plugin properties in SQL Server |
+| `-p`, `--plugin` | Select one id, repeated ids, comma-separated ids, or `all` |
+| `-f`, `--file` | UTF-8 Java properties override file |
+| `-j`, `--parallelism` | Maximum concurrent plugins, integer 1–64 |
+| `--dry-run` | No plugin persistence or generic run-audit rows |
+| `-v`, `--verbose` | Enable `FINE` JUL output after runtime configuration loads |
+| `-h`, `--help` | Print help |
+| `--about` | Display graphical About window |
+| `--list-plugins` | List installed registry entries |
+| `--register` | Register packaged application/plugin properties in SQL Server |
 
-`--plugin` is required for execution, not informational commands and not
-`--register`. `--register` cannot be combined with `--plugin`, `--parallelism`,
-or `--dry-run`.
+Rules enforced by the parser:
 
-## Examples
+- execution requires `--plugin` unless the request is informational or
+  `--register`;
+- `all` cannot be combined with another plugin id;
+- a plugin id cannot be selected twice;
+- `--file` without a plugin is allowed only for `--register`;
+- `--register` cannot be combined with plugin, parallelism or dry run; and
+- multi-plugin override files cannot contain unscoped plugin keys.
 
-```text
-opendata --list-plugins
-opendata --plugin ofgem --dry-run
-opendata --plugin openmeteo --plugin ofgem --parallelism 2
-opendata --plugin all --file C:\OpenData\run.properties
-opendata --register --file C:\OpenData\bootstrap.properties
-```
+The parser also expands a single launcher argument containing the complete
+quoted command line, which supports IDE/wrapper configurations that pass all
+options as one string.
 
-Create the certificate files before the first registration run:
+## Current execution outcome limitation
 
-```powershell
-. .\scripts\New-ConfigurationCertificate.ps1
-New-ConfigurationCertificate
-```
+`ExecutionStatus` defines codes 0, 1, 2, 3, 4, 5, 6 and 130, but the entry point
+does not call `System.exit(statusCode)`. These codes are not currently returned
+to the shell. Use the final application log and plugin summaries.
 
-## Outcomes
+## Dry-run compatibility
 
-The process logs one of `SUCCESS`, `PLUGIN_FAILURE`, `COMMAND_LINE_ERROR`,
-`CONFIGURATION_ERROR`, `INTERRUPTED` or `APPLICATION_FAILURE`.
+Ofgem and OpenMeteo support dry run. Octopus does not, and `all --dry-run` also
+fails because `all` selects Octopus.

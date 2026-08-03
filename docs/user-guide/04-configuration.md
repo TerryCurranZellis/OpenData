@@ -2,82 +2,88 @@
 
 **Document ID:** USER-004  
 **Version:** 2.0  
-**Status:** Updated  
-**Baseline date:** 01 August 2026
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
-`src/main/resources/config/application.properties` is now a bootstrap file.
-The packaged repository default is a bootstrap file. After `--register`, it
-should contain only:
+## Configuration layers
 
-- `application.version`
-- `application.use-database-properties`
-- `database.url`
-- `database.user`
-- `database.password` (encrypted)
+OpenData resolves configuration from:
 
-## Runtime sources
+1. built-in runtime defaults;
+2. the repository-local bootstrap file;
+3. classpath properties before registration, or SQL Server properties after
+   registration; and
+4. optional `--file` overrides for the current invocation.
 
-1. Bootstrap file `src/main/resources/config/application.properties`
-2. SQL Server tables `[core].[application_property]` and `[core].[plugin_property]`
-3. Optional `--file` overrides for one invocation
+The writable bootstrap file is:
 
-When `application.use-database-properties=true`, OpenData loads runtime and
-plugin properties from SQL Server by default and ignores the packaged plugin
-property files during normal execution. The repository default remains `false`
-until registration is completed for an environment.
-
-## Bootstrap properties
-
-| Property key | Required | Description |
-|---|---|---|
-| `application.version` | Yes | Bootstrap version marker |
-| `application.use-database-properties` | Yes | Whether SQL Server is the default configuration source |
-| `database.url` | Yes | SQL Server JDBC URL |
-| `database.user` | Yes | SQL Server login |
-| `database.password` | Yes | SQL Server password; encrypted after registration |
-
-## Register configuration in SQL Server
-
-Create the encryption certificate material first:
-
-```powershell
-. .\scripts\New-ConfigurationCertificate.ps1
-New-ConfigurationCertificate
+```text
+src/main/resources/config/application.properties
 ```
 
-Use `--register` to copy packaged application and plugin properties into SQL
-Server and then switch future runs to database-backed configuration:
+After registration it contains only the version marker, database-backed switch,
+database URL, database user and encrypted database password.
+
+## Registration
+
+Create a protected bootstrap override file outside the repository:
 
 ```properties
 application.database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
 application.database.user=OpenData
-application.database.******
+application.database.password=<local-database-password>
 ```
+
+Run:
 
 ```text
 opendata --register --file C:\OpenData\bootstrap.properties
 ```
 
-After registration, keep the bootstrap file restricted and out of Git when it
-contains environment-specific values.
+Registration:
+
+- upserts application defaults and packaged application properties into
+  `core.application_property`;
+- replaces each installed plugin's rows in `core.plugin_property`;
+- stores the database password encrypted in SQL Server; and
+- rewrites the local bootstrap file with
+  `application.use-database-properties=true` and an encrypted password.
+
+The database writes and bootstrap-file rewrite are not one atomic transaction.
+After an interrupted or failed registration, inspect both the database tables and
+the local bootstrap file before retrying.
 
 ## Override scopes
 
-Application overrides always use `application.<key>`.
-
-Single-plugin runs may use unscoped plugin values:
+Application overrides always use `application.<key>`:
 
 ```properties
-application.database.******
+application.execution.max-parallel-plugins=2
+application.logging.directory=C:\OpenData\logs
+```
+
+A single-plugin run may use unscoped plugin keys:
+
+```properties
 property.start-date.value=2025-01-01
 ```
 
-Multi-plugin runs must scope plugin values:
+A multi-plugin run must scope all plugin values:
 
 ```properties
-application.database.******
 plugin.openmeteo.property.start-date.value=2025-01-01
 plugin.ofgem.property.download.request-timeout.value=PT180S
 ```
+
+Unknown properties may remain unused; the runtime validates only values that a
+configuration class resolves. Keep override files minimal and review them after
+upgrades.
+
+## Security warning
+
+The uploaded baseline contains a tracked plaintext bootstrap credential and a
+tracked private PFX. Remove them from source control, replace the certificate
+pair, and rotate any database password that has been exposed before release or
+production use.

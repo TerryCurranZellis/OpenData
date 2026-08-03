@@ -42,6 +42,7 @@ under `docs/diagrams` or another legacy subdirectory.
 | Octopus statement processing | `octopus-statement-processing.puml` | [image](generated/octopus-statement-processing.svg) |
 | Octopus data model | `octopus-data-model.puml` | [image](generated/octopus-data-model.svg) |
 | Documentation generation | `documentation-generation-flow.puml` | [image](generated/documentation-generation-flow.svg) |
+| Operational lifecycle | `operational-lifecycle.puml` | [image](generated/operational-lifecycle.svg) |
 | Manifest-driven documentation engine | `manifest-driven-documentation-engine.puml` | [image](generated/manifest-driven-documentation-engine.svg) |
 
 Run the documentation build with `-RenderDiagrams`. Markdown embeds the committed

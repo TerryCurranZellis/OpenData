@@ -1,9 +1,9 @@
 # Monitoring and Diagnostics
 
 **Document ID:** OPS-MONITOR-001  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -11,27 +11,43 @@
 
 | Signal | Source | Investigate when |
 |---|---|---|
-| Final application status | JUL final message | Not `SUCCESS` |
-| Plugin terminal status | `core.PluginRun` and summary log | `FAILED`, `CANCELLED` or stale `RUNNING` |
-| Domain ingestion status | `core.ingestion_run` for Ofgem | Stale `STARTED` or non-success |
-| Row metrics | Plugin summary/audit tables | Unexpected zero, spike or mismatch |
-| Pool usage/waits | Pool snapshot and SQL Server | Sustained exhaustion or long waits |
-| Source identity | URI, size and SHA-256 | Unexpected publisher/file change |
+| Final application status | final JUL message | not `Successful` |
+| Plugin terminal status | summary log and `core.PluginRun` | `FAILED`, `CANCELLED` or stale `RUNNING` |
+| Ofgem ingestion status | `core.ingestion_run` | stale `STARTED` or non-success |
+| Row metrics | summary/audit/domain tables | unexpected zero, spike or mismatch |
+| Pool state | pool snapshot and SQL Server | sustained exhaustion or long waits |
+| Source identity | URI/file name, size and SHA-256 | unexpected change |
+| Octopus archive reconciliation | input/archive directories and `octopus.statement_file` | committed file remains unarchived |
+| Configuration freshness | configuration tables `updated_at` | unexpected registration/update |
 
 ## Correlation
 
-Use the UUID printed as `[run=<uuid>]` to correlate concurrent log records with
-`core.PluginRun`. The current Ofgem domain ingestion identity is separate, so
-also correlate by plugin, time, source URI and workbook.
+Use `[run=<uuid>]` to correlate plugin logs with `core.PluginRun`. Dry runs have a
+UUID in logs but no persisted generic audit row. Ofgem has a separate numeric
+ingestion id; correlate by time, source URI and plugin context.
 
-## First diagnostic checks
+## Diagnostic sequence
 
-1. locate the first `SEVERE` entry for the affected run UUID;
-2. confirm whether the failure occurred before or after persistence;
-3. inspect the terminal audit row and plugin metrics;
-4. check SQL Server connectivity, locks and permissions;
-5. verify external HTTP status and publisher layout;
-6. reproduce with a dry run when the suspected failure is before persistence.
+1. locate the first `SEVERE` or `WARNING` for the affected run;
+2. determine whether failure occurred before or after persistence;
+3. inspect plugin summary metrics and terminal audit state;
+4. check SQL connectivity, permissions, locks and pool availability;
+5. verify remote response, workbook/API/PDF structure and configured scope;
+6. reconcile source hashes and archive movement; and
+7. reproduce with a supported dry run only when the suspected failure is before
+   persistence.
 
-Dry-run success does not prove SQL, transactions, audit completion or
-least-privilege grants.
+A successful Ofgem/OpenMeteo dry run does not prove SQL, transaction, grants or
+audit completion. Octopus has no usable dry-run path in this baseline.
+
+## Useful stale-run query
+
+```sql
+SELECT RunId, PluginId, Status, StartedAt, ThreadName, HostName
+FROM core.PluginRun
+WHERE Status = 'RUNNING'
+  AND StartedAt < DATEADD(hour, -2, SYSUTCDATETIME())
+ORDER BY StartedAt;
+```
+
+Do not update stale rows to success. Retain them as incident evidence.

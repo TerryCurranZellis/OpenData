@@ -1,61 +1,44 @@
 # Ingestion Audit Reference
 
 **Document ID:** REF-AUDIT-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Version 2.0.0 implementation reference  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-## Plugin-run statuses
+## Generic plugin-run audit
 
 | Status | Terminal | Meaning |
 |---|---|---|
-| `RUNNING` | no | Coordinator task has begun |
-| `SUCCESS` | yes | Plugin completed successfully |
-| `DRY_RUN` | yes | Reserved status; dry runs currently do not persist audit rows |
-| `FAILED` | yes | Plugin or audit completion failed |
-| `CANCELLED` | yes | Task was interrupted or cancelled |
+| `RUNNING` | no | coordinator task started |
+| `SUCCESS` | yes | write-mode plugin completed |
+| `DRY_RUN` | yes | schema-supported value; current dry runs create no row |
+| `FAILED` | yes | plugin failed or successful work could not complete audit |
+| `CANCELLED` | yes | execution was interrupted |
 
-`core.PluginRun` records `RunId`, plugin, timestamps, thread/host, read,
-inserted, updated and skipped counts, plus a truncated error message.
+`core.PluginRun` stores run UUID, plugin id, timestamps, thread, host, row metrics
+and an error message truncated to 4,000 characters.
 
-## Domain-ingestion statuses
+Dry runs use `NoOpPluginRunAudit`, so a dry-run UUID appears only in logs.
 
-| Status | Terminal | Meaning |
-|---|---|---|
-| `STARTED` | no | Run exists and processing has begun |
-| `SUCCEEDED` | yes | All required work completed without rejected rows |
-| `SUCCEEDED_WITH_REJECTIONS` | yes | Load completed but some extracted rows were rejected under policy |
-| `FAILED` | yes | Required stage failed; success must not be inferred |
-| `CANCELLED` | yes | Execution was deliberately stopped |
+## Audit completion edge case
 
-## Recommended stage names
+If plugin work succeeds but the terminal audit update fails, the coordinator
+changes the in-memory/logged result to `FAILED`. Business rows may already have
+committed. Investigate the domain tables before retrying.
 
-`CONFIGURATION`, `DISCOVERY`, `DOWNLOAD`, `VALIDATION`, `PARSE`, `TRANSFORM`,
-`LOAD`, `VERIFY`, `SHUTDOWN`.
+## Plugin-specific provenance
 
-## Implemented counters
+- Ofgem also uses `core.ingestion_run`, `core.source_file` and
+  `core.ingestion_error`; there is no direct key to `core.PluginRun`.
+- OpenMeteo business rows store `LastRunId` linked to the generic UUID.
+- Octopus business rows and `octopus.statement_file` store `last_run_id` linked
+  to the generic UUID.
 
-| Column | Definition |
-|---|---|
-| `rows_extracted` | Typed records produced from the source before persistence |
-| `rows_loaded` | Database fact rows confirmed written |
-| `rows_rejected` | Extracted records excluded by an explicit rejection policy |
+## Operational rules
 
-For a strict all-or-nothing Ofgem import, rejected normally remains zero and a
-validation problem fails the run. More granular discovery/read/accepted counters
-are possible future schema additions, not current columns.
-
-## Duration
-
-`duration_ms` is calculated from run start and finish timestamps in SQL Server.
-The application should also log monotonic elapsed time for diagnostics, but the
-database record remains the durable operational value.
-
-## Transitional relationship
-
-Ofgem writes a `core.PluginRun` row for the coordinator and a separate
-`core.ingestion_run` row for workbook provenance. OpenMeteo rows link directly
-to `core.PluginRun.RunId`. No current column links the two Ofgem audit records.
+Do not manually change failed, cancelled or stale-running rows to success. Keep
+them as evidence and create a new run after diagnosis. Reconcile audit status,
+metrics, source/statement identity and business rows together.

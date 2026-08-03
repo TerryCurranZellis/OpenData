@@ -2,40 +2,45 @@
 
 **Document ID:** USER-001  
 **Version:** 2.0  
-**Status:** Version 2.0.0 baseline  
-**Baseline date:** 2 August 2026
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
-OpenData is a Java 17 command-line application that acquires source data,
-transforms it into validated records and loads it into Microsoft SQL Server.
-Version 2.0.0 uses SQL Server for normal runtime and plugin configuration after a
-one-time registration step.
-
-Three plugins are installed:
+OpenData is a Java 17 command-line application that extracts data from external
+or local sources, transforms it into validated records and loads it into
+Microsoft SQL Server.
 
 | Plugin ID | Data source | Input form |
 |---|---|---|
-| `ofgem` | Ofgem Energy Price Cap | Public HTML publication page and XLSX workbook |
-| `openmeteo` | Open-Meteo historical weather | Public JSON API |
+| `ofgem` | Ofgem Energy Price Cap | Public HTML page and XLSX workbook |
+| `openmeteo` | Open-Meteo archive API | JSON over HTTPS |
 | `octopus` | Octopus Energy customer statements | User-supplied local PDF files |
 
-The Octopus plugin is not a website downloader. Place legitimately obtained
-statements in the configured input directory using the required filename pattern.
-The default directory is `C:\Attachments\octopus`.
+Version 2.0.0 introduces database-backed application and plugin configuration.
+A one-time `--register` command copies the packaged property definitions into SQL
+Server and rewrites the local bootstrap file with an encrypted database
+password.
 
-A normal first installation proceeds as follows:
+A normal installation sequence is:
 
-1. build the application;
-2. install the SQL Server scripts;
-3. create or provide the configuration certificate files;
-4. set the initial bootstrap database password;
-5. run `--register`;
-6. restart and verify `--list-plugins`;
-7. dry-run each plugin; and
-8. enable write-mode processing only after reviewing the output and security
-   settings.
+1. build and test the application;
+2. install the numbered SQL Server scripts;
+3. replace the development certificate material and bootstrap credential;
+4. run `--register` using a protected local override file;
+5. restart and verify `--list-plugins`;
+6. dry-run Ofgem and OpenMeteo;
+7. perform a controlled Octopus write-mode acceptance run against test data; and
+8. enable routine execution only after database, log and audit verification.
 
-The Maven JAR is not currently a self-contained executable. Use Apache NetBeans
-or another classpath-aware launcher with main class
-`com.towermarsh.opendata.OpenData`.
+The Maven JAR is not currently a self-contained executable and does not declare a
+`Main-Class`. Use Apache NetBeans or another classpath-aware launcher with main
+class `com.towermarsh.opendata.OpenData` and the repository root as the working
+directory.
+
+Two current limitations matter operationally:
+
+- the Java entry point logs a status but does not call `System.exit`, so the
+  `ExecutionStatus` numeric codes are not returned to the operating system; and
+- Octopus dry run fails because its extraction phase reads the processed-file
+  ledger through the unavailable dry-run database resource.

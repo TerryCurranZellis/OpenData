@@ -2,42 +2,55 @@
 
 **Document ID:** GUIDE-DB-SECURITY-001  
 **Version:** 2.0  
-**Status:** Updated  
-**Baseline date:** 01 August 2026  
+**Status:** Version 2.0.0 procedure with known implementation limitation  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-1. Run `. .\\scripts\\New-ConfigurationCertificate.ps1` and then
-   `New-ConfigurationCertificate` to create
-   `src/main/resources/config/security/opendata-config-public.cer` and
-   `src/main/resources/config/security/opendata-config-private.pfx`.
-2. Create a local bootstrap override file containing `application.database.url`,
-   `application.database.user`, and `application.database.password`.
-3. Run `opendata --register --file <bootstrap.properties>`.
-4. Confirm `src/main/resources/config/application.properties` now contains the
-   environment's encrypted database password and
-   `application.use-database-properties=true`.
-5. Apply `sql/003-create-configuration-store.sql` and the permission
-   grants before relying on database-backed configuration.
-6. Restrict the bootstrap file and the generated certificate files.
-7. Confirm logs do not contain the password or decrypted password value.
+1. Create a replacement X.509 public certificate and matching PKCS#12 private
+   key store.
+2. Place them at the paths currently required beneath
+   `src/main/resources/config/security` for the controlled installation.
+3. Create a protected bootstrap override file with
+   `application.database.url`, `application.database.user` and
+   `application.database.password`.
+4. Run `opendata --register --file <bootstrap.properties>`.
+5. Confirm the configuration tables and rewritten bootstrap file contain the
+   expected encrypted password and database-backed switch.
+6. Remove the plaintext override file when operational policy permits, or retain
+   it only in an approved secret store.
+7. Restrict the private key and bootstrap file to the application identity.
 
 ## Local development URL
 
 ```properties
 application.database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
 application.database.user=OpenData
-application.database.******
+application.database.password=<local-password>
 ```
 
 ## Production URL principle
 
-Use `encrypt=true`, a trusted SQL Server certificate and
-`trustServerCertificate=false`. Avoid embedding credentials in the URL.
+Use `encrypt=true`, a SQL Server certificate trusted by the JVM and
+`trustServerCertificate=false`. Do not embed credentials in the URL.
 
-## Permission test
+## PKCS#12 password
 
-Connect as `OpenData` and verify ordinary reads/writes succeed but schema changes
-fail. The role must be able to read and update the configuration store tables,
-but it must not be granted broad schema-management rights.
+The supported mechanism is the JVM property:
+
+```text
+-Dopendata.config.keystore.password=<password>
+```
+
+The intended environment-variable mechanism is defective in this baseline
+because the code reads an environment variable literally named `nopassword`.
+Do not create or depend on such an environment variable; correct the code in a
+future source release.
+
+## Release blockers
+
+The uploaded baseline includes a plaintext bootstrap credential and private PFX
+under source control. Remove both, rotate the database password, replace the
+certificate pair and purge sensitive history as appropriate before publication
+or production use.

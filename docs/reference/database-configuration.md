@@ -2,45 +2,44 @@
 
 **Document ID:** REF-DB-CONFIG-001  
 **Version:** 2.0  
-**Status:** Updated  
-**Baseline date:** 01 August 2026  
+**Status:** Version 2.0.0 implementation reference  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
 ## Bootstrap settings
 
-| Property | Example | Required | Description |
-|---|---|---|---|
-| `database.url` | `jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true` | yes | Microsoft JDBC connection URL |
-| `database.user` | `OpenData` | yes | SQL Server login/database user |
-| `database.password` | encrypted value after registration | yes | Password used to reach SQL Server |
-| `application.use-database-properties` | `true` | yes | Enables database-backed configuration loading |
+| Property | Required | Description |
+|---|---|---|
+| `database.url` | yes | Microsoft JDBC connection URL |
+| `database.user` | yes | SQL Server login/database user |
+| `database.password` | yes | plaintext before registration, `{enc}` RSA ciphertext afterwards |
+| `application.use-database-properties` | yes | selects SQL Server configuration after registration |
+| `application.version` | no | version marker; defaults to `2.0.0` |
 
-## Built-in defaults
+## Configuration tables
 
-These values are supplied by the runtime unless overridden through the database
-or `--file`:
+- `core.application_property(property_key, property_value, is_encrypted, updated_at)`
+- `core.plugin_property(plugin_id, property_key, property_value, updated_at)`
 
-- `database.driver-class=com.microsoft.sqlserver.jdbc.SQLServerDriver`
-- `database.pool.name=OpenData`
-- `database.pool.max-total=8`
-- `database.pool.max-idle=8`
-- `database.pool.min-idle=1`
-- `database.pool.max-wait-seconds=30`
-- `database.pool.validation-query=SELECT 1`
+Database application values marked encrypted are normalised with the `{enc}`
+prefix when loaded and decrypted by the RSA password cipher.
 
-## Configuration store tables
+## Certificate and key-store paths
 
-- `[core].[application_property]`
-- `[core].[plugin_property]`
+```text
+src/main/resources/config/security/opendata-config-public.cer
+src/main/resources/config/security/opendata-config-private.pfx
+```
 
-`--register` seeds both tables from the packaged property files.
-Generate `opendata-config-public.cer` and `opendata-config-private.pfx` with
-`scripts/New-ConfigurationCertificate.ps1` before the first registration run.
+The only dependable non-code PFX password input in this baseline is JVM property
+`opendata.config.keystore.password`. The intended environment-variable constant
+is incorrect.
 
-## Production differences
+## Production controls
 
-Use a trusted SQL Server certificate and set `trustServerCertificate=false`.
-Keep the bootstrap file restricted because it still contains the encrypted
-password needed to open the configuration database.
+Use a trusted SQL Server certificate, `trustServerCertificate=false`, protected
+bootstrap/private-key files, a rotated password and the supplied least-privilege
+role. The current source-tree paths and tracked development secrets must be
+corrected before production packaging.

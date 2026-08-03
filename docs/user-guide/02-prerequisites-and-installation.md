@@ -2,8 +2,8 @@
 
 **Document ID:** USER-002  
 **Version:** 2.0  
-**Status:** Version 2.0.0 baseline  
-**Baseline date:** 2 August 2026
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
@@ -11,9 +11,9 @@
 
 - JDK 17 or later;
 - Maven 3.9 or later;
-- Microsoft SQL Server for registration and database-writing runs;
+- Microsoft SQL Server;
 - Apache NetBeans or another classpath-aware Java launcher;
-- PowerShell 5.1 or later for supplied scripts; and
+- PowerShell 5.1 or later for the supplied support scripts; and
 - outbound HTTPS access for Ofgem and OpenMeteo.
 
 Pandoc and PlantUML are required only when rebuilding generated documentation.
@@ -27,32 +27,46 @@ mvn clean verify
 mvn package
 ```
 
-The build creates `target/opendata-2.0.0.jar`. It does not currently include all
-runtime dependencies or a `Main-Class` manifest entry. In NetBeans, configure:
+The build produces `target/opendata-2.0.0.jar`, but the JAR does not contain all
+runtime dependencies and has no configured `Main-Class`. Configure the launcher
+with:
 
 ```text
 Main class: com.towermarsh.opendata.OpenData
 Working directory: repository root
 ```
 
-Keeping the repository root as the working directory allows the development run
-to find bootstrap and security resources under `src/main/resources`.
+The working directory is significant. The current implementation reads and
+writes bootstrap and certificate files beneath `src/main/resources/config` by
+resolving them from `user.dir`.
 
 ## Local directories
 
-Create writable directories required by the enabled plugins. For Octopus, the
-Version 2.0.0 default input directory is:
+Create writable directories for logs, working files and plugin inputs. For
+Octopus, define separate input and archive directories. Do not leave
+`archive.directory` blank: a blank value becomes the process working directory.
+The configured `working.directory` is currently parsed but not used.
+
+A typical local layout is:
 
 ```text
-C:\Attachments\octopus
+C:\OpenData\logs
+C:\Attachments\octopus\incoming
+C:\Attachments\octopus\archive
 ```
 
-Restrict access because statement files can contain personal and financial data.
-Do not place real statements under the repository directory.
+Restrict the Octopus directories because statements contain personal and
+financial data.
 
-## First application check
+## First checks
 
-Before database registration, run `--help` and `--list-plugins` from the configured
-launcher. The plugin list should include `ofgem`, `openmeteo` and `octopus`.
-Continue with [SQL Server setup](03-sql-server-setup.md) and then the
-[quick start](../guides/quick-start.md).
+Before registration, run:
+
+```text
+opendata --help
+opendata --list-plugins
+```
+
+`opendata` in this guide means the configured classpath-aware launcher. The list
+should contain `ofgem`, `openmeteo` and `octopus`. Continue with
+[SQL Server setup](03-sql-server-setup.md).

@@ -1,35 +1,42 @@
-# 10. Logs, Audit and Troubleshooting
+# 11. Logs, Audit and Troubleshooting
 
 **Document ID:** USER-010  
-**Version:** 1.0  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
 
 ---
 
-Logs are written through `java.util.logging`. Concurrent records include:
+OpenData uses `java.util.logging` with console output and rotating files named
+`opendata-%g.log`. The default directory is `logs`, file limit 10 MiB, file count
+10 and append enabled.
+
+Concurrent plugin records contain context similar to:
 
 ```text
 [thread=opendata-plugin-1] [plugin=openmeteo] [run=<uuid>]
 ```
 
-Use the UUID to correlate a task with `core.PluginRun`. Ofgem also creates a
-separate numeric ingestion id for source provenance.
+Use the UUID to correlate logs with `core.PluginRun`. Dry runs do not create
+`core.PluginRun` rows. Ofgem also creates a separate numeric ingestion identity.
 
 ## Common failures
 
 | Symptom | Check |
 |---|---|
-| Plugin not installed | `index.properties`, descriptor id and implementation class |
-| Database password error | `application.database.password` in the external file |
-| Pool/connection failure | URL, TLS, SQL Server, principal and grants |
-| Ofgem extraction failure | Publisher page/link text and workbook layout |
-| OpenMeteo failure | dates, coordinates, timezone, HTTP response and array lengths |
-| Multi-plugin configuration error | all plugin keys are `plugin.<id>.<key>` |
-| Stale audit row | process interruption, audit completion error and transaction state |
+| Missing required `--plugin` | launcher passed arguments correctly; use one argument array or the supported single-string form |
+| Plugin not installed | `config/plugins/index.properties`, plugin file and implementation class |
+| Configuration database fails at startup | encrypted bootstrap password, certificate/PFX, SQL URL and grants |
+| Pool timeout | SQL availability, long transactions, leaked connections and parallelism |
+| Ofgem extraction fails | publisher page, link text and workbook layout |
+| OpenMeteo fails | explicit dates, coordinates, timezone, HTTP response and array lengths |
+| Octopus dry run fails | known ledger/database limitation; use isolated write-mode acceptance |
+| Octopus archive warning | database commit succeeded but file move failed; reconcile ledger and input/archive directories |
+| Multi-plugin override rejected | every plugin key is `plugin.<id>.<key>` |
+| Stale `RUNNING` row | process ended before audit completion; retain evidence and start a new run |
 
-Run with `--verbose` for `FINE` output. Never paste a password or unredacted
-override file into an incident report.
+Run with `--verbose` for `FINE` output. Never publish passwords, private keys,
+unredacted statement text or complete override files.
 
-Do not rely on the current shell exit code; inspect final application and plugin
-statuses.
+Do not rely on the shell exit code. Confirm the final application log line and
+every plugin summary.

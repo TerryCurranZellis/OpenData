@@ -1,21 +1,17 @@
 # Logging and Connection-Pool Operations
 
 **Document ID:** OPS-LOG-POOL-001  
-**Version:** 1.1  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Version 2.0.0 operational baseline  
+**Baseline date:** 3 August 2026
+
+---
 
 ## Logging
 
-The framework uses only `java.util.logging`. One console handler and one rotating file handler are shared by all workers. Every formatted record contains:
-
-```text
-2026-07-24T19:30:00+01:00 [INFO] [thread=opendata-plugin-1] [plugin=openmeteo] [run=<uuid>] logger - message
-```
-
-`PluginLogContext` is a `ThreadLocal` scope opened and closed by the coordinator. It must never be opened by a plugin without try-with-resources because pooled worker threads are reused.
-
-Useful settings:
+OpenData uses `java.util.logging`. Startup first configures the default `logs`
+directory and then reconfigures handlers after runtime properties are loaded.
+The final runtime defaults are:
 
 ```properties
 logging.directory=logs
@@ -24,24 +20,25 @@ logging.file-count=10
 logging.append=true
 ```
 
-`--verbose` changes the root level to `FINE`. Passwords and complete override maps must not be logged.
+Each configuration creates one console handler and one rotating file handler
+using pattern `opendata-%g.log`. `--verbose` changes the root level from `INFO` to
+`FINE` after runtime configuration is loaded.
 
-## Pool
+Concurrent plugin records include thread, plugin and run UUID. Passwords,
+private-key material, complete override maps and unredacted Octopus statement
+text must never be logged.
 
-The supplied pool uses the existing singleton pattern:
+## Connection pool
 
-```java
-SQLServerResource.initialise(configuration);
-SQLServerResource.getInstance().getConnection();
-```
+The application uses a singleton Apache Commons DBCP pool. Each plugin repository
+borrows its own JDBC connection; connections are not shared between plugin
+threads. Closing a connection returns it to the pool. Closing the database
+resource closes the registered pool and clears the singleton.
 
-Closing a pooled connection returns it to the pool. Closing the singleton shuts down the registered DBCP pool and clears the singleton reference.
-
-The supplied JDBC URL trusts the server certificate for local development. Use a certificate trusted by the JVM and set `trustServerCertificate=false` for a production deployment.
-
-Default settings:
+Built-in defaults:
 
 ```properties
+database.pool.name=OpenData
 database.pool.max-total=8
 database.pool.max-idle=8
 database.pool.min-idle=1
@@ -49,4 +46,12 @@ database.pool.max-wait-seconds=30
 database.pool.validation-query=SELECT 1
 ```
 
-Monitor active/idle counts and SQL Server waits before increasing concurrency. A pool-exhaustion wait normally indicates that transactions are too long, connections are not being closed, or parallelism is too high.
+The pool tests connections on borrow and while idle, blocks when exhausted and
+uses the configured maximum wait.
+
+Monitor active/idle counts, SQL waits and task duration before increasing
+parallelism. Pool exhaustion usually indicates long transactions, unclosed
+resources, SQL blocking, server unavailability or excessive concurrency.
+
+For production, use a certificate trusted by the JVM and set
+`trustServerCertificate=false`.

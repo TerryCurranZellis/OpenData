@@ -2,37 +2,27 @@
 
 **Document ID:** GUIDE-DB-BOOTSTRAP-001  
 **Version:** 2.0  
-**Status:** Current  
-**Baseline date:** 26 July 2026
+**Status:** Version 2.0.0 procedure  
+**Baseline date:** 3 August 2026
 
 ---
 
 ## Prerequisites
 
-- SQL Server instance;
+- a SQL Server instance;
 - `sqlcmd`, SSMS, Azure Data Studio or equivalent;
-- an administrator identity for database/login creation;
-- a password chosen locally for login `OpenData`.
+- an administrator identity for database/login creation; and
+- a locally chosen password for login `OpenData`.
 
 ## Installation order
 
-1. `sql/001-create-database-and-login.sql`
-2. `sql/002-create-core-schema.sql`
-3. `sql/003-create-configuration-store.sql`
-4. `sql/004-create-ofgem-schema.sql`
-5. `sql/005-seed-reference-data.sql`
-6. `sql/006-create-plugin-run-audit.sql`
-7. `sql/007-create-openmeteo-schema.sql`
-8. `sql/007a-create-octopus-schema.sql`
-9. `sql/008-grant-application-permissions.sql`
-10. `sql/009-grant-shared-schema-permissions.sql`
+Run scripts `001` through `009` in the order documented in
+[`sql/README.md`](../../sql/README.md). Script `010` contains optional read-only
+verification queries.
 
 ## PowerShell example
 
 ```powershell
-. .\scripts\New-ConfigurationCertificate.ps1
-New-ConfigurationCertificate
-
 sqlcmd -S localhost -E -b `
   -i .\sql\001-create-database-and-login.sql `
   -v OpenDataPassword="YOUR_LOCAL_PASSWORD"
@@ -51,23 +41,20 @@ $scripts = @(
 $scripts | ForEach-Object {
     sqlcmd -S localhost -E -d OpenData -b -i $_
 }
+
+sqlcmd -S localhost -E -d OpenData -b -i .\sql\010-verification-queries.sql
 ```
 
-## Verification queries
+## Verification
 
-```sql
-USE OpenData;
-SELECT * FROM core.schema_version ORDER BY version;
-SELECT name FROM sys.schemas WHERE name IN ('core', 'ofgem', 'openmeteo', 'octopus');
-SELECT name FROM sys.database_principals WHERE name IN ('OpenData', 'opendata_app');
-SELECT dataset_code, plugin_id, enabled FROM core.dataset;
-SELECT OBJECT_ID(N'core.application_property') AS application_property_object;
-SELECT OBJECT_ID(N'core.plugin_property') AS plugin_property_object;
-SELECT OBJECT_ID(N'core.PluginRun') AS plugin_run_object;
-SELECT OBJECT_ID(N'octopus.electric_data') AS octopus_electric_data_object;
-SELECT OBJECT_ID(N'octopus.gas_data') AS octopus_gas_data_object;
-SELECT OBJECT_ID(N'openmeteo.DailyWeather') AS daily_weather_object;
-```
+Confirm schemas `core`, `ofgem`, `openmeteo` and `octopus`; configuration tables;
+`core.PluginRun`; plugin business tables; role `opendata_app`; and the user-role
+membership created by the bootstrap scripts.
 
-Rerun the numbered schema scripts once to confirm they are idempotent. Do not
-place the password in a committed script, shell history file or documentation.
+Rerun the numbered schema scripts against a disposable environment to confirm
+idempotency. Do not place the SQL login password in a committed script,
+documentation file or persistent shell history.
+
+After SQL deployment, prepare the certificate pair and run configuration
+registration as described in
+[Configure database access securely](database-configuration-and-security.md).
