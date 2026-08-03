@@ -1,58 +1,106 @@
-# 5. Command-Line Use
+# Command-Line Use
 
-**Document ID:** USER-005  
-**Version:** 2.0  
-**Status:** Version 2.0.0 operational baseline  
+**Document ID:** USER-CLI-005  
+**Version:** 2.1  
+**Status:** OpenData 2.0.0 implementation guidance  
 **Baseline date:** 3 August 2026
 
 ---
 
-## Syntax
+OpenData uses one or more `--plugin` selections followed by either an
+administration operation or normal execution.
+
+## Common commands
 
 ```text
-opendata --plugin <id|all> [--plugin <id>] [--file <settings>] [options]
-opendata --register [--file <bootstrap-settings>]
 opendata --help
-opendata --list-plugins
 opendata --about
+opendata --list-plugins
+opendata --plugin all --register
+opendata --plugin example --register --file C:\OpenData\example.properties
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+opendata --plugin octopus --unregister
+opendata --plugin ofgem --dry-run
+opendata --plugin all --dry-run --parallelism 3
 ```
+
+## Option summary
 
 | Option | Meaning |
 |---|---|
-| `-p`, `--plugin` | Plugin id, repeated ids, comma-separated ids, or `all` |
-| `-f`, `--file` | UTF-8 Java properties override file |
-| `-j`, `--parallelism` | Maximum concurrent plugins, 1–64 |
-| `--dry-run` | Parse and validate without plugin database writes or run-audit rows |
-| `-v`, `--verbose` | Enable `FINE` `java.util.logging` output |
-| `-h`, `--help` | Print command help |
-| `--about` | Show the graphical About dialog |
-| `--list-plugins` | List installed plugin descriptors |
-| `--register` | Register application and plugin properties in SQL Server |
+| `-p`, `--plugin` | Plugin id, repeated/comma-separated ids, or `all` |
+| `-r`, `--register` | Register selected packaged plugins or one plugin supplied by `--file` |
+| `-u`, `--unregister` | Remove selected registered plugins and stored plugin properties |
+| `--remove` | Alias for `--unregister` |
+| `-e`, `--enable` | Enable selected registered plugins |
+| `-d`, `--disable` | Disable selected registered plugins |
+| `-f`, `--file` | Plugin definition file; registration only, one named plugin only |
+| `-j`, `--parallelism` | Maximum concurrent plugin tasks, integer 1–64 |
+| `-n`, `--dry-run` | Run without plugin data writes or run-audit rows |
+| `-v`, `--verbose` | Detailed `FINE` logging |
+| `-h`, `--help` | Command help |
+| `-a`, `--about` | Graphical version/about information |
+| `-l`, `--list-plugins` | Registered plugin ids and enabled/disabled status |
 
-`--register` cannot be combined with `--plugin`, `--parallelism` or `--dry-run`.
-`--file` is the intended companion for registration credentials.
+The original requested option list used `-d` twice. OpenData uses `-d` for
+**disable** and `-n` for **dry-run**. The long form `--dry-run` is unchanged.
 
-## Examples
+## Rules that prevent ambiguous commands
+
+- Plugin execution and every administration operation require `--plugin`.
+- `--plugin all` cannot be mixed with named plugins.
+- Register, unregister, enable and disable cannot be combined with each other.
+- `--dry-run` cannot be combined with an administration operation.
+- `--file` requires `--register`, exactly one named plugin, and cannot be used
+  with `all`.
+- Help, About and plugin listing cannot be mixed with operational options.
+
+## Repeated plugin selection
 
 ```text
-opendata --list-plugins
-opendata --plugin ofgem --dry-run
-opendata --plugin openmeteo --file C:\OpenData\openmeteo.properties
-opendata --plugin ofgem,openmeteo --parallelism 2
-opendata --plugin octopus --file C:\OpenData\octopus.properties
-opendata --register --file C:\OpenData\bootstrap.properties
+opendata --plugin ofgem --plugin openmeteo --parallelism 2
 ```
 
-Do not use `--plugin all --dry-run` in this baseline because `all` includes the
-Octopus plugin, whose extraction phase currently requires a usable database.
+Comma-separated selection remains supported:
 
-## Final status and shell exit code
+```text
+opendata --plugin ofgem,openmeteo --parallelism 2
+```
 
-The application logs a final status such as `Successful`, `Configuration error`
-or `One or more plugins failed`. Although `ExecutionStatus` defines numeric
-codes, the main method does not call `System.exit`. The operating-system process
-code therefore cannot currently be used as a reliable scheduler result. Parse
-and retain the final application and plugin-summary log records instead.
+A named plugin runs only when it is registered and enabled. `--plugin all` runs
+all registered enabled plugins.
 
-The `--about` option requires a graphical desktop and should not be used in a
-headless service or scheduler.
+## Plugin administration
+
+Registration copies plugin metadata and the complete definition into SQL Server.
+Re-registration replaces the definition while preserving the current registry
+enabled status.
+
+```text
+opendata --plugin all --register
+opendata --plugin ofgem --plugin openmeteo --register
+```
+
+Use an external definition only for one plugin:
+
+```text
+opendata --plugin example --register --file C:\OpenData\example.properties
+```
+
+Disable and re-enable without deleting configuration:
+
+```text
+opendata --plugin example --disable
+opendata --plugin example --enable
+```
+
+Remove the registration and stored properties:
+
+```text
+opendata --plugin example --unregister
+```
+
+Unregister does not delete imported provider data or run history.
+
+See the complete [Command-Line Reference](../reference/command-line-reference.md).

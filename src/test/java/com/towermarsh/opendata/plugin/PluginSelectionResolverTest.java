@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
+import com.towermarsh.opendata.cli.PluginCommand;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -21,11 +22,7 @@ class PluginSelectionResolverTest {
         final var disabled = descriptor("future", false);
         final PluginRegistry registry = new PluginRegistry() {
             @Override
-            /**
- * @author Terry Curran
- * @version 1.0.0
- */
-public List<PluginDescriptor> list() {
+            public List<PluginDescriptor> list() {
                 return List.of(enabled, disabled);
             }
 
@@ -39,8 +36,7 @@ public List<PluginDescriptor> list() {
                 return find(pluginId).filter(PluginDescriptor::enabled).orElseThrow();
             }
         };
-        final var arguments = new CommandLineArguments(
-                List.of(), true, Optional.empty(), OptionalInt.empty(), false, false, false, false, false, false);
+        final var arguments = arguments(List.of(), true);
         assertEquals(List.of(enabled), new PluginSelectionResolver().resolve(arguments, registry));
     }
 
@@ -48,17 +44,31 @@ public List<PluginDescriptor> list() {
     void selectedPluginResolvesById() {
         final var ofgem = descriptor("ofgem", true);
         final PluginRegistry registry = registry(ofgem);
-        final var arguments = new CommandLineArguments(
-                List.of("ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false, false);
+        final var arguments = arguments(List.of("ofgem"), false);
         assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(arguments, registry));
     }
 
     @Test
     void selectedDuplicatePluginIdsAreRejected() {
         final PluginRegistry registry = registry(descriptor("ofgem", true));
-        final var arguments = new CommandLineArguments(
-                List.of("ofgem", "ofgem"), false, Optional.empty(), OptionalInt.empty(), false, false, false, false, false, false);
+        final var arguments = arguments(List.of("ofgem", "ofgem"), false);
         assertThrows(PluginRegistryException.class, () -> new PluginSelectionResolver().resolve(arguments, registry));
+    }
+
+    private static CommandLineArguments arguments(
+            final List<String> pluginIds,
+            final boolean all) {
+        return new CommandLineArguments(
+                pluginIds,
+                all,
+                Optional.empty(),
+                OptionalInt.empty(),
+                false,
+                false,
+                false,
+                false,
+                false,
+                PluginCommand.RUN);
     }
 
     private static PluginRegistry registry(final PluginDescriptor... descriptors) {

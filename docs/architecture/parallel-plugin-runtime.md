@@ -1,61 +1,33 @@
-# Parallel plugin runtime
+# Parallel Plugin Runtime
 
 **Document ID:** ARCH-PARALLEL-RUNTIME-001  
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Implemented  
-**Baseline date:** 26 July 2026  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-## Purpose
-
-The runtime accepts one or more plugin ids. Each selected plugin becomes one independent `Callable<PluginRunResult>` and receives a fresh plugin instance, a unique run id, its own immutable definition and access to the shared connection pool.
+The runtime accepts one or more plugin ids. Each selected enabled registered
+plugin becomes one independent task with a fresh implementation instance, unique
+run id, immutable definition and access to the shared pool (or unavailable data
+resource during dry run).
 
 ## Selection rules
 
-- `--plugin openmeteo` selects one plugin.
-- `--plugin openmeteo --plugin ofgem` and `--plugin openmeteo,ofgem` select several plugins.
-- `--plugin all` selects every enabled descriptor in the classpath registry.
-- Duplicate ids are rejected before execution.
-- `all` cannot be combined with named ids.
-- Disabled plugins are omitted from `all` and rejected when explicitly named.
+- `--plugin openmeteo` selects one enabled registered plugin.
+- repeated options or comma-separated values select several plugins.
+- `--plugin all` selects every enabled row in `core.plugin_registry`.
+- duplicate ids and `all` mixed with named ids are rejected.
+- disabled or unregistered named plugins are rejected.
 
-## Thread model
+`--parallelism` accepts 1-64. The effective worker count is the lower of selected
+plugin count and requested/configured parallelism. It is accepted but ignored for
+administration commands.
 
-`PluginExecutionCoordinator` creates a fixed-size executor. The effective worker count is the lower of selected plugins and configured/requested parallelism. There is one task per plugin, but not an unbounded permanent thread per plugin. This protects the JVM, database pool and remote services as the registry grows.
+A failure in one task does not cancel unrelated plugins. Results are reported in
+selection order and the invocation succeeds only when every selected task is
+successful or a successful dry run.
 
-A failure in one task does not cancel unrelated plugins. Results are reported in selection order. The invocation succeeds only when all tasks have status `SUCCESS` or `DRY_RUN`.
-
-## Isolation rules
-
-1. Plugin implementations must be stateless or confined to one task.
-2. `ReflectionPluginFactory` creates a new instance for each execution.
-3. Plugins must not cache JDBC `Connection`, `Statement` or `ResultSet` objects in static or instance fields.
-4. Each repository method owns one transaction and closes its connection with try-with-resources.
-5. Shared immutable objects are permitted; mutable cross-plugin state is not.
-6. Interruption is restored with `Thread.currentThread().interrupt()`.
-
-## Why a bounded platform-thread pool
-
-Java 17 is the project baseline, so virtual threads are not available. A fixed pool provides predictable concurrency and integrates with JDBC drivers and Apache DBCP without changing the minimum Java version.
-
-## Shutdown
-
-The coordinator calls `shutdown()`, waits for `execution.shutdown-timeout-seconds`, and then uses `shutdownNow()` only if workers do not finish. Plugin code must honour interruption during blocking or long-running work.
-
-## Extension contract
-
-Every executable implementation must implement:
-
-```java
-public interface OpenDataPlugin {
-    PluginMetrics execute(PluginExecutionContext context) throws Exception;
-}
-```
-
-The implementation should expose either a public constructor accepting `PluginDefinition` or a public no-argument constructor.
-
-## References
-
-- Java SE 17 `Executors`: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Executors.html
+Java 17 uses a bounded platform-thread executor. Repositories own transactions
+and connections; plugin instances must not share mutable execution state.

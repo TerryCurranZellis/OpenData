@@ -7,7 +7,7 @@
 
 ## Candidate scope
 
-Version 2.0.0 delivers database-backed configuration registration,
+Version 2.0.0 delivers persistent plugin lifecycle administration, database-backed configuration registration,
 certificate-protected bootstrap credentials, the common plugin lifecycle and
 local-file Octopus statement ingestion.
 
@@ -20,9 +20,8 @@ The following are mandatory before declaring the release production-ready:
 - clean Maven/quality/test evidence;
 - clean SQL Server install/reinstall and least-privilege evidence;
 - registration/encrypted restart evidence with deployment-specific keys;
-- successful Ofgem/OpenMeteo dry runs and representative write runs;
-- representative Octopus write-mode/idempotency/archive tests;
-- correction of Octopus dry-run before using Octopus or `all` dry-run acceptance;
+- successful Ofgem/OpenMeteo/Octopus and all-plugin dry runs;
+- registry lifecycle acceptance and representative provider write/idempotency/archive tests;
 - removal/rotation of tracked secrets and private keys;
 - validated SQL Server certificate trust;
 - preview JDBC dependency decision;

@@ -1,74 +1,32 @@
 # Run and Verify an Ofgem Price-Cap Import
 
 **Document ID:** GUIDE-OFGEM-RUN-001  
-**Version:** 1.1  
+**Version:** 2.0  
 **Status:** Current operating procedure  
-**Baseline date:** 26 July 2026
+**Baseline date:** 3 August 2026
 
 ## Before running
 
-- create and seed the `OpenData` database;
-- configure the external database password;
-- verify outbound access to the Ofgem landing page;
+- install the current SQL schema and grants;
+- register and enable `ofgem`;
+- verify outbound access to the publication page;
 - run `mvn clean test`.
 
-## Dry run
-
 ```text
+opendata --plugin ofgem --register
 opendata --plugin ofgem --dry-run
+opendata --plugin ofgem
 ```
 
-The dry run performs discovery, download and workbook extraction. It does not
-archive the workbook, initialise the database pool or create either audit model.
-
-## Write run
-
-Create an external file:
-
-```properties
-application.database.password=<secret>
-```
-
-Then run:
+To modify the definition, re-register a complete file:
 
 ```text
-opendata --plugin ofgem --file C:\OpenData\ofgem.properties
+opendata --plugin ofgem --register --file C:\OpenData\ofgem.properties
 ```
 
-Use a classpath-aware launcher; executable JAR packaging is not yet configured.
+A dry run performs discovery, download and workbook extraction without archive,
+provider tables or audit writes. A write run persists and archives according to
+configuration.
 
-## Database verification
-
-```sql
-SELECT TOP (10) *
-FROM core.PluginRun
-WHERE PluginId = N'ofgem'
-ORDER BY StartedAt DESC;
-
-SELECT TOP (10) *
-FROM core.ingestion_run
-ORDER BY ingestion_run_id DESC;
-
-SELECT effective_from, effective_to, period_name, is_current
-FROM ofgem.price_cap_period
-ORDER BY effective_from DESC;
-
-SELECT p.period_name, COUNT(*) AS fact_count
-FROM ofgem.price_cap_level l
-JOIN ofgem.price_cap_period p
-  ON p.price_cap_period_id = l.price_cap_period_id
-GROUP BY p.period_name
-ORDER BY MAX(p.effective_from) DESC;
-```
-
-For the workbook structure used during Phase 3 validation, the primary extraction
-produced 384 populated annual cap-level values. Treat that as a fixture-specific
-check, not a permanent contractual count for every future workbook.
-
-Expect one `core.PluginRun` row and one `core.ingestion_run` row for the current
-implementation. They are not linked; this is a known gap.
-
-## Lineage check
-
-Select representative values with `source_sheet` and `source_cell`, open the
-recorded source workbook, and confirm the values and dimensional labels match.
+Verify `core.PluginRun`, `core.ingestion_run`, `ofgem.price_cap_period`,
+`ofgem.price_cap_level`, source hashes and representative worksheet/cell lineage.

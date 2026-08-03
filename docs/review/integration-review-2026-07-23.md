@@ -1,5 +1,7 @@
 # Integrated Repository Review
 
+> **Historical assessment:** This review predates the Version 2.0.0 persistent plugin registry and expanded CLI. Current architecture, command-line and release-readiness documents take precedence.
+
 **Date:** 23 July 2026  
 **Repository:** OpenData  
 **Status:** Implementation overlay supplied

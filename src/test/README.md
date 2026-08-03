@@ -9,6 +9,9 @@ This directory contains a replacement JUnit test suite for the current OpenData 
 - HTTP-focused tests use local test servers or controlled collaborators rather than production endpoints.
 - Workbook/parser tests create controlled test data in memory or temporary files.
 - Plugin coordinator tests exercise success, dry-run, failure, audit, and parallel execution behaviour.
+- CLI tests cover repeated plugin selection, lifecycle-operation exclusivity, file-registration rules, informational commands, short-option mapping and parallelism bounds.
+- Persistent registry tests cover stored status reads and enable/disable failure paths.
+- Octopus dry-run tests prove that completion-ledger database access is skipped.
 
 ## Run
 

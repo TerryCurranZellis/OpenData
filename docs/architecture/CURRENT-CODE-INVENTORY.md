@@ -11,9 +11,9 @@ Reviewed against the project archive uploaded on 3 August 2026.
 | Area | Current classes/contracts | Status |
 |---|---|---|
 | Bootstrap | `OpenData`, `OpenDataApplication`, `ExecutionStatus` | Implemented |
-| CLI | `CommandLineArguments`, processor and selection resolver | Implemented, including multiple plugins, registration and dry run |
+| CLI | `CommandLineArguments`, `PluginCommand`, processor and selection resolver | Implemented: repeated/all selection, lifecycle administration, dry run, verbosity and bounded parallelism |
 | Bootstrap security | bootstrap loader and RSA password cipher | Implemented; key/credential deployment remediation required |
-| Configuration sources | classpath and JDBC property sources, overrides and registration service | Implemented |
+| Configuration sources | classpath/JDBC sources, external single-plugin registration source and registration service | Implemented |
 | Download/discovery | JDK HTTP, Jsoup discovery and strategies | Implemented |
 | Parsing | shared CSV/JSON/Excel plus provider-specific PDF/Excel/JSON parsing | Implemented |
 | Validation | shared contracts and provider validators | Implemented where required by providers |
@@ -22,10 +22,10 @@ Reviewed against the project archive uploaded on 3 August 2026.
 | Persistence | DBCP resource manager, JDBC configuration/audit and provider repositories | Implemented for SQL Server |
 | Logging | manager, formatter and plugin log context | Implemented |
 | Exceptions | framework hierarchy plus configuration/database exceptions | Present |
-| Plugin registry | explicit classpath index, descriptors and reflection factory | Implemented |
+| Plugin registry | packaged classpath catalogue plus persistent `JdbcPluginRegistry` and reflection factory | Implemented |
 | Ofgem | HTML discovery, workbook extract/validate, transactional load and archive | Implemented; live acceptance outstanding |
 | OpenMeteo | date resolution, JSON API, validation/transform, idempotent load | Implemented; live acceptance outstanding |
-| Octopus | local PDF discovery/hash, text extraction, parse, transactional load and archive | Write path implemented; live acceptance and dry-run correction outstanding |
+| Octopus | local PDF discovery/hash, text extraction, parse, dry-run isolation, transactional load and archive | Implemented; live acceptance outstanding |
 | Audit | `core.PluginRun` plus separate ingestion/provenance structures | Implemented but duplicated |
 | Scheduling | external scheduling | Internal scheduler deferred |
 | UI | startup splash and about dialog | Implemented auxiliary UI |
@@ -36,12 +36,13 @@ Reviewed against the project archive uploaded on 3 August 2026.
 - The runtime entry class is `com.towermarsh.opendata.OpenData`.
 - `OpenData` deliberately does not call `System.exit`; logged status is not
   currently an operating-system exit code.
-- Plugin definitions may come from classpath or SQL Server; installed plugin
-  implementation ids still come from the classpath index.
+- Packaged definitions are registration sources; installed metadata/status come
+  from `core.plugin_registry`, while implementation classes must still exist on
+  the runtime classpath.
 - Database-backed dry runs need configuration database access during startup,
   then use an unavailable database resource for plugin execution.
-- Octopus currently requests that unavailable resource while reading its
-  processed-file ledger, so an end-to-end Octopus dry run fails before parsing.
+- Octopus dry run skips the processed-file ledger and parses all matching input
+  PDFs without plugin data writes or archive movement.
 - The active database path uses `DatabasePoolConfiguration`,
   `DatabaseResourceManager` and provider repositories. Older similarly named
   pool/connection/repository classes remain and should not be mistaken for the

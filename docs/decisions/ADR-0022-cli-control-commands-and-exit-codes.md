@@ -6,13 +6,13 @@
 
 ## Context
 
-Help, version, plugin listing, invocation errors, and configuration failures must be handled before dataset processing begins. Scripts also require stable process exit codes.
+Help, About, plugin listing, lifecycle operations, invocation errors, and configuration failures must be handled before dataset processing begins. Scripts also require stable process exit codes.
 
 ## Decision
 
 Represent parsed arguments with an immutable command model and process them with an Apache Commons CLI adapter.
 
-Handle help, version, and plugin-list requests in `Main` before configuration-driven execution. Map command-line errors, configuration errors, and unexpected failures to distinct exit codes.
+Handle help and About before database access; handle plugin listing and lifecycle administration at the application boundary before provider execution. Map failures to distinct `ExecutionStatus` values.
 
 ## Consequences
 
@@ -39,6 +39,4 @@ Rejected because these are application-level concerns.
 
 ## Implementation notes
 
-Current exit codes are 1 for unexpected failure, 2 for command-line error, and 3 for configuration error. Normal control commands return successfully.
-
-The current hard-coded version banner and plugin list should later be supplied by build metadata and the plugin registry.
+The implementation logs `ExecutionStatus` but deliberately does not call `System.exit`, so numeric process exit codes are not currently propagated. Plugin listing is supplied by the persistent SQL registry. ADR-0048 defines the current lifecycle command model and short-option resolution.

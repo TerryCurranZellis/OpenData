@@ -25,24 +25,15 @@ import org.apache.commons.cli.ParseException;
 /**
  * Parses and validates the OpenData command line.
  *
- * @author terry curran
- * @version 1.0.0
+ * @author Terry Curran
+ * @version 2.0.0
  */
 public final class CommandLineArgumentsProcessor {
 
-    /**
-     * Application Name
-     */
     private static final String APPLICATION_NAME = "OpenData";
-
-    /**
-     * Create command line options
-     */
     private final Options options = createOptions();
 
-    /**
-     * Creates a command-line processor.
-     */
+    /** Creates a command-line processor. */
     public CommandLineArgumentsProcessor() {
     }
 
@@ -66,11 +57,11 @@ public final class CommandLineArgumentsProcessor {
     /**
      * Normalises launcher input before Commons CLI parsing.
      *
-     * <p>
-     * Some IDE and wrapper configurations pass the complete command line as one
-     * argument. This method expands only that single-element form.</p>
+     * <p>Some IDE and wrapper configurations pass the complete command line as
+     * one argument. This method expands only that single-element form.</p>
      *
      * @param arguments array of command line arguments
+     * @return normalised argument array
      */
     static String[] normaliseArguments(final String[] arguments) {
         if (arguments.length != 1) {
@@ -106,21 +97,10 @@ public final class CommandLineArgumentsProcessor {
         return tokens.toArray(String[]::new);
     }
 
-    /**
-     * Check for whitespace
-     *
-     * @param value string to check
-     */
     private static boolean containsWhitespace(final String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
-    /**
-     * Tokenize the command line
-     *
-     * @param tokens exiting tokens
-     * @param token token to add
-     */
     private static void addToken(final List<String> tokens, final StringBuilder token) {
         if (!token.isEmpty()) {
             tokens.add(token.toString());
@@ -131,121 +111,117 @@ public final class CommandLineArgumentsProcessor {
     /**
      * Prints command-line help to the supplied writer.
      *
-     * @param writer output source
+     * @param writer output destination
      */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
         final var formatter = new HelpFormatter();
-        formatter.setWidth(118);
+        formatter.setWidth(124);
         formatter.printHelp(
                 writer,
-                118,
-                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] [--file <settings>] [options]",
+                124,
+                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] [operation] [options]",
                 System.lineSeparator()
-                + "Runs one or more OpenData plugins. Each selected plugin is submitted as an independent task."
+                + "Runs or administers registered OpenData plugins. Named --plugin options may be repeated."
                 + System.lineSeparator() + System.lineSeparator()
-                + "Examples:" + System.lineSeparator()
+                + "Run examples:" + System.lineSeparator()
                 + "  opendata --plugin openmeteo" + System.lineSeparator()
                 + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
-                + "  opendata --plugin openmeteo,ofgem" + System.lineSeparator()
-                + "  opendata --plugin all" + System.lineSeparator()
-                + "  opendata --register --file C:\\OpenData\\bootstrap.properties" + System.lineSeparator()
-                + "  opendata --about" + System.lineSeparator()
-                + "  opendata --plugin all --file C:\\OpenData\\run.properties" + System.lineSeparator(),
+                + "  opendata --plugin all --dry-run" + System.lineSeparator()
+                + System.lineSeparator()
+                + "Administration examples:" + System.lineSeparator()
+                + "  opendata --plugin all --register" + System.lineSeparator()
+                + "  opendata --plugin example --register --file C:\\OpenData\\example.properties" + System.lineSeparator()
+                + "  opendata --plugin octopus --disable" + System.lineSeparator()
+                + "  opendata --plugin octopus --enable" + System.lineSeparator()
+                + "  opendata --plugin octopus --unregister" + System.lineSeparator()
+                + "  opendata --list-plugins" + System.lineSeparator(),
                 options,
                 2,
                 4,
                 System.lineSeparator()
-                + "For a multi-plugin run, plugin overrides in --file must use plugin.<id>.<property>."
+                + "Exactly one of --register, --unregister/--remove, --enable, or --disable may be used."
                 + System.lineSeparator()
-                + "Application overrides use application.<property>. Password values are never logged."
+                + "The -d short option means --disable. Use -n or --dry-run for dry-run execution."
+                + System.lineSeparator()
+                + "--file is accepted only with --register and one named plugin; it cannot be used with 'all'."
+                + System.lineSeparator()
+                + "--parallelism accepts 1-64 and affects only run and dry-run execution."
                 + System.lineSeparator(),
                 true);
         writer.flush();
     }
 
-    /**
-     * Build the command line options
-     *
-     * @return the command line options
-     */
     private static Options createOptions() {
         final var result = new Options();
-        result.addOption(Option
-                .builder("p")
+        result.addOption(Option.builder("p")
                 .longOpt("plugin")
                 .hasArg().argName("id|all")
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
                 .get());
-        result.addOption(Option
-                .builder("f")
+        result.addOption(Option.builder("f")
                 .longOpt("file")
-                .hasArg()
-                .argName("settings.properties")
-                .desc("Optional application and plugin override properties file.")
+                .hasArg().argName("plugin.properties")
+                .desc("Plugin definition file; requires --register and one named plugin.")
                 .get());
-        result.addOption(Option
-                .builder("j")
+        result.addOption(Option.builder("j")
                 .longOpt("parallelism")
-                .hasArg()
-                .argName("1-64")
-                .desc("Maximum plugins executing concurrently; defaults to application configuration.")
+                .hasArg().argName("1-64")
+                .desc("Maximum plugins executing concurrently; effective only for runs and dry-runs.")
                 .get());
-        result.addOption(Option
-                .builder().longOpt("dry-run")
-                .desc("Download and validate without database writes or run-audit rows.")
+        result.addOption(Option.builder("r")
+                .longOpt("register")
+                .desc("Register or replace the selected plugin definitions.")
                 .get());
-        result.addOption(Option
-                .builder("v")
+        result.addOption(Option.builder("u")
+                .longOpt("unregister")
+                .desc("Remove the selected plugins and their stored configuration.")
+                .get());
+        result.addOption(Option.builder()
+                .longOpt("remove")
+                .desc("Alias for --unregister.")
+                .get());
+        result.addOption(Option.builder("e")
+                .longOpt("enable")
+                .desc("Enable the selected registered plugins.")
+                .get());
+        result.addOption(Option.builder("d")
+                .longOpt("disable")
+                .desc("Disable the selected registered plugins.")
+                .get());
+        result.addOption(Option.builder("n")
+                .longOpt("dry-run")
+                .desc("Run without plugin data writes or run-audit rows.")
+                .get());
+        result.addOption(Option.builder("v")
                 .longOpt("verbose")
                 .desc("Enable FINE java.util.logging output.")
                 .get());
-        result.addOption(Option
-                .builder("h")
+        result.addOption(Option.builder("h")
                 .longOpt("help")
                 .desc("Display help.")
                 .get());
-        result.addOption(Option
-                .builder()
+        result.addOption(Option.builder("a")
                 .longOpt("about")
                 .desc("Display the graphical About and version window.")
                 .get());
-        result.addOption(Option
-                .builder()
+        result.addOption(Option.builder("l")
                 .longOpt("list-plugins")
-                .desc("List installed plugins.")
-                .get());
-        result.addOption(Option
-                .builder()
-                .longOpt("register")
-                .desc("Register application and plugin properties in the database.")
+                .desc("List registered plugins and enabled/disabled status.")
                 .get());
         return result;
     }
 
-    /**
-     * Parse the command line
-     *
-     * @param commandLine the command line
-     * @return the command line arguments record
-     */
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
         final var help = commandLine.hasOption("help");
         final var about = commandLine.hasOption("about");
         final var list = commandLine.hasOption("list-plugins");
-        final var register = commandLine.hasOption("register");
-        final var informational = help || about || list;
-        final List<String> rawIds = new ArrayList<>();
-        final var optionValues = commandLine.getOptionValues("plugin");
-        if (optionValues != null) {
-            for (var optionValue : optionValues) {
-                for (var item : optionValue.split(",")) {
-                    if (!item.isBlank()) {
-                        rawIds.add(item.trim().toLowerCase(Locale.ROOT));
-                    }
-                }
-            }
+        final var informationalCount = booleanCount(help, about, list);
+        if (informationalCount > 1) {
+            throw new IllegalArgumentException("Use only one of --help, --about, or --list-plugins.");
         }
+
+        final List<String> rawIds = parsePluginIds(commandLine);
         final var all = rawIds.stream().anyMatch("all"::equals);
         if (all && rawIds.size() > 1) {
             throw new IllegalArgumentException("--plugin all cannot be combined with another plugin id.");
@@ -254,17 +230,53 @@ public final class CommandLineArgumentsProcessor {
         if (uniqueIds.size() != rawIds.size()) {
             throw new IllegalArgumentException("A plugin was selected more than once.");
         }
-        if (!informational && !register && rawIds.isEmpty()) {
+
+        final var register = commandLine.hasOption("register");
+        final var unregister = commandLine.hasOption("unregister") || commandLine.hasOption("remove");
+        if (commandLine.hasOption("unregister") && commandLine.hasOption("remove")) {
+            throw new IllegalArgumentException("--unregister and --remove are aliases; specify only one.");
+        }
+        final var enable = commandLine.hasOption("enable");
+        final var disable = commandLine.hasOption("disable");
+        final var actionCount = booleanCount(register, unregister, enable, disable);
+        if (actionCount > 1) {
+            throw new IllegalArgumentException(
+                    "--register, --unregister/--remove, --enable, and --disable are mutually exclusive.");
+        }
+        final var command = register ? PluginCommand.REGISTER
+                : unregister ? PluginCommand.UNREGISTER
+                : enable ? PluginCommand.ENABLE
+                : disable ? PluginCommand.DISABLE
+                : PluginCommand.RUN;
+
+        final var dryRun = commandLine.hasOption("dry-run");
+        final var fileSpecified = commandLine.hasOption("file");
+        final var parallelismSpecified = commandLine.hasOption("parallelism");
+        final var pluginSpecified = !rawIds.isEmpty();
+        final var informational = informationalCount == 1;
+
+        if (informational && (pluginSpecified || actionCount > 0 || dryRun || fileSpecified || parallelismSpecified)) {
+            throw new IllegalArgumentException(
+                    "Informational options cannot be combined with plugin selection or operational options.");
+        }
+        if (!informational && !pluginSpecified) {
             throw new IllegalArgumentException("Missing required option: --plugin <id|all>.");
         }
-        if (commandLine.hasOption("file") && rawIds.isEmpty() && !register) {
-            throw new IllegalArgumentException("--file requires --plugin.");
+        if (dryRun && command != PluginCommand.RUN) {
+            throw new IllegalArgumentException("--dry-run cannot be combined with a plugin administration operation.");
         }
-        if (register && (!rawIds.isEmpty() || commandLine.hasOption("parallelism") || commandLine.hasOption("dry-run"))) {
-            throw new IllegalArgumentException("--register cannot be combined with --plugin, --parallelism, or --dry-run.");
+        if (fileSpecified && command != PluginCommand.REGISTER) {
+            throw new IllegalArgumentException("--file requires --register.");
         }
+        if (fileSpecified && all) {
+            throw new IllegalArgumentException("--file cannot be used with --plugin all.");
+        }
+        if (fileSpecified && uniqueIds.size() != 1) {
+            throw new IllegalArgumentException("--file requires exactly one named --plugin value.");
+        }
+
         var parallelism = OptionalInt.empty();
-        if (commandLine.hasOption("parallelism")) {
+        if (parallelismSpecified) {
             try {
                 final var value = Integer.parseInt(commandLine.getOptionValue("parallelism"));
                 if (value < 1 || value > 64) {
@@ -275,16 +287,43 @@ public final class CommandLineArgumentsProcessor {
                 throw new IllegalArgumentException("--parallelism must be an integer.", exception);
             }
         }
+
         return new CommandLineArguments(
                 all ? List.of() : List.copyOf(uniqueIds),
                 all,
                 Optional.ofNullable(commandLine.getOptionValue("file")).map(Path::of),
                 parallelism,
-                commandLine.hasOption("dry-run"),
+                dryRun,
                 commandLine.hasOption("verbose"),
                 help,
                 about,
                 list,
-                register);
+                command);
+    }
+
+    private static List<String> parsePluginIds(final CommandLine commandLine) {
+        final List<String> rawIds = new ArrayList<>();
+        final var optionValues = commandLine.getOptionValues("plugin");
+        if (optionValues == null) {
+            return rawIds;
+        }
+        for (var optionValue : optionValues) {
+            for (var item : optionValue.split(",")) {
+                if (!item.isBlank()) {
+                    rawIds.add(item.trim().toLowerCase(Locale.ROOT));
+                }
+            }
+        }
+        return rawIds;
+    }
+
+    private static int booleanCount(final boolean... values) {
+        var count = 0;
+        for (var value : values) {
+            if (value) {
+                count++;
+            }
+        }
+        return count;
     }
 }

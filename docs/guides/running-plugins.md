@@ -1,76 +1,53 @@
-# Running plugins
+# Running Plugins
 
-**Document ID:** GUIDE-PLUGIN-RUN-001
-**Version:** 2.0
-**Status:** Current with Octopus dry-run limitation
-**Baseline date:** 3 August 2026
+**Document ID:** GUIDE-PLUGIN-RUN-001  
+**Version:** 2.0  
+**Status:** Current  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-## Commands
+## Prerequisite
+
+Plugins must be registered and enabled. Inspect status with:
 
 ```text
 opendata --list-plugins
+```
+
+## Run selection
+
+```text
 opendata --plugin openmeteo
 opendata --plugin openmeteo --plugin ofgem
 opendata --plugin openmeteo,ofgem --parallelism 2
 opendata --plugin all
-opendata --plugin openmeteo,ofgem --dry-run --parallelism 2
+opendata --plugin all --dry-run --parallelism 3
 ```
 
-`--parallelism` accepts 1 to 64. The actual worker count never exceeds the
-number of selected plugins.
+`--plugin` may repeat. `all` cannot be mixed with named ids. Named disabled or
+unregistered plugins are rejected; `all` silently excludes disabled rows.
 
-## Override files
+`--parallelism` accepts 1-64 and is effective only for runs/dry-runs.
 
-A single-plugin run accepts unprefixed plugin keys and application values remain
-under `application.` in an external override file:
+## Configuration changes
 
-```properties
-application.database.password=...
-property.start-date.value=2024-01-01
+A run does not accept `--file`. Copy a complete packaged plugin definition,
+amend it and re-register one named plugin:
+
+```text
+opendata --plugin openmeteo --register --file C:\OpenData\openmeteo.properties
 ```
-
-A multi-plugin or `all` run requires scoped plugin keys:
-
-```properties
-application.database.password=...
-application.execution.max-parallel-plugins=4
-plugin.openmeteo.property.start-date.value=2024-01-01
-plugin.ofgem.property.download.request-timeout.value=PT180S
-```
-
-The override loader strips `application.` before applying application values, so
-`application.database.password` maps to the runtime key `database.password`.
-Unscoped plugin entries are rejected in a multi-plugin run to prevent a property
-intended for one plugin being applied to every plugin.
-
-A database-writing run rejects a blank database password. In database-backed
-configuration mode, startup must still decrypt the bootstrap password and query
-SQL Server before plugin execution, even when the selected plugins later run in
-dry-run mode.
 
 ## Dry run
 
-Ofgem and OpenMeteo dry runs perform acquisition, parsing and validation without
-creating plugin audit rows or writing plugin tables. The plugin execution layer
-uses an unavailable database resource instead of the normal pool.
-
-The current Octopus extract stage nevertheless queries
-`octopus.statement_file` to obtain completed filename/hash keys. Consequently:
-
-```text
-opendata --plugin octopus --dry-run
-opendata --plugin all --dry-run
-```
-
-are not valid acceptance commands in this baseline. Both fail when Octopus tries
-to use the unavailable dry-run database resource. This requires a Java fix.
+Ofgem, OpenMeteo and Octopus perform acquisition/parsing without provider data
+writes, generic audit rows or archive movements. Startup still needs SQL Server
+for registry/configuration reads. Octopus dry run skips its completion ledger and
+parses every matching input PDF.
 
 ## Outcome
 
-The application does not call `System.exit`. The `finally` block logs an
-operator-facing `ExecutionStatus.displayName()` and elapsed milliseconds. An
-individual plugin failure does not stop another selected plugin, but the
-aggregate status becomes `PLUGIN_FAILURE`.
+The application logs final `ExecutionStatus` and per-plugin summaries. It does
+not currently call `System.exit`, so shell status alone is not authoritative.

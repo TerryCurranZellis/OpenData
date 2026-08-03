@@ -20,14 +20,14 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * Phase 1 registry backed by an explicit classpath plugin index.
+ * Packaged plugin catalogue backed by an explicit classpath index.
  *
  * <p>An index is used instead of scanning a resource directory because
  * directory scanning is not portable once the application is packaged in a
  * JAR. The index resource is {@code config/plugins/index.properties}.</p>
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class ClasspathPluginRegistry implements PluginRegistry {
 
@@ -71,11 +71,11 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
     public PluginDescriptor requireEnabled(final String pluginId) {
         final PluginDescriptor descriptor = find(pluginId)
                 .orElseThrow(() -> new PluginRegistryException(
-                        "Plugin is not installed: " + pluginId));
+                        "Packaged plugin definition was not found: " + pluginId));
 
         if (!descriptor.enabled()) {
             throw new PluginRegistryException(
-                    "Plugin is installed but disabled: " + descriptor.id());
+                    "Packaged plugin definition is disabled: " + descriptor.id());
         }
 
         return descriptor;

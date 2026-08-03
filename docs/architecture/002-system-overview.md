@@ -20,61 +20,37 @@ the local file system.
 
 | Participant | Interaction |
 |---|---|
-| Operator or scheduler | Runs control commands or selects one or more plugins |
-| Bootstrap properties file | Provides database connection values and the database-backed-configuration switch |
-| Optional override file | Supplies invocation-specific application or plugin values |
-| Ofgem | Provides the Energy Price Cap publication page and workbook |
+| Operator or scheduler | Registers, lists, enables, disables, unregisters or runs plugins |
+| Bootstrap properties file | Provides SQL Server connection values and database-backed switch |
+| External plugin definition | Supplies one complete named plugin definition during registration only |
+| Ofgem | Provides the Energy Price Cap page and workbook |
 | Open-Meteo | Provides the historical weather JSON API |
-| Octopus statement directory | Provides local PDF statements named using the supported convention |
-| SQL Server | Stores configuration, run audit and plugin-owned business data |
+| Octopus statement directory | Provides local PDF statements |
+| SQL Server | Stores registry, configuration, run audit and plugin business data |
 | File system | Stores logs, working files, input statements and archives |
-| Documentation toolchain | Renders PlantUML and publishes Markdown, DOCX or PDF outputs |
+| Documentation toolchain | Renders PlantUML and publishes manuals |
 
 ## Implemented capabilities
 
-The Version 2.0.0 baseline implements:
-
-- Apache Commons CLI parsing and control commands;
-- an explicit classpath plugin index and reflection-based plugin construction;
-- classpath or SQL Server property sources with invocation overrides;
-- `--register`, which copies application and plugin properties into SQL Server
-  and rewrites the bootstrap file for subsequent database-backed runs;
-- RSA OAEP encryption and decryption for the database password;
-- bounded parallel plugin execution with per-task log context;
+- Apache Commons CLI parsing with repeated plugin selection and lifecycle commands;
+- packaged classpath registration catalogue and persistent JDBC runtime registry;
+- registration of packaged definitions or one complete external definition;
+- durable enable/disable/unregister state in `core.plugin_registry`;
+- classpath or SQL Server property sources after registration;
+- RSA OAEP database-password encryption/decryption;
+- bounded parallel execution with per-task log context;
 - pooled SQL Server access and plugin-run audit;
-- complete Ofgem and OpenMeteo pipelines and an implemented Octopus write-mode
-  pipeline for local statements;
-- side-effect-free dry-run infrastructure for plugin execution. The current
-  Octopus extractor is an exception because it still queries its processed-file
-  ledger during a dry run.
+- complete Ofgem, OpenMeteo and local-file Octopus pipelines; and
+- side-effect-free dry-run execution for all three plugins.
 
 ## Important limitations
 
-- The plugin registry itself remains an explicit classpath index; only property
-  values are database-backed.
-- A dry run still needs SQL Server during startup when
-  `application.use-database-properties=true`, because runtime and plugin
-  definitions are read before the application swaps to an unavailable database
-  resource for plugin execution.
-- Octopus dry run is currently defective: `OctopusExtract` queries
-  `octopus.statement_file` even when `context.dryRun()` is true, so it requests a
-  connection from the unavailable dry-run resource and fails. This requires a
-  Java fix; documentation must not present `--plugin octopus --dry-run` as
-  operational.
+- Dry run still connects to SQL Server for registry/configuration reads before
+  plugin execution switches to an unavailable data-write resource.
 - Internal scheduling is not implemented; use an external scheduler.
-- The process logs an `ExecutionStatus` but does not call `System.exit`, so a
-  non-success application status is not currently mapped to a non-zero process
-  exit code.
-- Source-tree bootstrap and certificate paths are writable implementation
-  assumptions and are unsuitable for an installed, read-only application image.
-- The uploaded baseline contains sensitive bootstrap material that must be
-  removed or replaced before a public or production release.
-
-## Design constraint
-
-Dataset URLs, mapping rules, source paths and SQL statements belong in
-configuration or plugin-owned components. They must not be hard-coded in the
-`OpenData` entry point or generic application coordinator.
+- `ExecutionStatus` is logged but is not mapped to a process exit code.
+- source-tree bootstrap/certificate paths are unsuitable for a read-only install;
+- tracked development secrets/private-key material require remediation.
 
 ::: {.landscape}
 ![OpenData system context](../diagrams/generated/system-context.svg){width=22.5cm}

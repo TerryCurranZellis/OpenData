@@ -1,9 +1,9 @@
 # Running and Testing
 
-**Document ID:** GUIDE-TEST-001
-**Version:** 2.0
-**Status:** Current
-**Baseline date:** 3 August 2026
+**Document ID:** GUIDE-TEST-001  
+**Version:** 2.0  
+**Status:** Current  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
@@ -11,40 +11,35 @@
 ## Build verification
 
 Run `java -version`, `mvn --version`, `mvn clean test` and `mvn package`. Maven
-must compile with release 17. The current package is not an executable fat JAR.
+must compile with release 17. The current package is not a verified executable
+fat JAR.
+
+## CLI and registry verification
+
+```text
+opendata --help
+opendata --plugin all --register
+opendata --list-plugins
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+```
+
+Use a disposable database to verify unregister/re-register behaviour and that
+provider data remains intact.
 
 ## Runtime verification
 
-From NetBeans or another classpath-aware launcher, run:
-
 ```text
-opendata --list-plugins
 opendata --plugin ofgem --dry-run
 opendata --plugin openmeteo --dry-run
-opendata --plugin ofgem,openmeteo --dry-run --parallelism 2
+opendata --plugin octopus --dry-run
+opendata --plugin all --dry-run --parallelism 3
 ```
 
-These Ofgem/OpenMeteo dry runs verify acquisition and parsing without plugin
-database or audit writes. Database-backed configuration startup may still need
-the bootstrap credential and SQL Server before the dry-run execution boundary is
-created.
-
-Do not use Octopus or `all` dry run as the current acceptance test. Octopus
-extract still reads the completed-file ledger and fails against the unavailable
-dry-run database resource. Validate Octopus with disposable statements, a test
-database and a controlled write run until that defect is fixed.
-
-## Database verification
-
-Unit tests for JDBC repositories use mocks; they do not replace:
-
-- clean and repeat SQL script execution;
-- write, idempotency and rollback tests;
-- application-principal permission checks;
-- pool exhaustion and shutdown checks.
+Complete controlled write, replay, rollback and permission tests for each plugin.
+Mock JDBC tests do not replace SQL Server integration testing.
 
 ## Documentation verification
 
-Run the documentation test, render all PlantUML sources, search for secrets and
-stale implementation claims, and confirm that every unique ADR number appears in
-the register.
+Validate manifests/links, render PlantUML, parse changed Markdown, scan for
+secrets/stale claims and confirm ADR registration.

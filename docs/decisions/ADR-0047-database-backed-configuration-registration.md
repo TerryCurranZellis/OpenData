@@ -18,9 +18,9 @@ configuration source on future runs.
 
 ## Decision
 
-OpenData adds a `--register` command that:
+OpenData adds selected registration through `--plugin <id|all> --register` that:
 
-1. reads the packaged application and plugin property files;
+1. reads packaged application properties and the selected packaged plugin definitions, or one complete external definition with `--file`;
 2. writes the resolved flat property sets into SQL Server tables
    `[core].[application_property]` and `[core].[plugin_property]`;
 3. encrypts the database password before storing it; and
@@ -44,7 +44,7 @@ execution.
   properties file.
 - File-backed and database-backed configuration loading share the same parsing
   and validation path.
-- The `--register` command provides an explicit migration step into version 2.
+- The selected registration command provides an explicit migration step into version 2.
 
 ### Negative or limiting
 
@@ -67,3 +67,7 @@ database-backed configuration after registration.
 Rejected for now because the current plugin parser already operates on flat
 properties and the relational key/value model minimises change while remaining
 queryable.
+
+## Amendment — persistent lifecycle registry
+
+ADR-0048 adds `core.plugin_registry`, selected/repeated/all registration and lifecycle administration. `--file` is no longer an invocation override; it is one complete named registration source. This ADR remains authoritative for database-backed configuration and encrypted bootstrap behaviour.

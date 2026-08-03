@@ -12,12 +12,12 @@
 | Static analysis/coverage | `<path-or-link>` | Not run | |
 | Dependency/licence inventory | `<path-or-link>` | Not run | |
 | Clean SQL install/reinstall | `<path-or-link>` | Not run | |
-| Registration and encrypted restart | `<path-or-link>` | Not run | |
+| Registration, registry lifecycle and encrypted restart | `<path-or-link>` | Not run | |
 | SQL TLS and least privilege | `<path-or-link>` | Not run | |
 | Ofgem acceptance | `<path-or-link>` | Not run | |
 | OpenMeteo acceptance | `<path-or-link>` | Not run | |
 | Octopus write/idempotency/archive | `<path-or-link>` | Not run | |
-| Octopus dry-run defect closure | `<path-or-link>` | Open | |
+| All-plugin dry-run and Octopus isolation | `<path-or-link>` | Not run | |
 | Documentation validation/build | `<path-or-link>` | Not run | |
 | Archive secret/privacy review | `<path-or-link>` | Not run | |
 | Checksums/publication verification | `<path-or-link>` | Not run | |

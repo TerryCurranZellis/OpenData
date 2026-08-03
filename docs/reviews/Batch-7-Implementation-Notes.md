@@ -1,5 +1,7 @@
 # Batch 7 Implementation Notes
 
+> **Historical implementation note:** The later command-line and persistent plugin-registry update supersedes statements here about standalone registration, invocation override files, or Octopus/`all` dry-run limitations. Current CLI and release documents take precedence.
+
 ## Scope
 
 Batch 7 updates repository entry points, release notes, changelog, roadmap,

@@ -12,24 +12,21 @@
 
 The application-level sequence is:
 
-1. parse arguments and execute immediate control commands;
-2. load an optional override file;
-3. load and decrypt the bootstrap database password;
-4. select the classpath or SQL Server property source;
-5. load runtime settings, resolve enabled plugins and validate definitions;
-6. initialise execution database access or switch to an unavailable resource for
-   plugin dry-run execution;
-7. submit one task per plugin to a bounded executor;
-8. create audit rows for write runs, execute plugins and aggregate metrics;
-9. close the executor, database resource and logging system.
+1. parse and validate command-line arguments;
+2. handle help/About or open SQL Server for registry operations;
+3. execute register/list/enable/disable/unregister when requested;
+4. for a run, load runtime settings and resolve enabled registered plugins;
+5. switch to write-mode database access or unavailable dry-run data access;
+6. submit one task per plugin to a bounded executor;
+7. create audit rows for write runs, execute plugins and aggregate metrics;
+8. close the executor, database resource and logging system.
 
 When database-backed configuration is enabled, step 4 opens SQL Server even for
 a dry run. The connection is closed before plugin execution and the coordinator
 then receives `UnavailableDatabaseResourceManager` with `NoOpPluginRunAudit`.
-This prevents plugin persistence but does not make configuration loading
-independent of the database. It also exposes the current Octopus dry-run defect:
-that extractor reads the processed-file ledger before its load-stage dry-run
-branch and therefore fails against the unavailable database resource.
+This prevents plugin persistence but does not make registry/configuration loading
+independent of the database. Octopus now skips its processed-file-ledger query
+during dry run and therefore respects the same boundary.
 
 ## Provider sequence
 
@@ -45,9 +42,8 @@ write execution:
 
 Ofgem and OpenMeteo archive or clean up provider work as part of finalisation.
 Octopus archives successfully loaded PDF statements only after the database
-transaction completes. Its load and finalise stages avoid writes during dry run,
-but its extract-stage processed-ledger lookup currently prevents an end-to-end
-Octopus dry run. A plugin failure stops that task but does not cancel other
+transaction completes. Its extract, load and finalise stages avoid database and archive side effects
+during dry run. A plugin failure stops that task but does not cancel other
 selected plugins automatically.
 
 `ExtractService`, `TransformService` and `LoadService` remain reusable contracts.

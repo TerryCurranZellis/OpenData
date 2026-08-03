@@ -43,8 +43,7 @@ The automated baseline does not prove:
 - absence of secrets from Git history and release artefacts; or
 - a minimum test-coverage percentage.
 
-The current Octopus dry-run database access is a known contract defect and must
-not be normalised as an acceptable test pattern.
+The CLI/registry suite must cover repeated selection, lifecycle exclusivity, external registration-file rules and the `-d`/`-n` short-option decision.
 
 ## Required release evidence
 

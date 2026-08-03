@@ -45,10 +45,12 @@ interruption handling and no shared JDBC connection.
 
 ### Dry run
 
-A dry run MUST prove absence of writes, archive moves and other persistent side
-effects. It should not require a database unless a documented read-only dry-run
-contract has been implemented. The current Octopus dry-run defect is therefore a
-known failure, not an acceptable pattern for new plugins.
+A dry run MUST prove absence of provider-table writes, run-audit rows, archive
+moves and other persistent side effects. Registry and configuration reads are
+permitted before execution. During plugin execution, OpenData supplies an
+unavailable provider-data resource and no-op audit service. Octopus additionally
+skips its processed-file ledger, and its regression test proves that dry-run
+extract does not request a database connection.
 
 ## Determinism
 

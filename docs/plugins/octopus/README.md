@@ -1,14 +1,14 @@
 # Octopus Energy Statement Plugin
 
-**Document ID:** PLUGIN-OCTOPUS-INDEX-001
-**Version:** 2.0
-**Status:** Write path implemented; dry-run defect and live acceptance pending
+**Document ID:** PLUGIN-OCTOPUS-INDEX-001  
+**Version:** 2.0  
+**Status:** Runtime and dry-run implemented; live acceptance pending  
 **Baseline date:** 3 August 2026
 
 ---
 
-**Plugin id:** `octopus`
-**Implementation:** `com.towermarsh.opendata.plugin.octopus.OctopusPlugin`
+**Plugin id:** `octopus`  
+**Implementation:** `com.towermarsh.opendata.plugin.octopus.OctopusPlugin`  
 **Dataset id:** `octopus-energy-billing`
 
 ## Purpose and source boundary
@@ -16,110 +16,71 @@
 The plugin imports personal Octopus Energy electricity and gas billing records
 from PDF statements already present in a local directory. Version 2.0.0 does not
 connect to an Octopus account, call an Octopus API, read email or download
-attachments. Those remain separate future source-adapter options.
+attachments.
 
-Only files named as follows are candidates:
+Candidate names use:
 
 ```text
 octopus-energy-statement-YYYY-MM-DD.pdf
 ```
 
-The date in the filename is parsed as the statement date and candidates are
-processed in date/name order.
-
 ## Active pipeline
 
 | Stage | Active class | Implemented behaviour |
 |---|---|---|
-| Initialise | `initialise.OctopusInitialise` | Controls extract, transform, load and finalise with a completion flag |
-| Extract | `extract.OctopusExtract` | Validates input directory, lists matching PDFs, calculates SHA-256, checks completed-file ledger and extracts PDF text |
-| Transform | `transform.OctopusTransform` / `OctopusStatementParser` | Parses electricity and gas tariff-period records from statement text |
+| Initialise | `initialise.OctopusInitialise` | Controls extract, transform, load and finalise |
+| Extract | `extract.OctopusExtract` | Lists matching PDFs, hashes files, checks the completion ledger in write mode, and extracts text |
+| Transform | `transform.OctopusTransform` / `OctopusStatementParser` | Parses electricity and gas tariff-period records |
 | Load | `load.OctopusLoad` / `OctopusPersistenceRepository` | Transactionally inserts/updates facts and marks source files completed |
-| Finalise | `finalise.OctopusFinalise` | Reports metrics and moves successfully committed PDFs to the archive directory |
+| Finalise | `finalise.OctopusFinalise` | Reports metrics and moves successfully committed PDFs in write mode |
 
-## Duplicate and changed-file handling
-
-`octopus.statement_file` has a unique `(file_name, sha256)` key. Extraction reads
-all `COMPLETED` keys and skips only a file whose lower-cased name and SHA-256 both
-match a completed row. A file with the same name but different content is
-selected again.
-
-The ledger is marked `COMPLETED` in the same SQL transaction as the electricity
-and gas records. Files are moved after commit. An archive failure therefore does
-not roll back committed data; it is logged as a warning and requires operational
-cleanup.
-
-## PDF parsing
-
-PDF text is extracted before the statement parser identifies:
-
-- bill period and tariff periods;
-- tariff name;
-- MPAN or MPRN and meter id;
-- opening and closing meter readings and reading types;
-- electricity kWh or gas cubic metres/kWh;
-- unit rate and standing-charge values;
-- total electricity or gas charge.
-
-The parser contains layout-specific regular expressions for Octopus's statement
-text and two-column extraction effects. A materially changed statement layout
-may require parser and fixture updates. It must fail rather than invent missing
-financial values.
-
-## Transaction and natural keys
-
-One extraction batch is committed in one transaction. Existing records are
-updated when their composite natural key is found; otherwise they are inserted.
-The electricity key includes bill date, tariff period, tariff name, MPAN, meter,
-and reading dates. The gas key uses the corresponding MPRN fields.
-
-## Configuration
-
-| Property | Packaged value | Requirement |
-|---|---|---|
-| `input.directory` | `C:\Attachments\octopus` | Must exist and contain matching PDFs |
-| `working.directory` | blank | Present in typed configuration but currently unused by the pipeline |
-| `archive.directory` | blank | Must be set explicitly for a write run; blank becomes the process working directory |
-
-All three properties are present in the plugin definition, so the current typed
-configuration accepts blank working/archive values as `Path.of("")`. Operators
-must override the archive path rather than relying on that unsafe default.
-
-Example single-plugin override:
-
-```properties
-property.input.directory.value=C:\Attachments\octopus
-property.working.directory.value=C:\OpenData\work\octopus
-property.archive.directory.value=C:\OpenData\archive\octopus
-```
-
-Database-backed configuration stores the same property keys in
-`core.plugin_property`.
-
-## Current dry-run defect
-
-Do **not** use this as an acceptance command in the current source baseline:
+## Dry-run behaviour
 
 ```text
 opendata --plugin octopus --dry-run
 ```
 
-Although `OctopusLoad` and `OctopusFinalise` avoid writes during a dry run,
-`OctopusExtract` still calls `OctopusProcessedFileRepository` to read the
-completed-file ledger. The framework intentionally supplies
-`UnavailableDatabaseResourceManager` during plugin dry-run execution, so the run
-fails before parsing. This is a Java implementation defect, not a configuration
-requirement. `--plugin all --dry-run` is affected for the same reason.
+Dry run does not access `octopus.statement_file`, write provider rows, write the
+generic audit table or archive files. It processes every matching PDF currently
+in the input directory so extraction and parsing can be validated without a
+plugin data connection.
+
+## Write-mode duplicate handling
+
+`octopus.statement_file` has a unique `(file_name, sha256)` key. Write-mode
+extraction reads all `COMPLETED` keys and skips only a file whose lower-cased
+name and SHA-256 both match a completed row. A file with the same name but
+different content is selected again.
+
+The ledger is marked `COMPLETED` in the same transaction as electricity and gas
+records. Files move after commit; an archive failure therefore does not roll back
+committed data.
+
+## Configuration
+
+Copy the full packaged definition, set explicit paths and register it:
+
+```properties
+property.input.directory.value=C:\Attachments\octopus\incoming
+property.working.directory.value=C:\Attachments\octopus\working
+property.archive.directory.value=C:\Attachments\octopus\archive
+```
+
+```text
+opendata --plugin octopus --register --file C:\OpenData\octopus.properties
+```
+
+The file must remain a complete plugin definition, not only the three property
+lines. `working.directory` is currently parsed but unused. A write run must not
+rely on a blank archive path.
 
 ## Write-run prerequisites
 
-1. Apply `sql/007a-create-octopus-schema.sql` and the relevant grants.
-2. Configure explicit input and archive directories.
-3. Protect both directories because statements contain personal billing data.
-4. Ensure every candidate PDF follows the supported filename convention.
-5. Run the plugin in normal mode and inspect `core.PluginRun`,
-   `octopus.statement_file`, `octopus.electric_data`, `octopus.gas_data` and the
-   archive directory.
+1. Apply `sql/007a-create-octopus-schema.sql`, plugin-registry migration and grants.
+2. Register and enable the plugin.
+3. Protect input/archive directories as personal financial data.
+4. Run dry-run validation, then a controlled write-mode acceptance.
+5. Inspect `core.PluginRun`, `octopus.statement_file`, provider tables and archive.
 
 See [plugin reference](../../reference/octopus-plugin.md),
 [schema reference](../../reference/octopus-schema.md) and

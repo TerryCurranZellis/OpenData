@@ -6,7 +6,7 @@
 ## Current implementation
 
 Ofgem, OpenMeteo and local-file Octopus ingestion execute through the common
-plugin registry/lifecycle. Database-backed configuration registration,
+persistent plugin registry/lifecycle. Database-backed configuration registration,
 transactional plugin persistence, bounded parallelism and manifest-driven manuals
 are implemented.
 
@@ -16,7 +16,7 @@ are implemented.
 |---:|---|---|
 | 1 | Remove/rotate tracked credentials and private keys | Clean archive/history decision and deployment-specific key test |
 | 2 | Correct keystore environment-variable secret input | Automated and manual startup tests |
-| 3 | Correct Octopus dry-run ledger access | Octopus and `all` dry runs complete without database resources/writes |
+| 3 | Validate persistent plugin lifecycle commands on SQL Server | Register/list/enable/disable/unregister acceptance evidence |
 | 4 | Validate SQL Server trust and least privilege | Trusted TLS connection and permission evidence |
 | 5 | Resolve preview JDBC dependency | Stable dependency or approved risk decision |
 | 6 | Verify executable packaging | Clean-machine launch with documented command/dependencies |

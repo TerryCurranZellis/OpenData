@@ -86,6 +86,23 @@ public final class LoggingManager {
     }
 
     /**
+     * Changes the level of the currently configured handlers without replacing
+     * the active log files.
+     *
+     * @param verbose whether FINE logging should be enabled
+     */
+    public static void setVerbose(final boolean verbose) {
+        synchronized (LOCK) {
+            final var level = verbose ? Level.FINE : Level.INFO;
+            ROOT.setLevel(level);
+            for (var handler : ROOT.getHandlers()) {
+                handler.setLevel(level);
+            }
+            LOGGER.setLevel(level);
+        }
+    }
+
+    /**
      *
      * Returns the shared application logger.
      *

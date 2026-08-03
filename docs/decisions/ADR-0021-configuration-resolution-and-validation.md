@@ -1,12 +1,12 @@
 # ADR-0021: Separate configuration resolution from validation
 
-- Status: Accepted and implemented
+- Status: Accepted; invocation-file layering superseded by ADR-0047 and ADR-0048
 - Date: 2026-07-22
 - Decision owners: OpenData maintainers
 
 ## Context
 
-An invocation can combine framework defaults, plugin defaults, optional override files, and command-line values. Loading those values and deciding whether the final configuration is valid are separate responsibilities.
+Configuration can combine framework defaults, stored application properties and stored plugin definitions. Loading those values and deciding whether the final configuration is valid are separate responsibilities. The original decision also allowed per-invocation override files; that part has been superseded by database-backed registration and the registration-only `--file` contract.
 
 ## Decision
 
@@ -41,4 +41,4 @@ Rejected because the project prefers standard Java and explicit construction.
 
 ## Implementation notes
 
-`Main` calls `ConfigurationService.resolve(arguments)`. The service loads, validates, and returns the configuration for one invocation.
+`OpenDataApplication` loads runtime configuration through `ApplicationRuntimeConfiguration` and validates each registered plugin through `PropertiesPluginDefinitionLoader`. `--file` is not an invocation override: ADR-0048 restricts it to registering one complete named plugin definition.

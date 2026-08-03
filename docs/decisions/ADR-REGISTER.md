@@ -26,7 +26,7 @@
 | [ADR-0010](ADR-0010-constructor-injection-no-di-framework.md) | Use constructor injection without a DI framework | Accepted | |
 | [ADR-0011](ADR-0011-jdk-http-client-downloads.md) | Use JDK HTTP and streamed downloads | Accepted | |
 | [ADR-0012](ADR-0012-plugin-properties-before-database-configuration.md) | Use properties-based plugin definitions in Phase 1 | Accepted | |
-| [ADR-0013](ADR-0013-plugin-manifest-and-registry.md) | Use an explicit classpath plugin index | Accepted | |
+| [ADR-0013](ADR-0013-plugin-manifest-and-registry.md) | Use an explicit classpath plugin index | Accepted with amended role | Packaged registration catalogue; ADR-0048 owns persistent runtime status |
 | [ADR-0014](ADR-0014-framework-metadata-and-plugin-business-tables.md) | Separate framework metadata and plugin business tables | Accepted | Implemented in Phase 3 |
 | [ADR-0015](ADR-0015-database-abstraction-sql-server-first.md) | Abstract database contracts, implement SQL Server first | Accepted | |
 | [ADR-0016](ADR-0016-exception-hierarchy-and-boundary-translation.md) | Translate exceptions at boundaries | Accepted | |
@@ -63,9 +63,10 @@
 | [ADR-0041](ADR-0041-contextual-jul-for-concurrent-plugins.md) | Add task context to `java.util.logging` | Accepted | Implemented |
 | [ADR-0042](ADR-0042-side-effect-free-dry-run.md) | Keep dry runs free of persistent side effects | Accepted | Implemented |
 | [ADR-0043](ADR-0043-plugin-local-pipeline-packages.md) | Organise provider code as plugin-local pipeline packages | Accepted | Implemented |
-| [ADR-0044](ADR-0044-octopus-energy.md) | Process local Octopus Energy statement PDFs | Accepted | Write path implemented; dry-run correction pending |
+| [ADR-0044](ADR-0044-octopus-energy.md) | Process local Octopus Energy statement PDFs | Accepted | Write and dry-run paths implemented; live acceptance pending |
 | [ADR-0045](ADR-0045-documentation-delivery-baseline.md) | Standardise the documentation delivery baseline | Accepted | Implemented |
 | [ADR-0046](ADR-0046-manifest-driven-documentation-engine.md) | Use a manifest-driven documentation engine | Accepted | Implemented |
 | [ADR-0047](ADR-0047-database-backed-configuration-registration.md) | Register configuration in SQL Server and bootstrap from encrypted file settings | Accepted | Implemented for version 2 bootstrap |
+| [ADR-0048](ADR-0048-persistent-plugin-registry-and-cli-lifecycle.md) | Persist plugin lifecycle state and administer it through the CLI | Accepted | Implemented; extends ADR-0013/0047 |
 |
 :::

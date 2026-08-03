@@ -1,37 +1,27 @@
 @startuml
-title Runtime Configuration Loading
+title Runtime Registry and Configuration Loading
 actor Operator
 participant CommandLineArgumentsProcessor as CLI
-participant OverrideConfiguration as Override
 participant ApplicationBootstrapPropertiesLoader as Bootstrap
 participant RsaConfigurationPasswordCipher as Cipher
-participant OpenDataApplication as Application
-participant ConfigurationPropertiesSource as Source
+participant SQLServerResource as SQL
+participant JdbcPluginRegistry as Registry
+participant JdbcConfigurationPropertiesSource as Properties
 participant ApplicationRuntimeConfiguration as Runtime
-participant ClasspathPluginRegistry as Registry
 participant PropertiesPluginDefinitionLoader as Loader
 
-Operator -> CLI : --plugin id|all [--file settings]
-CLI --> Application : CommandLineArguments
-Application -> Override : load(optional file)
-Override --> Application : scoped override values
-Application -> Bootstrap : load(application overrides)
-Bootstrap -> Cipher : decrypt database password when {enc}
-Cipher --> Bootstrap : plaintext for runtime use
-Bootstrap --> Application : bootstrap values and source-mode flag
-alt database-backed properties
-  Application -> Source : JdbcConfigurationPropertiesSource
-  Source --> Application : core.application_property
-else classpath properties
-  Application -> Source : ClasspathConfigurationPropertiesSource
-  Source --> Application : packaged application values
-end
-Application -> Runtime : load(source + overrides)
-Runtime --> Application : database, execution and logging
-Application -> Registry : resolve enabled descriptors
-Registry --> Application : selected descriptors
+Operator -> CLI : --plugin id|all [--dry-run] [--parallelism n]
+CLI --> Bootstrap : validated run request
+Bootstrap -> Cipher : decrypt {enc} password
+Cipher --> Bootstrap : runtime password
+Bootstrap -> SQL : initialise registry/configuration connection
+SQL --> Registry : database resource
+Registry -> SQL : SELECT core.plugin_registry
+Registry --> Runtime : enabled selected descriptors
+Properties -> SQL : SELECT application/plugin properties
+Properties --> Runtime : runtime values
 loop each selected plugin
-  Application -> Loader : source plugin values + scoped overrides
-  Loader --> Application : validated PluginDefinition
+  Runtime -> Loader : stored plugin properties
+  Loader --> Runtime : validated PluginDefinition
 end
 @enduml

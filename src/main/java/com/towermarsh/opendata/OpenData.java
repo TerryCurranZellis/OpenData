@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * OpenData application entry point.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OpenData {
 
@@ -43,8 +43,7 @@ public final class OpenData {
     /**
      * Starts the application without terminating the JVM explicitly.
      *
-     * @verions 2.0.0 add code to change console setting
-     * @param args the command line argument array
+     * @param args command-line arguments
      */
     public static void main(final String[] args) {
         final var startedAt = Instant.now();
@@ -56,11 +55,14 @@ public final class OpenData {
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
             final var arguments = processor.parse(args);
+            LoggingManager.setVerbose(arguments.verbose());
             if (arguments.aboutRequested()) {
                 AboutDialog.showAndWait(ApplicationInfo.current());
                 status = ExecutionStatus.SUCCESS;
             } else {
-                splash.show();
+                if (arguments.runRequested()) {
+                    splash.show();
+                }
                 status = new OpenDataApplication().start(arguments, processor);
             }
         } catch (CommandLineProcessingException exception) {

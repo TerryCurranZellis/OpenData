@@ -16,18 +16,24 @@ import com.towermarsh.opendata.config.ConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.ConfigurationRegistrationService;
 import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.OpenDataConfigurationException;
-import com.towermarsh.opendata.config.OverrideConfiguration;
+import com.towermarsh.opendata.config.PluginRegistration;
+import com.towermarsh.opendata.config.PropertiesFileConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
 import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.database.SQLServerResource;
 import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.logging.LoggingManager;
 import com.towermarsh.opendata.plugin.ClasspathPluginRegistry;
+import com.towermarsh.opendata.plugin.JdbcPluginRegistry;
 import com.towermarsh.opendata.plugin.JdbcPluginRunAudit;
 import com.towermarsh.opendata.plugin.NoOpPluginRunAudit;
+import com.towermarsh.opendata.plugin.OpenDataPlugin;
+import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionCoordinator;
 import com.towermarsh.opendata.plugin.PluginExecutionSummary;
+import com.towermarsh.opendata.plugin.PluginRegistryException;
 import com.towermarsh.opendata.plugin.PluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginSelectionResolver;
 import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
@@ -36,156 +42,297 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Coordinates registry selection, configuration, pooled database access, and
- * plugin execution.
+ * Coordinates plugin administration, registry selection, configuration,
+ * pooled database access, and plugin execution.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class OpenDataApplication {
 
-    /**
-     * set up the logger
-     */
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
     /**
      * Starts the OpenData application for one parsed command line.
      *
-     * @param arguments the command line arguments
-     * @param processor the command line processor
-     * @return ExecutionStatus status of process
-     * @throws IOException - I/O error with input file
-     * @throws InterruptedException error in concurrent processing
+     * @param arguments command-line arguments
+     * @param processor command-line processor
+     * @return execution status
+     * @throws IOException on I/O failure
+     * @throws InterruptedException when concurrent execution is interrupted
      */
     public ExecutionStatus start(
             final CommandLineArguments arguments,
-            final CommandLineArgumentsProcessor processor) throws IOException, InterruptedException {
-        final var registry = new ClasspathPluginRegistry();
+            final CommandLineArgumentsProcessor processor)
+            throws IOException, InterruptedException {
         if (arguments.helpRequested()) {
             processor.printHelp(new PrintWriter(System.out, true, StandardCharsets.UTF_8));
             return ExecutionStatus.SUCCESS;
         }
-        if (arguments.listPluginsRequested()) {
-            registry.list().forEach(plugin -> System.out.printf(
-                    "%s\t%s\t%s%n",
-                    plugin.id(),
-                    plugin.enabled() ? "enabled" : "disabled",
-                    plugin.displayName()));
-            return ExecutionStatus.SUCCESS;
-        }
 
-        final var overrideConfiguration = OverrideConfiguration.load(arguments.overrideFile());
         final ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
         final var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
-        final var bootstrap = bootstrapLoader.load(overrideConfiguration.applicationValues());
-        if (arguments.registerRequested()) {
-            registerConfiguration(registry, bootstrap, bootstrapLoader, passwordCipher);
-            return ExecutionStatus.SUCCESS;
-        }
+        final var bootstrap = bootstrapLoader.load(Map.of());
+        requireDatabasePassword(bootstrap, arguments);
 
         DatabaseResourceManager configurationDatabase = null;
-        final ConfigurationPropertiesSource propertiesSource;
-        if (bootstrap.useDatabaseProperties()) {
-            configurationDatabase = SQLServerResource.initialise(bootstrap.toDatabasePoolConfiguration());
-            propertiesSource = new JdbcConfigurationPropertiesSource(configurationDatabase);
-        } else {
-            propertiesSource = new ClasspathConfigurationPropertiesSource();
-        }
+        try {
+            configurationDatabase = SQLServerResource.initialise(
+                    bootstrap.toDatabasePoolConfiguration());
+            final var registeredPlugins = new JdbcPluginRegistry(configurationDatabase);
 
-        final var runtime = ApplicationRuntimeConfiguration.load(
-                propertiesSource,
-                overrideConfiguration.applicationValues());
-        if (!arguments.dryRun() && runtime.database().password().isBlank()) {
+            if (arguments.listPluginsRequested()) {
+                printRegisteredPlugins(registeredPlugins);
+                return ExecutionStatus.SUCCESS;
+            }
+            if (arguments.registerRequested()) {
+                registerPlugins(
+                        arguments,
+                        bootstrap,
+                        bootstrapLoader,
+                        passwordCipher,
+                        configurationDatabase,
+                        registeredPlugins);
+                return ExecutionStatus.SUCCESS;
+            }
+            if (arguments.unregisterRequested()) {
+                administerSelected(arguments, registeredPlugins, AdministrationAction.UNREGISTER);
+                return ExecutionStatus.SUCCESS;
+            }
+            if (arguments.enableRequested()) {
+                administerSelected(arguments, registeredPlugins, AdministrationAction.ENABLE);
+                return ExecutionStatus.SUCCESS;
+            }
+            if (arguments.disableRequested()) {
+                administerSelected(arguments, registeredPlugins, AdministrationAction.DISABLE);
+                return ExecutionStatus.SUCCESS;
+            }
+
+            return runPlugins(arguments, bootstrap, configurationDatabase, registeredPlugins);
+        } finally {
             closeDatabase(configurationDatabase);
+        }
+    }
+
+    private static ExecutionStatus runPlugins(
+            final CommandLineArguments arguments,
+            final ApplicationBootstrapProperties bootstrap,
+            final DatabaseResourceManager configurationDatabase,
+            final JdbcPluginRegistry registry) throws IOException, InterruptedException {
+        final ConfigurationPropertiesSource propertiesSource = bootstrap.useDatabaseProperties()
+                ? new JdbcConfigurationPropertiesSource(configurationDatabase)
+                : new ClasspathConfigurationPropertiesSource();
+        final var runtime = ApplicationRuntimeConfiguration.load(propertiesSource, Map.of());
+        if (!arguments.dryRun() && runtime.database().password().isBlank()) {
             throw new OpenDataConfigurationException(
                     "application.database.password must be supplied for a database-writing run.");
         }
         LoggingManager.configure(runtime.logging(), arguments.verbose());
 
         final var selected = new PluginSelectionResolver().resolve(arguments, registry);
-        final var multiPluginRun = selected.size() > 1;
         final var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
         final var plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(
                 descriptor,
-                definitionLoader.load(
-                        descriptor.id(),
-                        overrideConfiguration.pluginValues(descriptor.id(), multiPluginRun))))
+                definitionLoader.load(descriptor.id(), Map.of())))
                 .toList();
 
-        final var parallelism = arguments.parallelism().orElse(runtime.execution().maxParallelPlugins());
+        final var parallelism = arguments.parallelism().orElse(
+                runtime.execution().maxParallelPlugins());
         LOGGER.log(Level.INFO,
-                "Selected {0} plugin(s); parallelism={1}; dryRun={2}",
+                "Selected {0} registered plugin(s); parallelism={1}; dryRun={2}",
                 new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), arguments.dryRun()});
 
-        DatabaseResourceManager database = configurationDatabase;
+        DatabaseResourceManager executionDatabase = null;
+        closeDatabase(configurationDatabase);
         try {
             final PluginRunAudit audit;
             if (arguments.dryRun()) {
-                closeDatabase(database);
-                database = new UnavailableDatabaseResourceManager();
+                executionDatabase = new UnavailableDatabaseResourceManager();
                 audit = new NoOpPluginRunAudit();
             } else {
-                closeDatabase(database);
-                database = SQLServerResource.initialise(runtime.database());
-                audit = new JdbcPluginRunAudit(database);
+                executionDatabase = SQLServerResource.initialise(runtime.database());
+                audit = new JdbcPluginRunAudit(executionDatabase);
             }
             final var coordinator = new PluginExecutionCoordinator(
                     new ReflectionPluginFactory(),
                     audit,
-                    database,
+                    executionDatabase,
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
             final var summary = coordinator.execute(plugins, parallelism, arguments.dryRun());
             logSummary(summary);
-            return summary.allSuccessful() ? ExecutionStatus.SUCCESS : ExecutionStatus.PLUGIN_FAILURE;
+            return summary.allSuccessful()
+                    ? ExecutionStatus.SUCCESS
+                    : ExecutionStatus.PLUGIN_FAILURE;
         } finally {
-            closeDatabase(database);
+            closeDatabase(executionDatabase);
         }
     }
 
-    /**
-     * Registers classpath configuration in the database and rewrites the local
-     * bootstrap file to enable database-backed configuration for future runs.
-     *
-     * @param registry installed plugin registry
-     * @param bootstrap resolved bootstrap properties
-     * @param bootstrapLoader bootstrap properties loader
-     * @param passwordCipher password cipher
-     */
-    private static void registerConfiguration(
-            final ClasspathPluginRegistry registry,
+    private static void registerPlugins(
+            final CommandLineArguments arguments,
             final ApplicationBootstrapProperties bootstrap,
             final ApplicationBootstrapPropertiesLoader bootstrapLoader,
-            final ConfigurationPasswordCipher passwordCipher) {
-        if (bootstrap.databasePassword().isBlank()) {
-            throw new OpenDataConfigurationException(
-                    "application.database.password must be supplied for --register.");
+            final ConfigurationPasswordCipher passwordCipher,
+            final DatabaseResourceManager database,
+            final JdbcPluginRegistry registeredPlugins) {
+        final var classpathSource = new ClasspathConfigurationPropertiesSource();
+        final List<PluginRegistration> registrations;
+        if (arguments.pluginFile().isPresent()) {
+            registrations = List.of(registrationFromFile(
+                    arguments.pluginIds().get(0), arguments.pluginFile().orElseThrow()));
+        } else {
+            registrations = registrationsFromClasspath(arguments, classpathSource);
         }
-        DatabaseResourceManager database = null;
+
+        new ConfigurationRegistrationService(
+                classpathSource,
+                new JdbcConfigurationPropertiesSource(database),
+                registeredPlugins,
+                bootstrapLoader,
+                passwordCipher)
+                .register(bootstrap, registrations);
+
+        registrations.forEach(registration -> {
+            final var actual = registeredPlugins.find(registration.descriptor().id())
+                    .orElseThrow(() -> new PluginRegistryException(
+                    "Registered plugin could not be read back: "
+                            + registration.descriptor().id()));
+            System.out.printf(
+                    "Registered plugin: %s (%s)%n",
+                    actual.id(),
+                    actual.enabled() ? "enabled" : "disabled");
+        });
+        noteIgnoredParallelism(arguments);
+    }
+
+    private static PluginRegistration registrationFromFile(
+            final String requestedPluginId,
+            final java.nio.file.Path file) {
+        final var source = new PropertiesFileConfigurationPropertiesSource(file);
+        final var properties = source.loadPluginProperties(requestedPluginId);
+        final var definition = new PropertiesPluginDefinitionLoader(source)
+                .load(requestedPluginId, Map.of());
+        validateImplementation(definition.implementationClass());
+        return new PluginRegistration(toDescriptor(definition), properties);
+    }
+
+    private static List<PluginRegistration> registrationsFromClasspath(
+            final CommandLineArguments arguments,
+            final ClasspathConfigurationPropertiesSource source) {
+        final var catalog = new ClasspathPluginRegistry();
+        final List<PluginDescriptor> requested;
+        if (arguments.allPluginsRequested()) {
+            requested = catalog.list();
+        } else {
+            requested = arguments.pluginIds().stream()
+                    .map(id -> catalog.find(id).orElseThrow(() -> new PluginRegistryException(
+                    "Packaged plugin definition was not found: " + id)))
+                    .toList();
+        }
+        final var loader = new PropertiesPluginDefinitionLoader(source);
+        final List<PluginRegistration> registrations = new ArrayList<>();
+        for (var descriptor : requested) {
+            final var properties = source.loadPluginProperties(descriptor.id());
+            final var definition = loader.load(descriptor.id(), Map.of());
+            validateImplementation(definition.implementationClass());
+            registrations.add(new PluginRegistration(toDescriptor(definition), properties));
+        }
+        return List.copyOf(registrations);
+    }
+
+    private static PluginDescriptor toDescriptor(final PluginDefinition definition) {
+        return new PluginDescriptor(
+                definition.id(),
+                definition.displayName(),
+                definition.description(),
+                definition.implementationClass(),
+                definition.enabled(),
+                definition.configurationVersion());
+    }
+
+    private static void validateImplementation(final String className) {
         try {
-            database = SQLServerResource.initialise(bootstrap.toDatabasePoolConfiguration());
-            new ConfigurationRegistrationService(
-                    new ClasspathConfigurationPropertiesSource(),
-                    new JdbcConfigurationPropertiesSource(database),
-                    bootstrapLoader,
-                    passwordCipher)
-                    .register(bootstrap, registry.list());
-        } finally {
-            closeDatabase(database);
+            final var implementation = Class.forName(
+                    className, false, Thread.currentThread().getContextClassLoader());
+            if (!OpenDataPlugin.class.isAssignableFrom(implementation)) {
+                throw new PluginRegistryException(
+                        "Plugin class does not implement OpenDataPlugin: " + className);
+            }
+        } catch (ClassNotFoundException exception) {
+            throw new PluginRegistryException(
+                    "Plugin implementation class was not found: " + className,
+                    exception);
         }
     }
 
-    /**
-     * Close the connection to the database
-     *
-     * @param database the database connection
-     */
+    private static void administerSelected(
+            final CommandLineArguments arguments,
+            final JdbcPluginRegistry registry,
+            final AdministrationAction action) {
+        final List<String> pluginIds = arguments.allPluginsRequested()
+                ? registry.list().stream().map(PluginDescriptor::id).toList()
+                : arguments.pluginIds();
+        if (pluginIds.isEmpty()) {
+            System.out.println("No registered plugins matched the request.");
+            return;
+        }
+        for (var pluginId : pluginIds) {
+            switch (action) {
+                case UNREGISTER -> registry.unregister(pluginId);
+                case ENABLE -> registry.setEnabled(pluginId, true);
+                case DISABLE -> registry.setEnabled(pluginId, false);
+                default -> throw new IllegalStateException("Unsupported administration action: " + action);
+            }
+            System.out.printf("%s plugin: %s%n", action.displayText, pluginId);
+        }
+        noteIgnoredParallelism(arguments);
+    }
+
+    private static void printRegisteredPlugins(final JdbcPluginRegistry registry) {
+        final var plugins = registry.list();
+        if (plugins.isEmpty()) {
+            System.out.println("No plugins are registered.");
+            return;
+        }
+        System.out.printf("%-20s %-10s %-32s %s%n", "PLUGIN", "STATUS", "NAME", "IMPLEMENTATION");
+        for (var plugin : plugins) {
+            System.out.printf(
+                    "%-20s %-10s %-32s %s%n",
+                    plugin.id(),
+                    plugin.enabled() ? "enabled" : "disabled",
+                    plugin.displayName(),
+                    plugin.implementationClass());
+        }
+    }
+
+    private static void requireDatabasePassword(
+            final ApplicationBootstrapProperties bootstrap,
+            final CommandLineArguments arguments) {
+        if (bootstrap.databasePassword().isBlank()) {
+            final var purpose = arguments.registerRequested()
+                    ? "--register"
+                    : "plugin registry access";
+            throw new OpenDataConfigurationException(
+                    "application.database.password must be supplied for " + purpose + ".");
+        }
+    }
+
+    private static void noteIgnoredParallelism(final CommandLineArguments arguments) {
+        if (arguments.parallelism().isPresent()) {
+            LOGGER.log(Level.INFO,
+                    "--parallelism is ignored for plugin administration operations.");
+        }
+    }
+
     private static void closeDatabase(final DatabaseResourceManager database) {
         if (database == null) {
             return;
@@ -198,11 +345,6 @@ public final class OpenDataApplication {
         }
     }
 
-    /**
-     * Get the error message from the exception
-     *
-     * @param exception the exception details
-     */
     private static String messageFor(final Throwable exception) {
         var current = exception;
         while (current.getCause() != null && current.getCause() != current) {
@@ -214,11 +356,6 @@ public final class OpenDataApplication {
                 : message;
     }
 
-    /**
-     * Show the execution summary for each plugin
-     *
-     * @param summary summary details for each pluging
-     */
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach(result -> LOGGER.log(
                 result.successful() ? Level.INFO : Level.SEVERE,
@@ -231,5 +368,17 @@ public final class OpenDataApplication {
         LOGGER.log(Level.INFO,
                 "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
                 new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
+    }
+
+    private enum AdministrationAction {
+        UNREGISTER("Unregistered"),
+        ENABLE("Enabled"),
+        DISABLE("Disabled");
+
+        private final String displayText;
+
+        AdministrationAction(final String displayText) {
+            this.displayText = displayText;
+        }
     }
 }

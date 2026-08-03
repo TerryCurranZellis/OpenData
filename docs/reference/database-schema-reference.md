@@ -24,7 +24,8 @@
 | `core.PluginRun` | UUID runtime task status and read/write metrics |
 | `core.schema_version` | Installed logical migration versions |
 | `core.application_property` | Database-backed runtime application properties and encryption marker |
-| `core.plugin_property` | Database-backed property values by plugin id |
+| `core.plugin_registry` | Registered plugin metadata, implementation class, configuration version and enabled status |
+| `core.plugin_property` | Complete database-backed plugin definition values by plugin id |
 | `core.dataset` | Dataset/plugin registration |
 | `core.ingestion_run` | Run status, timing, counters and message |
 | `core.source_file` | Source URI, filename, size, media type and SHA-256 |

@@ -1,48 +1,28 @@
 @startuml
 !theme plain
 title OpenData Version 2.0.0 Operational Lifecycle
-
 start
-:Deploy compatible source/package,
-SQL schema and documentation;
-:Replace bootstrap credential
-and certificate/private key;
-:Verify directories, grants,
-backup and working directory;
-
-if (Configuration registered?) then (no)
-  :Run --register with protected
-override file;
-  :Verify SQL configuration tables
-and rewritten bootstrap file;
+:Deploy compatible source/package, SQL schema and documentation;
+:Replace bootstrap credential and certificate/private key;
+:Verify registry migration, grants, directories and backup;
+if (Required plugins registered?) then (no)
+  :Run --plugin id|all --register;
+  :Optionally register one complete external definition;
 endif
-
 :Run --list-plugins;
-:Dry-run Ofgem and OpenMeteo;
-note right
-Octopus dry run is not usable
-in the current baseline.
-end note
-
+:Enable/disable intended operational set;
+:Run --plugin all --dry-run;
 if (Acceptance successful?) then (yes)
-  :Run one controlled write
-per selected plugin;
-  :Verify final log, plugin summary,
-audit rows and business data;
+  :Run one controlled write per enabled plugin;
+  :Verify logs, audit, registry, business data and archives;
   if (Warnings or mismatches?) then (yes)
-    :Stop further writes;
-    :Retain evidence and reconcile
-transactions, ledgers and archives;
-    :Recover or correct configuration;
+    :Stop writes and retain evidence;
+    :Reconcile transactions, ledgers and archives;
   else (no)
-    :Permit routine operation;
-    :Monitor logs, audit, pool,
-source hashes and capacity;
+    :Permit routine operation and monitor;
   endif
 else (no)
-  :Diagnose configuration,
-source and parser failures;
+  :Diagnose registry, configuration, source and parser failures;
 endif
-
 stop
 @enduml

@@ -2,34 +2,32 @@
 !pragma layout smetana
 title OpenData Version 2.0.0 Component Architecture
 skinparam componentStyle rectangle
-
 package "Application" {
   [OpenData] as Entry
   [CommandLineArgumentsProcessor] as CLI
   [OpenDataApplication] as App
 }
-
-package "Configuration" {
+package "Configuration and Registry" {
   [ApplicationBootstrapPropertiesLoader] as Bootstrap
   [RsaConfigurationPasswordCipher] as Cipher
+  [ClasspathPluginRegistry
+Registration Catalogue] as Catalogue
+  [PropertiesFileConfigurationPropertiesSource] as External
   [ConfigurationRegistrationService] as Register
-  [ClasspathConfigurationPropertiesSource] as FileSource
+  [JdbcPluginRegistry] as Registry
   [JdbcConfigurationPropertiesSource] as DbSource
   [PropertiesPluginDefinitionLoader] as Definitions
 }
-
 package "Plugin Runtime" {
-  [ClasspathPluginRegistry] as Registry
+  [PluginSelectionResolver] as Selection
   [ReflectionPluginFactory] as Factory
   [PluginExecutionCoordinator] as Coordinator
 }
-
 package "Provider Plugins" {
   [OfgemPlugin] as Ofgem
   [OpenMeteoPlugin] as Meteo
   [OctopusPlugin] as Octopus
 }
-
 package "Infrastructure" {
   [LoggingManager] as Logging
   [JdbcPluginRunAudit] as Audit
@@ -37,26 +35,27 @@ package "Infrastructure" {
   database "SQL Server" as Database
   folder "Work / Input / Archive" as Files
 }
-
 Entry --> CLI
 Entry --> App
 App --> Bootstrap
 Bootstrap --> Cipher
-App --> Register : --register
-Register --> FileSource
+App --> Catalogue : packaged registration
+App --> External : external registration
+App --> Register
+Register --> Registry
 Register --> DbSource
-App --> Registry
-App --> FileSource : file mode
-App --> DbSource : database mode
+App --> Registry : list/admin/run
+App --> Selection
+Selection --> Registry
 App --> Definitions
 App --> Coordinator
 Coordinator --> Factory
 Factory --> Ofgem
 Factory --> Meteo
 Factory --> Octopus
-App --> Logging
 Coordinator --> Audit
-App --> Pool
+App --> Logging
+Registry --> Pool
 DbSource --> Pool
 Audit --> Pool
 Ofgem --> Pool

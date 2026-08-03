@@ -11,8 +11,8 @@
 
 - Passwords, tokens, private keys and customer data MUST NOT be committed.
 - Logs, exceptions, diagnostics and generated manuals MUST NOT expose secrets.
-- Bootstrap and override files containing secrets MUST be restricted to the
-  runtime identity.
+- Bootstrap files and external registration files containing secrets MUST be
+  restricted to the runtime identity.
 - Classpath defaults MUST contain blank secrets or non-secret references.
 - A public certificate MAY be distributed; the private key MUST be provisioned
   separately and protected.

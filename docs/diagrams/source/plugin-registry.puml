@@ -1,32 +1,34 @@
 @startuml
 !pragma layout smetana
-title Plugin Registry and Configuration Sources
+title Packaged Catalogue and Persistent Plugin Registry
 skinparam componentStyle rectangle
-[PluginRegistry] as Contract
-[ClasspathPluginRegistry] as Registry
-[index.properties\nplugins=ofgem,openmeteo,octopus] as Index
-[PluginDescriptor] as Descriptor
-[ReflectionPluginFactory] as Factory
+[CommandLineArgumentsProcessor] as CLI
+[ClasspathPluginRegistry
+registration catalogue] as Catalogue
+[index.properties + packaged definitions] as Packaged
+[PropertiesFileConfigurationPropertiesSource] as External
+[JdbcPluginRegistry
+authoritative lifecycle registry] as Registry
+[core.plugin_registry] as RegistryTable
+[core.plugin_property] as PropertyTable
+[PluginSelectionResolver] as Selection
 [PropertiesPluginDefinitionLoader] as Loader
-[ClasspathConfigurationPropertiesSource] as FileSource
-[JdbcConfigurationPropertiesSource] as DbSource
-[ofgem.properties] as Ofgem
-[openmeteo.properties] as OpenMeteo
-[octopus.properties] as Octopus
-[core.plugin_property] as DbProperties
+[ReflectionPluginFactory] as Factory
 
-Registry --> Contract
-Registry --> Index
-Registry --> Descriptor
-Factory --> Descriptor
-Loader --> FileSource
-Loader --> DbSource
-FileSource --> Ofgem
-FileSource --> OpenMeteo
-FileSource --> Octopus
-DbSource --> DbProperties
+CLI --> Catalogue : register without --file
+Catalogue --> Packaged
+CLI --> External : register one named --file
+Catalogue --> Registry : selected registration
+External --> Registry : selected registration
+Registry --> RegistryTable
+Registry --> PropertyTable
+CLI --> Registry : list/enable/disable/unregister/run
+Registry --> Selection : enabled descriptors
+PropertyTable --> Loader
+Selection --> Factory
+Loader --> Factory
 note right of Registry
-Implementation registration remains classpath-backed.
-Property values may be classpath or SQL Server-backed.
+Re-registration preserves current enabled status.
+First registration uses plugin.enabled.
 end note
 @enduml

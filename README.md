@@ -2,43 +2,41 @@
 
 OpenData is a Java 17 command-line framework that acquires external data,
 transforms it into validated plugin-specific records and loads it into Microsoft
-SQL Server. It is implemented as a modular monolith with independently selectable
-plugins.
+SQL Server. It is implemented as a modular monolith with independently
+registered and selectable plugins.
 
 ![OpenData project overview](docs/diagrams/generated/project-overview.svg)
 
 ## Current baseline
 
-The repository and documentation describe **OpenData 2.0.0** as a development and
-release-candidate baseline. It is not yet a production-ready release. The
+The repository and documentation describe **OpenData 2.0.0** as a development
+and release-candidate baseline. It is not yet a production-ready release. The
 remaining mandatory blockers and environment-dependent acceptance checks are
 listed in the [final release checklist](docs/release/Final-Release-Checklist.md)
 and [current readiness assessment](docs/review/RELEASE-READINESS-STATUS-2.0.0.md).
 
-Version 2.0.0 introduces database-backed configuration registration,
-certificate-based bootstrap password protection, the common five-phase plugin
-lifecycle, and local Octopus statement ingestion. Version 1.0.0 material is
-retained as historical release documentation.
+Version 2.0.0 introduces a persistent plugin registry, database-backed
+configuration, certificate-based bootstrap password protection, the common
+five-phase plugin lifecycle, and local Octopus statement ingestion. Version
+1.0.0 material is retained as historical release documentation.
 
 ## Implemented capabilities
 
-- `--register` stores application and plugin configuration in SQL Server.
-- The bootstrap properties file retains database connection details and an
-  encrypted database password after registration.
-- Ofgem and OpenMeteo support dry-run and write-mode execution.
-- Octopus discovers local statement PDFs, prevents duplicate completed-file
-  processing, batch transforms new statements, persists records transactionally
-  and archives successfully loaded files.
-- Multiple plugins can execute concurrently with bounded parallelism.
-- Technical, administrator, developer and API manuals are composed from JSON
-  manifests, Markdown and generated SVG diagrams.
+- Register one, several, or all packaged plugins with `--register`.
+- Register one named plugin from an external UTF-8 properties file with
+  `--register --file <filename>`.
+- Persist registered plugin metadata, enabled/disabled status and complete
+  plugin configuration in SQL Server.
+- List, enable, disable and unregister plugins from the command line.
+- Run one, several, or all enabled registered plugins.
+- Perform side-effect-free dry runs for Ofgem, OpenMeteo and Octopus without
+  plugin data writes or generic run-audit rows.
+- Execute multiple plugins concurrently with bounded parallelism.
+- Build Technical, Administrator, Developer and API manuals from JSON manifests,
+  Markdown and generated SVG diagrams.
 
 ## Important current limitations
 
-- Octopus dry-run still reads its processed-file ledger and therefore requires a
-  database resource that the framework intentionally does not provide in dry-run
-  mode. Do not use Octopus or `--plugin all` as release dry-run acceptance until
-  that source defect is corrected.
 - The supplied private key, development PFX password and bootstrap password are
   not production-safe.
 - The environment-variable PFX password path is defective; use the JVM system
@@ -46,8 +44,10 @@ retained as historical release documentation.
 - The JDBC URL trusts the server certificate in the development configuration.
 - The SQL Server JDBC dependency is a preview build.
 - The Maven JAR is not a verified self-contained `java -jar` distribution.
+- Target-environment Maven, SQL Server and PowerShell acceptance evidence is
+  still required before release approval.
 
-## Installed plugins
+## Installed plugin definitions
 
 | ID | Source | Version 2.0.0 acquisition |
 |---|---|---|
@@ -55,11 +55,15 @@ retained as historical release documentation.
 | `openmeteo` | Open-Meteo Historical Weather API | HTTPS JSON API |
 | `octopus` | Customer-supplied Octopus statement PDFs | Local configured directory; no website/email/API download |
 
+Packaged definitions are registration sources. The authoritative runtime list is
+stored in `core.plugin_registry` and displayed with `--list-plugins`.
+
 ## Requirements
 
 - Java 17 or later while compiling for Java 17.
 - Maven 3.9 or later.
-- Microsoft SQL Server for registration and write-mode processing.
+- Microsoft SQL Server for registration, registry administration, configuration
+  loading and write-mode processing.
 - PowerShell 5.1 or later for supplied Windows scripts.
 - Pandoc and PlantUML when rebuilding generated manuals/diagrams.
 
@@ -76,34 +80,43 @@ The reviewed POM creates `target/opendata-2.0.0.jar` but does not establish a
 verified self-contained executable. Launch `com.towermarsh.opendata.OpenData`
 from NetBeans or another classpath-aware launcher.
 
-## Initial registration
+## Database migration and initial registration
 
-Install SQL scripts in numeric order and create a deployment certificate pair.
-For the first controlled registration the bootstrap file uses database mode
-`false` and a temporary plaintext database password. Run:
+Install the SQL scripts in the order documented in `sql/README.md`, including
+`003a-create-plugin-registry.sql`, and create a deployment certificate pair. For
+the first controlled registration, the bootstrap file uses database-properties
+mode `false` and a temporary plaintext database password.
 
 ```text
---register
+--plugin all --register
 ```
 
-Confirm the rewritten password begins with `{enc}`, restart, and verify database
-configuration loading. Replace the supplied development certificate/private key
-and rotate any password present in tracked history before production use.
+Confirm the rewritten password begins with `{enc}`, restart, and verify:
+
+```text
+--list-plugins
+```
+
+Replace the supplied development certificate/private key and rotate any password
+present in tracked history before production use.
 
 ## Common commands
 
 ```text
 --help
+--about
 --list-plugins
---register
+--plugin all --register
+--plugin example --register --file C:\OpenData\example.properties
+--plugin octopus --disable
+--plugin octopus --enable
+--plugin octopus --unregister
 --plugin ofgem --dry-run
---plugin openmeteo --dry-run
---plugin octopus
---plugin openmeteo,ofgem --parallelism 2
+--plugin all --dry-run --parallelism 3
+--plugin openmeteo --plugin ofgem --parallelism 2
 ```
 
-Do not present `--plugin octopus --dry-run` or `--plugin all --dry-run` as valid
-in the current source baseline.
+The short option `-d` is reserved for `--disable`; use `-n` for `--dry-run`.
 
 ## Documentation map
 

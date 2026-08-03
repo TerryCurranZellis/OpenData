@@ -2,89 +2,52 @@
 
 **Document ID:** ARCH-011  
 **Version:** 2.0  
-**Status:** Database-backed registration implemented  
+**Status:** Persistent registry and database-backed registration implemented  
 **Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-## Configuration categories
+## Bootstrap
 
-### Bootstrap file
+`src/main/resources/config/application.properties` is read before database
+lookup and contains version, database-backed switch, JDBC URL, user and plain
+(first registration) or `{enc}` encrypted password.
 
-`src/main/resources/config/application.properties` is the writable bootstrap
-file used before any database-backed lookup. Its intended contents are limited
-to:
+## Packaged catalogue
 
-```properties
-application.version=2.0.0
-application.use-database-properties=<true|false>
-database.url=<JDBC URL>
-database.user=<database user>
-database.password=<plain text for first registration or {enc}... afterwards>
+`config/plugins/index.properties` and `config/plugins/<id>.properties` describe
+plugins available for registration. They are not the authoritative installed
+state.
+
+## Persistent registry and configuration
+
+- `core.plugin_registry`: id, display metadata, implementation class,
+  configuration version and enabled status.
+- `core.plugin_property`: complete flattened definition for each registered id.
+- `core.application_property`: active runtime/application configuration.
+
+Normal execution uses `JdbcPluginRegistry` for selection. Named disabled plugins
+are rejected; `all` includes only enabled rows.
+
+## Registration sources
+
+```text
+--plugin all --register
+--plugin ofgem --plugin openmeteo --register
+--plugin example --register --file C:\OpenData\example.properties
 ```
 
-The current implementation reads this repository-local path first and falls back
-to the classpath resource only when the file is absent. Because registration
-rewrites it, an installed deployment must provide a writable external equivalent
-before packaging can be treated as complete.
+Without `--file`, selected definitions come from the packaged catalogue. With
+`--file`, exactly one named complete definition comes from an external UTF-8
+properties file. The external `plugin.id` must match the selected id. `--file`
+is not an invocation override.
 
-### Installed plugin registry
+Re-registration replaces stored properties and metadata but preserves the
+existing enabled/disabled status. A first registration uses `plugin.enabled`.
 
-`src/main/resources/config/plugins/index.properties` lists installed plugin ids.
-This remains classpath-backed in both modes.
+## Failure boundary
 
-### Application and plugin values
-
-When `application.use-database-properties=false`,
-`ClasspathConfigurationPropertiesSource` reads packaged application defaults and
-`config/plugins/<id>.properties`.
-
-When the flag is `true`, `JdbcConfigurationPropertiesSource` reads:
-
-- `core.application_property` for runtime application values;
-- `core.plugin_property` for plugin property values.
-
-`PropertiesPluginDefinitionLoader` parses either source into the same
-storage-neutral `PluginDefinition` model.
-
-## Registration
-
-`--register` performs the following operation:
-
-1. load bootstrap values and require a non-blank database password;
-2. connect using the bootstrap URL, user and decrypted password;
-3. merge application defaults with classpath application values;
-4. force `application.use-database-properties=true`;
-5. encrypt the database password and upsert application values, marking the
-   password row as encrypted;
-6. upsert every installed plugin's classpath values into
-   `core.plugin_property`;
-7. rewrite the bootstrap file with the encrypted password and database mode
-   enabled.
-
-The SQL objects must exist and the application role must have the required
-configuration-table permissions before registration.
-
-## Override precedence
-
-An optional `--file` is loaded before bootstrap and runtime resolution:
-
-- application entries use `application.<key>`;
-- a single-plugin run may use unscoped plugin entries;
-- a multi-plugin run uses `plugin.<id>.<key>`;
-- unscoped plugin entries in a multi-plugin file are rejected.
-
-Invocation overrides take precedence over the selected classpath or database
-property source. Keys are normalised case-insensitively.
-
-## Encryption boundary
-
-`RsaConfigurationPasswordCipher` encrypts the database password with the public
-certificate and decrypts it with the matching PKCS#12 private key store. Values
-are marked with `{enc}` and Base64 encoded. The encryption mechanism protects a
-value at rest only when the private key store and its password are protected
-separately from the encrypted data.
-
-See [Security and Credentials](017-security-and-credentials.md) for the current
-release-blocking source-tree issues.
+Application-property writes, per-plugin registry transactions and bootstrap-file
+rewrite are not one distributed transaction. Operators must inspect both SQL
+Server and the bootstrap file after interrupted registration.

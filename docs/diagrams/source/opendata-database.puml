@@ -16,6 +16,17 @@ entity "core.application_property" as ApplicationProperty {
   updated_at : datetime2
 }
 
+entity "core.plugin_registry" as PluginRegistry {
+  * plugin_id : varchar(100) <<PK>>
+  --
+  display_name : nvarchar(200)
+  implementation_class : nvarchar(500)
+  is_enabled : bit
+  configuration_version : int
+  registered_at : datetime2
+  updated_at : datetime2
+}
+
 entity "core.plugin_property" as PluginProperty {
   * plugin_id : varchar(100) <<PK>>
   * property_key : varchar(200) <<PK>>
@@ -152,6 +163,7 @@ entity "octopus.gas_data" as GasData {
   last_run_id : uniqueidentifier <<FK>>
 }
 
+PluginRegistry ||--o{ PluginProperty
 Location ||--o{ Weather
 PluginRun ||--o{ Weather : LastRunId
 Dataset ||--o{ IngestionRun
@@ -168,9 +180,13 @@ note right of ApplicationProperty
 Registered application settings;
 password row may be encrypted.
 end note
+note right of PluginRegistry
+Authoritative registered metadata
+and enabled/disabled status.
+end note
 note right of PluginProperty
-Registered definitions and
-properties by plugin id.
+Complete registered definitions
+and properties by plugin id.
 end note
 note right of StatementFile
 Unique (file_name, sha256)

@@ -1,8 +1,8 @@
 # Octopus Plugin Reference
 
-**Document ID:** REF-PLUGIN-OCTOPUS-001
-**Version:** 2.0
-**Status:** Write-mode implementation reference
+**Document ID:** REF-OCTOPUS-001  
+**Version:** 2.0  
+**Status:** Current implementation reference  
 **Baseline date:** 3 August 2026
 
 ---
@@ -10,47 +10,40 @@
 | Item | Value |
 |---|---|
 | Plugin id | `octopus` |
-| Implementation class | `com.towermarsh.opendata.plugin.octopus.OctopusPlugin` |
-| Dataset id | `octopus-energy-billing` |
-| Source | Local PDF directory |
-| Filename pattern | `octopus-energy-statement-YYYY-MM-DD.pdf` |
-| Duplicate check | lower-cased filename plus SHA-256 against completed ledger rows |
-| Persistence | One batch transaction for facts and file-ledger completion |
-| Archive | Move source PDFs after successful commit |
+| Implementation | `com.towermarsh.opendata.plugin.octopus.OctopusPlugin` |
+| Source | Local PDFs named `octopus-energy-statement-YYYY-MM-DD.pdf` |
+| Registration source | Packaged definition or one complete external properties file |
+| Runtime status | Must be registered and enabled in `core.plugin_registry` |
 
-## Active class flow
+## Commands
 
 ```text
-OctopusPlugin
- -> initialise.OctopusInitialise
- -> extract.OctopusExtract / PdfTextExtractor
- -> transform.OctopusTransform / OctopusStatementParser
- -> load.OctopusLoad / OctopusPersistenceRepository
- -> finalise.OctopusFinalise
+opendata --plugin octopus --register
+opendata --plugin octopus --register --file C:\OpenData\octopus.properties
+opendata --plugin octopus --dry-run
+opendata --plugin octopus
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+opendata --plugin octopus --unregister
 ```
 
-## Metrics
+## Dry run
 
-`read` is the total number of electricity and gas records parsed. Write metrics
-count inserted or updated business rows. The processed-file ledger is updated in
-the same transaction but is not counted as a business record.
+The extractor deliberately bypasses the processed-file repository during dry
+run. Every matching file is hashed, read and parsed; no provider data, completion
+ledger, generic run audit or archive movement occurs.
 
-## Failure conditions
+## Write run
 
-- missing/non-directory input path;
-- unsupported filename or invalid date in a candidate name;
-- PDF text extraction failure;
-- changed statement layout or missing required financial fields;
-- absent Octopus schema or database permission failure;
-- business-row or ledger transaction failure;
-- post-commit archive move failure.
+Write mode queries completed `(file_name, sha256)` pairs, excludes exact matches,
+persists the entire statement batch and completion ledger in one transaction,
+and archives source PDFs after commit.
 
-## Known dry-run defect
+## Configuration properties
 
-The extract stage always reads the completed-file ledger. In framework dry-run
-mode that call receives an unavailable database resource and fails. The load and
-archive stages are dry-run aware, but an end-to-end Octopus dry run is not
-currently supported. `--plugin all --dry-run` is therefore also unsuitable.
+- `property.input.directory.value`
+- `property.working.directory.value` (currently unused)
+- `property.archive.directory.value`
 
-See [plugin documentation](../plugins/octopus/README.md) and
-[schema reference](octopus-schema.md).
+Use an external file only to register a complete definition. Runtime invocation
+files are not supported.

@@ -2,7 +2,7 @@
 
 **Document ID:** USER-008-OCTOPUS  
 **Version:** 2.0  
-**Status:** Runtime implemented with dry-run limitation  
+**Status:** Runtime and dry-run implemented; live acceptance required  
 **Baseline date:** 3 August 2026
 
 ---
@@ -13,70 +13,45 @@ API.
 
 ## Required file name
 
-Place each PDF in the configured input directory using:
-
 ```text
 octopus-energy-statement-YYYY-MM-DD.pdf
 ```
 
 Only regular files matching this pattern, case-insensitively, are considered.
-The date in the file name is used as the statement date and files are processed
+The date in the filename is used as the statement date and files are processed
 in date/name order.
 
-## Required configuration
+## Configuration
+
+Copy the complete packaged Octopus definition and set explicit paths:
 
 ```properties
 property.input.directory.value=C:\Attachments\octopus\incoming
 property.working.directory.value=C:\Attachments\octopus\working
-property.archive.directory.value=C:\Attachments\octopus\archive
+property.archive.directory.value=C:\Attachments\octopusrchive
 ```
-
-All three properties must be present. `working.directory` is currently unused.
-Do not leave `archive.directory` blank because a blank path resolves to the
-process working directory.
-
-## Controlled acceptance run
-
-Octopus dry run is not usable in the current baseline. Use disposable copies of
-statements, an isolated database and an explicit archive directory:
 
 ```text
-opendata --plugin octopus --file C:\OpenData\octopus.properties
+opendata --plugin octopus --register --file C:\OpenData\octopus.properties
 ```
 
-The plugin:
+`working.directory` is currently unused. Do not leave `archive.directory` blank
+for a write run because a blank path resolves to the process working directory.
 
-1. lists matching PDFs;
-2. calculates each file's SHA-256 hash;
-3. skips a file only when the same name and hash already have a completed ledger
-   row in `octopus.statement_file`;
-4. extracts PDF text and parses electricity and gas records;
-5. writes the complete batch and completed-file ledger in one JDBC transaction;
-   and
-6. moves source PDFs to the archive directory after the database commit.
+## Controlled acceptance
 
-If archiving fails, the database commit remains successful and a warning is
-logged. The source files may therefore remain in the input directory even though
-`octopus.statement_file` marks them completed; the next run will skip them by
-name and hash.
-
-## Verification
-
-Review the plugin summary and query:
-
-```sql
-SELECT TOP (20) * FROM core.PluginRun
-WHERE PluginId = 'octopus'
-ORDER BY StartedAt DESC;
-
-SELECT TOP (20) * FROM octopus.statement_file
-ORDER BY processed_at DESC;
-
-SELECT TOP (20) * FROM octopus.electric_data
-ORDER BY bill_date DESC;
-
-SELECT TOP (20) * FROM octopus.gas_data
-ORDER BY bill_date DESC;
+```text
+opendata --plugin octopus --dry-run
+opendata --plugin octopus
 ```
+
+Dry run lists and parses candidate PDFs without reading/writing the completion
+ledger, loading provider rows, writing `core.PluginRun`, or moving source files.
+It therefore examines every matching candidate currently in the input directory.
+
+Write mode calculates SHA-256, skips completed name/hash pairs, parses statements,
+commits the complete batch and ledger transactionally, then moves committed files
+to the archive directory. If archiving fails, the database commit remains
+successful and a warning is logged.
 
 Protect statement files, logs and backups as personal financial data.

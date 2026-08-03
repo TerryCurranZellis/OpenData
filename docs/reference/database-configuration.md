@@ -1,45 +1,68 @@
 # Database Configuration Reference
 
 **Document ID:** REF-DB-CONFIG-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation reference  
-**Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Version:** 2.1  
+**Status:** OpenData 2.0.0 implementation reference  
+**Baseline date:** 3 August 2026
 
 ---
 
-## Bootstrap settings
+## Bootstrap connection
 
-| Property | Required | Description |
-|---|---|---|
-| `database.url` | yes | Microsoft JDBC connection URL |
-| `database.user` | yes | SQL Server login/database user |
-| `database.password` | yes | plaintext before registration, `{enc}` RSA ciphertext afterwards |
-| `application.use-database-properties` | yes | selects SQL Server configuration after registration |
-| `application.version` | no | version marker; defaults to `2.0.0` |
+The minimal local bootstrap supplies the SQL Server URL, user and encrypted
+password needed to reach the configuration store and persistent plugin registry.
+The database password cannot be supplied through the plugin `--file` option.
 
-## Configuration tables
+## Configuration and registry tables
 
-- `core.application_property(property_key, property_value, is_encrypted, updated_at)`
-- `core.plugin_property(plugin_id, property_key, property_value, updated_at)`
+| Table | Purpose |
+|---|---|
+| `core.application_property` | Runtime application settings and encrypted-value marker |
+| `core.plugin_registry` | Registered plugin metadata and enabled status |
+| `core.plugin_property` | Flattened complete definition for each registered plugin |
 
-Database application values marked encrypted are normalised with the `{enc}`
-prefix when loaded and decrypted by the RSA password cipher.
+Install `sql/003a-create-plugin-registry.sql` after the existing configuration
+store migration. Apply the updated application permission scripts so the
+application role can select, insert, update and delete registry rows.
 
-## Certificate and key-store paths
+## Registration behaviour
 
 ```text
-src/main/resources/config/security/opendata-config-public.cer
-src/main/resources/config/security/opendata-config-private.pfx
+opendata --plugin all --register
 ```
 
-The only dependable non-code PFX password input in this baseline is JVM property
-`opendata.config.keystore.password`. The intended environment-variable constant
-is incorrect.
+Registration:
 
-## Production controls
+1. connects with bootstrap database settings;
+2. refreshes application properties;
+3. encrypts the database password before database storage;
+4. validates each selected definition;
+5. upserts registry metadata;
+6. atomically replaces each selected plugin's property rows; and
+7. rewrites the bootstrap file with database-backed configuration enabled.
 
-Use a trusted SQL Server certificate, `trustServerCertificate=false`, protected
-bootstrap/private-key files, a rotated password and the supplied least-privilege
-role. The current source-tree paths and tracked development secrets must be
-corrected before production packaging.
+An external plugin definition is supplied only as:
+
+```text
+opendata --plugin example --register --file C:\OpenData\example.properties
+```
+
+## Runtime database use
+
+A dry-run still reads configuration and registry tables before plugin execution.
+The plugin execution context then receives an unavailable database resource and
+no-op run audit. A write run reinitialises the pool from resolved runtime database
+settings.
+
+## Administration SQL effects
+
+| Command | Registry effect | Property effect | Provider data effect |
+|---|---|---|---|
+| `--register` | Insert/update metadata | Replace selected rows | None |
+| `--enable` | Set `is_enabled=1` | None | None |
+| `--disable` | Set `is_enabled=0` | None | None |
+| `--unregister` | Delete metadata | Delete selected rows | None |
+| `--list-plugins` | Read | None | None |
+
+Use `sql/010-verification-queries.sql` to inspect the resulting registry and
+configuration rows.

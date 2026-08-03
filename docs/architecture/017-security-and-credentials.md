@@ -26,7 +26,7 @@ are equally important.
 - an already encrypted value is not encrypted a second time;
 - `ApplicationBootstrapPropertiesLoader` decrypts before constructing runtime
   database configuration;
-- `--register` stores the encrypted password in both
+- `--plugin <id|all> --register` stores the encrypted password in both
   `core.application_property` and the rewritten bootstrap file.
 
 A PKCS#12 password can be supplied through the Java system property

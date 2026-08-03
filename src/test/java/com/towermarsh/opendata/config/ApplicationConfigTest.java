@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +35,6 @@ class ApplicationConfigTest {
                         Map.of()),
                 plugin,
                 Map.of(),
-                Optional.empty(),
                 true,
                 false);
 

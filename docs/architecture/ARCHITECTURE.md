@@ -9,8 +9,8 @@
 ---
 
 The numbered documents describe the current OpenData modular monolith as
-implemented in the uploaded Version 2.0.0 source baseline. The application has a
-classpath plugin registry, database-backed configuration registration, bounded
+implemented in the uploaded Version 2.0.0 source baseline. The application has a packaged registration catalogue, persistent SQL Server
+plugin registry, database-backed configuration, bounded
 parallel execution, contextual logging, pooled SQL Server access and three
 executable plugins: Ofgem, OpenMeteo and Octopus Energy.
 

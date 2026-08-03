@@ -7,47 +7,21 @@
 
 ---
 
-## Primary signals
-
 | Signal | Source | Investigate when |
 |---|---|---|
+| Registry/status | `core.plugin_registry`, `--list-plugins` | unexpected absence/status/change |
+| Configuration freshness | property-table `updated_at` | unexpected registration/update |
 | Final application status | final JUL message | not `Successful` |
-| Plugin terminal status | summary log and `core.PluginRun` | `FAILED`, `CANCELLED` or stale `RUNNING` |
-| Ofgem ingestion status | `core.ingestion_run` | stale `STARTED` or non-success |
-| Row metrics | summary/audit/domain tables | unexpected zero, spike or mismatch |
-| Pool state | pool snapshot and SQL Server | sustained exhaustion or long waits |
-| Source identity | URI/file name, size and SHA-256 | unexpected change |
-| Octopus archive reconciliation | input/archive directories and `octopus.statement_file` | committed file remains unarchived |
-| Configuration freshness | configuration tables `updated_at` | unexpected registration/update |
+| Plugin status | summary and `core.PluginRun` | failure or stale `RUNNING` |
+| Row metrics | logs/audit/provider tables | unexpected zero/spike/mismatch |
+| Pool state | pool snapshot/SQL Server | sustained exhaustion or waits |
+| Source identity | URI/name/size/SHA-256 | unexplained change |
+| Octopus archive | ledger and directories | committed file remains unarchived |
 
-## Correlation
+Dry runs have log run UUIDs but no generic audit row. They still require SQL
+registry/configuration reads and are useful only for failures before persistence.
+All three current plugins support dry run.
 
-Use `[run=<uuid>]` to correlate plugin logs with `core.PluginRun`. Dry runs have a
-UUID in logs but no persisted generic audit row. Ofgem has a separate numeric
-ingestion id; correlate by time, source URI and plugin context.
-
-## Diagnostic sequence
-
-1. locate the first `SEVERE` or `WARNING` for the affected run;
-2. determine whether failure occurred before or after persistence;
-3. inspect plugin summary metrics and terminal audit state;
-4. check SQL connectivity, permissions, locks and pool availability;
-5. verify remote response, workbook/API/PDF structure and configured scope;
-6. reconcile source hashes and archive movement; and
-7. reproduce with a supported dry run only when the suspected failure is before
-   persistence.
-
-A successful Ofgem/OpenMeteo dry run does not prove SQL, transaction, grants or
-audit completion. Octopus has no usable dry-run path in this baseline.
-
-## Useful stale-run query
-
-```sql
-SELECT RunId, PluginId, Status, StartedAt, ThreadName, HostName
-FROM core.PluginRun
-WHERE Status = 'RUNNING'
-  AND StartedAt < DATEADD(hour, -2, SYSUTCDATETIME())
-ORDER BY StartedAt;
-```
-
-Do not update stale rows to success. Retain them as incident evidence.
+Diagnostic sequence: locate first warning/error, identify pre/post-persistence
+boundary, inspect status/metrics, check SQL/grants/locks/pool, verify source
+shape/scope, reconcile hashes/archive, then reproduce safely.

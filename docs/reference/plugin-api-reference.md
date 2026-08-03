@@ -24,7 +24,7 @@ shared mutable run state.
 | Component | Meaning |
 |---|---|
 | `runId` | UUID for this plugin task |
-| `descriptor` | Installed classpath plugin descriptor |
+| `descriptor` | Persistent registered plugin descriptor |
 | `definition` | Resolved database-backed plugin definition |
 | `database` | `DatabaseResourceManager` for write mode, unavailable manager in dry run |
 | `clock` | Time source for deterministic date/time logic |
@@ -68,11 +68,7 @@ paths, URIs and domain-specific values.
 
 ## Registry and selection
 
-`ClasspathPluginRegistry` reads
-`config/plugins/index.properties`, then one
-`config/plugins/<id>.properties` resource for each entry. It validates ID
-agreement and exposes installed descriptors. Enabled selection is resolved
-before runtime definitions are loaded.
+`ClasspathPluginRegistry` reads the packaged index/definitions as a registration catalogue. `JdbcPluginRegistry` reads `core.plugin_registry` and is authoritative for installed metadata and status. `PluginSelectionResolver` selects enabled persistent descriptors before database-backed definitions are reconstructed.
 
 ## Execution boundary
 

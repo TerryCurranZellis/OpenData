@@ -20,8 +20,6 @@ Pandoc and PlantUML are required only when rebuilding generated documentation.
 
 ## Build
 
-From the repository root:
-
 ```powershell
 mvn clean verify
 mvn package
@@ -36,37 +34,31 @@ Main class: com.towermarsh.opendata.OpenData
 Working directory: repository root
 ```
 
-The working directory is significant. The current implementation reads and
-writes bootstrap and certificate files beneath `src/main/resources/config` by
-resolving them from `user.dir`.
+The working directory is significant because the current bootstrap and
+certificate paths are resolved beneath `src/main/resources/config` from
+`user.dir`.
 
 ## Local directories
 
 Create writable directories for logs, working files and plugin inputs. For
-Octopus, define separate input and archive directories. Do not leave
-`archive.directory` blank: a blank value becomes the process working directory.
-The configured `working.directory` is currently parsed but not used.
-
-A typical local layout is:
+Octopus, define separate input and archive directories and protect them as
+personal financial data.
 
 ```text
 C:\OpenData\logs
 C:\Attachments\octopus\incoming
-C:\Attachments\octopus\archive
+C:\Attachments\octopusrchive
 ```
-
-Restrict the Octopus directories because statements contain personal and
-financial data.
 
 ## First checks
 
-Before registration, run:
+Help and About do not require SQL Server:
 
 ```text
 opendata --help
-opendata --list-plugins
+opendata --about
 ```
 
-`opendata` in this guide means the configured classpath-aware launcher. The list
-should contain `ofgem`, `openmeteo` and `octopus`. Continue with
-[SQL Server setup](03-sql-server-setup.md).
+`--list-plugins` reads the persistent registry and therefore requires the SQL
+schema and valid bootstrap database connection. Continue with
+[SQL Server setup](03-sql-server-setup.md) before listing or registering plugins.

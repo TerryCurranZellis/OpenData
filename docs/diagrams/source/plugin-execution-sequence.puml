@@ -3,29 +3,29 @@ title Plugin Execution
 actor Operator
 participant OpenData
 participant OpenDataApplication as Application
+participant JdbcPluginRegistry as Registry
 participant ConfigurationPropertiesSource as Configuration
-participant ClasspathPluginRegistry as Registry
 participant PluginExecutionCoordinator as Coordinator
 participant PluginRunAudit as Audit
 participant ReflectionPluginFactory as Factory
 participant OpenDataPlugin as Plugin
 
-Operator -> OpenData : command
+Operator -> OpenData : --plugin id|all [--dry-run]
 OpenData -> Application : start(arguments)
-Application -> Configuration : runtime and plugin values
-Configuration --> Application : resolved values
-Application -> Registry : resolve selected descriptors
-Registry --> Application : enabled descriptors
+Application -> Registry : resolve enabled registered descriptors
+Registry --> Application : selected descriptors
+Application -> Configuration : application and plugin values
+Configuration --> Application : validated runtime definitions
 Application -> Coordinator : execute(plugins, parallelism, dryRun)
 par one independent task per plugin
-  Coordinator -> Audit : started(runId) [write run]
+  Coordinator -> Audit : started(runId) [write only]
   Coordinator -> Factory : create(resolved plugin)
   Factory --> Coordinator : fresh plugin instance
   Coordinator -> Plugin : execute(context)
   Plugin --> Coordinator : PluginMetrics / failure
-  Coordinator -> Audit : completed(result) [write run]
+  Coordinator -> Audit : completed(result) [write only]
 end
-Coordinator --> Application : ordered PluginExecutionSummary
+Coordinator --> Application : ordered summary
 Application --> OpenData : ExecutionStatus
 OpenData --> Operator : logged status and duration
 @enduml

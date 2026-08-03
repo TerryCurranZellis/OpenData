@@ -1,1 +1,188 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="ACTIVITY" height="1145px" preserveAspectRatio="none" style="width:755px;height:1145px;background:#FFFFFF;" version="1.1" viewBox="0 0 755 1145" width="755px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="2"><text fill="#000000" font-family="Verdana" font-size="22" font-weight="700" lengthAdjust="spacing" textLength="561.2686" x="95.9519" y="37.1182">OpenData Version 2.0.0 Operational Lifecycle</text></g><ellipse cx="399.9604" cy="67.7373" fill="#FFFFFF" rx="10" ry="10" style="stroke:#000000;stroke-width:1;"/><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="235.1504" x="282.3853" y="97.7373"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="215.1504" x="292.3853" y="119.8018">Deploy compatible source/package,</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="195.2402" x="292.3853" y="134.3857">SQL schema and documentation</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="192.125" x="303.8979" y="166.9053"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="172.125" x="313.8979" y="188.9697">Replace bootstrap credential</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="158.9824" x="313.8979" y="203.5537">and certificate/private key</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="199.2559" x="300.3325" y="236.0732"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="153.75" x="310.3325" y="258.1377">Verify directories, grants,</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="179.2559" x="310.3325" y="272.7217">backup and working directory</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="196.1738" x="301.8735" y="353.9255"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="176.1738" x="311.8735" y="375.99">Run --register with protected</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="71.8652" x="311.8735" y="390.574">override file</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="207.1133" x="296.4038" y="438.0935"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="187.1133" x="306.4038" y="460.158">Verify SQL configuration tables</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="165.1465" x="306.4038" y="474.7419">and rewritten bootstrap file</text><polygon fill="#FFFFFF" points="329.9536,305.2412,469.9673,305.2412,481.9673,317.2412,469.9673,329.2412,329.9536,329.2412,317.9536,317.2412,329.9536,305.2412" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="13.6372" x="403.9604" y="340.3003">no</text><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="140.0137" x="329.9536" y="321.616">Configuration registered?</text><polygon fill="#FFFFFF" points="399.9604,507.2615,411.9604,519.2615,399.9604,531.2615,387.9604,519.2615,399.9604,507.2615" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><rect fill="#FFFFFF" height="34.584" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="124.6426" x="337.6392" y="551.2615"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="104.6426" x="347.6392" y="573.3259">Run --list-plugins</text><path d="M525.064,602.3381 L525.064,619.1375 L505.064,623.1375 L525.064,627.1375 L525.064,643.9368 A0,0 0 0 0 525.064,643.9368 L739.1724,643.9368 A0,0 0 0 0 739.1724,643.9368 L739.1724,612.3381 L729.1724,602.3381 L525.064,602.3381 A0,0 0 0 0 525.064,602.3381" fill="#FFFFFF" style="stroke:#000000;stroke-width:1;"/><path d="M729.1724,602.3381 L729.1724,612.3381 L739.1724,612.3381 L729.1724,602.3381" fill="#FFFFFF" style="stroke:#000000;stroke-width:1;"/><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="193.1084" x="531.064" y="620.408">Octopus dry run is not usable</text><text fill="#000000" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="152.0454" x="531.064" y="636.2073">in the current baseline.</text><rect fill="#FFFFFF" height="34.584" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="210.207" x="294.8569" y="605.8455"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="190.207" x="304.8569" y="627.9099">Dry-run Ofgem and OpenMeteo</text><polygon fill="#FFFFFF" points="335.7329,663.9368,464.188,663.9368,476.188,675.9368,464.188,687.9368,335.7329,687.9368,323.7329,675.9368,335.7329,663.9368" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="128.4551" x="335.7329" y="680.3115">Acceptance successful?</text><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="18.7935" x="304.9395" y="673.6272">yes</text><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="13.6372" x="476.188" y="673.6272">no</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="167.7969" x="153.6602" y="697.9368"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="147.7969" x="163.6602" y="720.0012">Run one controlled write</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="114.3574" x="163.6602" y="734.5852">per selected plugin</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="217.6953" x="128.7109" y="767.1047"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="197.6953" x="138.7109" y="789.1692">Verify final log, plugin summary,</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="176.4082" x="138.7109" y="803.7532">audit rows and business data</text><polygon fill="#FFFFFF" points="166.123,836.2727,308.9941,836.2727,320.9941,848.2727,308.9941,860.2727,166.123,860.2727,154.123,848.2727,166.123,836.2727" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="142.8711" x="166.123" y="852.6475">Warnings or mismatches?</text><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="18.7935" x="135.3296" y="845.9631">yes</text><text fill="#000000" font-family="Verdana" font-size="11" lengthAdjust="spacing" textLength="13.6372" x="320.9941" y="845.9631">no</text><rect fill="#FFFFFF" height="34.584" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="134.0176" x="57.3389" y="870.2727"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="114.0176" x="67.3389" y="892.3372">Stop further writes</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="226.6953" x="11" y="924.8567"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="179.7949" x="21" y="946.9211">Retain evidence and reconcile</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="206.6953" x="21" y="961.5051">transactions, ledgers and archives</text><rect fill="#FFFFFF" height="34.584" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="214.3027" x="17.1963" y="994.0247"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="194.3027" x="27.1963" y="1016.0891">Recover or correct configuration</text><rect fill="#FFFFFF" height="34.584" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="167.5332" x="267.0029" y="870.2727"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="147.5332" x="277.0029" y="892.3372">Permit routine operation</text><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="186.1484" x="257.6953" y="924.8567"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="151.1074" x="267.6953" y="946.9211">Monitor logs, audit, pool,</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="166.1484" x="267.6953" y="961.5051">source hashes and capacity</text><polygon fill="#FFFFFF" points="237.5586,1034.6086,249.5586,1046.6086,237.5586,1058.6086,225.5586,1046.6086,237.5586,1034.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><rect fill="#FFFFFF" height="49.168" rx="12.5" ry="12.5" style="stroke:#000000;stroke-width:1;" width="177.0371" x="473.8438" y="697.9368"/><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="143.0215" x="483.8438" y="720.0012">Diagnose configuration,</text><text fill="#000000" font-family="Verdana" font-size="12" lengthAdjust="spacing" textLength="157.0371" x="483.8438" y="734.5852">source and parser failures</text><polygon fill="#FFFFFF" points="399.9604,1064.6086,411.9604,1076.6086,399.9604,1088.6086,387.9604,1076.6086,399.9604,1064.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><ellipse cx="399.9604" cy="1119.6086" fill="none" rx="11" ry="11" style="stroke:#000000;stroke-width:1;"/><ellipse cx="399.9604" cy="1119.6086" fill="#FFFFFF" rx="6" ry="6" style="stroke:#000000;stroke-width:1;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="77.7373" y2="97.7373"/><polygon fill="#000000" points="395.9604,87.7373,399.9604,97.7373,403.9604,87.7373,399.9604,91.7373" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="146.9053" y2="166.9053"/><polygon fill="#000000" points="395.9604,156.9053,399.9604,166.9053,403.9604,156.9053,399.9604,160.9053" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="216.0732" y2="236.0732"/><polygon fill="#000000" points="395.9604,226.0732,399.9604,236.0732,403.9604,226.0732,399.9604,230.0732" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="403.0935" y2="438.0935"/><polygon fill="#000000" points="395.9604,428.0935,399.9604,438.0935,403.9604,428.0935,399.9604,432.0935" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="329.2412" y2="353.9255"/><polygon fill="#000000" points="395.9604,343.9255,399.9604,353.9255,403.9604,343.9255,399.9604,347.9255" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="481.9673" x2="513.5171" y1="317.2412" y2="317.2412"/><polygon fill="#000000" points="509.5171,410.5935,513.5171,420.5935,517.5171,410.5935,513.5171,414.5935" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="513.5171" x2="513.5171" y1="317.2412" y2="519.2615"/><line style="stroke:#000000;stroke-width:1;" x1="513.5171" x2="411.9604" y1="519.2615" y2="519.2615"/><polygon fill="#000000" points="421.9604,515.2615,411.9604,519.2615,421.9604,523.2615,417.9604,519.2615" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="487.2615" y2="507.2615"/><polygon fill="#000000" points="395.9604,497.2615,399.9604,507.2615,403.9604,497.2615,399.9604,501.2615" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="285.2412" y2="305.2412"/><polygon fill="#000000" points="395.9604,295.2412,399.9604,305.2412,403.9604,295.2412,399.9604,299.2412" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="531.2615" y2="551.2615"/><polygon fill="#000000" points="395.9604,541.2615,399.9604,551.2615,403.9604,541.2615,399.9604,545.2615" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="585.8455" y2="605.8455"/><polygon fill="#000000" points="395.9604,595.8455,399.9604,605.8455,403.9604,595.8455,399.9604,599.8455" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="237.5586" x2="237.5586" y1="747.1047" y2="767.1047"/><polygon fill="#000000" points="233.5586,757.1047,237.5586,767.1047,241.5586,757.1047,237.5586,761.1047" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="124.3477" x2="124.3477" y1="904.8567" y2="924.8567"/><polygon fill="#000000" points="120.3477,914.8567,124.3477,924.8567,128.3477,914.8567,124.3477,918.8567" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="124.3477" x2="124.3477" y1="974.0247" y2="994.0247"/><polygon fill="#000000" points="120.3477,984.0247,124.3477,994.0247,128.3477,984.0247,124.3477,988.0247" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="350.7695" x2="350.7695" y1="904.8567" y2="924.8567"/><polygon fill="#000000" points="346.7695,914.8567,350.7695,924.8567,354.7695,914.8567,350.7695,918.8567" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="154.123" x2="124.3477" y1="848.2727" y2="848.2727"/><line style="stroke:#000000;stroke-width:1;" x1="124.3477" x2="124.3477" y1="848.2727" y2="870.2727"/><polygon fill="#000000" points="120.3477,860.2727,124.3477,870.2727,128.3477,860.2727,124.3477,864.2727" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="320.9941" x2="350.7695" y1="848.2727" y2="848.2727"/><line style="stroke:#000000;stroke-width:1;" x1="350.7695" x2="350.7695" y1="848.2727" y2="870.2727"/><polygon fill="#000000" points="346.7695,860.2727,350.7695,870.2727,354.7695,860.2727,350.7695,864.2727" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="124.3477" x2="124.3477" y1="1028.6086" y2="1046.6086"/><line style="stroke:#000000;stroke-width:1;" x1="124.3477" x2="225.5586" y1="1046.6086" y2="1046.6086"/><polygon fill="#000000" points="215.5586,1042.6086,225.5586,1046.6086,215.5586,1050.6086,219.5586,1046.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="350.7695" x2="350.7695" y1="974.0247" y2="1046.6086"/><line style="stroke:#000000;stroke-width:1;" x1="350.7695" x2="249.5586" y1="1046.6086" y2="1046.6086"/><polygon fill="#000000" points="259.5586,1042.6086,249.5586,1046.6086,259.5586,1050.6086,255.5586,1046.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="237.5586" x2="237.5586" y1="816.2727" y2="836.2727"/><polygon fill="#000000" points="233.5586,826.2727,237.5586,836.2727,241.5586,826.2727,237.5586,830.2727" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="323.7329" x2="237.5586" y1="675.9368" y2="675.9368"/><line style="stroke:#000000;stroke-width:1;" x1="237.5586" x2="237.5586" y1="675.9368" y2="697.9368"/><polygon fill="#000000" points="233.5586,687.9368,237.5586,697.9368,241.5586,687.9368,237.5586,691.9368" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="476.188" x2="562.3623" y1="675.9368" y2="675.9368"/><line style="stroke:#000000;stroke-width:1;" x1="562.3623" x2="562.3623" y1="675.9368" y2="697.9368"/><polygon fill="#000000" points="558.3623,687.9368,562.3623,697.9368,566.3623,687.9368,562.3623,691.9368" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="237.5586" x2="237.5586" y1="1058.6086" y2="1076.6086"/><line style="stroke:#000000;stroke-width:1;" x1="237.5586" x2="387.9604" y1="1076.6086" y2="1076.6086"/><polygon fill="#000000" points="377.9604,1072.6086,387.9604,1076.6086,377.9604,1080.6086,381.9604,1076.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="562.3623" x2="562.3623" y1="747.1047" y2="1076.6086"/><line style="stroke:#000000;stroke-width:1;" x1="562.3623" x2="411.9604" y1="1076.6086" y2="1076.6086"/><polygon fill="#000000" points="421.9604,1072.6086,411.9604,1076.6086,421.9604,1080.6086,417.9604,1076.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="640.4294" y2="663.9368"/><polygon fill="#000000" points="395.9604,653.9368,399.9604,663.9368,403.9604,653.9368,399.9604,657.9368" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#000000;stroke-width:1;" x1="399.9604" x2="399.9604" y1="1088.6086" y2="1108.6086"/><polygon fill="#000000" points="395.9604,1098.6086,399.9604,1108.6086,403.9604,1098.6086,399.9604,1102.6086" style="stroke:#000000;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><?plantuml-src NLDBRzim3BxhLt2t5aYxOiVaC0pBiKMt3jZEZ4mxH6N98Aa4_lUZx3HhTyf3rFVYfqzsf95WIiWv65iYU9uexz4GVfCebmnVxX_k7zhVWkQ_CS4ZznJdc2W4DHGBsprDgSmGopZvqC5Xj5I9z7d2-8e3RSAldu-WqTaGC7VGbLX7ohP0xiBsnG4m4XnACJN12Q9GvmECARGBaSIuvuZceC8d_uHNclsgw-H-Xew5eXLXqWqCWjbq4mvENwU5yLpabVDmdVEhWNku-LvopqDTpO7Gm6hat5zlmSF9S9FBRG3OljGCTtTlvt1cEy8anHoCkb1E9C8TGS-9Tct-8glvZXye33qVNKm9dONDdEMVxnM0SiTz21VMv9ntKwe3PtN7Uvdln0-U-u76nLnRsXCPbLt8BWc4XwE5P_SvLOLEPcZphE2dKBKf29oRGOXLn7E60oebpdJVkDiShVbyYv4cm-pBqUhVLVkQhk7CfDTqIgPcrQIaH1wuMwFWjG47NbA2rSBxU7fkXKfbs5mEdMGSKUPDmDgnWPIpBXOFLLsTkXilPuDeulwWP5-gGX4OMKSqhvZ-hyxfVdaIq5Vn_sLLfhlrv8NComzqykqra-jUt4VqHGHVILQCRN5UAxSr-AjOPb3YaK_lO6BhG1CIYxIAVLnx6wEazDOdl_A3P5mSLdDdKDvUs0NngMJsdhPmd7f9mqCg9Mt2-hZWYEfk5pKH_QMnpGlDqfttPDizuv2BqaTDLw26CA6ew--HKvLcwr91zUJ-0W00?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="584pt" height="904pt"
+ viewBox="0.00 0.00 583.50 904.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 900)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-900 579.5,-900 579.5,4 -4,4"/>
+<text text-anchor="middle" x="287.75" y="-876" font-family="Arial" font-size="20.00">OpenData 2.0.0 Operational Lifecycle</text>
+<!-- deploy -->
+<g id="node1" class="node">
+<title>deploy</title>
+<path fill="none" stroke="black" d="M467.5,-866C467.5,-866 173.5,-866 173.5,-866 167.5,-866 161.5,-860 161.5,-854 161.5,-854 161.5,-842 161.5,-842 161.5,-836 167.5,-830 173.5,-830 173.5,-830 467.5,-830 467.5,-830 473.5,-830 479.5,-836 479.5,-842 479.5,-842 479.5,-854 479.5,-854 479.5,-860 473.5,-866 467.5,-866"/>
+<text text-anchor="middle" x="320.5" y="-845.5" font-family="Arial" font-size="10.00">Deploy compatible source/package, SQL schema and documentation</text>
+</g>
+<!-- secure -->
+<g id="node2" class="node">
+<title>secure</title>
+<path fill="none" stroke="black" d="M453.5,-793C453.5,-793 187.5,-793 187.5,-793 181.5,-793 175.5,-787 175.5,-781 175.5,-781 175.5,-769 175.5,-769 175.5,-763 181.5,-757 187.5,-757 187.5,-757 453.5,-757 453.5,-757 459.5,-757 465.5,-763 465.5,-769 465.5,-769 465.5,-781 465.5,-781 465.5,-787 459.5,-793 453.5,-793"/>
+<text text-anchor="middle" x="320.5" y="-772.5" font-family="Arial" font-size="10.00">Replace/protect bootstrap credential and certificate/private key</text>
+</g>
+<!-- deploy&#45;&gt;secure -->
+<g id="edge1" class="edge">
+<title>deploy&#45;&gt;secure</title>
+<path fill="none" stroke="black" d="M320.5,-829.81C320.5,-821.79 320.5,-812.05 320.5,-803.07"/>
+<polygon fill="black" stroke="black" points="324,-803.03 320.5,-793.03 317,-803.03 324,-803.03"/>
+</g>
+<!-- verify -->
+<g id="node3" class="node">
+<title>verify</title>
+<path fill="none" stroke="black" d="M437,-720C437,-720 204,-720 204,-720 198,-720 192,-714 192,-708 192,-708 192,-696 192,-696 192,-690 198,-684 204,-684 204,-684 437,-684 437,-684 443,-684 449,-690 449,-696 449,-696 449,-708 449,-708 449,-714 443,-720 437,-720"/>
+<text text-anchor="middle" x="320.5" y="-699.5" font-family="Arial" font-size="10.00">Verify registry migration, grants, directories and backup</text>
+</g>
+<!-- secure&#45;&gt;verify -->
+<g id="edge2" class="edge">
+<title>secure&#45;&gt;verify</title>
+<path fill="none" stroke="black" d="M320.5,-756.81C320.5,-748.79 320.5,-739.05 320.5,-730.07"/>
+<polygon fill="black" stroke="black" points="324,-730.03 320.5,-720.03 317,-730.03 324,-730.03"/>
+</g>
+<!-- regq -->
+<g id="node4" class="node">
+<title>regq</title>
+<path fill="none" stroke="black" d="M308.64,-645.17C308.64,-645.17 215.76,-630.83 215.76,-630.83 209.83,-629.92 209.83,-628.08 215.76,-627.17 215.76,-627.17 308.64,-612.83 308.64,-612.83 314.57,-611.92 326.43,-611.92 332.36,-612.83 332.36,-612.83 425.24,-627.17 425.24,-627.17 431.17,-628.08 431.17,-629.92 425.24,-630.83 425.24,-630.83 332.36,-645.17 332.36,-645.17 326.43,-646.08 314.57,-646.08 308.64,-645.17"/>
+<text text-anchor="middle" x="320.5" y="-626.5" font-family="Arial" font-size="10.00">Required plugins registered?</text>
+</g>
+<!-- verify&#45;&gt;regq -->
+<g id="edge3" class="edge">
+<title>verify&#45;&gt;regq</title>
+<path fill="none" stroke="black" d="M320.5,-683.81C320.5,-675.79 320.5,-666.05 320.5,-657.07"/>
+<polygon fill="black" stroke="black" points="324,-657.03 320.5,-647.03 317,-657.03 324,-657.03"/>
+</g>
+<!-- reg -->
+<g id="node5" class="node">
+<title>reg</title>
+<path fill="none" stroke="black" d="M366,-565C366,-565 87,-565 87,-565 81,-565 75,-559 75,-553 75,-553 75,-541 75,-541 75,-535 81,-529 87,-529 87,-529 366,-529 366,-529 372,-529 378,-535 378,-541 378,-541 378,-553 378,-553 378,-559 372,-565 366,-565"/>
+<text text-anchor="middle" x="226.5" y="-544.5" font-family="Arial" font-size="10.00">Register packaged selected/all or one complete external definition</text>
+</g>
+<!-- regq&#45;&gt;reg -->
+<g id="edge4" class="edge">
+<title>regq&#45;&gt;reg</title>
+<path fill="none" stroke="black" d="M303.26,-613.33C289.63,-601.73 270.32,-585.3 254.49,-571.82"/>
+<polygon fill="black" stroke="black" points="256.45,-568.9 246.57,-565.08 251.92,-574.23 256.45,-568.9"/>
+<text text-anchor="middle" x="285" y="-585.8" font-family="Arial" font-size="9.00">no</text>
+</g>
+<!-- list -->
+<g id="node6" class="node">
+<title>list</title>
+<path fill="none" stroke="black" d="M432,-492C432,-492 209,-492 209,-492 203,-492 197,-486 197,-480 197,-480 197,-468 197,-468 197,-462 203,-456 209,-456 209,-456 432,-456 432,-456 438,-456 444,-462 444,-468 444,-468 444,-480 444,-480 444,-486 438,-492 432,-492"/>
+<text text-anchor="middle" x="320.5" y="-471.5" font-family="Arial" font-size="10.00">List plugins and set intended enabled/disabled status</text>
+</g>
+<!-- regq&#45;&gt;list -->
+<g id="edge5" class="edge">
+<title>regq&#45;&gt;list</title>
+<path fill="none" stroke="black" d="M342.52,-614.18C358.04,-603.04 377.59,-585.83 386.5,-565 392.79,-550.29 393.35,-543.46 386.5,-529 380.69,-516.74 370.58,-506.34 360,-498.03"/>
+<polygon fill="black" stroke="black" points="362.01,-495.17 351.87,-492.1 357.88,-500.82 362.01,-495.17"/>
+<text text-anchor="middle" x="399" y="-544.8" font-family="Arial" font-size="9.00">yes</text>
+</g>
+<!-- reg&#45;&gt;list -->
+<g id="edge6" class="edge">
+<title>reg&#45;&gt;list</title>
+<path fill="none" stroke="black" d="M249.25,-528.81C261.38,-519.66 276.47,-508.26 289.63,-498.32"/>
+<polygon fill="black" stroke="black" points="292.08,-500.85 297.95,-492.03 287.87,-495.26 292.08,-500.85"/>
+</g>
+<!-- dry -->
+<g id="node7" class="node">
+<title>dry</title>
+<path fill="none" stroke="black" d="M369,-419C369,-419 272,-419 272,-419 266,-419 260,-413 260,-407 260,-407 260,-395 260,-395 260,-389 266,-383 272,-383 272,-383 369,-383 369,-383 375,-383 381,-389 381,-395 381,-395 381,-407 381,-407 381,-413 375,-419 369,-419"/>
+<text text-anchor="middle" x="320.5" y="-398.5" font-family="Arial" font-size="10.00">Run &#45;&#45;plugin all &#45;&#45;dry&#45;run</text>
+</g>
+<!-- list&#45;&gt;dry -->
+<g id="edge7" class="edge">
+<title>list&#45;&gt;dry</title>
+<path fill="none" stroke="black" d="M320.5,-455.81C320.5,-447.79 320.5,-438.05 320.5,-429.07"/>
+<polygon fill="black" stroke="black" points="324,-429.03 320.5,-419.03 317,-429.03 324,-429.03"/>
+</g>
+<!-- accept -->
+<g id="node8" class="node">
+<title>accept</title>
+<path fill="none" stroke="black" d="M308.68,-343.94C308.68,-343.94 228.86,-330.06 228.86,-330.06 222.95,-329.03 222.95,-326.97 228.86,-325.94 228.86,-325.94 308.68,-312.06 308.68,-312.06 314.59,-311.03 326.41,-311.03 332.32,-312.06 332.32,-312.06 412.14,-325.94 412.14,-325.94 418.05,-326.97 418.05,-329.03 412.14,-330.06 412.14,-330.06 332.32,-343.94 332.32,-343.94 326.41,-344.97 314.59,-344.97 308.68,-343.94"/>
+<text text-anchor="middle" x="320.5" y="-325.5" font-family="Arial" font-size="10.00">Acceptance successful?</text>
+</g>
+<!-- dry&#45;&gt;accept -->
+<g id="edge8" class="edge">
+<title>dry&#45;&gt;accept</title>
+<path fill="none" stroke="black" d="M320.5,-382.81C320.5,-374.79 320.5,-365.05 320.5,-356.07"/>
+<polygon fill="black" stroke="black" points="324,-356.03 320.5,-346.03 317,-356.03 324,-356.03"/>
+</g>
+<!-- write -->
+<g id="node9" class="node">
+<title>write</title>
+<path fill="none" stroke="black" d="M273,-264C273,-264 130,-264 130,-264 124,-264 118,-258 118,-252 118,-252 118,-240 118,-240 118,-234 124,-228 130,-228 130,-228 273,-228 273,-228 279,-228 285,-234 285,-240 285,-240 285,-252 285,-252 285,-258 279,-264 273,-264"/>
+<text text-anchor="middle" x="201.5" y="-243.5" font-family="Arial" font-size="10.00">Controlled write per enabled plugin</text>
+</g>
+<!-- accept&#45;&gt;write -->
+<g id="edge9" class="edge">
+<title>accept&#45;&gt;write</title>
+<path fill="none" stroke="black" d="M300.31,-313.43C282.6,-301.52 256.46,-283.95 235.52,-269.87"/>
+<polygon fill="black" stroke="black" points="237.44,-266.95 227.19,-264.27 233.54,-272.76 237.44,-266.95"/>
+<text text-anchor="middle" x="276" y="-284.8" font-family="Arial" font-size="9.00">yes</text>
+</g>
+<!-- diagnose -->
+<g id="node14" class="node">
+<title>diagnose</title>
+<path fill="none" stroke="black" d="M563.5,-264C563.5,-264 315.5,-264 315.5,-264 309.5,-264 303.5,-258 303.5,-252 303.5,-252 303.5,-240 303.5,-240 303.5,-234 309.5,-228 315.5,-228 315.5,-228 563.5,-228 563.5,-228 569.5,-228 575.5,-234 575.5,-240 575.5,-240 575.5,-252 575.5,-252 575.5,-258 569.5,-264 563.5,-264"/>
+<text text-anchor="middle" x="439.5" y="-243.5" font-family="Arial" font-size="10.00">Diagnose registry, configuration, source and parser failures</text>
+</g>
+<!-- accept&#45;&gt;diagnose -->
+<g id="edge10" class="edge">
+<title>accept&#45;&gt;diagnose</title>
+<path fill="none" stroke="black" d="M340.69,-313.43C358.4,-301.52 384.54,-283.95 405.48,-269.87"/>
+<polygon fill="black" stroke="black" points="407.46,-272.76 413.81,-264.27 403.56,-266.95 407.46,-272.76"/>
+<text text-anchor="middle" x="393" y="-284.8" font-family="Arial" font-size="9.00">no</text>
+</g>
+<!-- inspect -->
+<g id="node10" class="node">
+<title>inspect</title>
+<path fill="none" stroke="black" d="M313.5,-191C313.5,-191 89.5,-191 89.5,-191 83.5,-191 77.5,-185 77.5,-179 77.5,-179 77.5,-167 77.5,-167 77.5,-161 83.5,-155 89.5,-155 89.5,-155 313.5,-155 313.5,-155 319.5,-155 325.5,-161 325.5,-167 325.5,-167 325.5,-179 325.5,-179 325.5,-185 319.5,-191 313.5,-191"/>
+<text text-anchor="middle" x="201.5" y="-170.5" font-family="Arial" font-size="10.00">Verify logs, audit, registry, provider data and archives</text>
+</g>
+<!-- write&#45;&gt;inspect -->
+<g id="edge11" class="edge">
+<title>write&#45;&gt;inspect</title>
+<path fill="none" stroke="black" d="M201.5,-227.81C201.5,-219.79 201.5,-210.05 201.5,-201.07"/>
+<polygon fill="black" stroke="black" points="205,-201.03 201.5,-191.03 198,-201.03 205,-201.03"/>
+</g>
+<!-- warn -->
+<g id="node11" class="node">
+<title>warn</title>
+<path fill="none" stroke="black" d="M189.66,-116.04C189.66,-116.04 104.89,-101.96 104.89,-101.96 98.97,-100.98 98.97,-99.02 104.89,-98.04 104.89,-98.04 189.66,-83.96 189.66,-83.96 195.58,-82.98 207.42,-82.98 213.34,-83.96 213.34,-83.96 298.11,-98.04 298.11,-98.04 304.03,-99.02 304.03,-100.98 298.11,-101.96 298.11,-101.96 213.34,-116.04 213.34,-116.04 207.42,-117.02 195.58,-117.02 189.66,-116.04"/>
+<text text-anchor="middle" x="201.5" y="-97.5" font-family="Arial" font-size="10.00">Warnings or mismatches?</text>
+</g>
+<!-- inspect&#45;&gt;warn -->
+<g id="edge12" class="edge">
+<title>inspect&#45;&gt;warn</title>
+<path fill="none" stroke="black" d="M201.5,-154.81C201.5,-146.79 201.5,-137.05 201.5,-128.07"/>
+<polygon fill="black" stroke="black" points="205,-128.03 201.5,-118.03 198,-128.03 205,-128.03"/>
+</g>
+<!-- stop -->
+<g id="node12" class="node">
+<title>stop</title>
+<path fill="none" stroke="black" d="M187,-36C187,-36 12,-36 12,-36 6,-36 0,-30 0,-24 0,-24 0,-12 0,-12 0,-6 6,0 12,0 12,0 187,0 187,0 193,0 199,-6 199,-12 199,-12 199,-24 199,-24 199,-30 193,-36 187,-36"/>
+<text text-anchor="middle" x="99.5" y="-15.5" font-family="Arial" font-size="10.00">Stop writes, retain evidence and reconcile</text>
+</g>
+<!-- warn&#45;&gt;stop -->
+<g id="edge13" class="edge">
+<title>warn&#45;&gt;stop</title>
+<path fill="none" stroke="black" d="M183.26,-84.7C168.39,-73.03 147.08,-56.31 129.67,-42.66"/>
+<polygon fill="black" stroke="black" points="131.51,-39.66 121.48,-36.24 127.19,-45.17 131.51,-39.66"/>
+<text text-anchor="middle" x="165" y="-56.8" font-family="Arial" font-size="9.00">yes</text>
+</g>
+<!-- routine -->
+<g id="node13" class="node">
+<title>routine</title>
+<path fill="none" stroke="black" d="M379.5,-36C379.5,-36 229.5,-36 229.5,-36 223.5,-36 217.5,-30 217.5,-24 217.5,-24 217.5,-12 217.5,-12 217.5,-6 223.5,0 229.5,0 229.5,0 379.5,0 379.5,0 385.5,0 391.5,-6 391.5,-12 391.5,-12 391.5,-24 391.5,-24 391.5,-30 385.5,-36 379.5,-36"/>
+<text text-anchor="middle" x="304.5" y="-15.5" font-family="Arial" font-size="10.00">Permit routine operation and monitor</text>
+</g>
+<!-- warn&#45;&gt;routine -->
+<g id="edge14" class="edge">
+<title>warn&#45;&gt;routine</title>
+<path fill="none" stroke="black" d="M219.91,-84.7C234.93,-73.03 256.46,-56.31 274.04,-42.66"/>
+<polygon fill="black" stroke="black" points="276.55,-45.14 282.3,-36.24 272.26,-39.61 276.55,-45.14"/>
+<text text-anchor="middle" x="265" y="-56.8" font-family="Arial" font-size="9.00">no</text>
+</g>
+</g>
+</svg>

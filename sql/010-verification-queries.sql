@@ -20,6 +20,7 @@ WHERE t.object_id IN
       (OBJECT_ID(N'[core].[PluginRun]'),
        OBJECT_ID(N'[core].[application_property]'),
        OBJECT_ID(N'[core].[plugin_property]'),
+       OBJECT_ID(N'[core].[plugin_registry]'),
        OBJECT_ID(N'[octopus].[electric_data]'),
        OBJECT_ID(N'[octopus].[gas_data]'),
        OBJECT_ID(N'[openmeteo].[Location]'),
@@ -50,6 +51,18 @@ SELECT
     [updated_at]
 FROM [core].[plugin_property]
 ORDER BY [plugin_id], [property_key];
+GO
+
+SELECT
+    [plugin_id],
+    [display_name],
+    [is_enabled],
+    [configuration_version],
+    [implementation_class],
+    [registered_at],
+    [updated_at]
+FROM [core].[plugin_registry]
+ORDER BY [plugin_id];
 GO
 
 SELECT

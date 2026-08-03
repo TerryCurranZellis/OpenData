@@ -64,10 +64,7 @@ packaging have been implemented and tested.
 8. run the SQL Server acceptance matrix for persistence or configuration
    changes.
 
-The current Octopus extractor reads its processed-file ledger during dry run.
-The framework supplies an unavailable database resource in dry-run mode, so
-`--plugin octopus --dry-run` and `--plugin all --dry-run` are not valid
-verification commands until the defect is corrected.
+Octopus dry run skips completion-ledger access and parses every matching input PDF without provider writes or archive movement.
 
 ## Testing documentation examples
 
@@ -80,6 +77,6 @@ framework API.
 
 ## Local and generated files
 
-Do not commit passwords, local override files, logs, downloads, database
+Do not commit passwords, external plugin registration files, logs, downloads, database
 backups, customer PDFs, private PFX files or generated manuals unless repository
 policy explicitly identifies an output as maintained.

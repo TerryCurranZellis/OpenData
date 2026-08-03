@@ -10,9 +10,10 @@
 
 ## Lifecycle
 
-Classpath plugin property files are the authoritative registration definitions.
-`--register` parses and validates them, then stores the flattened properties in
-SQL Server. Ordinary plugin runs load their property set from
+Packaged plugin property files are the default registration definitions.
+`--plugin <id|all> --register` parses selected packaged definitions, while
+`--plugin <id> --register --file <filename>` parses one complete external
+definition. Registration stores the flattened properties and metadata in SQL Server. Ordinary runs load their property set from
 `core.plugin_property` and reconstruct the immutable `PluginDefinition`.
 
 Editing a classpath file does not change an existing runtime definition until
@@ -30,7 +31,7 @@ plugin.configuration-version=1
 dataset.id=example-dataset
 ```
 
-The classpath registry ID, `plugin.id` and resource filename must agree.
+For packaged definitions, catalogue ID, `plugin.id` and resource filename must agree. For external registration, `plugin.id` must match the one named command-line id.
 
 ## Endpoint groups
 
@@ -94,3 +95,7 @@ Property names are normalised to lowercase for lookup.
 Credential metadata can define authentication type, provider, secret reference,
 request location and parameter name. Actual secret resolution and application
 are not implemented. Never store an actual key or token in the properties file.
+
+## Enabled status
+
+`plugin.enabled` sets initial status only for a newly registered row. Re-registration preserves current persistent status. Use `--enable` and `--disable` for lifecycle administration.

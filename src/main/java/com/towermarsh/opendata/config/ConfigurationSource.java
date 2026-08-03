@@ -9,7 +9,7 @@ package com.towermarsh.opendata.config;
  * Records where a resolved property value originated.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public enum ConfigurationSource {
 
@@ -26,10 +26,5 @@ public enum ConfigurationSource {
     /**
      * Plugin configuration
      */
-    PLUGIN_CLASSPATH,
-
-    /**
-     * override configuration
-     */
-    OVERRIDE_FILE
+    PLUGIN_CLASSPATH
 }

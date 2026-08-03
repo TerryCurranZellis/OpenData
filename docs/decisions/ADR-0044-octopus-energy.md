@@ -1,6 +1,6 @@
 # ADR-0044: Process local Octopus Energy statement PDFs
 
-- **Status:** Accepted and implemented for write-mode execution
+- **Status:** Accepted and implemented
 - **Date:** 2026-08-02
 - **Updated:** 2026-08-03
 - **Decision owners:** OpenData maintainers
@@ -39,8 +39,7 @@ Implement plugin id `octopus` as a local-folder pipeline:
 - input and archive directories contain personal billing data;
 - filesystem archive cannot join the SQL transaction;
 - operators must arrange statement download separately;
-- the current extract stage reads the ledger during dry run and therefore
-  violates the framework's unavailable-database dry-run design.
+- dry-run parsing intentionally ignores the completion ledger, so it may parse files that write mode later skips.
 
 ## Implementation evidence
 
@@ -52,6 +51,6 @@ Implement plugin id `octopus` as a local-folder pipeline:
 
 ## Follow-up
 
-Correct Octopus dry-run extraction, complete live SQL/rollback/idempotency tests,
+Maintain dry-run isolation and complete live SQL/rollback/idempotency tests,
 and define operational recovery for post-commit archive failures. Separate ADRs
 remain authoritative for any future IMAP or account/API source adapter.

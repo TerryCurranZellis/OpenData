@@ -48,7 +48,7 @@ public final class OctopusExtract {
         }
 
         final Set<String> processed = context.dryRun()
-                ? new OctopusProcessedFileRepository(context.database()).findProcessedFileKeys()
+                ? Set.of()
                 : new OctopusProcessedFileRepository(context.database()).findProcessedFileKeys();
         final List<Path> candidates;
         try (Stream<Path> files = Files.list(inputDirectory)) {

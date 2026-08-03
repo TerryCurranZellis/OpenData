@@ -1,68 +1,97 @@
 # Configuration Reference
 
 **Document ID:** REF-CONFIG-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation reference  
-**Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Version:** 2.1  
+**Status:** OpenData 2.0.0 implementation reference  
+**Baseline date:** 3 August 2026
 
 ---
 
-## Sources and precedence
+## Configuration sources
 
-| Order | Source | Purpose |
-|---|---|---|
-| 1 | built-in defaults | JDBC pool, execution and logging defaults |
-| 2 | bootstrap file | database reachability and database-backed switch |
-| 3 | classpath or SQL Server | runtime and plugin property sets |
-| 4 | `--file` | invocation-only overrides |
+| Source | Purpose |
+|---|---|
+| Writable/classpath `config/application.properties` | Minimal database bootstrap and first-registration application defaults |
+| Classpath `config/plugins/index.properties` | Packaged plugin catalogue used by `--plugin all --register` |
+| Classpath `config/plugins/<id>.properties` | Packaged definition used when registering a named plugin without `--file` |
+| External `--file <plugin.properties>` | Complete definition for one named plugin during registration only |
+| `core.application_property` | Runtime application settings after registration |
+| `core.plugin_registry` | Registered plugin metadata and enabled/disabled status |
+| `core.plugin_property` | Complete registered plugin definitions |
 
-When `application.use-database-properties=false`, runtime/plugin values come from
-classpath resources. When true, they come from `core.application_property` and
-`core.plugin_property`.
+`--file` is no longer an invocation override. It is reserved for registering one
+plugin and must contain the same unprefixed keys as a packaged plugin definition.
 
-## Bootstrap keys
+## Bootstrap configuration
+
+The writable bootstrap contains:
 
 ```properties
 application.version=2.0.0
 application.use-database-properties=true
-database.url=<jdbc-url>
-database.user=<user>
-database.password={enc}<base64-ciphertext>
+database.url=jdbc:sqlserver://...
+database.user=OpenData
+database.password={enc}...
 ```
 
-The writable file path is resolved from `user.dir` as
-`src/main/resources/config/application.properties`; this is a source-tree
-coupling, not a portable packaged-runtime location.
+Help and About do not need SQL Server. Plugin listing, administration and
+execution require bootstrap database access because the persistent registry is
+the system of record.
 
-## Built-in application defaults
+## Application configuration
 
-| Key | Default |
-|---|---|
-| `database.driver-class` | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
-| `database.pool.name` | `OpenData` |
-| `database.pool.max-total` | `8` |
-| `database.pool.max-idle` | `8` |
-| `database.pool.min-idle` | `1` |
-| `database.pool.max-wait-seconds` | `30` |
-| `database.pool.validation-query` | `SELECT 1` |
-| `execution.max-parallel-plugins` | `4` |
-| `execution.shutdown-timeout-seconds` | `30` |
-| `logging.directory` | `logs` |
-| `logging.file-limit-bytes` | `10485760` |
-| `logging.file-count` | `10` |
-| `logging.append` | `true` |
+After registration, `JdbcConfigurationPropertiesSource` loads
+`core.application_property`. The registration command refreshes application
+values and marks the encrypted database-password row with `is_encrypted=1`.
 
-Boolean values accept `true/yes/1/on` and `false/no/0/off`.
+## Plugin registration sources
 
-## Override scopes
+### Packaged definition
 
-Application overrides use `application.<key>`. Single-plugin files may use
-unscoped plugin keys. Multi-plugin files must use
-`plugin.<id>.<property-key>`.
+```text
+opendata --plugin ofgem --register
+opendata --plugin all --register
+```
 
-## Registration behaviour
+The classpath catalogue determines which packaged definitions are available.
 
-`--register` upserts application properties, deletes and replaces each plugin's
-property rows, and finally rewrites the local bootstrap file. Those steps are
-not wrapped in one cross-resource transaction.
+### External definition
+
+```text
+opendata --plugin example --register --file C:\OpenData\example.properties
+```
+
+The file must include at least:
+
+```properties
+plugin.id=example
+plugin.display-name=Example Plugin
+plugin.implementation-class=com.example.ExamplePlugin
+plugin.enabled=true
+plugin.configuration-version=1
+dataset.id=example-data
+```
+
+It must also define at least one endpoint or typed plugin property. The id must
+match the command line, and the implementation class must be loadable and
+implement `OpenDataPlugin`.
+
+## Registered status versus definition value
+
+`plugin.enabled` supplies the initial status when a plugin is first registered.
+Thereafter `core.plugin_registry.is_enabled` is authoritative. Re-registration
+preserves the existing status; use `--enable` or `--disable` to change it.
+
+## Removal
+
+`--unregister` removes the registry row and every `core.plugin_property` row for
+the plugin. It does not remove application configuration or provider data.
+
+## Key normalisation
+
+Property keys and plugin ids are trimmed and lower-cased for lookup. Values are
+trimmed. Plugin ids must satisfy the framework id validation and SQL check
+constraint.
+
+See [Plugin Properties Reference](plugin-properties-reference.md) and
+[Plugin Registry Reference](plugin-registry-reference.md).

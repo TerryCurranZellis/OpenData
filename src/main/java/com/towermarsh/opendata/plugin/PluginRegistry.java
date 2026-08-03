@@ -9,25 +9,26 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Provides metadata for installed OpenData plugins.
+ * Provides metadata for OpenData plugins available to a particular operation.
  *
- * <p>The Phase 1 implementation is backed by classpath properties files.
- * A later database-backed implementation can implement the same interface.</p>
+ * <p>{@link JdbcPluginRegistry} is authoritative for administration and
+ * execution. {@link ClasspathPluginRegistry} is the packaged registration
+ * catalogue used by {@code --register} when no external file is supplied.</p>
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public interface PluginRegistry {
 
     /**
-     * Lists all installed plugins in identifier order.
+     * Lists all plugins in identifier order.
      *
      * @return immutable plugin list
      */
     List<PluginDescriptor> list();
 
     /**
-     * Finds an installed plugin.
+     * Finds an plugin.
      *
      * @param pluginId plugin identifier
      * @return descriptor when installed

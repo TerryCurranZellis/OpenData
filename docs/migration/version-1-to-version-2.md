@@ -76,12 +76,13 @@ the shared plugin exception handler. Preserve additional packages under
 
 ## 8. Validate plugins
 
-Dry-run Ofgem and OpenMeteo separately and together before write runs. Do not
-use Octopus or `all` dry run as an acceptance command in this source baseline:
-Octopus extract still queries the completed-file ledger through the unavailable
-dry-run database resource. For Octopus, use copies of representative statements
-outside source control, an isolated test database and explicit archive directory;
-test duplicate, changed-file, transaction failure and archive behaviour.
+Dry-run Ofgem, OpenMeteo and Octopus separately, then run
+`--plugin all --dry-run`. Dry runs use an unavailable provider-data resource and
+no-op audit service; Octopus also skips its processed-file ledger and archive
+movement. Use copies of representative statements outside source control for
+Octopus acceptance, then use an isolated test database and explicit archive
+directory for write-mode duplicate, changed-file, transaction-failure and
+archive testing.
 
 ## Rollback
 

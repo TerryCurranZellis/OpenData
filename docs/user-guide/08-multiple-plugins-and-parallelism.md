@@ -24,8 +24,7 @@ Each task has its own plugin instance, run UUID and database transaction. A
 plugin failure does not cancel the other selected plugins, but the aggregate
 application status becomes `PLUGIN_FAILURE`.
 
-A multi-plugin override file must use `plugin.<id>.<key>` for every plugin value.
-Unscoped plugin values are rejected.
+Configuration files are registration inputs, not run-time overrides. Re-register each named plugin separately when its stored definition must change.
 
 Start with parallelism one. Increase it only after checking SQL Server
 connections, lock waits, remote-service behaviour and per-plugin run duration.
@@ -33,5 +32,4 @@ The default database pool maximum is eight connections, but a plugin may borrow
 more than one connection during its lifecycle, so do not equate pool size with a
 safe plugin count.
 
-`--plugin all --dry-run` is not a valid acceptance command while Octopus dry run
-is defective. Dry-run only Ofgem and OpenMeteo together.
+`--plugin all --dry-run` is the preferred combined pre-write acceptance command. It selects every enabled registered plugin; disabled plugins are omitted.

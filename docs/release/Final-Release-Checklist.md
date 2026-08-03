@@ -45,22 +45,21 @@ only on expectation or documentation review.
 - [ ] Least-privilege application login/role verified.
 - [ ] SQL Server uses validated certificate trust with
       `trustServerCertificate=false` for the release environment.
-- [ ] Registration encrypts the bootstrap password and restart loads database
-      properties.
+- [ ] `--plugin all --register` encrypts the bootstrap password and restart loads database properties.
+- [ ] Registry list, named/repeated/all selection and enable/disable/unregister/re-register are accepted against SQL Server.
+- [ ] External one-plugin registration file rules are accepted and invalid combinations rejected.
 - [ ] Wrong/unavailable private key fails closed.
 
 ## Plugin acceptance
 
-- [ ] Ofgem dry-run succeeds without database writes/audit rows.
-- [ ] OpenMeteo dry-run succeeds without database writes/audit rows.
+- [ ] Ofgem, OpenMeteo and Octopus dry-runs succeed without provider writes/audit rows/archive moves.
+- [ ] `--plugin all --dry-run` succeeds with the expected enabled set and bounded parallelism.
 - [ ] Ofgem representative write run and rollback/reconciliation verified.
 - [ ] OpenMeteo representative write run and period replacement verified.
 - [ ] Octopus electricity-only, gas-only and dual-fuel write runs verified.
 - [ ] Completed Octopus filename/hash pairs are skipped.
 - [ ] Changed content under the same Octopus filename is processed as a new hash.
 - [ ] Octopus source files archive only after successful commit.
-- [ ] Octopus dry-run database-ledger defect corrected before claiming Octopus or
-      `--plugin all --dry-run` acceptance.
 
 ## Distribution and release
 

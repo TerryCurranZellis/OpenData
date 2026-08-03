@@ -1,31 +1,32 @@
 @startuml
-title Configuration Registration
+title Selected Plugin Registration
 actor Operator
 participant OpenDataApplication as Application
 participant ApplicationBootstrapPropertiesLoader as Bootstrap
 participant RsaConfigurationPasswordCipher as Cipher
-participant SQLServerResource as Database
+participant ClasspathPluginRegistry as Catalogue
+participant PropertiesFileConfigurationPropertiesSource as ExternalFile
 participant ConfigurationRegistrationService as Register
-participant ClasspathConfigurationPropertiesSource as Files
-participant JdbcConfigurationPropertiesSource as Jdbc
+participant JdbcPluginRegistry as Registry
+participant JdbcConfigurationPropertiesSource as Properties
+participant SQLServerResource as SQL
 
-Operator -> Application : --register [--file bootstrap.properties]
-Application -> Bootstrap : load and decrypt bootstrap
-Bootstrap -> Cipher : decrypt when necessary
-Cipher --> Bootstrap : database password
-Application -> Database : initialise bootstrap connection
-Application -> Register : register(bootstrap, installed plugins)
-Register -> Files : load application and plugin properties
-Files --> Register : property maps
-Register -> Cipher : encrypt database password
-Cipher --> Register : {enc}Base64 value
-Register -> Jdbc : upsert application properties
-Jdbc -> Database : core.application_property
-loop each installed plugin
-  Register -> Jdbc : upsert plugin properties
-  Jdbc -> Database : core.plugin_property
+Operator -> Application : --plugin id|all --register [--file complete-plugin.properties]
+Application -> Bootstrap : load bootstrap and decrypt password
+Bootstrap -> Cipher : decrypt when {enc}
+Application -> SQL : initialise connection
+alt external file supplied
+  Application -> ExternalFile : load exactly one complete named definition
+else packaged definition(s)
+  Application -> Catalogue : resolve named/repeated/all definitions
 end
-Register -> Bootstrap : store(useDatabaseProperties=true)
-Bootstrap -> Cipher : encrypt password for local bootstrap
-Bootstrap --> Operator : registration completed
+Application -> Register : register(bootstrap, selected definitions)
+Register -> Cipher : encrypt database password
+Register -> Properties : save application properties
+Properties -> SQL : core.application_property
+loop each selected plugin
+  Register -> Registry : upsert metadata and replace properties
+  Registry -> SQL : core.plugin_registry + core.plugin_property
+end
+Register -> Bootstrap : store encrypted bootstrap and database mode=true
 @enduml

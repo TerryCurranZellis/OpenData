@@ -18,10 +18,11 @@ context supplies run identity, database access, clock and dry-run state.
 
 ## Registry and definitions
 
-Installed plugin ids are listed explicitly in
-`config/plugins/index.properties`. `ClasspathPluginRegistry` uses this index to
-create descriptors; it does not scan the classpath or query the database for
-installed implementation classes.
+Packaged plugin ids are listed explicitly in
+`config/plugins/index.properties`. `ClasspathPluginRegistry` exposes that
+catalogue only for registration. `JdbcPluginRegistry` reads
+`core.plugin_registry` and is authoritative for installed metadata, enabled
+status and execution selection.
 
 Plugin property values are loaded by `PropertiesPluginDefinitionLoader` through
 a `ConfigurationPropertiesSource`:
@@ -30,10 +31,11 @@ a `ConfigurationPropertiesSource`:
   registration or when database-backed mode is disabled;
 - `JdbcConfigurationPropertiesSource` reads `core.plugin_property` after
   registration;
-- invocation overrides are applied last.
+- external properties files are accepted only as complete single-plugin registration sources.
 
-This separates implementation registration from configuration storage. Moving
-property values to SQL Server does not make the plugin registry dynamic.
+Registration persists the implementation class, display metadata, configuration
+version and status alongside the complete property set. Runtime construction
+still requires the named class to be available on the application classpath.
 
 ## Construction and execution
 
@@ -46,11 +48,9 @@ own context and runs selected plugins in a bounded executor.
 
 - ids are lowercase, stable and unique;
 - index id, plugin definition id and implementation id must agree;
-- disabled plugins may be listed but cannot run;
+- disabled registered plugins may be listed but cannot run;
 - plugin instances are task-confined and must not share JDBC connections;
-- plugins are required to honour `context.dryRun()` and return
-  `PluginMetrics`; the current Octopus extract stage violates the no-database
-  dry-run rule and is a recorded implementation defect;
+- plugins are required to honour `context.dryRun()` and return `PluginMetrics`;
 - plugins do not implement their own CLI or read global bootstrap files;
 - provider SQL and source parsing remain inside the provider package;
 - finalisation must distinguish dry run, successful completion and failure.

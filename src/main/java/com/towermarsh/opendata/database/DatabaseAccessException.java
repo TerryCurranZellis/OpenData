@@ -9,9 +9,9 @@ package com.towermarsh.opendata.database;
  * Unchecked wrapper for database bootstrap and persistence failures.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
-public final class DatabaseAccessException extends RuntimeException {
+public final class DatabaseAccessException extends DatabaseException {
 
     private static final long serialVersionUID = 1L;
 

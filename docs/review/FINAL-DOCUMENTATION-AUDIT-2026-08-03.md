@@ -3,7 +3,7 @@
 ## Scope
 
 This audit compares the uploaded OpenData 2.0.0 source baseline with the
-cumulative documentation updates in Batches 2–7. It assesses documentation
+cumulative documentation updates plus the command-line/plugin-registry implementation update. It assesses documentation
 consistency, not production runtime acceptance.
 
 ## Results
@@ -11,8 +11,8 @@ consistency, not production runtime acceptance.
 | Area | Result | Notes |
 |---|---|---|
 | Version identity | Pass | Active documentation identifies 2.0.0; 1.0.0 is historical |
-| Architecture | Pass with blockers recorded | Registration, security, database and Octopus flows match source structure |
-| Plugin guidance | Pass with limitation | Invalid Octopus/`all` dry-run guidance removed |
+| Architecture | Pass with blockers recorded | Persistent registry, registration, security, database and provider flows match source structure |
+| Plugin guidance | Pass | All current plugins and `all` support dry-run; lifecycle administration is documented |
 | User/operations | Pass | Current main class, registration, commands and recovery boundaries documented |
 | Developer/API | Pass | Current contracts, parsers, examples and quality configuration documented |
 | Governance/notices | Pass for source documentation | Binary/transitive licence review remains a release-time activity |
@@ -30,8 +30,7 @@ runtime proof.
 
 The documentation intentionally describes the following source defects rather
 than concealing them: tracked credentials/private key, broken environment-variable
-secret input, Octopus dry-run ledger access, development TLS trust and preview
-JDBC dependency.
+secret input, development TLS trust and preview JDBC dependency.
 
 ## Conclusion
 

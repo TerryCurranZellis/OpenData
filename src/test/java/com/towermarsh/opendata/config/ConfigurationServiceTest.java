@@ -5,43 +5,70 @@
  */
 package com.towermarsh.opendata.config;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-
-/**
- * @author Terry Curran
- * @version 1.0.0
- */
+/** Tests external plugin definition registration sources. */
 class ConfigurationServiceTest {
 
     @TempDir
     Path temporaryDirectory;
 
     @Test
-    void overrideFileTakesPrecedenceOverPluginDefaults() throws Exception {
-        final Path overrideFile = temporaryDirectory.resolve("ofgem.properties");
-        Files.writeString(overrideFile, """
-                database.batch-size=250
-                application.working-directory=local-work
+    void externalPluginFileUsesPackagedPluginDefinitionFormat() throws Exception {
+        final Path pluginFile = temporaryDirectory.resolve("example.properties");
+        Files.writeString(pluginFile, """
+                plugin.id=example
+                plugin.display-name=Example Plugin
+                plugin.description=External plugin definition
+                plugin.implementation-class=com.towermarsh.opendata.plugin.example.ExamplePlugin
+                plugin.enabled=false
+                plugin.configuration-version=2
+                dataset.id=example-data
+                property.batch-size.value=250
+                property.batch-size.type=integer
                 """);
 
-//        final CommandLineArguments arguments = CommandLineArguments.builder()
-//                .pluginId("ofgem")
-//                .overrideFile(overrideFile)
-//                .dryRun(true)
-//                .build();
-//        final ApplicationConfig configuration =
-//                new ConfigurationService().resolve(arguments);
-//        assertEquals("ofgem", configuration.pluginId());
-//        assertEquals(
-//                250,
-//                Integer.parseInt(configuration.bootstrap().values().get("database.batch-size")));
-//        assertEquals(Path.of("local-work"), configuration.bootstrap().workingDirectory());
-//        assertTrue(configuration.dryRun());
+        final var source = new PropertiesFileConfigurationPropertiesSource(pluginFile);
+        final var definition = new PropertiesPluginDefinitionLoader(source)
+                .load("example", Map.of());
+
+        assertEquals("example", definition.id());
+        assertEquals("Example Plugin", definition.displayName());
+        assertEquals(2, definition.configurationVersion());
+        assertFalse(definition.enabled());
+        assertEquals("250", source.loadPluginProperties("example")
+                .get("property.batch-size.value"));
+    }
+
+    @Test
+    void externalPluginFileMustMatchRequestedPluginId() throws Exception {
+        final Path pluginFile = temporaryDirectory.resolve("example.properties");
+        Files.writeString(pluginFile, """
+                plugin.id=example
+                plugin.display-name=Example Plugin
+                plugin.implementation-class=example.ExamplePlugin
+                dataset.id=example-data
+                """);
+
+        final var source = new PropertiesFileConfigurationPropertiesSource(pluginFile);
+        assertThrows(PluginDefinitionException.class,
+                () -> new PropertiesPluginDefinitionLoader(source)
+                        .load("different", Map.of()));
+    }
+
+    @Test
+    void missingExternalPluginFileIsRejected() {
+        final var source = new PropertiesFileConfigurationPropertiesSource(
+                temporaryDirectory.resolve("missing.properties"));
+        assertThrows(PluginDefinitionException.class,
+                () -> source.loadPluginProperties("missing"));
     }
 }

@@ -10,10 +10,19 @@
 OpenMeteo downloads daily minimum, maximum and mean temperature, sunrise,
 sunset, daylight duration and WMO weather code from the archive API.
 
-Example override:
+Register and test:
+
+```text
+opendata --plugin openmeteo --register
+opendata --plugin openmeteo --dry-run
+opendata --plugin openmeteo
+```
+
+To change location or dates, copy the complete packaged
+`config/plugins/openmeteo.properties` definition, amend values such as these,
+and re-register it:
 
 ```properties
-application.database.password=<database-password>
 property.location-key.value=home
 property.location-name.value=Home
 property.latitude.value=51.674304
@@ -23,20 +32,10 @@ property.start-date.value=2025-01-01
 property.end-date.value=2025-12-31
 ```
 
-Run:
-
 ```text
-opendata --plugin openmeteo --dry-run --file C:\OpenData\weather.properties
-opendata --plugin openmeteo --file C:\OpenData\weather.properties
+opendata --plugin openmeteo --register --file C:\OpenData\openmeteo.properties
 ```
 
 `location-key` is the stable database identity. Repeating an unchanged date range
 should report no inserts or updates; changed values are updated and new dates are
-inserted.
-
-The active date resolver uses explicit `start-date` and `end-date`. The packaged
-`default-start-days-ago` and `include-current-date` properties are currently not
-used by the active implementation, so do not depend on them for scheduling.
-
-Rows are stored in `openmeteo.Location` and `openmeteo.DailyWeather`, linked to
-the generic `core.PluginRun` UUID.
+inserted. The active date resolver uses explicit `start-date` and `end-date`.

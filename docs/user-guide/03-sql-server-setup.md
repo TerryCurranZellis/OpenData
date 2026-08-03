@@ -7,22 +7,23 @@
 
 ---
 
-Run the scripts in `/sql` in numeric order against a non-production instance
-first.
+Run the scripts in `/sql` in the order defined by `sql/README.md` against a
+non-production instance first.
 
 ## Installation order
 
 1. `001-create-database-and-login.sql`
 2. `002-create-core-schema.sql`
 3. `003-create-configuration-store.sql`
-4. `004-create-ofgem-schema.sql`
-5. `005-seed-reference-data.sql`
-6. `006-create-plugin-run-audit.sql`
-7. `007-create-openmeteo-schema.sql`
-8. `007a-create-octopus-schema.sql`
-9. `008-grant-application-permissions.sql`
-10. `009-grant-shared-schema-permissions.sql`
-11. `010-verification-queries.sql` as a read-only verification aid
+4. `003a-create-plugin-registry.sql`
+5. `004-create-ofgem-schema.sql`
+6. `005-seed-reference-data.sql`
+7. `006-create-plugin-run-audit.sql`
+8. `007-create-openmeteo-schema.sql`
+9. `007a-create-octopus-schema.sql`
+10. `008-grant-application-permissions.sql`
+11. `009-grant-shared-schema-permissions.sql`
+12. `010-verification-queries.sql` as a read-only verification aid
 
 The application expects database `OpenData` and normally connects as login/user
 `OpenData`. Supply the login password locally through the SQLCMD variable; do not
@@ -51,12 +52,12 @@ currently looks for an environment variable literally named `nopassword`.
 
 Confirm that:
 
-- `core.application_property` and `core.plugin_property` exist;
+- `core.application_property`, `core.plugin_property` and
+  `core.plugin_registry` exist;
 - `core.PluginRun` exists;
 - the `ofgem`, `openmeteo` and `octopus` schemas exist;
 - the application principal has the supplied grants but not schema-owner rights;
-- the certificate private key is protected and not stored in a public source
-  tree; and
+- the certificate private key is protected and not stored in a public source tree; and
 - a recoverable database backup or snapshot exists.
 
 Then follow [Configuration](04-configuration.md) and the

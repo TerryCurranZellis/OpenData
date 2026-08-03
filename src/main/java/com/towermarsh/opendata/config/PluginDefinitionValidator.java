@@ -16,7 +16,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
  * Validates structural and cross-reference rules for plugin definitions.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class PluginDefinitionValidator {
 
@@ -31,11 +31,6 @@ public final class PluginDefinitionValidator {
         if (!PLUGIN_ID.matcher(definition.id()).matches()) {
             throw new PluginDefinitionException(
                     "Invalid plugin id: " + definition.id());
-        }
-
-        if (!definition.enabled()) {
-            throw new PluginDefinitionException(
-                    "Plugin is disabled: " + definition.id());
         }
 
         if (definition.configurationVersion() < 1) {

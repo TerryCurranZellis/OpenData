@@ -8,7 +8,6 @@ package com.towermarsh.opendata.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -23,14 +22,14 @@ import com.towermarsh.opendata.exception.ConfigurationException;
 import java.io.InputStreamReader;
 
 /**
- * Loads and merges framework, application, plugin and user override properties.
+ * Loads and merges framework, application and packaged plugin properties.
  *
  * <p>
- * Environment variables are deliberately not used. This preserves explicit,
- * repeatable execution through Apache Commons CLI and properties files.</p>
+ * Environment variables are deliberately not used. External plugin files are
+ * handled only by the registration command and are not invocation overrides.</p>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public final class ConfigurationLoader {
 
@@ -98,9 +97,6 @@ public final class ConfigurationLoader {
         final var pluginDefaults = loadRequiredClasspathProperties(pluginResource);
         merge(merged, pluginDefaults, ConfigurationSource.PLUGIN_CLASSPATH);
 
-        arguments.overrideFile().ifPresent(path
-                -> merge(merged, loadRequiredFileProperties(path), ConfigurationSource.OVERRIDE_FILE));
-
         final Map<String, String> values = new LinkedHashMap<>();
         merged.forEach((key, resolved) -> values.put(key, resolved.value()));
 
@@ -112,7 +108,6 @@ public final class ConfigurationLoader {
                 bootstrap,
                 plugin,
                 Map.of(),
-                arguments.overrideFile(),
                 arguments.dryRun(),
                 arguments.verbose());
     }
@@ -172,36 +167,6 @@ public final class ConfigurationLoader {
         } catch (IOException exception) {
             throw new ConfigurationException(
                     "Unable to close plugin configuration resource: " + resourceName,
-                    exception);
-        }
-    }
-
-    /**
-     * Loads a required external properties file.
-     *
-     * @param path path to the override file
-     * @return loaded properties
-     * @throws ConfigurationException if the file is missing, unreadable, or
-     * invalid
-     */
-    private Map<String, String> loadRequiredFileProperties(final Path path) throws ConfigurationException {
-        final var normalised = path.toAbsolutePath().normalize();
-
-        if (!Files.exists(normalised)) {
-            throw new ConfigurationException("Configuration override file does not exist: " + normalised);
-        }
-        if (!Files.isRegularFile(normalised)) {
-            throw new ConfigurationException("Configuration override path is not a file: " + normalised);
-        }
-        if (!Files.isReadable(normalised)) {
-            throw new ConfigurationException("Configuration override file is not readable: " + normalised);
-        }
-
-        try (var input = Files.newInputStream(normalised)) {
-            return readProperties(input, normalised.toString());
-        } catch (IOException exception) {
-            throw new ConfigurationException(
-                    "Unable to read configuration override file: " + normalised,
                     exception);
         }
     }

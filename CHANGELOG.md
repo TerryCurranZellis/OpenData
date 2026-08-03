@@ -6,11 +6,35 @@ contain release blockers.
 
 ## [Unreleased]
 
+### Added
+
+- Persistent SQL Server plugin registry in `core.plugin_registry`.
+- Command-line plugin administration: `--register`, `--unregister`/`--remove`,
+  `--enable`, `--disable` and `--list-plugins`.
+- Repeated `--plugin` selection and `--plugin all` support across runs and
+  administration commands.
+- External single-plugin registration with
+  `--plugin <id> --register --file <filename>`.
+- `--verbose` and bounded `--parallelism 1-64` validation for the expanded CLI.
+- New `-n` short option for `--dry-run`; `-d` is reserved for `--disable`.
+- SQL migration and grants for persistent plugin metadata/status.
+
+### Changed
+
+- Normal execution now selects only plugins that are both registered and
+  enabled in SQL Server.
+- Packaged classpath plugin definitions are a registration catalogue rather than
+  the authoritative runtime registry.
+- `--file` is no longer a run-time override; it is accepted only for registering
+  one named plugin.
+- Octopus dry run no longer reads the processed-file ledger and is compatible
+  with the framework's unavailable dry-run database resource.
+- Obsolete override configuration classes and tests were removed.
+
 ### Planned or under evaluation
 
 - Correct the keystore-password environment-variable implementation.
 - Remove tracked deployment secrets/private keys and establish key rotation.
-- Correct Octopus dry-run database-ledger access.
 - Validate SQL Server certificate trust and least-privilege deployment.
 - Replace or explicitly approve the preview SQL Server JDBC dependency.
 - Produce and verify a self-contained executable distribution.
@@ -22,7 +46,6 @@ contain release blockers.
 ### Added
 
 - Database-backed application and plugin configuration registration.
-- `--register` control command and minimal post-registration bootstrap file.
 - RSA OAEP encryption/decryption of the bootstrap database password.
 - Common `initialise`, `extract`, `transform`, `load`, `finalise` plugin flow.
 - Bounded parallel plugin execution and contextual JUL logging.
@@ -32,19 +55,8 @@ contain release blockers.
 - Expanded architecture, operations, developer, governance and release evidence
   documentation.
 
-### Changed
-
-- Most runtime/plugin properties move from classpath files to SQL Server after
-  registration.
-- Plugin-specific local exception hierarchies are replaced by shared framework
-  exceptions and boundary handling.
-- Documentation describes actual limitations rather than presenting planned
-  features as implemented.
-
 ### Known limitations
 
-- Octopus dry-run is incompatible with the framework's no-database dry-run
-  resource model.
 - Tracked development credential/private-key artifacts must not be used for
   production.
 - The intended environment-variable keystore password route is defective.

@@ -1,131 +1,68 @@
 # OpenData 2.0.0 Quick Start
 
-**Document ID:** GUIDE-QUICKSTART-001
-**Version:** 2.0
-**Status:** Current
+**Document ID:** GUIDE-QUICKSTART-001  
+**Version:** 2.0  
+**Status:** Current  
 **Baseline date:** 3 August 2026
 
 ---
 
-This guide provides the shortest safe path from a source checkout to a registered
-configuration and first dry run.
-
-## 1. Build the source
+## 1. Build
 
 ```powershell
 mvn clean verify
 mvn package
 ```
 
-Configure your IDE or classpath launcher to run:
+Use main class `com.towermarsh.opendata.OpenData` with the repository root as
+working directory.
+
+## 2. Install SQL Server
+
+Run the numbered scripts in `sql/README.md`, including
+`003a-create-plugin-registry.sql` and `007a-create-octopus-schema.sql`.
+
+## 3. Prepare certificate and bootstrap
+
+Replace the development certificate/private key. Before initial registration,
+set `application.use-database-properties=false` and a temporary plain database
+password in `src/main/resources/config/application.properties`. For a protected
+PFX use `-Dopendata.config.keystore.password=<password>`.
+
+## 4. Register and inspect
 
 ```text
-com.towermarsh.opendata.OpenData
+opendata --plugin all --register
+opendata --list-plugins
 ```
 
-## 2. Install SQL Server objects
+Successful registration persists application configuration, plugin definitions
+and registry metadata, encrypts the password and enables database-backed mode.
 
-Run the numbered scripts in `/sql`, including
-`007a-create-octopus-schema.sql`. Use the detailed
-[SQL Server bootstrap guide](sql-server-bootstrap.md) for the complete order.
-
-## 3. Prepare the certificate
-
-Confirm that the public certificate and private PFX exist under:
+## 5. Dry-run
 
 ```text
-src/main/resources/config/security
+opendata --plugin ofgem --dry-run
+opendata --plugin openmeteo --dry-run
+opendata --plugin octopus --dry-run
+opendata --plugin all --dry-run --parallelism 3
 ```
 
-The supplied development PFX password is `nopassword`. For another PFX password,
-use the JVM system property:
+Dry run still reads the SQL registry/configuration, but plugin execution creates
+no provider writes, generic audit rows or archive movements.
+
+## 6. Administration examples
 
 ```text
--Dopendata.config.keystore.password=<pfx-password>
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+opendata --plugin octopus --unregister
+opendata --plugin octopus --register
 ```
 
-Do not rely on `OPENDATA_CONFIG_KEYSTORE_PASSWORD` in this baseline. The Java
-constant currently causes the runtime to look for an environment variable named
-`nopassword`; that defect must be fixed and tested before an environment variable
-can be documented as supported.
+Use `-n` for dry run; `-d` means disable.
 
-## 4. Set the initial bootstrap properties
+## 7. First write run
 
-Before registration, `src/main/resources/config/application.properties` should
-contain:
-
-```properties
-application.version=2.0.0
-application.use-database-properties=false
-database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
-database.user=OpenData
-database.password=<plain-text-database-password>
-```
-
-Use the plain-text password only for the registration run. Protect the file from
-other users and do not commit it.
-
-## 5. Register configuration
-
-Run:
-
-```text
---register
-```
-
-A successful registration:
-
-- saves application runtime properties in SQL Server;
-- saves definitions for `ofgem`, `openmeteo` and `octopus`;
-- stores the database password as an encrypted value;
-- rewrites the local bootstrap password with an `{enc}` prefix; and
-- changes `application.use-database-properties` to `true`.
-
-## 6. Restart and verify
-
-Restart the application so it must decrypt the bootstrap password and read its
-configuration from SQL Server. Run:
-
-```text
---list-plugins
-```
-
-Expected plugin IDs:
-
-```text
-ofgem
-openmeteo
-octopus
-```
-
-## 7. Dry-run plugins
-
-Dry-run Ofgem and OpenMeteo separately before combining them:
-
-```text
---plugin ofgem --dry-run
---plugin openmeteo --dry-run
---plugin ofgem,openmeteo --dry-run --parallelism 2
-```
-
-Do not use `--plugin octopus --dry-run` or `--plugin all --dry-run` as acceptance
-commands in the current source baseline. `OctopusExtract` still reads the
-processed-file ledger while the framework supplies an unavailable database
-resource during plugin dry run, so execution fails before PDF parsing.
-
-For Octopus acceptance, place disposable test PDFs outside source control in
-`C:\Attachments\octopus` using names such as:
-
-```text
-octopus-energy-statement-2026-07-31.pdf
-```
-
-Use a test database and explicit archive directory for a controlled write run
-until the Octopus dry-run defect is corrected.
-
-## 8. First write run
-
-Back up the database, review logs, and run one plugin at a time before using
-`--plugin all`. Confirm that Octopus statement records and the
-`octopus.statement_file` ledger commit together and that successful source PDFs
-are archived only after the commit.
+Back up SQL Server, run one plugin at a time, reconcile logs/audit/provider rows,
+then test repeated and parallel execution before routine scheduling.

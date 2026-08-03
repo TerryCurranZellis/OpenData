@@ -1,63 +1,109 @@
 # Plugin Registry Reference
 
-**Document ID:** REF-REGISTRY-001
-**Version:** 2.0
-**Status:** Version 2.0.0 implementation reference
+**Document ID:** REF-REGISTRY-001  
+**Version:** 2.1  
+**Status:** OpenData 2.0.0 implementation reference  
 **Baseline date:** 3 August 2026
-**Minimum Java version:** 17
 
 ---
 
-## Classpath resources
+## Two registry roles
+
+OpenData now distinguishes between a packaged plugin **catalogue** and the
+persistent runtime **registry**.
+
+| Source | Implementation | Purpose |
+|---|---|---|
+| `config/plugins/index.properties` and packaged plugin files | `ClasspathPluginRegistry` | Catalogue of definitions available to `--register` when no external file is supplied |
+| `core.plugin_registry` | `JdbcPluginRegistry` | System of record for registered plugins and enabled/disabled status |
+
+The classpath catalogue does not by itself make a plugin runnable. A plugin must
+be registered in SQL Server.
+
+## Persistent metadata
+
+`core.plugin_registry` stores:
+
+- stable plugin id;
+- display name and description;
+- implementation class;
+- enabled/disabled status;
+- configuration version;
+- registration and update timestamps.
+
+The complete flattened definition remains in `core.plugin_property`.
+
+## Registration
 
 ```text
-src/main/resources/config/plugins/
-    index.properties
-    ofgem.properties
-    openmeteo.properties
-    octopus.properties
+opendata --plugin all --register
+opendata --plugin ofgem --register
+opendata --plugin example --register --file C:\OpenData\example.properties
 ```
 
-The index contains:
+Packaged registration loads definitions through
+`ClasspathConfigurationPropertiesSource`. External registration uses
+`PropertiesFileConfigurationPropertiesSource`. In both cases
+`PropertiesPluginDefinitionLoader` validates the file before
+`JdbcPluginRegistry` stores metadata and properties.
 
-```properties
-plugins=ofgem,openmeteo,octopus
+For an existing registry row, registration refreshes metadata and configuration
+but preserves the current enabled/disabled state. A new row uses the
+`plugin.enabled` value from the definition.
+
+## Runtime selection
+
+```text
+opendata --plugin all
+opendata --plugin ofgem --plugin openmeteo
 ```
 
-Each id must have a corresponding definition and matching `plugin.id`.
-`ClasspathPluginRegistry` uses the index for installed implementation metadata
-and orders descriptors by id.
+- `all` returns every registered enabled plugin in id order.
+- A named plugin must exist in `core.plugin_registry` and be enabled.
+- A missing plugin produces `Plugin is not registered`.
+- A disabled plugin produces `Plugin is registered but disabled`.
 
-## Configuration-source distinction
+## Status management
 
-The installed implementation registry remains classpath-backed. Plugin property
-values can be loaded from packaged files or `core.plugin_property` through
-`JdbcConfigurationPropertiesSource` after registration. Database-backed
-properties do not create a dynamic plugin marketplace or load arbitrary classes.
+```text
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+opendata --plugin all --disable
+opendata --plugin all --enable
+```
 
-## Listing plugins
+Enable and disable update `core.plugin_registry.is_enabled`; they do not alter
+stored definition properties or provider data.
+
+## Unregistration
+
+```text
+opendata --plugin octopus --unregister
+opendata --plugin all --remove
+```
+
+Unregister deletes the selected rows from both `core.plugin_registry` and
+`core.plugin_property` in a transaction for each plugin. It deliberately leaves:
+
+- provider business tables;
+- archived source files;
+- generic and provider-specific run history.
+
+This prevents an administrative configuration action from destroying imported
+data.
+
+## Listing
 
 ```text
 opendata --list-plugins
 ```
 
-`opendata` denotes a classpath-aware launcher for
-`com.towermarsh.opendata.OpenData`; the current POM does not produce a complete
-executable/fat JAR. Output is tab-separated and supplied by the registry:
+The output includes id, enabled/disabled status, display name and implementation
+class. It reads SQL Server and therefore requires the `003a` registry migration,
+permissions and valid bootstrap credentials.
 
-```text
-ofgem       enabled    Ofgem Energy Price Cap
-openmeteo   enabled    OpenMeteo Historical Weather
-octopus     enabled    Octopus Energy Billing
-```
+## Database installation
 
-## Adding a plugin
-
-1. Add `config/plugins/<plugin-id>.properties`.
-2. Add the id to `index.properties`.
-3. Add the implementation class named by `plugin.implementation-class`.
-4. Follow the plugin-local initialise/extract/transform/load/finalise packages.
-5. Add registry, selection, dry-run and provider tests.
-6. Apply any provider schema and least-privilege grants.
-7. Update plugin, operator, reference and data-source documentation.
-8. Re-run `--register` when database-backed properties are in use.
+Run `sql/003a-create-plugin-registry.sql` after
+`003-create-configuration-store.sql`. Fresh and upgraded installations must then
+apply the updated grant scripts.

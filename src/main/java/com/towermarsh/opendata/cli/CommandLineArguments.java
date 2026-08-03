@@ -15,38 +15,37 @@ import java.util.OptionalInt;
  * Immutable command-line arguments for one invocation.
  *
  * @param pluginIds selected plugin identifiers
- * @param allPluginsRequested whether all installed plugins were requested
- * @param overrideFile optional external override properties file
+ * @param allPluginsRequested whether all plugins were requested
+ * @param pluginFile optional plugin definition file used only for registration
  * @param parallelism optional plugin parallelism override
- * @param dryRun whether database writes and audit rows are disabled
+ * @param dryRun whether plugin data writes and run-audit rows are disabled
  * @param verbose whether verbose logging is requested
  * @param helpRequested whether help output was requested
  * @param aboutRequested whether the graphical About window was requested
- * @param listPluginsRequested whether installed plugin listing was requested
- * @param registerRequested whether configuration registration into the database was requested
+ * @param listPluginsRequested whether registered plugin listing was requested
+ * @param command requested plugin operation
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 public record CommandLineArguments(
         List<String> pluginIds,
         boolean allPluginsRequested,
-        Optional<Path> overrideFile,
+        Optional<Path> pluginFile,
         OptionalInt parallelism,
         boolean dryRun,
         boolean verbose,
         boolean helpRequested,
         boolean aboutRequested,
         boolean listPluginsRequested,
-        boolean registerRequested) {
+        PluginCommand command) {
 
-    /**
-     * Validates and normalises record components.
-     */
+    /** Validates and normalises record components. */
     public CommandLineArguments {
         pluginIds = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
-        overrideFile = overrideFile == null ? Optional.empty() : overrideFile;
+        pluginFile = pluginFile == null ? Optional.empty() : pluginFile;
         parallelism = parallelism == null ? OptionalInt.empty() : parallelism;
+        command = Objects.requireNonNull(command, "command");
         if (allPluginsRequested && !pluginIds.isEmpty()) {
             throw new IllegalArgumentException("'all' cannot be combined with named plugins.");
         }
@@ -60,10 +59,34 @@ public record CommandLineArguments(
     /**
      * Indicates whether the invocation only requests informational output.
      *
-     * @return {@code true} when help, About, or plugin listing output was
-     * requested
+     * @return {@code true} for help, About, or plugin listing output
      */
     public boolean informationalRequest() {
         return helpRequested || aboutRequested || listPluginsRequested;
+    }
+
+    /** @return whether plugin registration was requested */
+    public boolean registerRequested() {
+        return command == PluginCommand.REGISTER;
+    }
+
+    /** @return whether plugin removal was requested */
+    public boolean unregisterRequested() {
+        return command == PluginCommand.UNREGISTER;
+    }
+
+    /** @return whether plugin enablement was requested */
+    public boolean enableRequested() {
+        return command == PluginCommand.ENABLE;
+    }
+
+    /** @return whether plugin disablement was requested */
+    public boolean disableRequested() {
+        return command == PluginCommand.DISABLE;
+    }
+
+    /** @return whether normal plugin execution was requested */
+    public boolean runRequested() {
+        return command == PluginCommand.RUN && !informationalRequest();
     }
 }

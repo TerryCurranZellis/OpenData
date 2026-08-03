@@ -42,7 +42,7 @@ public record ApplicationRuntimeConfiguration(
     }
 
     /**
-     * Loads packaged runtime configuration and overlays application overrides.
+     * Loads packaged runtime configuration and overlays caller-supplied values.
      *
      * @param overrides application-level override values without the `application.` prefix
      * @return resolved runtime configuration
@@ -53,7 +53,7 @@ public record ApplicationRuntimeConfiguration(
 
     /**
      * Loads runtime configuration from one property source and overlays any
-     * invocation overrides.
+     * caller-supplied application values.
      *
      * @param source configuration property source
      * @param overrides application-level override values without the

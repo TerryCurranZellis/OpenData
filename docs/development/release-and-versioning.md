@@ -20,12 +20,11 @@ A Version 2.0.0 release candidate requires:
 - clean `mvn clean verify` output on Java 17 compatibility;
 - documentation validation and successful diagram rendering;
 - clean/repeat SQL Server installation;
-- successful `--register` from a plain bootstrap password;
+- successful `--plugin all --register` from a plain bootstrap password;
 - successful restart using the encrypted bootstrap password;
 - least-privilege verification for the application principal;
-- successful Ofgem and OpenMeteo dry runs, separately and together;
-- correction and verification of the Octopus dry-run database dependency, or an
-  explicit release waiver plus controlled Octopus write-mode acceptance;
+- successful Ofgem, OpenMeteo, Octopus and `all` dry runs;
+- register/list/enable/disable/unregister lifecycle acceptance;
 - representative write-mode, rollback and idempotency tests;
 - duplicate and changed-file tests for Octopus statements;
 - confirmation that private keys, plaintext credentials, customer PDFs and

@@ -1,19 +1,32 @@
 @startuml
-title Command-Line Flow
+title OpenData Command-Line Flow
 start
 :Parse and validate arguments;
-if (Informational command?) then (yes)
-  :Print help, version or plugin list;
-else (no)
-  :Resolve selected enabled plugins;
-  :Load runtime and plugin configuration;
-  if (Dry run?) then (yes)
-    :Use no-op audit and unavailable database;
+if (Help or About?) then (yes)
+  :Display information without SQL Server;
+elseif (List plugins?) then (yes)
+  :Open bootstrap SQL connection;
+  :Read core.plugin_registry;
+  :Display registered status;
+elseif (Administration command?) then (yes)
+  :Require plugin id(s) or all;
+  :Open bootstrap SQL connection;
+  if (Register?) then (yes)
+    :Load packaged definitions or one external file;
+    :Persist registry and properties;
   else (no)
-    :Initialise DBCP pool and JDBC audit;
+    :Unregister, enable or disable selected registry rows;
   endif
-  :Execute selected plugins with bounded parallelism;
-  :Log ordered plugin summaries;
+else (run)
+  :Open SQL Server for registry/configuration;
+  :Resolve enabled registered plugins;
+  if (Dry run?) then (yes)
+    :Use no-op audit and unavailable plugin data resource;
+  else (no)
+    :Initialise write pool and JDBC audit;
+  endif
+  :Execute with bounded parallelism;
+  :Log ordered summaries;
 endif
 :Log final status and duration;
 stop

@@ -7,15 +7,14 @@
 
 ---
 
-## Configuration layers
+## Configuration sources
 
-OpenData resolves configuration from:
+OpenData uses:
 
 1. built-in runtime defaults;
-2. the repository-local bootstrap file;
-3. classpath properties before registration, or SQL Server properties after
-   registration; and
-4. optional `--file` overrides for the current invocation.
+2. the repository-local bootstrap file for the SQL Server connection;
+3. packaged application/plugin properties during initial registration; and
+4. SQL Server application/plugin properties after registration.
 
 The writable bootstrap file is:
 
@@ -23,67 +22,54 @@ The writable bootstrap file is:
 src/main/resources/config/application.properties
 ```
 
-After registration it contains only the version marker, database-backed switch,
-database URL, database user and encrypted database password.
+It contains the version marker, database-backed switch, database URL, database
+user and encrypted database password. The initial registration requires a valid
+plain database password in this file; successful registration encrypts and
+rewrites it.
 
-## Registration
-
-Create a protected bootstrap override file outside the repository:
-
-```properties
-application.database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
-application.database.user=OpenData
-application.database.password=<local-database-password>
-```
-
-Run:
+## Register packaged plugins
 
 ```text
-opendata --register --file C:\OpenData\bootstrap.properties
+opendata --plugin all --register
+opendata --plugin ofgem --register
+opendata --plugin ofgem --plugin openmeteo --register
 ```
 
-Registration:
+Registration refreshes application properties, inserts or updates selected
+plugin metadata in `core.plugin_registry`, replaces each selected plugin's
+complete `core.plugin_property` set and enables database-backed configuration.
+Re-registering an existing plugin preserves its current enabled/disabled status.
 
-- upserts application defaults and packaged application properties into
-  `core.application_property`;
-- replaces each installed plugin's rows in `core.plugin_property`;
-- stores the database password encrypted in SQL Server; and
-- rewrites the local bootstrap file with
-  `application.use-database-properties=true` and an encrypted password.
+## Register one plugin from a file
 
-The database writes and bootstrap-file rewrite are not one atomic transaction.
-After an interrupted or failed registration, inspect both the database tables and
-the local bootstrap file before retrying.
+Copy a complete packaged definition, edit it outside the repository, then run:
 
-## Override scopes
-
-Application overrides always use `application.<key>`:
-
-```properties
-application.execution.max-parallel-plugins=2
-application.logging.directory=C:\OpenData\logs
+```text
+opendata --plugin openmeteo --register --file C:\OpenData\openmeteo.properties
 ```
 
-A single-plugin run may use unscoped plugin keys:
+The file must contain the full unprefixed plugin definition, including
+`plugin.id`, implementation class, dataset, endpoints and typed properties. Its
+`plugin.id` must match the selected command-line id. `--file` cannot be used with
+`all`, multiple plugin ids, enable, disable, unregister, or a normal run.
 
-```properties
-property.start-date.value=2025-01-01
+`plugin.enabled` supplies the initial status only when the plugin is first
+registered. Use `--enable` or `--disable` for subsequent lifecycle changes.
+
+## Administration
+
+```text
+opendata --list-plugins
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+opendata --plugin octopus --unregister
 ```
 
-A multi-plugin run must scope all plugin values:
-
-```properties
-plugin.openmeteo.property.start-date.value=2025-01-01
-plugin.ofgem.property.download.request-timeout.value=PT180S
-```
-
-Unknown properties may remain unused; the runtime validates only values that a
-configuration class resolves. Keep override files minimal and review them after
-upgrades.
+Unregistering removes both metadata and stored plugin properties. Provider data
+and historical audit rows are not deleted.
 
 ## Security warning
 
-The uploaded baseline contains a tracked plaintext bootstrap credential and a
-tracked private PFX. Remove them from source control, replace the certificate
-pair, and rotate any database password that has been exposed before release or
-production use.
+The uploaded baseline contains development credential/private-key material.
+Remove it from source control, replace the certificate pair and rotate any
+exposed database password before release or production use.

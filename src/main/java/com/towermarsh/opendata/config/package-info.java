@@ -19,7 +19,6 @@
  * <li>{@link ExecutionConfiguration}</li>
  * <li>{@link LoggingConfiguration}</li>
  * <li>{@link OpenDataConfigurationException}</li>
- * <li>{@link OverrideConfiguration}</li>
  * <li>{@link PluginDefinitionException}</li>
  * <li>{@link PluginDefinitionLoader}</li>
  * <li>{@link PluginDefinitionValidator}</li>
