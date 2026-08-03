@@ -1,51 +1,40 @@
 # OpenData 2.0.0 Release Record
 
-**Release status:** Development and release-candidate baseline  
-**Documentation baseline:** 2 August 2026  
-**Release date:** To be assigned after acceptance  
+**Status:** Development and release-candidate baseline  
+**Documentation baseline:** 3 August 2026  
+**Release date:** Not assigned  
 **Licence:** Apache License 2.0
 
-## Summary
+## Candidate scope
 
-OpenData 2.0.0 establishes database-backed configuration, certificate-protected
-bootstrap credentials and a consistent five-phase plugin lifecycle. It also
-promotes the Octopus Energy integration from a transform-only implementation to
-a local-file ingestion workflow with duplicate prevention, transactional loading
-and post-commit archiving.
+Version 2.0.0 delivers database-backed configuration registration,
+certificate-protected bootstrap credentials, the common plugin lifecycle and
+local-file Octopus statement ingestion.
 
 ![Version evolution](../diagrams/generated/version-evolution.svg)
 
-## Delivered capabilities
+## Release gates
 
-- Minimal bootstrap configuration and SQL Server runtime configuration.
-- Registration of installed application and plugin properties.
-- RSA OAEP encryption and decryption of the database password.
-- Source-tree and classpath certificate lookup.
-- Ofgem and OpenMeteo plugins aligned with the common plugin lifecycle.
-- Octopus local PDF discovery, SHA-256 ledger, batch transform and transactional
-  persistence.
-- Side-effect-free dry-run behaviour and bounded parallel plugin execution.
-- Manifest-driven documentation for multiple generated manuals.
+The following are mandatory before declaring the release production-ready:
 
-## Compatibility and migration
+- clean Maven/quality/test evidence;
+- clean SQL Server install/reinstall and least-privilege evidence;
+- registration/encrypted restart evidence with deployment-specific keys;
+- successful Ofgem/OpenMeteo dry runs and representative write runs;
+- representative Octopus write-mode/idempotency/archive tests;
+- correction of Octopus dry-run before using Octopus or `all` dry-run acceptance;
+- removal/rotation of tracked secrets and private keys;
+- validated SQL Server certificate trust;
+- preview JDBC dependency decision;
+- documentation builds and archive compliance review.
 
-Version 2.0.0 changes configuration ownership and the expected internal plugin
-package structure. Existing Version 1.x installations must install the new schema,
-prepare certificates, register configuration and migrate custom plugins. See
-[Upgrade from Version 1.x](../migration/version-1-to-version-2.md).
+## Historical boundary
 
-## Not included
+Version 1.0.0 records remain under `docs/release/Release-1.0.0.md`. They must not
+be used as evidence for 2.0.0.
 
-- Direct Octopus Energy website or API statement download.
-- Internal scheduling.
-- Graphical administration of database configuration.
-- A self-contained executable JAR.
-- An enterprise secret-management service.
+## Decision record
 
-These omissions should not be described as implemented Version 2.0.0 features.
-
-## Acceptance status
-
-Use [Final-Release-Checklist.md](Final-Release-Checklist.md) to record the clean
-build, documentation, database, registration, plugin and security evidence before
-assigning a release date and publishing tag `v2.0.0`.
+Assign the release date and tag only after the final checklist and evidence index
+are complete. Any waiver must state scope, risk owner, expiry/review date and
+compensating controls.

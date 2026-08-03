@@ -1,85 +1,61 @@
 # Changelog
 
-All notable changes to OpenData are documented in this file. The project follows
-semantic versioning.
+All notable OpenData changes are recorded here. The project follows semantic
+versioning for published releases; an unreleased development baseline can still
+contain release blockers.
 
 ## [Unreleased]
 
-### Planned
+### Planned or under evaluation
 
-- Additional plugins and data sources.
-- Possible Octopus Energy API extraction after API capabilities and terms are
-  separately evaluated.
-- Executable packaging with an explicit main class and dependency strategy.
+- Correct the keystore-password environment-variable implementation.
+- Remove tracked deployment secrets/private keys and establish key rotation.
+- Correct Octopus dry-run database-ledger access.
+- Validate SQL Server certificate trust and least-privilege deployment.
+- Replace or explicitly approve the preview SQL Server JDBC dependency.
+- Produce and verify a self-contained executable distribution.
+- Evaluate, separately, whether an Octopus API can support authorised statement
+  acquisition; no such feature is implemented.
 
-## [2.0.0] - Unreleased
+## [2.0.0] - Release candidate, not yet tagged
 
 ### Added
 
 - Database-backed application and plugin configuration registration.
-- `--register` control command.
-- Minimal bootstrap configuration containing only version, database mode,
-  database URL, database username and database password.
-- RSA OAEP encryption of the bootstrap database password using an X.509 public
-  certificate and PKCS#12 private key store.
-- Source-tree and classpath lookup for configuration certificate resources.
-- PFX password override through the JVM system property
-  `opendata.config.keystore.password`. The intended
-  `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment-variable path remains defective
-  in the current source baseline.
-- Standard plugin packages: `initialise`, `extract`, `transform`, `load` and
-  `finalise`.
-- Central plugin exception handling without plugin-local exception hierarchies.
-- Octopus Energy local PDF discovery and batch processing.
-- Octopus statement-file ledger with filename and SHA-256 duplicate prevention.
-- Transactional Octopus electricity, gas and file-ledger persistence.
-- Successful-statement archiving after non-dry-run processing.
-- Per-document manifests for the Technical User Guide, Administrator Guide,
-  Developer Guide and API Reference.
-- Shared document front matter and manifest-driven document composition.
+- `--register` control command and minimal post-registration bootstrap file.
+- RSA OAEP encryption/decryption of the bootstrap database password.
+- Common `initialise`, `extract`, `transform`, `load`, `finalise` plugin flow.
+- Bounded parallel plugin execution and contextual JUL logging.
+- Local Octopus PDF discovery, filename/SHA-256 completion ledger,
+  transactional load and post-commit archive.
+- Manifest-driven Technical, Administrator, Developer and API manuals.
+- Expanded architecture, operations, developer, governance and release evidence
+  documentation.
 
 ### Changed
 
-- Runtime configuration is loaded from SQL Server after bootstrap when database
-  mode is enabled.
-- Root plugin classes are thin framework entry points; plugin-specific initialise
-  classes control execution flow.
-- Extract stages obtain data and pass it to transform stages rather than mixing
-  acquisition, transformation and persistence.
-- Documentation generation builds every discovered document manifest.
-- Front matter is assembled before the table of contents in generated formats.
-- Documentation and release material now identify Version 2.0.0 as the active
-  architectural baseline.
+- Most runtime/plugin properties move from classpath files to SQL Server after
+  registration.
+- Plugin-specific local exception hierarchies are replaced by shared framework
+  exceptions and boundary handling.
+- Documentation describes actual limitations rather than presenting planned
+  features as implemented.
 
-### Fixed
+### Known limitations
 
-- PFX password handling no longer treats `nopassword` as an environment-variable
-  name.
-- Certificate lookup works from both the development source tree and packaged
-  classpath resources.
-- Octopus files are not recorded as completed unless their associated database
-  transaction commits.
+- Octopus dry-run is incompatible with the framework's no-database dry-run
+  resource model.
+- Tracked development credential/private-key artifacts must not be used for
+  production.
+- The intended environment-variable keystore password route is defective.
+- Development SQL Server configuration does not validate the server certificate.
+- `mssql-jdbc` is currently a preview version.
+- Executable JAR packaging has not been proven.
 
-### Removed
+## [1.0.0] - 29 July 2026
 
-- Plugin-specific exception packages from the standard plugin architecture.
-- The combined documentation manifest from the maintained build path.
-- Hard-coded Technical/User document branching in the documentation engine.
+Initial documented public baseline with the core framework, Ofgem and OpenMeteo
+plugins, SQL Server persistence, dry-run support and documentation automation.
+This release record is historical and does not describe the current 2.0.0 code.
 
-## [1.0.0] - 2026-07-29
-
-### Added
-
-- Initial Java 17 modular-monolith framework.
-- Properties-based plugin registry and command-line processing.
-- Ofgem and OpenMeteo reference plugins.
-- Concurrent plugin execution and side-effect-free dry runs.
-- SQL Server persistence, connection pooling and plugin-run auditing.
-- Configuration-driven documentation framework and reusable templates.
-- Repository governance, contribution, security and licensing standards.
-- Checkstyle, PMD, SpotBugs, Javadoc and JaCoCo quality tooling.
-- GitHub Actions build, documentation and tagged-release automation.
-
-[Unreleased]: https://github.com/TerryCurranZellis/OpenData/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v2.0.0
 [1.0.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v1.0.0

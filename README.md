@@ -1,80 +1,69 @@
 # OpenData
 
-OpenData is a Java 17 command-line framework for acquiring data from external
-sources, transforming it into validated records and loading it into Microsoft
-SQL Server. Data-source integrations are implemented as plugins within a
-modular monolith.
+OpenData is a Java 17 command-line framework that acquires external data,
+transforms it into validated plugin-specific records and loads it into Microsoft
+SQL Server. It is implemented as a modular monolith with independently selectable
+plugins.
 
 ![OpenData project overview](docs/diagrams/generated/project-overview.svg)
 
-## Version 2.0.0
+## Current baseline
 
-The current code and documentation baseline is **OpenData 2.0.0**. Version 2.0.0
-moves application and plugin configuration into SQL Server, adds database-backed
-plugin registration, protects the bootstrap database password with an X.509/PKCS#12
-certificate pair, standardises the plugin lifecycle, and completes local PDF
-statement ingestion for the Octopus Energy plugin.
+The repository and documentation describe **OpenData 2.0.0** as a development and
+release-candidate baseline. It is not yet a production-ready release. The
+remaining mandatory blockers and environment-dependent acceptance checks are
+listed in the [final release checklist](docs/release/Final-Release-Checklist.md)
+and [current readiness assessment](docs/review/RELEASE-READINESS-STATUS-2.0.0.md).
 
-Version 2.0.0 is the active development and release-candidate baseline. A tagged
-release should be published only after the checks in the
-[final release checklist](docs/release/Final-Release-Checklist.md) have passed.
+Version 2.0.0 introduces database-backed configuration registration,
+certificate-based bootstrap password protection, the common five-phase plugin
+lifecycle, and local Octopus statement ingestion. Version 1.0.0 material is
+retained as historical release documentation.
 
-See the [2.0.0 release notes](RELEASE_NOTES.md),
-[release record](docs/release/Release-2.0.0.md), and
-[1.x upgrade guide](docs/migration/version-1-to-version-2.md).
+## Implemented capabilities
 
-## Capabilities
+- `--register` stores application and plugin configuration in SQL Server.
+- The bootstrap properties file retains database connection details and an
+  encrypted database password after registration.
+- Ofgem and OpenMeteo support dry-run and write-mode execution.
+- Octopus discovers local statement PDFs, prevents duplicate completed-file
+  processing, batch transforms new statements, persists records transactionally
+  and archives successfully loaded files.
+- Multiple plugins can execute concurrently with bounded parallelism.
+- Technical, administrator, developer and API manuals are composed from JSON
+  manifests, Markdown and generated SVG diagrams.
 
-- Register application and plugin configuration in SQL Server with `--register`.
-- Retain only the database URL, username, encrypted password and bootstrap mode
-  in `application.properties` after registration.
-- Select one plugin, several plugins, or all enabled plugins.
-- Execute selected plugins concurrently with bounded parallelism.
-- Perform side-effect-free dry runs for Ofgem and OpenMeteo without database
-  writes or run-audit rows. The current Octopus extract stage has a documented
-  dry-run defect because it still reads the processed-file ledger.
-- Process Ofgem Energy Price Cap workbooks.
-- Download and persist Open-Meteo historical daily weather data.
-- Discover local Octopus Energy statement PDFs, exclude completed files by
-  filename and SHA-256, transform all new statements as a batch, load gas and
-  electricity records transactionally, and archive successfully processed files.
-- Generate technical, administrator, developer and API-reference documents from
-  Markdown, PlantUML and manifest definitions.
+## Important current limitations
 
-## Standard plugin lifecycle
-
-Every plugin follows the same top-level flow:
-
-```text
-Initialise -> Extract -> Transform -> Load -> Finalise
-```
-
-`Initialise` controls the plugin-specific flow. `Extract` obtains source data and
-passes it to `Transform`. `Transform` creates validated records for `Load`.
-`Finalise` runs after processing to perform cleanup and final reporting. Plugins
-use the shared exception framework rather than declaring plugin-local exception
-hierarchies.
+- Octopus dry-run still reads its processed-file ledger and therefore requires a
+  database resource that the framework intentionally does not provide in dry-run
+  mode. Do not use Octopus or `--plugin all` as release dry-run acceptance until
+  that source defect is corrected.
+- The supplied private key, development PFX password and bootstrap password are
+  not production-safe.
+- The environment-variable PFX password path is defective; use the JVM system
+  property only for controlled development until the code is fixed.
+- The JDBC URL trusts the server certificate in the development configuration.
+- The SQL Server JDBC dependency is a preview build.
+- The Maven JAR is not a verified self-contained `java -jar` distribution.
 
 ## Installed plugins
 
-| Plugin ID | Source | Version 2.0.0 behaviour |
+| ID | Source | Version 2.0.0 acquisition |
 |---|---|---|
-| `ofgem` | Ofgem public Energy Price Cap publication | Discovers, downloads, transforms and loads the current workbook |
-| `openmeteo` | Open-Meteo Historical Weather API | Downloads, validates and persists configured daily weather history |
-| `octopus` | User-supplied Octopus Energy PDF statements | Scans `C:\Attachments\octopus` by default, prevents duplicate processing, batch transforms, loads and archives statements |
-
-The Octopus plugin processes files already obtained by the user. It does not log
-in to, scrape, or download statements from the Octopus Energy website.
+| `ofgem` | Ofgem Energy Price Cap publication | Web discovery and workbook download |
+| `openmeteo` | Open-Meteo Historical Weather API | HTTPS JSON API |
+| `octopus` | Customer-supplied Octopus statement PDFs | Local configured directory; no website/email/API download |
 
 ## Requirements
 
-- Java Development Kit 17 or later, compiling with Java 17 compatibility.
+- Java 17 or later while compiling for Java 17.
 - Maven 3.9 or later.
-- Microsoft SQL Server for registration and write-mode runs.
-- PowerShell 5.1 or later for the supplied Windows scripts.
-- Pandoc and PlantUML only when rebuilding generated manuals and diagrams.
+- Microsoft SQL Server for registration and write-mode processing.
+- PowerShell 5.1 or later for supplied Windows scripts.
+- Pandoc and PlantUML when rebuilding generated manuals/diagrams.
 
-## Build
+## Build and launch
 
 ```powershell
 git clone https://github.com/TerryCurranZellis/OpenData.git
@@ -83,55 +72,25 @@ mvn clean verify
 mvn package
 ```
 
-The Maven build currently produces `target/opendata-2.0.0.jar` without bundled
-runtime dependencies or a `Main-Class` manifest entry. Run
-`com.towermarsh.opendata.OpenData` from Apache NetBeans or another classpath-aware
-launcher. Do not rely on `java -jar target/opendata-2.0.0.jar` until executable
-packaging is explicitly added and verified.
+The reviewed POM creates `target/opendata-2.0.0.jar` but does not establish a
+verified self-contained executable. Launch `com.towermarsh.opendata.OpenData`
+from NetBeans or another classpath-aware launcher.
 
-## Database bootstrap and registration
+## Initial registration
 
-Install the SQL scripts in numeric order, create the configuration certificate,
-and start with a minimal bootstrap file:
-
-```properties
-application.version=2.0.0
-application.use-database-properties=false
-database.url=jdbc:sqlserver://localhost;databaseName=OpenData;encrypt=true;trustServerCertificate=true
-database.user=OpenData
-database.password=<initial-plain-text-password>
-```
-
-Register the classpath application and plugin properties:
+Install SQL scripts in numeric order and create a deployment certificate pair.
+For the first controlled registration the bootstrap file uses database mode
+`false` and a temporary plaintext database password. Run:
 
 ```text
 --register
 ```
 
-Registration stores the runtime and plugin configuration in SQL Server, encrypts
-the database password with the public certificate, and rewrites the bootstrap
-file with `application.use-database-properties=true`. Subsequent starts decrypt
-the bootstrap password with the private key from the PKCS#12 file before loading
-runtime configuration from the database.
+Confirm the rewritten password begins with `{enc}`, restart, and verify database
+configuration loading. Replace the supplied development certificate/private key
+and rotate any password present in tracked history before production use.
 
-The supplied development PFX uses `nopassword`. The uploaded Java baseline
-reliably accepts a replacement password through the JVM system property:
-
-```text
--Dopendata.config.keystore.password=<pfx-password>
-```
-
-The previously documented `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment
-variable is **not honoured by the current code** because the environment-variable
-constant is incorrectly set to `nopassword`. Treat that as an implementation
-defect; do not depend on the environment-variable form until the Java code is
-corrected and tested.
-
-Replace the supplied development certificate and password before a production
-installation. See the
-[database configuration and security guide](docs/guides/database-configuration-and-security.md).
-
-## Command-line examples
+## Common commands
 
 ```text
 --help
@@ -140,57 +99,35 @@ installation. See the
 --plugin ofgem --dry-run
 --plugin openmeteo --dry-run
 --plugin octopus
---plugin all --parallelism 3
---plugin openmeteo,ofgem --file C:\OpenData\run.properties
+--plugin openmeteo,ofgem --parallelism 2
 ```
 
-The launcher prefix depends on the IDE or classpath runner. The complete option
-set is documented in the
-[command-line reference](docs/reference/command-line-reference.md).
+Do not present `--plugin octopus --dry-run` or `--plugin all --dry-run` as valid
+in the current source baseline.
 
-## Documentation
+## Documentation map
 
-| Area | Entry point |
+| Need | Entry point |
 |---|---|
 | Quick start | [docs/guides/quick-start.md](docs/guides/quick-start.md) |
 | User guide | [docs/user-guide/README.md](docs/user-guide/README.md) |
+| Administrator operations | [docs/operations/README.md](docs/operations/README.md) |
 | Architecture | [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) |
-| Plugin documentation | [docs/plugins/README.md](docs/plugins/README.md) |
-| Development | [docs/development/README.md](docs/development/README.md) |
-| Repository structure | [docs/development/repository-structure.md](docs/development/repository-structure.md) |
-| Operations | [docs/operations/README.md](docs/operations/README.md) |
-| Reference | [docs/reference/README.md](docs/reference/README.md) |
-| ADR register | [docs/decisions/ADR-REGISTER.md](docs/decisions/ADR-REGISTER.md) |
+| Plugin development | [docs/development/README.md](docs/development/README.md) |
+| API/configuration reference | [docs/reference/README.md](docs/reference/README.md) |
+| Governance and compliance | [docs/governance/README.md](docs/governance/README.md) |
+| Release process | [docs/release/Release-Process.md](docs/release/Release-Process.md) |
 | Documentation framework | [docs/README.md](docs/README.md) |
 
-Build every configured manual with:
+## Data, security and licensing
 
-```powershell
-.\scripts\Build-Documentation.ps1 -Document All -Format All
-```
+OpenData is Apache-2.0 licensed. Dependencies and data retain separate terms.
+Review [SECURITY.md](SECURITY.md), [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
+and [DATA-SOURCE-NOTICES.md](DATA-SOURCE-NOTICES.md). Never publish private keys,
+credentials, Octopus statements, extracted customer data or database backups.
 
-No documentation script changes are required for the Version 2.0.0 content
-refresh; document composition remains manifest driven.
+## Contributing
 
-## Data sources and privacy
-
-Ofgem and Open-Meteo data remain subject to their provider licences and service
-terms. Octopus Energy statements are customer documents and can contain personal,
-account, payment and consumption information. Do not commit statements, extracted
-records, database backups, logs containing statement content, or live credentials
-to source control. See [DATA-SOURCE-NOTICES.md](DATA-SOURCE-NOTICES.md) and
-[SECURITY.md](SECURITY.md).
-
-## Contributing and support
-
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes. Participation
-is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Report security issues
-privately as described in [SECURITY.md](SECURITY.md); use the GitHub issue tracker
-for non-sensitive defects and feature requests.
-
-## Licence
-
-OpenData is licensed under the Apache License, Version 2.0. See
-[`LICENSE`](LICENSE), [`NOTICE`](NOTICE), and the
-[licensing policy](docs/Licensing-Policy.md). External data and customer documents
-are not relicensed under Apache 2.0 merely because OpenData processes them.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Report sensitive vulnerabilities
+privately as described in `SECURITY.md`.

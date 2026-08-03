@@ -1,0 +1,21 @@
+@startuml
+!theme plain
+title OpenData release evidence flow
+start
+:Freeze candidate commit and scope;
+:Run build, SQL, plugin and documentation checks;
+:Index evidence;
+if (Any mandatory gate failed?) then (yes)
+  if (Approved waiver?) then (yes)
+    :Record risk, owner and controls;
+  else (no)
+    :Remediate and repeat affected checks;
+    stop
+  endif
+endif
+:Review archive contents and notices;
+:Generate and verify checksums;
+:Approve, tag and publish;
+:Download and verify published artifacts;
+stop
+@enduml

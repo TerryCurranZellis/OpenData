@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 2.0.0 baseline including governance, compliance, attribution and privacy controls"
+    "revisionSummary": "Version 2.0.0 baseline including governance and evidence-based release controls"
   },
   "sections": [
     "shared/introduction.md",
@@ -42,6 +42,9 @@
     "governance/data-and-privacy-governance.md",
     "governance/dependency-and-attribution-management.md",
     "governance/release-compliance-checklist.md",
+    "release/Release-Process.md",
+    "release/Distribution-Contents.md",
+    "release/Final-Release-Checklist.md",
     "shared/glossary.md",
     "shared/licence.md",
     "shared/third-party-notices.md",

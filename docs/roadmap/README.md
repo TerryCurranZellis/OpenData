@@ -1,35 +1,39 @@
 # OpenData Roadmap
 
-**Document ID:** ROADMAP-001  
-**Version:** 1.0  
 **Status:** Current priorities  
-**Baseline date:** 26 July 2026
+**Baseline:** 3 August 2026
 
----
+## Current implementation
 
-## Current baseline
+Ofgem, OpenMeteo and local-file Octopus ingestion execute through the common
+plugin registry/lifecycle. Database-backed configuration registration,
+transactional plugin persistence, bounded parallelism and manifest-driven manuals
+are implemented.
 
-Ofgem and OpenMeteo execute through the common registry and bounded coordinator.
-Dry runs, contextual logging, pooled SQL Server access and plugin metrics are
-implemented.
-
-## Priority order
+## Release-critical priorities
 
 | Priority | Outcome | Acceptance evidence |
-|---|---|---|
-| 1 | Unify plugin-run and ingestion provenance | One run identity links logs, source file and business rows |
-| 2 | Remove packaged/legacy credentials | No password in tracked resources; external secret verified |
-| 3 | Prove SQL Server operation | Clean/repeat install, both write runs, rollback and permissions |
-| 4 | Produce executable package | Verified `java -jar`, dependencies, manifest version and exit codes |
-| 5 | Harden documentation release | Technical/user builds and all PlantUML render successfully |
-| 6 | Expand Ofgem coverage | Component values and historical backfill with fixtures/reconciliation |
+|---:|---|---|
+| 1 | Remove/rotate tracked credentials and private keys | Clean archive/history decision and deployment-specific key test |
+| 2 | Correct keystore environment-variable secret input | Automated and manual startup tests |
+| 3 | Correct Octopus dry-run ledger access | Octopus and `all` dry runs complete without database resources/writes |
+| 4 | Validate SQL Server trust and least privilege | Trusted TLS connection and permission evidence |
+| 5 | Resolve preview JDBC dependency | Stable dependency or approved risk decision |
+| 6 | Verify executable packaging | Clean-machine launch with documented command/dependencies |
+| 7 | Complete release evidence | Final checklist and evidence index approved |
 
-## Deferred
+## Post-release candidates
 
-Internal scheduling, database-backed plugin configuration, IMAP/Octopus work and
-additional database engines remain deferred or shelved according to their ADRs.
+- Evaluate authorised Octopus API capabilities and terms; do not assume statement
+  PDF download is available.
+- Expand Ofgem historical/component coverage and reconciliation.
+- Add stronger secret-management integration and certificate rotation.
+- Improve source-provenance linkage and operational observability.
+- Consider internal scheduling only if external orchestration is insufficient.
+- Evaluate additional database engines without weakening SQL Server correctness.
 
-## Release boundary
+## Boundary
 
-Do not label the application production-ready until priorities 1–5 are complete
-or each remaining risk has a documented release waiver.
+Database-backed configuration and Octopus local-file processing are no longer
+future work. Direct Octopus acquisition, internal scheduling and additional
+database engines remain outside the Version 2.0.0 release scope.
