@@ -35,6 +35,7 @@ public final class PluginExecutionCoordinator {
     private final DatabaseResourceManager database;
     private final Clock clock;
     private final Duration shutdownTimeout;
+    private final PluginExceptionHandler exceptionHandler;
 
     /**
      *
@@ -55,6 +56,7 @@ public final class PluginExecutionCoordinator {
         this.database = Objects.requireNonNull(database, "database");
         this.clock = Objects.requireNonNull(clock, "clock");
         this.shutdownTimeout = Objects.requireNonNull(shutdownTimeout, "shutdownTimeout");
+        this.exceptionHandler = new PluginExceptionHandler();
     }
 
     /**
@@ -124,7 +126,7 @@ public final class PluginExecutionCoordinator {
             }
             LOGGER.log(Level.INFO, "Starting plugin {0}.", pluginId);
             final OpenDataPlugin plugin = pluginFactory.create(resolved);
-            metrics = plugin.execute(new PluginExecutionContext(
+            metrics = exceptionHandler.execute(pluginId, plugin, new PluginExecutionContext(
                     runId,
                     resolved.descriptor(),
                     resolved.definition(),

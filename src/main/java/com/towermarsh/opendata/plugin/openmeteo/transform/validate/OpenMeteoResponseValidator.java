@@ -5,8 +5,7 @@
  */
 package com.towermarsh.opendata.plugin.openmeteo.transform.validate;
 
-import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
-import com.towermarsh.opendata.plugin.openmeteo.extract.OpenMeteoResponse;
+import com.towermarsh.opendata.plugin.openmeteo.transform.OpenMeteoResponse;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,14 +19,14 @@ public final class OpenMeteoResponseValidator {
      *
      * @param response
      * @return
-     * @throws OpenMeteoException
+     * @throws IllegalArgumentException
      */
     public OpenMeteoResponse validate(final OpenMeteoResponse response)
-            throws OpenMeteoException {
+            throws IllegalArgumentException {
         Objects.requireNonNull(response, "response");
         final OpenMeteoResponse.Daily daily = response.daily();
         if (daily == null || daily.time() == null) {
-            throw new OpenMeteoException("Open-Meteo response did not contain daily data");
+            throw new IllegalArgumentException("Open-Meteo response did not contain daily data");
         }
         final int expected = daily.time().size();
         validateLength("temperature_2m_max", daily.maximumTemperatures(), expected);
@@ -43,13 +42,13 @@ public final class OpenMeteoResponseValidator {
     private static void validateLength(
             final String name,
             final List<?> values,
-            final int expected) throws OpenMeteoException {
+            final int expected) throws IllegalArgumentException {
         if (values == null || values.size() != expected) {
-            throw new OpenMeteoException(
+            throw new IllegalArgumentException(
                     "Open-Meteo daily array '%s' has an unexpected length".formatted(name));
         }
         if (values.stream().anyMatch(Objects::isNull)) {
-            throw new OpenMeteoException(
+            throw new IllegalArgumentException(
                     "Open-Meteo daily array '%s' contains a null value".formatted(name));
         }
     }

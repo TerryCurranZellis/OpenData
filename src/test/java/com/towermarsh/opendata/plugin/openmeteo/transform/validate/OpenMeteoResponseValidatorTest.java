@@ -8,8 +8,7 @@ package com.towermarsh.opendata.plugin.openmeteo.transform.validate;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.towermarsh.opendata.plugin.openmeteo.extract.OpenMeteoResponse;
-import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
+import com.towermarsh.opendata.plugin.openmeteo.transform.OpenMeteoResponse;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +20,7 @@ class OpenMeteoResponseValidatorTest {
     private final OpenMeteoResponseValidator validator = new OpenMeteoResponseValidator();
 
     @Test
-    void returnsResponseWhenDailyArraysHaveMatchingLengths() throws OpenMeteoException {
+    void returnsResponseWhenDailyArraysHaveMatchingLengths()  {
         final var response = response(List.of(1));
         assertSame(response, validator.validate(response));
     }
@@ -29,7 +28,7 @@ class OpenMeteoResponseValidatorTest {
     @Test
     void rejectsMismatchedDailyArrayLengths() {
         final var response = response(List.of());
-        assertThrows(OpenMeteoException.class, () -> validator.validate(response));
+        assertThrows(IllegalArgumentException.class, () -> validator.validate(response));
     }
 
     private static OpenMeteoResponse response(final List<Integer> weatherCodes) {

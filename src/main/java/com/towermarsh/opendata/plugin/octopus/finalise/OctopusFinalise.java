@@ -5,7 +5,6 @@
  */
 package com.towermarsh.opendata.plugin.octopus.finalise;
 
-import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
@@ -47,13 +46,13 @@ public final class OctopusFinalise {
      * @param pdfFiles      list of PDF files that were processed by the extract step
      * @param parseResult   records produced by the transform step
      * @param metrics       load outcome metrics
-     * @throws PluginException if cleanup fails (e.g. archiving files)
+     * 
      */
     public void finalise(
             final OctopusConfiguration configuration,
             final List<Path> pdfFiles,
             final OctopusParseResult parseResult,
-            final PluginMetrics metrics) throws PluginException {
+            final PluginMetrics metrics) {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(pdfFiles, "pdfFiles");
         Objects.requireNonNull(parseResult, "parseResult");

@@ -5,9 +5,8 @@
  */
 package com.towermarsh.opendata.plugin.openmeteo.transform;
 
-import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
-import com.towermarsh.opendata.plugin.openmeteo.exception.OpenMeteoException;
-import com.towermarsh.opendata.plugin.openmeteo.extract.OpenMeteoResponse;
+import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
+import com.towermarsh.opendata.plugin.openmeteo.transform.OpenMeteoResponse;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.WmoWeatherCode;
 import java.time.LocalDate;
@@ -29,11 +28,11 @@ public final class OpenMeteoTransformer {
      * @param response
      * @param configuration
      * @return
-     * @throws OpenMeteoException
+     * @throws IllegalArgumentException
      */
     public List<DailyWeatherRecord> transform(
             final OpenMeteoResponse response,
-            final OpenMeteoConfiguration configuration) throws OpenMeteoException {
+            final OpenMeteoConfiguration configuration) throws IllegalArgumentException {
         Objects.requireNonNull(response, "response");
         Objects.requireNonNull(configuration, "configuration");
         final var daily = response.daily();
@@ -63,7 +62,7 @@ public final class OpenMeteoTransformer {
             }
             return List.copyOf(results);
         } catch (DateTimeParseException | NullPointerException | IllegalArgumentException exception) {
-            throw new OpenMeteoException(
+            throw new IllegalArgumentException(
                     "Open-Meteo daily data could not be transformed",
                     exception);
         }

@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.plugin.octopus;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
-import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.OpenDataPlugin;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
@@ -39,8 +38,7 @@ import java.util.logging.Logger;
  *       (placeholder: archiving pending).</li>
  * </ol>
  *
- * <p>Exceptions from all steps are reported as
- * {@link PluginException} with plugin name {@code "octopus"}.
+ * <p>Phase failures are normalised by the framework PluginExceptionHandler.
  *
  * @author Terry Curran
  * @version 2.0.0
@@ -79,10 +77,10 @@ public final class OctopusPlugin implements OpenDataPlugin {
      *
      * @param context plugin execution context
      * @return plugin metrics summarising the run
-     * @throws PluginException if the pipeline fails at any step
+     * @throws Exception if a pipeline phase fails
      */
     @Override
-    public PluginMetrics execute(final PluginExecutionContext context) throws PluginException {
+    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         LOGGER.info(() -> "OctopusPlugin.execute starting (runId=%s, dryRun=%s)"
                 .formatted(context.runId(), context.dryRun()));

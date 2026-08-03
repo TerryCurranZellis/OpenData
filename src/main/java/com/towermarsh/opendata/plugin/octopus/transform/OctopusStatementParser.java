@@ -421,6 +421,19 @@ public final class OctopusStatementParser {
     }
 
     
+    /** Parses exactly the PDF files supplied by the Extract phase. */
+    public static OctopusParseResult parseAll(final List<Path> pdfFiles) throws IOException {
+        Objects.requireNonNull(pdfFiles, "pdfFiles");
+        final List<ElectricityRecord> electricity = new ArrayList<>();
+        final List<GasRecord> gas = new ArrayList<>();
+        for (Path pdfFile : pdfFiles) {
+            final OctopusParseResult result = parseAllFromFile(pdfFile);
+            electricity.addAll(result.electricityRecords());
+            gas.addAll(result.gasRecords());
+        }
+        return new OctopusParseResult(electricity, gas);
+    }
+
     // ── File discovery ───────────────────────────────────────────────────────
     /**
      * Return an ordered list of PDF entries whose filenames match the pattern

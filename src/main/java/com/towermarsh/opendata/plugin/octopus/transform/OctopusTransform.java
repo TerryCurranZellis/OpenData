@@ -5,8 +5,8 @@
  */
 package com.towermarsh.opendata.plugin.octopus.transform;
 
-import com.towermarsh.opendata.exception.PluginException;
-import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
+import java.nio.file.Path;
+import java.util.List;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -36,24 +36,13 @@ public final class OctopusTransform {
      *
      * @param configuration Octopus plugin configuration
      * @return combined electricity and gas records; never {@code null}
-     * @throws PluginException if the input directory cannot be read or any PDF
-     *                         fails to parse
+     * @throws IOException if any downloaded PDF cannot be read
      */
-    public OctopusParseResult transform(final OctopusConfiguration configuration)
-            throws PluginException {
-        Objects.requireNonNull(configuration, "configuration");
-
-        final var parser = new OctopusStatementParser(configuration.inputDirectory());
-        try {
-            final var result = parser.parseAll();
-            LOGGER.info(() -> "Octopus transform: %d electricity record(s), %d gas record(s)"
-                    .formatted(result.electricityRecords().size(), result.gasRecords().size()));
-            return result;
-        } catch (IOException e) {
-            throw new PluginException("octopus", "Failed to parse PDF statement files in "
-                    + configuration.inputDirectory(), e);
-        } catch (RuntimeException exception) {
-            throw new PluginException("octopus", "Failed to validate parsed Octopus statement data.", exception);
-        }
+    public OctopusParseResult transform(final List<Path> pdfFiles) throws IOException {
+        Objects.requireNonNull(pdfFiles, "pdfFiles");
+        final var result = OctopusStatementParser.parseAll(pdfFiles);
+        LOGGER.info(() -> "Octopus transform: %d electricity record(s), %d gas record(s)"
+                .formatted(result.electricityRecords().size(), result.gasRecords().size()));
+        return result;
     }
 }

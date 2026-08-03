@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import com.towermarsh.opendata.database.*;
-import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
+import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;
 import java.net.URI;
 import java.sql.*;

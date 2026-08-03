@@ -5,7 +5,6 @@
  */
 package com.towermarsh.opendata.plugin.octopus.extract;
 
-import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
 
 import java.io.IOException;
@@ -53,10 +52,10 @@ public final class OctopusExtract {
      * @param configuration Octopus plugin configuration
      * @return list of PDF file paths found in the input directory; never
      *         {@code null}; may be empty if no PDFs are present
-     * @throws PluginException if the input directory cannot be read
+     * @throws IOException if the input directory cannot be read
      */
     public List<Path> extract(final OctopusConfiguration configuration)
-            throws PluginException {
+            throws IOException {
         Objects.requireNonNull(configuration, "configuration");
 
         final Path inputDir = configuration.inputDirectory();
@@ -72,8 +71,7 @@ public final class OctopusExtract {
             LOGGER.info(() -> "Octopus extract: found %d PDF file(s)".formatted(pdfs.size()));
             return pdfs;
         } catch (IOException e) {
-            throw new PluginException("octopus",
-                    "Failed to list PDF files in input directory: " + inputDir, e);
+            throw new IOException("Failed to list PDF files in input directory: " + inputDir, e);
         }
     }
 }

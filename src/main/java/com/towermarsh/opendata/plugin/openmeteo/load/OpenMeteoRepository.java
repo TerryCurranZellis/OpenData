@@ -7,7 +7,7 @@ package com.towermarsh.opendata.plugin.openmeteo.load;
 
 import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
+import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;
 import java.sql.Connection;
 import java.sql.Date;

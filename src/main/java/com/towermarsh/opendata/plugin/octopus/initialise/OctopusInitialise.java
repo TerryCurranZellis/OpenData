@@ -5,7 +5,6 @@
  */
 package com.towermarsh.opendata.plugin.octopus.initialise;
 
-import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.octopus.extract.OctopusExtract;
@@ -31,9 +30,8 @@ import java.util.logging.Logger;
  *   <li>Calling the Finalise step to clean up and report statistics.</li>
  * </ol>
  *
- * <p>All exceptions from sub-steps are propagated as {@link PluginException}
- * with the plugin name {@code "octopus"} so they can be identified in logs and
- * audit records without inspecting the stack trace.
+ * <p>Phase exceptions are allowed to propagate to the framework, where the
+ * central PluginExceptionHandler adds the plugin identity for logging and audit.
  *
  * @author Terry Curran
  * @version 2.0.0
@@ -81,26 +79,24 @@ public final class OctopusInitialise {
      * @param context plugin execution context providing the database, run ID,
      *                dry-run flag and other runtime dependencies
      * @return plugin metrics summarising the run
-     * @throws PluginException if any pipeline step fails
+     * @throws Exception if any pipeline phase fails
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws PluginException {
+    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
 
         LOGGER.info(() -> "Octopus initialise: starting pipeline (dryRun=%s)"
                 .formatted(context.dryRun()));
 
-        // Extract – make PDF files available in the input directory
-        final var pdfFiles = extractor.extract(configuration);
-
-        // Transform – parse PDFs into structured records
-        final var parseResult = transformer.transform(configuration);
-
-        // Load – persist (or skip on dry run)
-        final var metrics = loader.load(parseResult, configuration, context);
-
-        // Finalise – clean up and report
-        finaliser.finalise(configuration, pdfFiles, parseResult, metrics);
-
-        return metrics;
+        List<Path> pdfFiles = List.of();
+        OctopusParseResult parseResult = new OctopusParseResult(List.of(), List.of());
+        PluginMetrics metrics = PluginMetrics.ZERO;
+        try {
+            pdfFiles = extractor.extract(configuration);
+            parseResult = transformer.transform(pdfFiles);
+            metrics = loader.load(parseResult, configuration, context);
+            return metrics;
+        } finally {
+            finaliser.finalise(configuration, pdfFiles, parseResult, metrics);
+        }
     }
 }

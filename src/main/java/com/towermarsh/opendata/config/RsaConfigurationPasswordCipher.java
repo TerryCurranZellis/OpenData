@@ -37,15 +37,10 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      */
     public static final String ENCRYPTED_PREFIX = "{enc}";
     public static final String KEYSTORE_PASSWORD_PROPERTY = "opendata.config.keystore.password";
-    public static final String KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE = "OPENDATA_CONFIG_KEYSTORE_PASSWORD";
-    public static final String DEFAULT_KEYSTORE_PASSWORD = "nopassword";
+    public static final String KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE = "nopassword";
 
     private static final String TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
     private static final char[] EMPTY_PASSWORD = new char[0];
-    private static final String PUBLIC_CERTIFICATE_RESOURCE =
-            "config/security/opendata-config-public.cer";
-    private static final String PRIVATE_KEY_STORE_RESOURCE =
-            "config/security/opendata-config-private.pfx";
 
     private final Path certificatePath;
     private final Path privateKeyStorePath;
@@ -157,7 +152,8 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      * @throws GeneralSecurityException on certificate decode failure
      */
     private PublicKey readPublicKey() throws IOException, GeneralSecurityException {
-        try (InputStream input = openResource(certificatePath, PUBLIC_CERTIFICATE_RESOURCE, "public certificate")) {
+        validateExists(certificatePath, "public certificate");
+        try (InputStream input = Files.newInputStream(certificatePath)) {
             final var certificateFactory = CertificateFactory.getInstance("X.509");
             return certificateFactory.generateCertificate(input).getPublicKey();
         }
@@ -171,6 +167,7 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      * @throws GeneralSecurityException on key-store failure
      */
     private PrivateKey readPrivateKey() throws IOException, GeneralSecurityException {
+        validateExists(privateKeyStorePath, "private key store");
         Exception lastFailure = null;
         for (char[] candidatePassword : candidateKeyStorePasswords()) {
             try {
@@ -199,8 +196,7 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
      */
     private PrivateKey loadPrivateKey(final char[] keyStorePassword) throws IOException, GeneralSecurityException {
         final var keyStore = KeyStore.getInstance("PKCS12");
-        try (var input = openResource(
-                privateKeyStorePath, PRIVATE_KEY_STORE_RESOURCE, "private key store")) {
+        try (var input = Files.newInputStream(privateKeyStorePath)) {
             keyStore.load(input, keyStorePassword);
         }
         final var alias = StreamSupport.stream(
@@ -225,7 +221,6 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
     private List<char[]> candidateKeyStorePasswords() {
         final List<char[]> candidates = new ArrayList<>();
         addCandidatePassword(candidates, privateKeyStorePassword);
-        addCandidatePassword(candidates, DEFAULT_KEYSTORE_PASSWORD.toCharArray());
         addCandidatePassword(candidates, null);
         addCandidatePassword(candidates, EMPTY_PASSWORD);
         return candidates;
@@ -266,36 +261,20 @@ public final class RsaConfigurationPasswordCipher implements ConfigurationPasswo
             return propertyValue.toCharArray();
         }
         final var environmentValue = System.getenv(KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE);
-        return environmentValue == null || environmentValue.isBlank()
-                ? DEFAULT_KEYSTORE_PASSWORD.toCharArray()
-                : environmentValue.toCharArray();
+        return environmentValue == null ? null : environmentValue.toCharArray();
     }
 
     /**
-     * Opens a certificate resource from the source tree when available, or
-     * from the application classpath when running from a packaged JAR.
+     * Verifies that one certificate file exists.
      *
-     * @param path source-tree path
-     * @param classpathResource packaged resource name
+     * @param path file path
      * @param description human-readable description
-     * @return open input stream
-     * @throws IOException when the resource cannot be opened
      */
-    private static InputStream openResource(
-            final Path path,
-            final String classpathResource,
-            final String description) throws IOException {
+    private static void validateExists(final Path path, final String description) {
         if (Files.isRegularFile(path)) {
-            return Files.newInputStream(path);
-        }
-        final var input = RsaConfigurationPasswordCipher.class
-                .getClassLoader()
-                .getResourceAsStream(classpathResource);
-        if (input != null) {
-            return input;
+            return;
         }
         throw new OpenDataConfigurationException(
-                "OpenData configuration " + description + " was not found at "
-                + path.toAbsolutePath() + " or on the classpath as " + classpathResource + '.');
+                "OpenData configuration " + description + " was not found: " + path.toAbsolutePath());
     }
 }

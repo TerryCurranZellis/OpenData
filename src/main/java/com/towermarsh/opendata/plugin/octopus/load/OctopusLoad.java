@@ -5,7 +5,6 @@
  */
 package com.towermarsh.opendata.plugin.octopus.load;
 
-import com.towermarsh.opendata.exception.PluginException;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
@@ -47,12 +46,12 @@ public final class OctopusLoad {
      * @param configuration Octopus plugin configuration
      * @param context       plugin execution context (provides database and dry-run flag)
      * @return plugin metrics summarising the load outcome
-     * @throws PluginException if the database write fails
+     * 
      */
     public PluginMetrics load(
             final OctopusParseResult parseResult,
             final OctopusConfiguration configuration,
-            final PluginExecutionContext context) throws PluginException {
+            final PluginExecutionContext context) {
         Objects.requireNonNull(parseResult, "parseResult");
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(context, "context");
