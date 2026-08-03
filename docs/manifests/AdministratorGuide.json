@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Administrator guide",
     "audience": "Database, platform and operations administrators",
-    "revisionSummary": "Version 2.0.0 baseline including governance and evidence-based release controls"
+    "revisionSummary": "Version 2.0.0 complete release-candidate documentation and readiness baseline"
   },
   "sections": [
     "shared/introduction.md",
@@ -31,6 +31,8 @@
     "release/Release-Process.md",
     "release/Distribution-Contents.md",
     "release/Final-Release-Checklist.md",
+    "review/RELEASE-READINESS-STATUS-2.0.0.md",
+    "release/Release-Evidence-Index.md",
     "shared/glossary.md",
     "shared/licence.md",
     "shared/third-party-notices.md",

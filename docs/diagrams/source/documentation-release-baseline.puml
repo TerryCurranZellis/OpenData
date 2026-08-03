@@ -1,0 +1,18 @@
+@startuml
+!theme plain
+title OpenData documentation authority and release closure
+rectangle "Source + executed evidence" as Source
+rectangle "Release readiness and architecture" as Current
+rectangle "User / operations / developer / reference" as Guides
+rectangle "Accepted ADRs" as ADR
+rectangle "Historical reviews and releases" as History
+Source -down-> Current : authoritative behaviour
+Current -down-> Guides : current guidance
+Guides -down-> ADR : design context
+ADR -down-> History : historical context
+note right of Source
+Documentation programme complete.
+Production release still requires
+source remediation and target tests.
+end note
+@enduml
