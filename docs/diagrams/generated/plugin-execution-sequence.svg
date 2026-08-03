@@ -1,1 +1,192 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="589px" preserveAspectRatio="none" style="width:1107px;height:589px;background:#FFFFFF;" version="1.1" viewBox="0 0 1107 589" width="1107px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="1"><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="113.5654" x="493.5842" y="29.5332">Plugin Execution</text></g><g class="participant-lifeline" data-entity-uid="part1" data-qualified-name="Operator" data-source-line="2" id="part1-lifeline"><g><title>Operator</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="31.624" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="35" x2="35" y1="121.2188" y2="505.4375"/></g></g><g class="participant-lifeline" data-entity-uid="part2" data-qualified-name="Main" data-source-line="3" id="part2-lifeline"><g><title>Main</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="208.8501" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="212.6777" x2="212.6777" y1="121.2188" y2="505.4375"/></g></g><g class="participant-lifeline" data-entity-uid="part3" data-qualified-name="Application" data-source-line="4" id="part3-lifeline"><g><title>OpenDataApplication</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="328.2109" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="332.0562" x2="332.0562" y1="121.2188" y2="505.4375"/></g></g><g class="participant-lifeline" data-entity-uid="part4" data-qualified-name="Registry" data-source-line="5" id="part4-lifeline"><g><title>ClasspathPluginRegistry</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="513.3398" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="517.0815" x2="517.0815" y1="121.2188" y2="505.4375"/></g></g><g class="participant-lifeline" data-entity-uid="part5" data-qualified-name="Coordinator" data-source-line="6" id="part5-lifeline"><g><title>PluginExecutionCoordinator</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="700.3735" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="703.5981" x2="703.5981" y1="121.2188" y2="505.4375"/></g></g><g class="participant-lifeline" data-entity-uid="part6" data-qualified-name="Factory" data-source-line="7" id="part6-lifeline"><g><title>ReflectionPluginFactory</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="885.0728" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="888.1489" x2="888.1489" y1="121.2188" y2="505.4375"/></g></g><g class="participant-lifeline" data-entity-uid="part7" data-qualified-name="Plugin" data-source-line="8" id="part7-lifeline"><g><title>OpenDataPlugin</title><rect fill="#000000" fill-opacity="0.00000" height="384.2188" width="8" x="1034.3652" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="1037.9966" x2="1037.9966" y1="121.2188" y2="505.4375"/></g></g><g class="participant participant-head" data-entity-uid="part1" data-qualified-name="Operator" data-source-line="2" id="part1-head"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248" x="5" y="118.1426">Operator</text><ellipse cx="35.624" cy="52.1094" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M35.624,60.1094 L35.624,87.1094 M22.624,68.1094 L48.624,68.1094 M35.624,87.1094 L22.624,102.1094 M35.624,87.1094 L48.624,102.1094" fill="none" style="stroke:#181818;stroke-width:0.5;"/></g><g class="participant participant-tail" data-entity-uid="part1" data-qualified-name="Operator" data-source-line="2" id="part1-tail"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248" x="5" y="518.9707">Operator</text><ellipse cx="35.624" cy="530.5469" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M35.624,538.5469 L35.624,565.5469 M22.624,546.5469 L48.624,546.5469 M35.624,565.5469 L22.624,580.5469 M35.624,565.5469 L48.624,580.5469" fill="none" style="stroke:#181818;stroke-width:0.5;"/></g><g class="participant participant-head" data-entity-uid="part2" data-qualified-name="Main" data-source-line="3" id="part2-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="44.3447" x="190.6777" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="30.3447" x="197.6777" y="110.1426">Main</text></g><g class="participant participant-tail" data-entity-uid="part2" data-qualified-name="Main" data-source-line="3" id="part2-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="44.3447" x="190.6777" y="504.4375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="30.3447" x="197.6777" y="525.9707">Main</text></g><g class="participant participant-head" data-entity-uid="part3" data-qualified-name="Application" data-source-line="4" id="part3-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146.3096" x="259.0562" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.3096" x="266.0562" y="110.1426">OpenDataApplication</text></g><g class="participant participant-tail" data-entity-uid="part3" data-qualified-name="Application" data-source-line="4" id="part3-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146.3096" x="259.0562" y="504.4375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.3096" x="266.0562" y="525.9707">OpenDataApplication</text></g><g class="participant participant-head" data-entity-uid="part4" data-qualified-name="Registry" data-source-line="5" id="part4-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="166.5166" x="434.0815" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152.5166" x="441.0815" y="110.1426">ClasspathPluginRegistry</text></g><g class="participant participant-tail" data-entity-uid="part4" data-qualified-name="Registry" data-source-line="5" id="part4-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="166.5166" x="434.0815" y="504.4375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152.5166" x="441.0815" y="525.9707">ClasspathPluginRegistry</text></g><g class="participant participant-head" data-entity-uid="part5" data-qualified-name="Coordinator" data-source-line="6" id="part5-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="187.5508" x="610.5981" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5508" x="617.5981" y="110.1426">PluginExecutionCoordinator</text></g><g class="participant participant-tail" data-entity-uid="part5" data-qualified-name="Coordinator" data-source-line="6" id="part5-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="187.5508" x="610.5981" y="504.4375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5508" x="617.5981" y="525.9707">PluginExecutionCoordinator</text></g><g class="participant participant-head" data-entity-uid="part6" data-qualified-name="Factory" data-source-line="7" id="part6-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="161.8477" x="808.1489" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8477" x="815.1489" y="110.1426">ReflectionPluginFactory</text></g><g class="participant participant-tail" data-entity-uid="part6" data-qualified-name="Factory" data-source-line="7" id="part6-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="161.8477" x="808.1489" y="504.4375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8477" x="815.1489" y="525.9707">ReflectionPluginFactory</text></g><g class="participant participant-head" data-entity-uid="part7" data-qualified-name="Plugin" data-source-line="8" id="part7-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="116.7373" x="979.9966" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.7373" x="986.9966" y="110.1426">OpenDataPlugin</text></g><g class="participant participant-tail" data-entity-uid="part7" data-qualified-name="Plugin" data-source-line="8" id="part7-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="116.7373" x="979.9966" y="504.4375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.7373" x="986.9966" y="525.9707">OpenDataPlugin</text></g><g class="message" data-entity-1="part1" data-entity-2="part2" data-source-line="10" id="msg1"><polygon fill="#181818" points="200.8501,149.5703,210.8501,153.5703,200.8501,157.5703,204.8501,153.5703" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="35.624" x2="206.8501" y1="153.5703" y2="153.5703"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57.0781" x="42.624" y="148.7139">command</text></g><g class="message" data-entity-1="part2" data-entity-2="part3" data-source-line="11" id="msg2"><polygon fill="#181818" points="320.2109,179.9219,330.2109,183.9219,320.2109,187.9219,324.2109,183.9219" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="212.8501" x2="326.2109" y1="183.9219" y2="183.9219"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="95.3608" x="219.8501" y="179.0654">start(arguments)</text></g><g class="message" data-entity-1="part3" data-entity-2="part4" data-source-line="12" id="msg3"><polygon fill="#181818" points="505.3398,210.2734,515.3398,214.2734,505.3398,218.2734,509.3398,214.2734" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="332.2109" x2="511.3398" y1="214.2734" y2="214.2734"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="161.1289" x="339.2109" y="209.417">resolve selected descriptors</text></g><g class="message" data-entity-1="part4" data-entity-2="part3" data-source-line="13" id="msg4"><polygon fill="#181818" points="343.2109,240.625,333.2109,244.625,343.2109,248.625,339.2109,244.625" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="337.2109" x2="516.3398" y1="244.625" y2="244.625"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="113.458" x="349.2109" y="239.7686">enabled descriptors</text></g><g class="message" data-entity-1="part3" data-entity-2="part5" data-source-line="14" id="msg5"><polygon fill="#181818" points="692.3735,270.9766,702.3735,274.9766,692.3735,278.9766,696.3735,274.9766" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="332.2109" x2="698.3735" y1="274.9766" y2="274.9766"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="266.6206" x="339.2109" y="270.1201">execute(resolved plugins, parallelism, dryRun)</text></g><g class="message" data-entity-1="part5" data-entity-2="part6" data-source-line="15" id="msg6"><polygon fill="#181818" points="877.0728,301.3281,887.0728,305.3281,877.0728,309.3281,881.0728,305.3281" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="704.3735" x2="883.0728" y1="305.3281" y2="305.3281"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="132.2344" x="711.3735" y="300.4717">create(resolved plugin)</text></g><g class="message" data-entity-1="part6" data-entity-2="part5" data-source-line="16" id="msg7"><polygon fill="#181818" points="715.3735,331.6797,705.3735,335.6797,715.3735,339.6797,711.3735,335.6797" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="709.3735" x2="888.0728" y1="335.6797" y2="335.6797"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="34.6963" x="721.3735" y="330.8232">plugin</text></g><g class="message" data-entity-1="part5" data-entity-2="part7" data-source-line="17" id="msg8"><polygon fill="#181818" points="1026.3652,362.0313,1036.3652,366.0313,1026.3652,370.0313,1030.3652,366.0313" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="704.3735" x2="1032.3652" y1="366.0313" y2="366.0313"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="96.1035" x="711.3735" y="361.1748">execute(context)</text></g><g class="message" data-entity-1="part7" data-entity-2="part5" data-source-line="18" id="msg9"><polygon fill="#181818" points="715.3735,392.3828,705.3735,396.3828,715.3735,400.3828,711.3735,396.3828" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="709.3735" x2="1037.3652" y1="396.3828" y2="396.3828"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="78.0254" x="721.3735" y="391.5264">PluginMetrics</text></g><g class="message" data-entity-1="part5" data-entity-2="part3" data-source-line="19" id="msg10"><polygon fill="#181818" points="343.2109,422.7344,333.2109,426.7344,343.2109,430.7344,339.2109,426.7344" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="337.2109" x2="703.3735" y1="426.7344" y2="426.7344"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="148.8462" x="349.2109" y="421.8779">PluginExecutionSummary</text></g><g class="message" data-entity-1="part3" data-entity-2="part2" data-source-line="20" id="msg11"><polygon fill="#181818" points="223.8501,453.0859,213.8501,457.0859,223.8501,461.0859,219.8501,457.0859" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="217.8501" x2="331.2109" y1="457.0859" y2="457.0859"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="93.9453" x="229.8501" y="452.2295">ExecutionStatus</text></g><g class="message" data-entity-1="part2" data-entity-2="part1" data-source-line="21" id="msg12"><polygon fill="#181818" points="46.624,483.4375,36.624,487.4375,46.624,491.4375,42.624,487.4375" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="40.624" x2="211.8501" y1="487.4375" y2="487.4375"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="153.2261" x="52.624" y="482.5811">logged status and duration</text></g><?plantuml-src RL99RiCm3Bph5Jp6GF817meKQNiBMgGlO6NM5I1BWaGLoUzBoqkyz4QPCnpEq6pO4dpOt1e7hpVIcOrt2ZNx2E-18agX0aOssWHq31SqRlL1KEu56Pz3i4PZpmTCi7Yku6UBAGNadq7qIgr97EyzPQfN-04shtRsFZR6zMlrbCLpnRhIjoNT4mR-Mt5KLCRoNmzZ488QAgMc3E3qLAn33Tft7Rf6bQTyNXgl8R7CFM1iSqUEKwMMRK7FXck8bBpz9KZKxqeDD9HqD47aaffnfvq4EVoo6_X6PHcJ44fwT1W56mZ5NJg2X83MaZMfEq8JxzViAhKaowmfEt4U2VTZAZKXJZlb0R6TECRyM4nxntJZIesT_Q2XSI6EHgVrl5q-cr_cCykzvE2hY1xdVE0OEQVnhDAVJr-3zMqhVbD1W1mVcXpBf3y0?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="770pt" height="492pt"
+ viewBox="0.00 0.00 769.58 492.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 474)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-18,18 -18,-474 751.58,-474 751.58,18 -18,18"/>
+<text text-anchor="middle" x="366.79" y="-436" font-family="Arial" font-size="20.00">Plugin Execution</text>
+<!-- operator -->
+<g id="node1" class="node">
+<title>operator</title>
+<ellipse fill="none" stroke="black" cx="282.08" cy="-408" rx="31.58" ry="18"/>
+<text text-anchor="middle" x="282.08" y="-405.5" font-family="Arial" font-size="10.00">Operator</text>
+</g>
+<!-- entry -->
+<g id="node2" class="node">
+<title>entry</title>
+<path fill="none" stroke="black" d="M300.58,-348C300.58,-348 263.58,-348 263.58,-348 257.58,-348 251.58,-342 251.58,-336 251.58,-336 251.58,-324 251.58,-324 251.58,-318 257.58,-312 263.58,-312 263.58,-312 300.58,-312 300.58,-312 306.58,-312 312.58,-318 312.58,-324 312.58,-324 312.58,-336 312.58,-336 312.58,-342 306.58,-348 300.58,-348"/>
+<text text-anchor="middle" x="282.08" y="-327.5" font-family="Arial" font-size="10.00">OpenData</text>
+</g>
+<!-- operator&#45;&gt;entry -->
+<g id="edge1" class="edge">
+<title>operator&#45;&gt;entry</title>
+<path fill="none" stroke="black" d="M262.07,-393.82C255.73,-388.49 249.49,-381.76 246.08,-374 243.29,-367.65 244.84,-361.51 248.52,-355.95"/>
+<polygon fill="black" stroke="black" points="251.29,-358.1 255.2,-348.26 246,-353.51 251.29,-358.1"/>
+<text text-anchor="middle" x="266.58" y="-366.8" font-family="Arial" font-size="9.00">command</text>
+</g>
+<!-- entry&#45;&gt;operator -->
+<g id="edge17" class="edge">
+<title>entry&#45;&gt;operator</title>
+<path fill="none" stroke="black" d="M286.98,-348.1C288.69,-355.96 289.98,-365.42 289.08,-374 288.87,-375.97 288.6,-377.99 288.28,-380.01"/>
+<polygon fill="black" stroke="black" points="284.81,-379.51 286.4,-389.98 291.69,-380.8 284.81,-379.51"/>
+<text text-anchor="middle" x="339.58" y="-366.8" font-family="Arial" font-size="9.00">logged status + duration</text>
+</g>
+<!-- app -->
+<g id="node3" class="node">
+<title>app</title>
+<path fill="none" stroke="black" d="M324.58,-270C324.58,-270 239.58,-270 239.58,-270 233.58,-270 227.58,-264 227.58,-258 227.58,-258 227.58,-246 227.58,-246 227.58,-240 233.58,-234 239.58,-234 239.58,-234 324.58,-234 324.58,-234 330.58,-234 336.58,-240 336.58,-246 336.58,-246 336.58,-258 336.58,-258 336.58,-264 330.58,-270 324.58,-270"/>
+<text text-anchor="middle" x="282.08" y="-249.5" font-family="Arial" font-size="10.00">OpenDataApplication</text>
+</g>
+<!-- entry&#45;&gt;app -->
+<g id="edge2" class="edge">
+<title>entry&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M251.5,-316.56C237.96,-309.03 226.43,-298.49 233.08,-286 234.72,-282.92 236.79,-280.08 239.14,-277.46"/>
+<polygon fill="black" stroke="black" points="241.94,-279.64 246.92,-270.29 237.19,-274.5 241.94,-279.64"/>
+<text text-anchor="middle" x="266.58" y="-288.8" font-family="Arial" font-size="9.00">start(arguments)</text>
+</g>
+<!-- app&#45;&gt;entry -->
+<g id="edge16" class="edge">
+<title>app&#45;&gt;entry</title>
+<path fill="none" stroke="black" d="M294.98,-270.33C297.89,-275.16 300.57,-280.58 302.08,-286 303.63,-291.55 302.84,-297.28 300.87,-302.68"/>
+<polygon fill="black" stroke="black" points="297.59,-301.4 296.3,-311.92 303.87,-304.51 297.59,-301.4"/>
+<text text-anchor="middle" x="315.58" y="-288.8" font-family="Arial" font-size="9.00">status</text>
+</g>
+<!-- config -->
+<g id="node4" class="node">
+<title>config</title>
+<path fill="none" stroke="black" d="M101.08,-192C101.08,-192 17.08,-192 17.08,-192 11.08,-192 5.08,-186 5.08,-180 5.08,-180 5.08,-168 5.08,-168 5.08,-162 11.08,-156 17.08,-156 17.08,-156 101.08,-156 101.08,-156 107.08,-156 113.08,-162 113.08,-168 113.08,-168 113.08,-180 113.08,-180 113.08,-186 107.08,-192 101.08,-192"/>
+<text text-anchor="middle" x="59.08" y="-171.5" font-family="Arial" font-size="10.00">Configuration Source</text>
+</g>
+<!-- app&#45;&gt;config -->
+<g id="edge3" class="edge">
+<title>app&#45;&gt;config</title>
+<path fill="none" stroke="black" d="M227.28,-248.34C150.51,-244.05 18.63,-234.37 4.08,-218 -2.32,-210.8 0.56,-203.92 7.57,-197.86"/>
+<polygon fill="black" stroke="black" points="9.61,-200.71 15.77,-192.1 5.58,-194.99 9.61,-200.71"/>
+<text text-anchor="middle" x="52.08" y="-210.8" font-family="Arial" font-size="9.00">runtime + plugin values</text>
+</g>
+<!-- registry -->
+<g id="node5" class="node">
+<title>registry</title>
+<path fill="none" stroke="black" d="M272.58,-192C272.58,-192 195.58,-192 195.58,-192 189.58,-192 183.58,-186 183.58,-180 183.58,-180 183.58,-168 183.58,-168 183.58,-162 189.58,-156 195.58,-156 195.58,-156 272.58,-156 272.58,-156 278.58,-156 284.58,-162 284.58,-168 284.58,-168 284.58,-180 284.58,-180 284.58,-186 278.58,-192 272.58,-192"/>
+<text text-anchor="middle" x="234.08" y="-171.5" font-family="Arial" font-size="10.00">Classpath Registry</text>
+</g>
+<!-- app&#45;&gt;registry -->
+<g id="edge5" class="edge">
+<title>app&#45;&gt;registry</title>
+<path fill="none" stroke="black" d="M240.15,-233.85C234.13,-229.57 228.73,-224.34 225.08,-218 222.27,-213.13 221.83,-207.49 222.62,-201.94"/>
+<polygon fill="black" stroke="black" points="226.02,-202.78 225.13,-192.22 219.24,-201.02 226.02,-202.78"/>
+<text text-anchor="middle" x="266.08" y="-210.8" font-family="Arial" font-size="9.00">selected descriptors</text>
+</g>
+<!-- coordinator -->
+<g id="node6" class="node">
+<title>coordinator</title>
+<path fill="none" stroke="black" stroke-width="2" d="M419.58,-192C419.58,-192 330.58,-192 330.58,-192 324.58,-192 318.58,-186 318.58,-180 318.58,-180 318.58,-168 318.58,-168 318.58,-162 324.58,-156 330.58,-156 330.58,-156 419.58,-156 419.58,-156 425.58,-156 431.58,-162 431.58,-168 431.58,-168 431.58,-180 431.58,-180 431.58,-186 425.58,-192 419.58,-192"/>
+<text text-anchor="middle" x="375.08" y="-171.5" font-family="Arial" font-size="10.00">Execution Coordinator</text>
+</g>
+<!-- app&#45;&gt;coordinator -->
+<g id="edge7" class="edge">
+<title>app&#45;&gt;coordinator</title>
+<path fill="none" stroke="black" d="M336.84,-242.24C363.72,-236.71 392.04,-228.59 400.08,-218 404.15,-212.64 403.42,-206.56 400.44,-200.69"/>
+<polygon fill="black" stroke="black" points="403.29,-198.65 394.76,-192.35 397.5,-202.59 403.29,-198.65"/>
+<text text-anchor="middle" x="465.58" y="-210.8" font-family="Arial" font-size="9.00">plugins + parallelism + dryRun</text>
+</g>
+<!-- config&#45;&gt;app -->
+<g id="edge4" class="edge">
+<title>config&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M92.04,-192.05C109.55,-200.64 131.63,-210.75 152.08,-218 173.01,-225.43 196.4,-231.9 217.5,-237.1"/>
+<polygon fill="black" stroke="black" points="216.79,-240.53 227.33,-239.47 218.43,-233.72 216.79,-240.53"/>
+<text text-anchor="middle" x="184.58" y="-210.8" font-family="Arial" font-size="9.00">resolved values</text>
+</g>
+<!-- registry&#45;&gt;app -->
+<g id="edge6" class="edge">
+<title>registry&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M284.8,-187.76C294.4,-192.53 303.25,-199.06 309.08,-208 312.77,-213.65 311.83,-219.77 308.71,-225.58"/>
+<polygon fill="black" stroke="black" points="305.83,-223.59 302.85,-233.75 311.52,-227.66 305.83,-223.59"/>
+<text text-anchor="middle" x="353.08" y="-210.8" font-family="Arial" font-size="9.00">enabled descriptors</text>
+</g>
+<!-- audit -->
+<g id="node7" class="node">
+<title>audit</title>
+<path fill="none" stroke="black" d="M393.08,-114C393.08,-114 331.08,-114 331.08,-114 325.08,-114 319.08,-108 319.08,-102 319.08,-102 319.08,-90 319.08,-90 319.08,-84 325.08,-78 331.08,-78 331.08,-78 393.08,-78 393.08,-78 399.08,-78 405.08,-84 405.08,-90 405.08,-90 405.08,-102 405.08,-102 405.08,-108 399.08,-114 393.08,-114"/>
+<text text-anchor="middle" x="362.08" y="-93.5" font-family="Arial" font-size="10.00">PluginRun Audit</text>
+</g>
+<!-- coordinator&#45;&gt;audit -->
+<g id="edge8" class="edge">
+<title>coordinator&#45;&gt;audit</title>
+<path fill="none" stroke="black" d="M372.13,-155.75C370.53,-146.43 368.53,-134.69 366.73,-124.17"/>
+<polygon fill="black" stroke="black" points="370.15,-123.44 365.02,-114.18 363.25,-124.62 370.15,-123.44"/>
+<text text-anchor="middle" x="405.08" y="-132.8" font-family="Arial" font-size="9.00">started [write run]</text>
+</g>
+<!-- coordinator&#45;&gt;audit -->
+<g id="edge13" class="edge">
+<title>coordinator&#45;&gt;audit</title>
+<path fill="none" stroke="black" d="M318.49,-160.01C299.89,-154.52 282.55,-147.62 277.08,-140 274.49,-136.39 274.57,-133.67 277.08,-130 284.7,-118.86 296.68,-111.48 309.26,-106.59"/>
+<polygon fill="black" stroke="black" points="310.59,-109.84 318.94,-103.32 308.34,-103.21 310.59,-109.84"/>
+<text text-anchor="middle" x="319.58" y="-132.8" font-family="Arial" font-size="9.00">completed [write run]</text>
+</g>
+<!-- factory -->
+<g id="node8" class="node">
+<title>factory</title>
+<path fill="none" stroke="black" d="M154.58,-114C154.58,-114 81.58,-114 81.58,-114 75.58,-114 69.58,-108 69.58,-102 69.58,-102 69.58,-90 69.58,-90 69.58,-84 75.58,-78 81.58,-78 81.58,-78 154.58,-78 154.58,-78 160.58,-78 166.58,-84 166.58,-90 166.58,-90 166.58,-102 166.58,-102 166.58,-108 160.58,-114 154.58,-114"/>
+<text text-anchor="middle" x="118.08" y="-93.5" font-family="Arial" font-size="10.00">Reflection Factory</text>
+</g>
+<!-- coordinator&#45;&gt;factory -->
+<g id="edge9" class="edge">
+<title>coordinator&#45;&gt;factory</title>
+<path fill="none" stroke="black" d="M318.56,-159.91C311.35,-158.47 304.06,-157.12 297.08,-156 263.33,-150.57 172.94,-158.32 144.08,-140 137.6,-135.89 132.5,-129.52 128.6,-122.93"/>
+<polygon fill="black" stroke="black" points="131.7,-121.3 124.01,-114.01 125.47,-124.51 131.7,-121.3"/>
+<text text-anchor="middle" x="171.08" y="-132.8" font-family="Arial" font-size="9.00">create plugin</text>
+</g>
+<!-- plugin -->
+<g id="node9" class="node">
+<title>plugin</title>
+<path fill="none" stroke="black" d="M283.08,-36C283.08,-36 151.08,-36 151.08,-36 145.08,-36 139.08,-30 139.08,-24 139.08,-24 139.08,-12 139.08,-12 139.08,-6 145.08,0 151.08,0 151.08,0 283.08,0 283.08,0 289.08,0 295.08,-6 295.08,-12 295.08,-12 295.08,-24 295.08,-24 295.08,-30 289.08,-36 283.08,-36"/>
+<text text-anchor="middle" x="217.08" y="-15.5" font-family="Arial" font-size="10.00">Fresh OpenDataPlugin Instance</text>
+</g>
+<!-- coordinator&#45;&gt;plugin -->
+<g id="edge11" class="edge">
+<title>coordinator&#45;&gt;plugin</title>
+<path fill="none" stroke="black" d="M318.45,-159.48C302.31,-154.5 285.06,-148.05 270.08,-140 253.94,-131.32 247.7,-129.59 238.08,-114 225.37,-93.41 220.31,-66.12 218.32,-46.07"/>
+<polygon fill="black" stroke="black" points="221.8,-45.73 217.51,-36.04 214.82,-46.29 221.8,-45.73"/>
+<text text-anchor="middle" x="272.08" y="-93.8" font-family="Arial" font-size="9.00">execute(context)</text>
+</g>
+<!-- summary -->
+<g id="node10" class="node">
+<title>summary</title>
+<path fill="none" stroke="black" d="M721.58,-114C721.58,-114 568.58,-114 568.58,-114 562.58,-114 556.58,-108 556.58,-102 556.58,-102 556.58,-90 556.58,-90 556.58,-84 562.58,-78 568.58,-78 568.58,-78 721.58,-78 721.58,-78 727.58,-78 733.58,-84 733.58,-90 733.58,-90 733.58,-102 733.58,-102 733.58,-108 727.58,-114 721.58,-114"/>
+<text text-anchor="middle" x="645.08" y="-93.5" font-family="Arial" font-size="10.00">Ordered Summary / ExecutionStatus</text>
+</g>
+<!-- coordinator&#45;&gt;summary -->
+<g id="edge14" class="edge">
+<title>coordinator&#45;&gt;summary</title>
+<path fill="none" stroke="black" d="M431.68,-157.07C473.23,-145.37 529.94,-129.41 574.45,-116.88"/>
+<polygon fill="black" stroke="black" points="575.65,-120.18 584.33,-114.1 573.76,-113.44 575.65,-120.18"/>
+<text text-anchor="middle" x="548.58" y="-132.8" font-family="Arial" font-size="9.00">aggregate</text>
+</g>
+<!-- factory&#45;&gt;plugin -->
+<g id="edge10" class="edge">
+<title>factory&#45;&gt;plugin</title>
+<path fill="none" stroke="black" d="M125.02,-77.78C129.2,-69.14 135.24,-59.04 143.08,-52 147.57,-47.97 152.64,-44.36 157.96,-41.14"/>
+<polygon fill="black" stroke="black" points="160.03,-44 167.1,-36.1 156.65,-37.87 160.03,-44"/>
+<text text-anchor="middle" x="170.58" y="-54.8" font-family="Arial" font-size="9.00">new instance</text>
+</g>
+<!-- plugin&#45;&gt;coordinator -->
+<g id="edge12" class="edge">
+<title>plugin&#45;&gt;coordinator</title>
+<path fill="none" stroke="black" d="M295.26,-27.81C335.16,-35.61 382.44,-50.31 417.08,-78 459.21,-111.68 460.01,-118.16 446.08,-140 443.84,-143.51 441.12,-146.65 438.07,-149.46"/>
+<polygon fill="black" stroke="black" points="435.65,-146.91 429.88,-155.8 439.93,-152.45 435.65,-146.91"/>
+<text text-anchor="middle" x="487.08" y="-93.8" font-family="Arial" font-size="9.00">metrics or failure</text>
+</g>
+<!-- summary&#45;&gt;app -->
+<g id="edge15" class="edge">
+<title>summary&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M635,-114.15C618,-141.32 580.87,-193.68 534.08,-218 502.51,-234.41 410.71,-243.24 347.09,-247.53"/>
+<polygon fill="black" stroke="black" points="346.49,-244.06 336.74,-248.2 346.95,-251.05 346.49,-244.06"/>
+</g>
+</g>
+</svg>

@@ -1,46 +1,68 @@
 @startuml
 !pragma layout smetana
-title OpenData Component Architecture
+title OpenData Version 2.0.0 Component Architecture
 skinparam componentStyle rectangle
 
 package "Application" {
-  [Main] as Main
+  [OpenData] as Entry
   [CommandLineArgumentsProcessor] as CLI
-  [OpenDataApplication] as AppService
+  [OpenDataApplication] as App
+}
+
+package "Configuration" {
+  [ApplicationBootstrapPropertiesLoader] as Bootstrap
+  [RsaConfigurationPasswordCipher] as Cipher
+  [ConfigurationRegistrationService] as Register
+  [ClasspathConfigurationPropertiesSource] as FileSource
+  [JdbcConfigurationPropertiesSource] as DbSource
+  [PropertiesPluginDefinitionLoader] as Definitions
 }
 
 package "Plugin Runtime" {
   [ClasspathPluginRegistry] as Registry
-  [PropertiesPluginDefinitionLoader] as Definitions
   [ReflectionPluginFactory] as Factory
   [PluginExecutionCoordinator] as Coordinator
 }
 
-package "Plugins" {
+package "Provider Plugins" {
   [OfgemPlugin] as Ofgem
   [OpenMeteoPlugin] as Meteo
+  [OctopusPlugin] as Octopus
 }
 
 package "Infrastructure" {
   [LoggingManager] as Logging
   [JdbcPluginRunAudit] as Audit
-  [SQLServerResource] as Pool
+  [SQLServerResource / DBCP] as Pool
   database "SQL Server" as Database
+  folder "Work / Input / Archive" as Files
 }
 
-Main --> CLI
-Main --> AppService
-AppService --> Registry
-AppService --> Definitions
-AppService --> Coordinator
+Entry --> CLI
+Entry --> App
+App --> Bootstrap
+Bootstrap --> Cipher
+App --> Register : --register
+Register --> FileSource
+Register --> DbSource
+App --> Registry
+App --> FileSource : file mode
+App --> DbSource : database mode
+App --> Definitions
+App --> Coordinator
 Coordinator --> Factory
 Factory --> Ofgem
 Factory --> Meteo
-AppService --> Logging
+Factory --> Octopus
+App --> Logging
 Coordinator --> Audit
-AppService --> Pool
+App --> Pool
+DbSource --> Pool
 Audit --> Pool
 Ofgem --> Pool
 Meteo --> Pool
+Octopus --> Pool
+Ofgem --> Files
+Octopus --> Files
 Pool --> Database
 @enduml

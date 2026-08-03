@@ -1,18 +1,24 @@
 # OpenData Architecture Manual
 
 **Document ID:** ARCH-INDEX-001  
-**Version:** 1.2  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Version 2.0.0 implementation baseline  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-The numbered documents describe the current modular-monolith architecture.
-Concrete Ofgem and OpenMeteo flows execute through a bounded plugin
-coordinator, and the partially implemented Octopus flow uses the same registry
-and pipeline boundaries; documents distinguish that implementation from reusable
-framework contracts and deferred work.
+The numbered documents describe the current OpenData modular monolith as
+implemented in the uploaded Version 2.0.0 source baseline. The application has a
+classpath plugin registry, database-backed configuration registration, bounded
+parallel execution, contextual logging, pooled SQL Server access and three
+executable plugins: Ofgem, OpenMeteo and Octopus Energy.
+
+The documentation distinguishes implemented behaviour from remaining release
+hardening. In particular, RSA password encryption is implemented, but encryption
+does not provide adequate protection while a private key store or a plaintext
+bootstrap password is retained in the source tree. That is an operational and
+release issue, not a future architecture feature.
 
 ::: {.docx-linear-table}
 
@@ -42,9 +48,11 @@ framework contracts and deferred work.
 | [022](022-deployment-and-environments.md) | Deployment and Environments |
 | [023](023-operational-failure-and-recovery.md) | Operational Failure and Recovery |
 | [024](024-architecture-traceability.md) | Architecture Traceability |
+| [025](025-manifest-driven-documentation-engine.md) | Manifest-Driven Documentation Engine |
 
 :::
 
 Principal diagrams are indexed in [the diagram directory](../diagrams/README.md).
-Known implementation mismatches are recorded in the
-[current gap analysis](../review/DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md).
+The current implementation inventory and documentation audit are maintained in
+[CURRENT-CODE-INVENTORY.md](CURRENT-CODE-INVENTORY.md) and
+[DOCUMENTATION-AUDIT.md](DOCUMENTATION-AUDIT.md).

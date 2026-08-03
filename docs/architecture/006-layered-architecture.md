@@ -1,27 +1,29 @@
 # Layered Architecture
 
 **Document ID:** ARCH-006  
-**Version:** 1.0  
+**Version:** 2.0  
 **Status:** Baseline  
-**Baseline date:** 23 July 2026  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-
 ## Layers
 
-1. **Entry:** `Main` and CLI translate process input and output.
-2. **Application:** coordinates use cases and object composition.
-3. **Plugin/domain:** represents datasets and source-specific rules.
-4. **Processing:** download, parse, validate, transform and load.
-5. **Infrastructure:** HTTP, file system, credentials and JDBC.
+1. **Entry:** `OpenData` and the CLI translate process input and operator output.
+2. **Application:** coordinates control commands, configuration sources,
+   resources, selection and execution.
+3. **Plugin/domain:** represents provider-specific datasets and rules.
+4. **Processing:** extract, parse, validate, transform, load and finalise.
+5. **Infrastructure:** HTTP, file system, encryption, logging and JDBC.
 
-Upper layers call lower layers through constructors and interfaces. Lower layers
-must not inspect CLI options or call `Main`.
+Upper layers call lower layers through constructors, records and interfaces.
+Lower layers must not inspect CLI options or call the `OpenData` entry point.
 
-Records cross boundaries; mutable third-party objects such as `Workbook`,
-`CSVParser`, `Connection` and `ResultSet` remain inside short resource scopes.
+Mutable third-party objects such as `Workbook`, `CSVParser`, `Connection` and
+`ResultSet` remain inside short resource scopes. Immutable records cross package
+boundaries.
 
-`List<Map<String,String>>` is a tolerated Phase 1 parser result; a typed
-`DataRecord`/`DataTable` model is future work.
+`List<Map<String,String>>` remains a tolerated shared parser result. A universal
+`DataRecord`/`DataTable` abstraction is future work and is not required by the
+current provider-specific typed pipelines.

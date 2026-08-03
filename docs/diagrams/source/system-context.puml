@@ -1,17 +1,21 @@
 @startuml
 !pragma layout smetana
-title OpenData System Context
+title OpenData Version 2.0.0 System Context
 left to right direction
-actor Operator
+actor "Operator / External Scheduler" as Operator
 rectangle "OpenData Java Application" as App
-file "External Override File" as Config
-cloud "Ofgem and Open-Meteo" as Publishers
-database "SQL Server" as Database
+file "Bootstrap and Override Properties" as Config
+cloud "Ofgem" as Ofgem
+cloud "Open-Meteo" as Meteo
+folder "Octopus Statement PDFs" as Octopus
 folder "Work, Archive and Logs" as Files
+database "OpenData SQL Server\nconfiguration, audit and plugin data" as Database
 
-Operator --> App : command
-App --> Config : read
-App --> Publishers : HTTPS
+Operator --> App : CLI command
+App --> Config : read / bootstrap rewrite
+App --> Ofgem : HTTPS page and XLSX
+App --> Meteo : HTTPS JSON API
+App --> Octopus : read local PDFs
 App --> Database : pooled JDBC
-App --> Files : read and write
+App --> Files : work, archive and logs
 @enduml

@@ -1,15 +1,32 @@
 @startuml
 !pragma layout smetana
-title Phase 1 Plugin Registry
-[PluginRegistry]
-[ClasspathPluginRegistry]
-[PluginDescriptor]
-[index.properties] as Index
+title Plugin Registry and Configuration Sources
+skinparam componentStyle rectangle
+[PluginRegistry] as Contract
+[ClasspathPluginRegistry] as Registry
+[index.properties\nplugins=ofgem,openmeteo,octopus] as Index
+[PluginDescriptor] as Descriptor
+[ReflectionPluginFactory] as Factory
+[PropertiesPluginDefinitionLoader] as Loader
+[ClasspathConfigurationPropertiesSource] as FileSource
+[JdbcConfigurationPropertiesSource] as DbSource
 [ofgem.properties] as Ofgem
 [openmeteo.properties] as OpenMeteo
-[ClasspathPluginRegistry] --> [PluginRegistry]
-[ClasspathPluginRegistry] --> Index
-[ClasspathPluginRegistry] --> Ofgem
-[ClasspathPluginRegistry] --> OpenMeteo
-[ClasspathPluginRegistry] --> [PluginDescriptor]
+[octopus.properties] as Octopus
+[core.plugin_property] as DbProperties
+
+Registry --> Contract
+Registry --> Index
+Registry --> Descriptor
+Factory --> Descriptor
+Loader --> FileSource
+Loader --> DbSource
+FileSource --> Ofgem
+FileSource --> OpenMeteo
+FileSource --> Octopus
+DbSource --> DbProperties
+note right of Registry
+Implementation registration remains classpath-backed.
+Property values may be classpath or SQL Server-backed.
+end note
 @enduml

@@ -1,55 +1,64 @@
 # Plugin Architecture
 
 **Document ID:** ARCH-007  
-**Version:** 1.2  
-**Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Implemented  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-
 ## Contract
 
 A plugin represents one dataset family and implements
-`OpenDataPlugin.execute(PluginExecutionContext)`. Its descriptor provides
-identity and implementation class; its immutable definition provides endpoints
-and typed properties. The execution context supplies run identity, database
-access, clock and dry-run state.
+`OpenDataPlugin.execute(PluginExecutionContext)`. A `PluginDescriptor` supplies
+identity, display name, implementation class and enabled state. A resolved
+`PluginDefinition` supplies endpoint and typed property values. The execution
+context supplies run identity, database access, clock and dry-run state.
 
-## Phase 1 definition and registry
+## Registry and definitions
 
-Each plugin uses the classpath resource `config/plugins/<id>.properties`
-(`src/main/resources/config/plugins/<id>.properties` in the repository), parsed
-into a storage-neutral `PluginDefinition`. An explicit `index.properties` lists
-installed ids because classpath directory scanning is unreliable inside JARs.
+Installed plugin ids are listed explicitly in
+`config/plugins/index.properties`. `ClasspathPluginRegistry` uses this index to
+create descriptors; it does not scan the classpath or query the database for
+installed implementation classes.
 
-`ReflectionPluginFactory` creates the implementation class using a
-`PluginDefinition` constructor when present, otherwise a no-argument
-constructor. `PluginExecutionCoordinator` creates a fresh instance for each
-selected task.
+Plugin property values are loaded by `PropertiesPluginDefinitionLoader` through
+a `ConfigurationPropertiesSource`:
+
+- `ClasspathConfigurationPropertiesSource` reads packaged properties before
+  registration or when database-backed mode is disabled;
+- `JdbcConfigurationPropertiesSource` reads `core.plugin_property` after
+  registration;
+- invocation overrides are applied last.
+
+This separates implementation registration from configuration storage. Moving
+property values to SQL Server does not make the plugin registry dynamic.
+
+## Construction and execution
+
+`ReflectionPluginFactory` creates a fresh plugin for each selected task. It uses
+a constructor accepting `PluginDefinition` when available and otherwise a
+no-argument constructor. `PluginExecutionCoordinator` gives each instance its
+own context and runs selected plugins in a bounded executor.
 
 ## Rules
 
-Ids are lowercase, stable and unique. Filename, index id and `plugin.id` match.
-Disabled plugins may be listed but cannot run. Plugins must be thread-confined,
-must honour `context.dryRun()`, must not share JDBC connections and must return
-`PluginMetrics`. They do not implement their own CLI or store secrets.
+- ids are lowercase, stable and unique;
+- index id, plugin definition id and implementation id must agree;
+- disabled plugins may be listed but cannot run;
+- plugin instances are task-confined and must not share JDBC connections;
+- plugins are required to honour `context.dryRun()` and return
+  `PluginMetrics`; the current Octopus extract stage violates the no-database
+  dry-run rule and is a recorded implementation defect;
+- plugins do not implement their own CLI or read global bootstrap files;
+- provider SQL and source parsing remain inside the provider package;
+- finalisation must distinguish dry run, successful completion and failure.
 
-Ofgem is the HTML-to-XLSX reference; OpenMeteo is the parameterised API
-reference.
+Ofgem is the HTML-to-XLSX reference, OpenMeteo is the parameterised JSON API
+reference, and Octopus is the local PDF and idempotent file-ledger reference.
 
-## Provider package boundary
-
-The implementation package is `plugin.<id>`. Its root class is the workflow
-facade; source-specific details live in `config`, `download`, `extract`,
-`transform`, `transform.model`, `transform.validate` and `load`. This keeps the
-shared `plugin` package focused on registry, execution and audit.
-
-The maintained [Java plugin template](../templates/plugin-java/README.md)
-contains this structure and a deliberately incomplete transactional loader.
-
-A database registry may later construct the same records from JSON, but that
-work is shelved.
+The maintained [example plugin](../examples/example-plugin/README.md) is the
+starting point for new implementations.
 
 ![Plugin registry](../diagrams/generated/plugin-registry.svg){width=16cm}

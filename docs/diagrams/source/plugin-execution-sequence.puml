@@ -1,23 +1,31 @@
 @startuml
 title Plugin Execution
 actor Operator
-participant Main
+participant OpenData
 participant OpenDataApplication as Application
+participant ConfigurationPropertiesSource as Configuration
 participant ClasspathPluginRegistry as Registry
 participant PluginExecutionCoordinator as Coordinator
+participant PluginRunAudit as Audit
 participant ReflectionPluginFactory as Factory
 participant OpenDataPlugin as Plugin
 
-Operator -> Main : command
-Main -> Application : start(arguments)
+Operator -> OpenData : command
+OpenData -> Application : start(arguments)
+Application -> Configuration : runtime and plugin values
+Configuration --> Application : resolved values
 Application -> Registry : resolve selected descriptors
 Registry --> Application : enabled descriptors
-Application -> Coordinator : execute(resolved plugins, parallelism, dryRun)
-Coordinator -> Factory : create(resolved plugin)
-Factory --> Coordinator : plugin
-Coordinator -> Plugin : execute(context)
-Plugin --> Coordinator : PluginMetrics
-Coordinator --> Application : PluginExecutionSummary
-Application --> Main : ExecutionStatus
-Main --> Operator : logged status and duration
+Application -> Coordinator : execute(plugins, parallelism, dryRun)
+par one independent task per plugin
+  Coordinator -> Audit : started(runId) [write run]
+  Coordinator -> Factory : create(resolved plugin)
+  Factory --> Coordinator : fresh plugin instance
+  Coordinator -> Plugin : execute(context)
+  Plugin --> Coordinator : PluginMetrics / failure
+  Coordinator -> Audit : completed(result) [write run]
+end
+Coordinator --> Application : ordered PluginExecutionSummary
+Application --> OpenData : ExecutionStatus
+OpenData --> Operator : logged status and duration
 @enduml

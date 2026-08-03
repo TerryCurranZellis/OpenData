@@ -1,26 +1,38 @@
 # Batch 2 Implementation Notes
 
-## Scope
+**Completed:** 3 August 2026  
+**Scope:** Core Version 2.0.0 architecture documentation and diagrams
 
-This batch introduces the documentation framework and prepares configuration-driven manual assembly.
+## Updated
 
-## Included
+- Architecture manual index and implementation status.
+- System context, high-level architecture and package/dependency boundaries.
+- Plugin registry and provider-owned pipeline architecture.
+- Configuration registration, classpath/JDBC property loading and override
+  precedence.
+- SQL Server schemas, transaction ownership and connection-resource boundaries.
+- RSA password protection and the distinction between encryption and secure key
+  deployment.
+- Current code inventory, documentation audit, future architecture and ADR
+  traceability.
 
-- Documentation inventory manifest.
-- Shared documentation sections.
-- Reusable Markdown templates.
-- Documentation standards.
-- Generated-output directory policy.
-- Manual directory placeholders.
+## Diagrams
 
-## Migration approach
+Updated system context, component architecture, plugin registry, plugin execution,
+pipeline and database diagrams. Added a separate configuration-registration
+sequence so first-time registration is not confused with an ordinary run.
 
-Existing documentation remains in place during initial integration. The generator reads the manifest and can include both legacy locations and new manual/shared locations. This avoids breaking current links while allowing gradual migration.
+## Important findings retained
 
-## Diagram approach
+- database-backed configuration is implemented;
+- Octopus is no longer a transform-only placeholder, but its extractor still
+  makes an invalid database request during dry run;
+- database-backed dry runs still require SQL Server while configuration is read;
+- process status is logged but not mapped through `System.exit`;
+- the uploaded source contains plaintext/private-key material that must be
+  removed before public or production release.
 
-New diagrams are supplied as PlantUML source files in the main integrated repository. Reader-facing Markdown should link to generated SVG assets after rendering.
+## Exclusions
 
-## Generator flow
-
-![Documentation generation flow](../diagrams/generated/documentation-generation-flow.svg){width=16cm}
+No Java, SQL, PowerShell or build-script files were changed. Plugin-specific
+operator/reference detail is handled in Batch 3.

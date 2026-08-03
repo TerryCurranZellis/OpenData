@@ -1,30 +1,36 @@
 @startuml
 !pragma layout smetana
-title Database Architecture
+title OpenData SQL Server Architecture
 skinparam componentStyle rectangle
 
-package "Application" {
+package "Application Services" {
+  [Configuration Registration / JDBC Source] as Config
   [PluginExecutionCoordinator] as Coordinator
-  [OfgemPlugin] as Ofgem
-  [OpenMeteoPlugin] as Meteo
+  [JdbcPluginRunAudit] as Audit
+  [Ofgem Repository] as OfgemRepo
+  [OpenMeteo Repository] as MeteoRepo
+  [Octopus Repository] as OctopusRepo
 }
 
 package "JDBC Infrastructure" {
-  [JdbcPluginRunAudit] as Audit
   [SQLServerResource] as Resource
   [Apache DBCP Pool] as Pool
 }
 
-database "core schema" as Core
-database "ofgem schema" as OfgemSchema
-database "openmeteo schema" as MeteoSchema
+database "core\nconfiguration, PluginRun, provenance" as Core
+database "ofgem\nperiods, facts, lineage" as Ofgem
+database "openmeteo\nlocations, daily weather" as Meteo
+database "octopus\nfile ledger, electricity, gas" as Octopus
 
+Config --> Resource
 Coordinator --> Audit
-Ofgem --> Resource
-Meteo --> Resource
 Audit --> Resource
+OfgemRepo --> Resource
+MeteoRepo --> Resource
+OctopusRepo --> Resource
 Resource --> Pool
 Pool --> Core
-Pool --> OfgemSchema
-Pool --> MeteoSchema
+Pool --> Ofgem
+Pool --> Meteo
+Pool --> Octopus
 @enduml

@@ -1,1 +1,167 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="560px" preserveAspectRatio="none" style="width:1350px;height:560px;background:#FFFFFF;" version="1.1" viewBox="0 0 1350 560" width="1350px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="1"><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="150.083" x="596.4744" y="29.5332">Configuration Loading</text></g><rect fill="none" height="79.0547" style="stroke:#000000;stroke-width:1.5;" width="456.6489" x="877.3828" y="381.0313"/><g class="participant-lifeline" data-entity-uid="part1" data-qualified-name="Operator" data-source-line="2" id="part1-lifeline"><g><title>Operator</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="31.624" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="35" x2="35" y1="121.2188" y2="477.0859"/></g></g><g class="participant-lifeline" data-entity-uid="part2" data-qualified-name="CLI" data-source-line="3" id="part2-lifeline"><g><title>CommandLineArgumentsProcessor</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="190.1304" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="193.248" x2="193.248" y1="121.2188" y2="477.0859"/></g></g><g class="participant-lifeline" data-entity-uid="part3" data-qualified-name="Override" data-source-line="4" id="part3-lifeline"><g><title>OverrideConfiguration</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="393.4917" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="397.0127" x2="397.0127" y1="121.2188" y2="477.0859"/></g></g><g class="participant-lifeline" data-entity-uid="part4" data-qualified-name="Runtime" data-source-line="5" id="part4-lifeline"><g><title>ApplicationRuntimeConfiguration</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="587.9185" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="590.9707" x2="590.9707" y1="121.2188" y2="477.0859"/></g></g><g class="participant-lifeline" data-entity-uid="part5" data-qualified-name="Registry" data-source-line="6" id="part5-lifeline"><g><title>ClasspathPluginRegistry</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="790.1245" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="793.8662" x2="793.8662" y1="121.2188" y2="477.0859"/></g></g><g class="participant-lifeline" data-entity-uid="part6" data-qualified-name="Loader" data-source-line="7" id="part6-lifeline"><g><title>PropertiesPluginDefinitionLoader</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="992.7236" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="996.3828" x2="996.3828" y1="121.2188" y2="477.0859"/></g></g><g class="participant-lifeline" data-entity-uid="part7" data-qualified-name="Application" data-source-line="8" id="part7-lifeline"><g><title>OpenDataApplication</title><rect fill="#000000" fill-opacity="0.00000" height="355.8672" width="8" x="1246.877" y="121.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="1250.7222" x2="1250.7222" y1="121.2188" y2="477.0859"/></g></g><g class="participant participant-head" data-entity-uid="part1" data-qualified-name="Operator" data-source-line="2" id="part1-head"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248" x="5" y="118.1426">Operator</text><ellipse cx="35.624" cy="52.1094" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M35.624,60.1094 L35.624,87.1094 M22.624,68.1094 L48.624,68.1094 M35.624,87.1094 L22.624,102.1094 M35.624,87.1094 L48.624,102.1094" fill="none" style="stroke:#181818;stroke-width:0.5;"/></g><g class="participant participant-tail" data-entity-uid="part1" data-qualified-name="Operator" data-source-line="2" id="part1-tail"><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55.248" x="5" y="490.6191">Operator</text><ellipse cx="35.624" cy="502.1953" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M35.624,510.1953 L35.624,537.1953 M22.624,518.1953 L48.624,518.1953 M35.624,537.1953 L22.624,552.1953 M35.624,537.1953 L48.624,552.1953" fill="none" style="stroke:#181818;stroke-width:0.5;"/></g><g class="participant participant-head" data-entity-uid="part2" data-qualified-name="CLI" data-source-line="3" id="part2-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="235.7646" x="76.248" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="221.7646" x="83.248" y="110.1426">CommandLineArgumentsProcessor</text></g><g class="participant participant-tail" data-entity-uid="part2" data-qualified-name="CLI" data-source-line="3" id="part2-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="235.7646" x="76.248" y="476.0859"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="221.7646" x="83.248" y="497.6191">CommandLineArgumentsProcessor</text></g><g class="participant participant-head" data-entity-uid="part3" data-qualified-name="Override" data-source-line="4" id="part3-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="150.958" x="322.0127" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.958" x="329.0127" y="110.1426">OverrideConfiguration</text></g><g class="participant participant-tail" data-entity-uid="part3" data-qualified-name="Override" data-source-line="4" id="part3-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="150.958" x="322.0127" y="476.0859"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136.958" x="329.0127" y="497.6191">OverrideConfiguration</text></g><g class="participant participant-head" data-entity-uid="part4" data-qualified-name="Runtime" data-source-line="5" id="part4-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="217.8955" x="482.9707" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="203.8955" x="489.9707" y="110.1426">ApplicationRuntimeConfiguration</text></g><g class="participant participant-tail" data-entity-uid="part4" data-qualified-name="Runtime" data-source-line="5" id="part4-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="217.8955" x="482.9707" y="476.0859"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="203.8955" x="489.9707" y="497.6191">ApplicationRuntimeConfiguration</text></g><g class="participant participant-head" data-entity-uid="part5" data-qualified-name="Registry" data-source-line="6" id="part5-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="166.5166" x="710.8662" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152.5166" x="717.8662" y="110.1426">ClasspathPluginRegistry</text></g><g class="participant participant-tail" data-entity-uid="part5" data-qualified-name="Registry" data-source-line="6" id="part5-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="166.5166" x="710.8662" y="476.0859"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152.5166" x="717.8662" y="497.6191">ClasspathPluginRegistry</text></g><g class="participant participant-head" data-entity-uid="part6" data-qualified-name="Loader" data-source-line="7" id="part6-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="218.6816" x="887.3828" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="204.6816" x="894.3828" y="110.1426">PropertiesPluginDefinitionLoader</text></g><g class="participant participant-tail" data-entity-uid="part6" data-qualified-name="Loader" data-source-line="7" id="part6-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="218.6816" x="887.3828" y="476.0859"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="204.6816" x="894.3828" y="497.6191">PropertiesPluginDefinitionLoader</text></g><g class="participant participant-head" data-entity-uid="part7" data-qualified-name="Application" data-source-line="8" id="part7-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146.3096" x="1177.7222" y="88.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.3096" x="1184.7222" y="110.1426">OpenDataApplication</text></g><g class="participant participant-tail" data-entity-uid="part7" data-qualified-name="Application" data-source-line="8" id="part7-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146.3096" x="1177.7222" y="476.0859"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.3096" x="1184.7222" y="497.6191">OpenDataApplication</text></g><g class="message" data-entity-1="part1" data-entity-2="part2" data-source-line="10" id="msg1"><polygon fill="#181818" points="182.1304,149.5703,192.1304,153.5703,182.1304,157.5703,186.1304,153.5703" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="35.624" x2="188.1304" y1="153.5703" y2="153.5703"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" text-decoration="line-through" textLength="55.6499" x="42.624" y="148.7139">plugin id [</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="68.6436" x="98.2739" y="148.7139">file settings]</text></g><g class="message" data-entity-1="part2" data-entity-2="part7" data-source-line="11" id="msg2"><polygon fill="#181818" points="1238.877,179.9219,1248.877,183.9219,1238.877,187.9219,1242.877,183.9219" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="194.1304" x2="1244.877" y1="183.9219" y2="183.9219"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="147.4053" x="201.1304" y="179.0654">CommandLineArguments</text></g><g class="message" data-entity-1="part7" data-entity-2="part3" data-source-line="12" id="msg3"><polygon fill="#181818" points="408.4917,210.2734,398.4917,214.2734,408.4917,218.2734,404.4917,214.2734" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="402.4917" x2="1249.877" y1="214.2734" y2="214.2734"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="99.0044" x="414.4917" y="209.417">load(optional file)</text></g><g class="message" data-entity-1="part3" data-entity-2="part7" data-source-line="13" id="msg4"><polygon fill="#181818" points="1238.877,240.625,1248.877,244.625,1238.877,248.625,1242.877,244.625" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="397.4917" x2="1244.877" y1="244.625" y2="244.625"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="170.5679" x="404.4917" y="239.7686">application and plugin scopes</text></g><g class="message" data-entity-1="part7" data-entity-2="part4" data-source-line="14" id="msg5"><polygon fill="#181818" points="602.9185,270.9766,592.9185,274.9766,602.9185,278.9766,598.9185,274.9766" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="596.9185" x2="1249.877" y1="274.9766" y2="274.9766"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="152.4707" x="608.9185" y="270.1201">load(application overrides)</text></g><g class="message" data-entity-1="part4" data-entity-2="part7" data-source-line="15" id="msg6"><polygon fill="#181818" points="1238.877,301.3281,1248.877,305.3281,1238.877,309.3281,1242.877,305.3281" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="591.9185" x2="1244.877" y1="305.3281" y2="305.3281"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="165.5151" x="598.9185" y="300.4717">database, execution, logging</text></g><g class="message" data-entity-1="part7" data-entity-2="part5" data-source-line="16" id="msg7"><polygon fill="#181818" points="805.1245,331.6797,795.1245,335.6797,805.1245,339.6797,801.1245,335.6797" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="799.1245" x2="1249.877" y1="335.6797" y2="335.6797"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="158.9771" x="811.1245" y="330.8232">resolve enabled descriptors</text></g><g class="message" data-entity-1="part5" data-entity-2="part7" data-source-line="17" id="msg8"><polygon fill="#181818" points="1238.877,362.0313,1248.877,366.0313,1238.877,370.0313,1242.877,366.0313" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="794.1245" x2="1244.877" y1="366.0313" y2="366.0313"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="115.6099" x="801.1245" y="361.1748">selected descriptors</text></g><path d="M877.3828,381.0313 L949.8174,381.0313 L949.8174,389.3828 L939.8174,399.3828 L877.3828,399.3828 L877.3828,381.0313" fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/><rect fill="none" height="79.0547" style="stroke:#000000;stroke-width:1.5;" width="456.6489" x="877.3828" y="381.0313"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="700" lengthAdjust="spacing" textLength="27.4346" x="892.3828" y="395.5264">loop</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="700" lengthAdjust="spacing" textLength="115.5269" x="964.8174" y="394.4502">[each selected plugin]</text><g class="message" data-entity-1="part7" data-entity-2="part6" data-source-line="19" id="msg9"><polygon fill="#181818" points="1007.7236,417.7344,997.7236,421.7344,1007.7236,425.7344,1003.7236,421.7344" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="1001.7236" x2="1249.877" y1="421.7344" y2="421.7344"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="230.1533" x="1013.7236" y="416.8779">classpath properties + scoped overrides</text></g><g class="message" data-entity-1="part6" data-entity-2="part7" data-source-line="20" id="msg10"><polygon fill="#181818" points="1238.877,448.0859,1248.877,452.0859,1238.877,456.0859,1242.877,452.0859" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="996.7236" x2="1244.877" y1="452.0859" y2="452.0859"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="145.9834" x="1003.7236" y="447.2295">validated PluginDefinition</text></g><?plantuml-src RLBBRW8n3BpdAtmiAli3UwY4u5892SIrwi4aPh4KaYZ9elRlw-m3TjdUadZ6CvuuSxO4M-yktBGHCti7Uu-6NQDGPn_X44ZUVLG1OsRD0LqMmks6pkpPqIOsxOrSJiVeDQKa54omtN_E28SxnSY6vae270ipz2O4oxh3d5gN-RRa3UzpLnPJ2fYlHzisx4xKSChnjuCFvnbU7CjmcIdrX1rTs75HA15GDqX_ciyIoEqmuyHbGKwkIesfGVLHie0QgYfq8i06lghgmf9xefmbwVIj2gOIxBHd_M_CQWeHnXYWmAruVVEXLD12KLYfHtdP7QV-dO71NzAIoa9co7jKcNBz895MQaGjnOm4TiP4Qw0VqcrvNKkhfYcRzgerVbmDaPAtTm9oUBPaG5Hqv2399lM0BTKIMTBv1M-z3q2ehyzoFx82U74m_7yDUbmf28zbWVS-8_ESN3eCbAMNErgMwGN-kcMAdFa3?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="1123pt" height="414pt"
+ viewBox="0.00 0.00 1122.50 414.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 396)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-18,18 -18,-396 1104.5,-396 1104.5,18 -18,18"/>
+<text text-anchor="middle" x="543.25" y="-358" font-family="Arial" font-size="20.00">Runtime Configuration Loading</text>
+<!-- operator -->
+<g id="node1" class="node">
+<title>operator</title>
+<ellipse fill="none" stroke="black" cx="505" cy="-330" rx="31.58" ry="18"/>
+<text text-anchor="middle" x="505" y="-327.5" font-family="Arial" font-size="10.00">Operator</text>
+</g>
+<!-- cli -->
+<g id="node2" class="node">
+<title>cli</title>
+<path fill="none" stroke="black" d="M533,-270C533,-270 477,-270 477,-270 471,-270 465,-264 465,-258 465,-258 465,-246 465,-246 465,-240 471,-234 477,-234 477,-234 533,-234 533,-234 539,-234 545,-240 545,-246 545,-246 545,-258 545,-258 545,-264 539,-270 533,-270"/>
+<text text-anchor="middle" x="505" y="-249.5" font-family="Arial" font-size="10.00">CLI Processor</text>
+</g>
+<!-- operator&#45;&gt;cli -->
+<g id="edge1" class="edge">
+<title>operator&#45;&gt;cli</title>
+<path fill="none" stroke="black" d="M505,-311.75C505,-302.52 505,-290.93 505,-280.49"/>
+<polygon fill="black" stroke="black" points="508.5,-280.18 505,-270.18 501.5,-280.18 508.5,-280.18"/>
+<text text-anchor="middle" x="544.5" y="-288.8" font-family="Arial" font-size="9.00">&#45;&#45;plugin id|all [&#45;&#45;file]</text>
+</g>
+<!-- app -->
+<g id="node9" class="node">
+<title>app</title>
+<path fill="none" stroke="black" stroke-width="2" d="M547.5,-192C547.5,-192 462.5,-192 462.5,-192 456.5,-192 450.5,-186 450.5,-180 450.5,-180 450.5,-168 450.5,-168 450.5,-162 456.5,-156 462.5,-156 462.5,-156 547.5,-156 547.5,-156 553.5,-156 559.5,-162 559.5,-168 559.5,-168 559.5,-180 559.5,-180 559.5,-186 553.5,-192 547.5,-192"/>
+<text text-anchor="middle" x="505" y="-171.5" font-family="Arial" font-size="10.00">OpenDataApplication</text>
+</g>
+<!-- cli&#45;&gt;app -->
+<g id="edge2" class="edge">
+<title>cli&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M505,-233.75C505,-224.52 505,-212.93 505,-202.49"/>
+<polygon fill="black" stroke="black" points="508.5,-202.18 505,-192.18 501.5,-202.18 508.5,-202.18"/>
+<text text-anchor="middle" x="549.5" y="-210.8" font-family="Arial" font-size="9.00">immutable arguments</text>
+</g>
+<!-- override -->
+<g id="node3" class="node">
+<title>override</title>
+<path fill="none" stroke="black" d="M102,-114C102,-114 12,-114 12,-114 6,-114 0,-108 0,-102 0,-102 0,-90 0,-90 0,-84 6,-78 12,-78 12,-78 102,-78 102,-78 108,-78 114,-84 114,-90 114,-90 114,-102 114,-102 114,-108 108,-114 102,-114"/>
+<text text-anchor="middle" x="57" y="-93.5" font-family="Arial" font-size="10.00">Override Configuration</text>
+</g>
+<!-- override&#45;&gt;app -->
+<g id="edge4" class="edge">
+<title>override&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M89.08,-114.01C108.02,-123.27 132.77,-134.02 156,-140 252.9,-164.95 369.29,-171.46 440.16,-172.93"/>
+<polygon fill="black" stroke="black" points="440.22,-176.43 450.28,-173.11 440.35,-169.43 440.22,-176.43"/>
+<text text-anchor="middle" x="191.5" y="-132.8" font-family="Arial" font-size="9.00">scoped overrides</text>
+</g>
+<!-- bootstrap -->
+<g id="node4" class="node">
+<title>bootstrap</title>
+<path fill="none" stroke="black" d="M306.5,-114C306.5,-114 169.5,-114 169.5,-114 163.5,-114 157.5,-108 157.5,-102 157.5,-102 157.5,-90 157.5,-90 157.5,-84 163.5,-78 169.5,-78 169.5,-78 306.5,-78 306.5,-78 312.5,-78 318.5,-84 318.5,-90 318.5,-90 318.5,-102 318.5,-102 318.5,-108 312.5,-114 306.5,-114"/>
+<text text-anchor="middle" x="238" y="-93.5" font-family="Arial" font-size="10.00">Bootstrap Loader + RSA Decrypt</text>
+</g>
+<!-- bootstrap&#45;&gt;app -->
+<g id="edge6" class="edge">
+<title>bootstrap&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M267.69,-114.03C284.36,-122.94 305.81,-133.35 326,-140 363.01,-152.2 405.91,-160.3 440.42,-165.43"/>
+<polygon fill="black" stroke="black" points="439.99,-168.9 450.39,-166.86 440.99,-161.97 439.99,-168.9"/>
+<text text-anchor="middle" x="379" y="-132.8" font-family="Arial" font-size="9.00">DB values + source mode</text>
+</g>
+<!-- source -->
+<g id="node5" class="node">
+<title>source</title>
+<path fill="none" stroke="black" d="M607,-114C607,-114 529,-114 529,-114 523,-114 517,-108 517,-102 517,-102 517,-90 517,-90 517,-84 523,-78 529,-78 529,-78 607,-78 607,-78 613,-78 619,-84 619,-90 619,-90 619,-102 619,-102 619,-108 613,-114 607,-114"/>
+<text text-anchor="middle" x="568" y="-99" font-family="Arial" font-size="10.00">Classpath or JDBC</text>
+<text text-anchor="middle" x="568" y="-88" font-family="Arial" font-size="10.00">Property Source</text>
+</g>
+<!-- runtime -->
+<g id="node6" class="node">
+<title>runtime</title>
+<path fill="none" stroke="black" d="M463,-36C463,-36 373,-36 373,-36 367,-36 361,-30 361,-24 361,-24 361,-12 361,-12 361,-6 367,0 373,0 373,0 463,0 463,0 469,0 475,-6 475,-12 475,-12 475,-24 475,-24 475,-30 469,-36 463,-36"/>
+<text text-anchor="middle" x="418" y="-15.5" font-family="Arial" font-size="10.00">Runtime Configuration</text>
+</g>
+<!-- source&#45;&gt;runtime -->
+<g id="edge8" class="edge">
+<title>source&#45;&gt;runtime</title>
+<path fill="none" stroke="black" d="M534.34,-77.94C512.6,-66.93 484.14,-52.51 460.8,-40.69"/>
+<polygon fill="black" stroke="black" points="462.31,-37.53 451.81,-36.13 459.15,-43.77 462.31,-37.53"/>
+<text text-anchor="middle" x="539.5" y="-54.8" font-family="Arial" font-size="9.00">application values</text>
+</g>
+<!-- loader -->
+<g id="node8" class="node">
+<title>loader</title>
+<path fill="none" stroke="black" d="M717,-36C717,-36 621,-36 621,-36 615,-36 609,-30 609,-24 609,-24 609,-12 609,-12 609,-6 615,0 621,0 621,0 717,0 717,0 723,0 729,-6 729,-12 729,-12 729,-24 729,-24 729,-30 723,-36 717,-36"/>
+<text text-anchor="middle" x="669" y="-15.5" font-family="Arial" font-size="10.00">Plugin Definition Loader</text>
+</g>
+<!-- source&#45;&gt;loader -->
+<g id="edge13" class="edge">
+<title>source&#45;&gt;loader</title>
+<path fill="none" stroke="black" d="M575.77,-77.78C580.37,-69.15 586.88,-59.05 595,-52 599.74,-47.89 605.08,-44.2 610.66,-40.93"/>
+<polygon fill="black" stroke="black" points="612.44,-43.94 619.58,-36.11 609.12,-37.78 612.44,-43.94"/>
+<text text-anchor="middle" x="622.5" y="-54.8" font-family="Arial" font-size="9.00">plugin values</text>
+</g>
+<!-- runtime&#45;&gt;app -->
+<g id="edge9" class="edge">
+<title>runtime&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M401.91,-36.14C385,-56.28 363.16,-89.99 381,-114 395.67,-133.75 411.52,-119.99 434,-130 446.8,-135.7 460.12,-143.27 471.71,-150.47"/>
+<polygon fill="black" stroke="black" points="469.89,-153.46 480.21,-155.87 473.64,-147.55 469.89,-153.46"/>
+<text text-anchor="middle" x="442.5" y="-93.8" font-family="Arial" font-size="9.00">database / execution / logging</text>
+</g>
+<!-- registry -->
+<g id="node7" class="node">
+<title>registry</title>
+<path fill="none" stroke="black" d="M1074.5,-114C1074.5,-114 967.5,-114 967.5,-114 961.5,-114 955.5,-108 955.5,-102 955.5,-102 955.5,-90 955.5,-90 955.5,-84 961.5,-78 967.5,-78 967.5,-78 1074.5,-78 1074.5,-78 1080.5,-78 1086.5,-84 1086.5,-90 1086.5,-90 1086.5,-102 1086.5,-102 1086.5,-108 1080.5,-114 1074.5,-114"/>
+<text text-anchor="middle" x="1021" y="-93.5" font-family="Arial" font-size="10.00">Classpath Plugin Registry</text>
+</g>
+<!-- registry&#45;&gt;app -->
+<g id="edge11" class="edge">
+<title>registry&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M1010.95,-114.26C1004.52,-123.6 995.27,-134.35 984,-140 947.93,-158.07 692.45,-167.69 570.06,-171.3"/>
+<polygon fill="black" stroke="black" points="569.6,-167.81 559.71,-171.6 569.81,-174.8 569.6,-167.81"/>
+<text text-anchor="middle" x="1038" y="-132.8" font-family="Arial" font-size="9.00">enabled descriptors</text>
+</g>
+<!-- loader&#45;&gt;app -->
+<g id="edge14" class="edge">
+<title>loader&#45;&gt;app</title>
+<path fill="none" stroke="black" d="M669.75,-36.09C669.91,-62.23 666.17,-112.05 638,-140 619.97,-157.9 593.84,-166.6 569.5,-170.67"/>
+<polygon fill="black" stroke="black" points="568.97,-167.22 559.57,-172.11 569.97,-174.14 568.97,-167.22"/>
+<text text-anchor="middle" x="708" y="-93.8" font-family="Arial" font-size="9.00">validated definitions</text>
+</g>
+<!-- app&#45;&gt;override -->
+<g id="edge3" class="edge">
+<title>app&#45;&gt;override</title>
+<path fill="none" stroke="black" d="M450.4,-173.22C333.14,-173.12 65.6,-169.62 38,-140 33.44,-135.11 33.75,-128.94 36.27,-122.81"/>
+<polygon fill="black" stroke="black" points="39.37,-124.45 41.25,-114.02 33.28,-121 39.37,-124.45"/>
+<text text-anchor="middle" x="72" y="-132.8" font-family="Arial" font-size="9.00">load optional file</text>
+</g>
+<!-- app&#45;&gt;bootstrap -->
+<g id="edge5" class="edge">
+<title>app&#45;&gt;bootstrap</title>
+<path fill="none" stroke="black" d="M450.31,-170.09C376.04,-165.56 250.88,-155.69 237,-140 233.23,-135.73 231.79,-130.2 231.63,-124.52"/>
+<polygon fill="black" stroke="black" points="235.13,-124.66 232.5,-114.4 228.16,-124.06 235.13,-124.66"/>
+<text text-anchor="middle" x="266.5" y="-132.8" font-family="Arial" font-size="9.00">load bootstrap</text>
+</g>
+<!-- app&#45;&gt;source -->
+<g id="edge7" class="edge">
+<title>app&#45;&gt;source</title>
+<path fill="none" stroke="black" d="M519.3,-155.75C527.59,-145.75 538.19,-132.97 547.37,-121.88"/>
+<polygon fill="black" stroke="black" points="550.07,-124.11 553.76,-114.18 544.68,-119.64 550.07,-124.11"/>
+<text text-anchor="middle" x="586.5" y="-132.8" font-family="Arial" font-size="9.00">select property source</text>
+</g>
+<!-- app&#45;&gt;registry -->
+<g id="edge10" class="edge">
+<title>app&#45;&gt;registry</title>
+<path fill="none" stroke="black" d="M559.58,-169.05C622.57,-164.09 729.17,-154.43 820,-140 820.82,-139.87 888.61,-125.36 945.23,-113.23"/>
+<polygon fill="black" stroke="black" points="946.25,-116.6 955.29,-111.08 944.78,-109.75 946.25,-116.6"/>
+<text text-anchor="middle" x="922.5" y="-132.8" font-family="Arial" font-size="9.00">resolve selected descriptors</text>
+</g>
+<!-- app&#45;&gt;loader -->
+<g id="edge12" class="edge">
+<title>app&#45;&gt;loader</title>
+<path fill="none" stroke="black" d="M559.74,-168.55C626.96,-161.76 734.82,-146.06 757,-114 766.1,-100.84 764.53,-92.12 757,-78 748.75,-62.53 734.45,-50.41 719.74,-41.28"/>
+<polygon fill="black" stroke="black" points="721.48,-38.24 711.08,-36.24 717.97,-44.29 721.48,-38.24"/>
+<text text-anchor="middle" x="828.5" y="-93.8" font-family="Arial" font-size="9.00">each plugin + scoped overrides</text>
+</g>
+</g>
+</svg>

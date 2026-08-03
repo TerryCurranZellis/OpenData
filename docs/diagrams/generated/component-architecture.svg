@@ -1,1 +1,323 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="593px" preserveAspectRatio="none" style="width:753px;height:593px;background:#FFFFFF;" version="1.1" viewBox="0 0 753 593" width="753px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="2"><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="234.1377" x="222.4312" y="24.5332">OpenData Component Architecture</text></g><!--cluster Application--><g class="cluster" data-qualified-name="Application" data-source-line="5" id="ent0001"><path d="M222.5,42.6094 L299.7207,42.6094 A3.75,3.75 0 0 1 302.2207,45.1094 L309.2207,66.2188 L645.5,66.2188 A2.5,2.5 0 0 1 648,68.7188 L648,188.1094 A2.5,2.5 0 0 1 645.5,190.6094 L222.5,190.6094 A2.5,2.5 0 0 1 220,188.1094 L220,45.1094 A2.5,2.5 0 0 1 222.5,42.6094" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="220" x2="309.2207" y1="66.2188" y2="66.2188"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="76.2207" x="224" y="59.1426">Application</text></g><!--cluster Plugin Runtime--><g class="cluster" data-qualified-name="Plugin Runtime" data-source-line="11" id="ent0005"><path d="M16.5,198.6094 L120.1621,198.6094 A3.75,3.75 0 0 1 122.6621,201.1094 L129.6621,222.2188 L656.5,222.2188 A2.5,2.5 0 0 1 659,224.7188 L659,344.1094 A2.5,2.5 0 0 1 656.5,346.6094 L16.5,346.6094 A2.5,2.5 0 0 1 14,344.1094 L14,201.1094 A2.5,2.5 0 0 1 16.5,198.6094" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="14" x2="129.6621" y1="222.2188" y2="222.2188"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="102.6621" x="18" y="215.1426">Plugin Runtime</text></g><!--cluster Plugins--><g class="cluster" data-qualified-name="Plugins" data-source-line="18" id="ent0010"><path d="M98.5,354.6094 L150.0586,354.6094 A3.75,3.75 0 0 1 152.5586,357.1094 L159.5586,378.2188 L361.5,378.2188 A2.5,2.5 0 0 1 364,380.7188 L364,426.1094 A2.5,2.5 0 0 1 361.5,428.6094 L98.5,428.6094 A2.5,2.5 0 0 1 96,426.1094 L96,357.1094 A2.5,2.5 0 0 1 98.5,354.6094" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="96" x2="159.5586" y1="378.2188" y2="378.2188"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="50.5586" x="100" y="371.1426">Plugins</text></g><!--cluster Infrastructure--><g class="cluster" data-qualified-name="Infrastructure" data-source-line="23" id="ent0013"><path d="M374.5,354.6094 L466.5205,354.6094 A3.75,3.75 0 0 1 469.0205,357.1094 L476.0205,378.2188 L675.5,378.2188 A2.5,2.5 0 0 1 678,380.7188 L678,583.1094 A2.5,2.5 0 0 1 675.5,585.6094 L374.5,585.6094 A2.5,2.5 0 0 1 372,583.1094 L372,357.1094 A2.5,2.5 0 0 1 374.5,354.6094" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="372" x2="476.0205" y1="378.2188" y2="378.2188"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="91.0205" x="376" y="371.1426">Infrastructure</text></g><!--entity Main--><g class="entity" data-qualified-name="Application.Main" data-source-line="6" id="ent0002"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="50.3447" x="431" y="70.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="30.3447" x="441" y="95.1426">Main</text></g><!--entity CLI--><g class="entity" data-qualified-name="Application.CLI" data-source-line="7" id="ent0003"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="241.7646" x="228" y="144.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="221.7646" x="238" y="169.1426">CommandLineArgumentsProcessor</text></g><!--entity AppService--><g class="entity" data-qualified-name="Application.AppService" data-source-line="8" id="ent0004"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="152.3096" x="488" y="144.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="132.3096" x="498" y="169.1426">OpenDataApplication</text></g><!--entity Registry--><g class="entity" data-qualified-name="Plugin Runtime.Registry" data-source-line="12" id="ent0006"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="172.5166" x="477.5" y="226.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152.5166" x="487.5" y="251.1426">ClasspathPluginRegistry</text></g><!--entity Definitions--><g class="entity" data-qualified-name="Plugin Runtime.Definitions" data-source-line="13" id="ent0007"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="224.6816" x="234.5" y="226.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="204.6816" x="244.5" y="251.1426">PropertiesPluginDefinitionLoader</text></g><!--entity Factory--><g class="entity" data-qualified-name="Plugin Runtime.Factory" data-source-line="14" id="ent0008"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="167.8477" x="86" y="300.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8477" x="96" y="325.1426">ReflectionPluginFactory</text></g><!--entity Coordinator--><g class="entity" data-qualified-name="Plugin Runtime.Coordinator" data-source-line="15" id="ent0009"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="193.5508" x="22" y="226.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5508" x="32" y="251.1426">PluginExecutionCoordinator</text></g><!--entity Ofgem--><g class="entity" data-qualified-name="Plugins.Ofgem" data-source-line="19" id="ent0011"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100.9307" x="254.5" y="382.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80.9307" x="264.5" y="407.1426">OfgemPlugin</text></g><!--entity Meteo--><g class="entity" data-qualified-name="Plugins.Meteo" data-source-line="20" id="ent0012"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="132.0752" x="104" y="382.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.0752" x="114" y="407.1426">OpenMeteoPlugin</text></g><!--entity Logging--><g class="entity" data-qualified-name="Infrastructure.Logging" data-source-line="24" id="ent0014"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="125.082" x="544.5" y="382.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105.082" x="554.5" y="407.1426">LoggingManager</text></g><!--entity Audit--><g class="entity" data-qualified-name="Infrastructure.Audit" data-source-line="25" id="ent0015"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146.082" x="380" y="382.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126.082" x="390" y="407.1426">JdbcPluginRunAudit</text></g><!--entity Pool--><g class="entity" data-qualified-name="Infrastructure.Pool" data-source-line="26" id="ent0016"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="149.165" x="380.5" y="456.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129.165" x="390.5" y="481.1426">SQLServerResource</text></g><!--entity Database--><g class="entity" data-qualified-name="Infrastructure.Database" data-source-line="27" id="ent0017"><path d="M408.5,540.6094 C408.5,530.6094 455.0688,530.6094 455.0688,530.6094 C455.0688,530.6094 501.6377,530.6094 501.6377,540.6094 L501.6377,567.2188 C501.6377,577.2188 455.0688,577.2188 455.0688,577.2188 C455.0688,577.2188 408.5,577.2188 408.5,567.2188 L408.5,540.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M408.5,540.6094 C408.5,550.6094 455.0688,550.6094 455.0688,550.6094 C455.0688,550.6094 501.6377,550.6094 501.6377,540.6094" fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="73.1377" x="418.5" y="569.1426">SQL Server</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" data-link-type="dependency" id="lnk18"><polygon fill="#181818" points="375.8,144.5757,385.5,142.8699,379.9483,141.7844,381.0338,136.2326,375.8,144.5757" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M430.9133,107.4902 C414.359,118.6295 396.8401,130.4179 379.9483,141.7844" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0004" data-link-type="dependency" id="lnk19"><polygon fill="#181818" points="536.8168,144.4872,531.5471,136.1667,532.6565,141.7137,527.1095,142.8231,536.8168,144.4872" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M481.0488,107.3086 C497.7487,118.4419 515.5332,130.2982 532.6565,141.7137" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0006" data-link-type="dependency" id="lnk20"><polygon fill="#181818" points="564,226.528,568,217.528,564,221.528,560,217.528,564,226.528" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M564,182.7626 C564,195.8551 564,208.452 564,221.528" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0007" data-link-type="dependency" id="lnk21"><polygon fill="#181818" points="393.7368,226.5559,403.5721,227.0722,398.406,224.7675,400.7107,219.6014,393.7368,226.5559" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M512.1068,182.7438 C497.792,187.8126 482.2742,193.3691 468,198.6094 C443.4219,207.6323 420.8244,216.1809 398.406,224.7675" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0009" data-link-type="dependency" id="lnk22"><polygon fill="#181818" points="151.7952,226.5283,161.6329,226.0585,156.2622,224.282,158.0387,218.9113,151.7952,226.5283" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M512.8308,182.6502 C501.801,185.8631 490.1138,188.7683 479,190.6094 C423.2868,199.8386 280.1056,186.26 225,198.6094 C199.3563,204.3562 176.6675,214.0206 156.2622,224.282" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0009" data-entity-2="ent0008" data-link-type="dependency" id="lnk23"><polygon fill="#181818" points="156.9573,300.1961,155.0192,290.5398,154.0672,296.116,148.491,295.164,156.9573,300.1961" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M131.8695,264.778 C139.5417,275.6094 146.3645,285.2417 154.0672,296.116" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0008" data-entity-2="ent0011" data-link-type="dependency" id="lnk24"><polygon fill="#181818" points="283.9072,382.5352,279.441,373.7572,280.0254,379.3838,274.3988,379.9682,283.9072,382.5352" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M214.4818,338.7504 C224.7357,343.4822 235.4347,348.8776 245,354.6094 C258.6235,362.7729 268.8909,370.3446 280.0254,379.3838" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0008" data-entity-2="ent0012" data-link-type="dependency" id="lnk25"><polygon fill="#181818" points="170,382.528,174,373.528,170,377.528,166,373.528,170,382.528" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M170,338.7626 C170,351.8551 170,364.452 170,377.528" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0014" data-link-type="dependency" id="lnk26"><polygon fill="#181818" points="633.7231,382.5198,643.2171,379.8998,637.5874,379.3468,638.1404,373.7171,633.7231,382.5198" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M640.0336,179.2742 C649.0236,184.0407 657.087,190.3266 663,198.6094 C701.2187,252.1448 688.7234,286.07 663,346.6094 C656.926,360.9044 648.8727,370.0803 637.5874,379.3468" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0009" data-entity-2="ent0015" data-link-type="dependency" id="lnk27"><polygon fill="#181818" points="419.9861,382.5342,413.9922,374.7193,415.5941,380.1446,410.1688,381.7465,419.9861,382.5342" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M171.5774,264.6649 C199.1156,274.5372 233.2159,287.4195 263,300.6094 C310.982,321.8581 321.5883,330.1199 368,354.6094 C385.2145,363.6927 399.8888,371.5995 415.5941,380.1446" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0016" data-link-type="dependency" id="lnk28"><polygon fill="#181818" points="529.5617,468.6338,538.9427,471.6333,534.5322,468.0911,538.0744,463.6806,529.5617,468.6338" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M640.0087,177.1602 C662.5855,182.5319 683.1459,189.6606 690,198.6094 C752.2419,279.873 746.4378,352.4904 678,428.6094 C658.376,450.4359 591.4519,461.8761 534.5322,468.0911" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0015" data-entity-2="ent0016" data-link-type="dependency" id="lnk29"><polygon fill="#181818" points="454.4885,456.1961,458.2371,447.0885,454.3497,451.198,450.2402,447.3106,454.4885,456.1961" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M453.5047,420.778 C453.8056,431.6094 454.0476,440.3237 454.3497,451.198" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0011" data-entity-2="ent0016" data-link-type="dependency" id="lnk30"><polygon fill="#181818" points="417.4209,456.5714,411.0381,449.0707,412.9132,454.4077,407.5762,456.2829,417.4209,456.5714" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M342.8513,420.778 C365.677,431.7343 390.1367,443.475 412.9132,454.4077" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0012" data-entity-2="ent0016" data-link-type="dependency" id="lnk31"><polygon fill="#181818" points="380.1202,460.4444,372.0962,454.7334,375.2202,459.4494,370.5042,462.5733,380.1202,460.4444" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M219.3601,420.6452 C227.8576,423.4841 236.6434,426.2545 245,428.6094 C289.3657,441.1114 334.899,451.2615 375.2202,459.4494" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0016" data-entity-2="ent0017" data-link-type="dependency" id="lnk32"><polygon fill="#181818" points="455,530.4528,459,521.4528,455,525.4528,451,521.4528,455,530.4528" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M455,494.7388 C455,505.4313 455,514.0562 455,525.4528" fill="none" style="stroke:#181818;stroke-width:1;"/></g><?plantuml-src RLB1JiCm3BttAyBk-mMaQO04wiJOZeY3bteXMfj4YOEO4FzEugIqL5msFxzdEtxkZVEW1X0zN6qa4GOaCD2GfXx5iqDp1mHYQmTd3HeI6o_VDQ6awB495sqSU1Y470L7kgP2dmHWL8zDuq1UGA5ORPphjGJIrgp4LoF4wmwqUHCGH0vo8eqPm7IjDhZnAWwfNzXxAp44wrcvRH-pS7pOh2VJ2H_HVsY9pVTizBwFIXjnY8RqW7NwjeSG7D1xOG-eT21_vJuZoBhq08UUD8OYlCEpDZgFR2rqMDur9KEkEU2vJnOaM6eUG9AjlMlChPcy_qGPitPhhU-q0HgNdV0_wuIwn_DPuL1INCLuD6c7X7P6ClxJxD6SFQHT8v-qzcojIXLgbpu5LJUigSm-TITPJOjc4pjDnVmSPVxuqkOhe3zWiD5BP7flRP_OBftj125DJZ9HT2ksi1BvTVc34ElrBT_x5yokEuNC_DvhaP-VPK7DpPt5p8qdgl-SAxRECyNBHTlHfcNBOiv2p9OmCq6UCq4UCi7yKpQhRlq0?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="1359pt" height="537pt"
+ viewBox="0.00 0.00 1359.20 537.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 515.6)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-515.6 1337.6,-515.6 1337.6,21.6 -21.6,21.6"/>
+<text text-anchor="middle" x="658" y="-474" font-family="Arial" font-size="20.00">OpenData Version 2.0.0 Component Architecture</text>
+<g id="clust1" class="cluster">
+<title>cluster_app</title>
+<path fill="white" stroke="black" d="M20,-101C20,-101 235,-101 235,-101 241,-101 247,-107 247,-113 247,-113 247,-232 247,-232 247,-238 241,-244 235,-244 235,-244 20,-244 20,-244 14,-244 8,-238 8,-232 8,-232 8,-113 8,-113 8,-107 14,-101 20,-101"/>
+<text text-anchor="middle" x="127.5" y="-224" font-family="Arial" font-size="20.00">Application</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_config</title>
+<path fill="white" stroke="black" d="M325,-252C325,-252 624,-252 624,-252 630,-252 636,-258 636,-264 636,-264 636,-444 636,-444 636,-450 630,-456 624,-456 624,-456 325,-456 325,-456 319,-456 313,-450 313,-444 313,-444 313,-264 313,-264 313,-258 319,-252 325,-252"/>
+<text text-anchor="middle" x="474.5" y="-436" font-family="Arial" font-size="20.00">Configuration</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_runtime</title>
+<path fill="white" stroke="black" d="M328.5,-101C328.5,-101 605.5,-101 605.5,-101 611.5,-101 617.5,-107 617.5,-113 617.5,-113 617.5,-232 617.5,-232 617.5,-238 611.5,-244 605.5,-244 605.5,-244 328.5,-244 328.5,-244 322.5,-244 316.5,-238 316.5,-232 316.5,-232 316.5,-113 316.5,-113 316.5,-107 322.5,-101 328.5,-101"/>
+<text text-anchor="middle" x="467" y="-224" font-family="Arial" font-size="20.00">Plugin Runtime</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_plugins</title>
+<path fill="white" stroke="black" d="M681,-162C681,-162 820,-162 820,-162 826,-162 832,-168 832,-174 832,-174 832,-354 832,-354 832,-360 826,-366 820,-366 820,-366 681,-366 681,-366 675,-366 669,-360 669,-354 669,-354 669,-174 669,-174 669,-168 675,-162 681,-162"/>
+<text text-anchor="middle" x="750.5" y="-346" font-family="Arial" font-size="20.00">Provider Plugins</text>
+</g>
+<g id="clust5" class="cluster">
+<title>cluster_infra</title>
+<path fill="white" stroke="black" d="M877,-30C877,-30 1296,-30 1296,-30 1302,-30 1308,-36 1308,-42 1308,-42 1308,-222 1308,-222 1308,-228 1302,-234 1296,-234 1296,-234 877,-234 877,-234 871,-234 865,-228 865,-222 865,-222 865,-42 865,-42 865,-36 871,-30 877,-30"/>
+<text text-anchor="middle" x="1086.5" y="-214" font-family="Arial" font-size="20.00">Infrastructure</text>
+</g>
+<!-- Entry -->
+<g id="node1" class="node">
+<title>Entry</title>
+<path fill="none" stroke="black" d="M67,-175C67,-175 28,-175 28,-175 22,-175 16,-169 16,-163 16,-163 16,-151 16,-151 16,-145 22,-139 28,-139 28,-139 67,-139 67,-139 73,-139 79,-145 79,-151 79,-151 79,-163 79,-163 79,-169 73,-175 67,-175"/>
+<text text-anchor="middle" x="47.5" y="-154.5" font-family="Arial" font-size="10.00">OpenData</text>
+</g>
+<!-- CLI -->
+<g id="node2" class="node">
+<title>CLI</title>
+<path fill="none" stroke="black" d="M212.5,-145C212.5,-145 154.5,-145 154.5,-145 148.5,-145 142.5,-139 142.5,-133 142.5,-133 142.5,-121 142.5,-121 142.5,-115 148.5,-109 154.5,-109 154.5,-109 212.5,-109 212.5,-109 218.5,-109 224.5,-115 224.5,-121 224.5,-121 224.5,-133 224.5,-133 224.5,-139 218.5,-145 212.5,-145"/>
+<text text-anchor="middle" x="183.5" y="-124.5" font-family="Arial" font-size="10.00">CLI Processor</text>
+</g>
+<!-- Entry&#45;&gt;CLI -->
+<g id="edge1" class="edge">
+<title>Entry&#45;&gt;CLI</title>
+<path fill="none" stroke="black" d="M79.24,-150.12C94.94,-146.6 114.43,-142.24 132.24,-138.25"/>
+<polygon fill="black" stroke="black" points="133.5,-141.56 142.49,-135.96 131.97,-134.73 133.5,-141.56"/>
+</g>
+<!-- App -->
+<g id="node3" class="node">
+<title>App</title>
+<path fill="none" stroke="black" d="M227,-206C227,-206 140,-206 140,-206 134,-206 128,-200 128,-194 128,-194 128,-182 128,-182 128,-176 134,-170 140,-170 140,-170 227,-170 227,-170 233,-170 239,-176 239,-182 239,-182 239,-194 239,-194 239,-200 233,-206 227,-206"/>
+<text text-anchor="middle" x="183.5" y="-185.5" font-family="Arial" font-size="10.00">OpenDataApplication</text>
+</g>
+<!-- Entry&#45;&gt;App -->
+<g id="edge2" class="edge">
+<title>Entry&#45;&gt;App</title>
+<path fill="none" stroke="black" d="M79.24,-164.11C90.87,-166.8 104.58,-169.97 118.15,-173.11"/>
+<polygon fill="black" stroke="black" points="117.44,-176.54 127.97,-175.38 119.02,-169.72 117.44,-176.54"/>
+</g>
+<!-- Bootstrap -->
+<g id="node4" class="node">
+<title>Bootstrap</title>
+<path fill="none" stroke="black" d="M416.5,-418C416.5,-418 347.5,-418 347.5,-418 341.5,-418 335.5,-412 335.5,-406 335.5,-406 335.5,-394 335.5,-394 335.5,-388 341.5,-382 347.5,-382 347.5,-382 416.5,-382 416.5,-382 422.5,-382 428.5,-388 428.5,-394 428.5,-394 428.5,-406 428.5,-406 428.5,-412 422.5,-418 416.5,-418"/>
+<text text-anchor="middle" x="382" y="-397.5" font-family="Arial" font-size="10.00">Bootstrap Loader</text>
+</g>
+<!-- App&#45;&gt;Bootstrap -->
+<g id="edge8" class="edge">
+<title>App&#45;&gt;Bootstrap</title>
+<path fill="none" stroke="black" d="M192.52,-206.07C209.52,-242.35 252.61,-324.49 313,-370 317.14,-373.12 321.67,-376.01 326.34,-378.65"/>
+<polygon fill="black" stroke="black" points="324.99,-381.89 335.47,-383.42 328.23,-375.68 324.99,-381.89"/>
+</g>
+<!-- Register -->
+<g id="node6" class="node">
+<title>Register</title>
+<path fill="none" stroke="black" d="M423.5,-357C423.5,-357 340.5,-357 340.5,-357 334.5,-357 328.5,-351 328.5,-345 328.5,-345 328.5,-333 328.5,-333 328.5,-327 334.5,-321 340.5,-321 340.5,-321 423.5,-321 423.5,-321 429.5,-321 435.5,-327 435.5,-333 435.5,-333 435.5,-345 435.5,-345 435.5,-351 429.5,-357 423.5,-357"/>
+<text text-anchor="middle" x="382" y="-336.5" font-family="Arial" font-size="10.00">Registration Service</text>
+</g>
+<!-- App&#45;&gt;Register -->
+<g id="edge9" class="edge">
+<title>App&#45;&gt;Register</title>
+<path fill="none" stroke="black" d="M199.97,-206.03C222.67,-231.61 267.28,-278.69 313,-309 316.79,-311.51 320.83,-313.91 324.98,-316.16"/>
+<polygon fill="black" stroke="black" points="323.67,-319.42 334.16,-320.87 326.86,-313.19 323.67,-319.42"/>
+<text text-anchor="middle" x="280" y="-297.6" font-family="Arial" font-size="8.00">&#45;&#45;register</text>
+</g>
+<!-- Definitions -->
+<g id="node9" class="node">
+<title>Definitions</title>
+<path fill="none" stroke="black" d="M431,-296C431,-296 333,-296 333,-296 327,-296 321,-290 321,-284 321,-284 321,-272 321,-272 321,-266 327,-260 333,-260 333,-260 431,-260 431,-260 437,-260 443,-266 443,-272 443,-272 443,-284 443,-284 443,-290 437,-296 431,-296"/>
+<text text-anchor="middle" x="382" y="-275.5" font-family="Arial" font-size="10.00">Plugin Definition Loader</text>
+</g>
+<!-- App&#45;&gt;Definitions -->
+<g id="edge11" class="edge">
+<title>App&#45;&gt;Definitions</title>
+<path fill="none" stroke="black" d="M220.51,-206.08C246.13,-218.76 281.45,-235.91 313,-250 317.43,-251.98 322.04,-253.99 326.69,-255.97"/>
+<polygon fill="black" stroke="black" points="325.64,-259.33 336.21,-260 328.37,-252.88 325.64,-259.33"/>
+</g>
+<!-- Registry -->
+<g id="node10" class="node">
+<title>Registry</title>
+<path fill="none" stroke="black" d="M421.5,-145C421.5,-145 342.5,-145 342.5,-145 336.5,-145 330.5,-139 330.5,-133 330.5,-133 330.5,-121 330.5,-121 330.5,-115 336.5,-109 342.5,-109 342.5,-109 421.5,-109 421.5,-109 427.5,-109 433.5,-115 433.5,-121 433.5,-121 433.5,-133 433.5,-133 433.5,-139 427.5,-145 421.5,-145"/>
+<text text-anchor="middle" x="382" y="-124.5" font-family="Arial" font-size="10.00">Classpath Registry</text>
+</g>
+<!-- App&#45;&gt;Registry -->
+<g id="edge10" class="edge">
+<title>App&#45;&gt;Registry</title>
+<path fill="none" stroke="black" d="M239.24,-171.01C264.51,-163.16 294.6,-153.82 320.54,-145.77"/>
+<polygon fill="black" stroke="black" points="321.75,-149.06 330.26,-142.75 319.67,-142.37 321.75,-149.06"/>
+</g>
+<!-- Coordinator -->
+<g id="node12" class="node">
+<title>Coordinator</title>
+<path fill="none" stroke="black" d="M427.5,-206C427.5,-206 336.5,-206 336.5,-206 330.5,-206 324.5,-200 324.5,-194 324.5,-194 324.5,-182 324.5,-182 324.5,-176 330.5,-170 336.5,-170 336.5,-170 427.5,-170 427.5,-170 433.5,-170 439.5,-176 439.5,-182 439.5,-182 439.5,-194 439.5,-194 439.5,-200 433.5,-206 427.5,-206"/>
+<text text-anchor="middle" x="382" y="-185.5" font-family="Arial" font-size="10.00">Execution Coordinator</text>
+</g>
+<!-- App&#45;&gt;Coordinator -->
+<g id="edge12" class="edge">
+<title>App&#45;&gt;Coordinator</title>
+<path fill="none" stroke="black" d="M239.24,-188C262.39,-188 289.58,-188 313.92,-188"/>
+<polygon fill="black" stroke="black" points="314.16,-191.5 324.16,-188 314.16,-184.5 314.16,-191.5"/>
+</g>
+<!-- Logging -->
+<g id="node16" class="node">
+<title>Logging</title>
+<path fill="none" stroke="black" d="M964,-74C964,-74 895,-74 895,-74 889,-74 883,-68 883,-62 883,-62 883,-50 883,-50 883,-44 889,-38 895,-38 895,-38 964,-38 964,-38 970,-38 976,-44 976,-50 976,-50 976,-62 976,-62 976,-68 970,-74 964,-74"/>
+<text text-anchor="middle" x="929.5" y="-53.5" font-family="Arial" font-size="10.00">Logging Manager</text>
+</g>
+<!-- App&#45;&gt;Logging -->
+<g id="edge13" class="edge">
+<title>App&#45;&gt;Logging</title>
+<path fill="none" stroke="black" d="M226.87,-169.91C233.81,-166.32 240.76,-162.31 247,-158 307.05,-116.49 308,-63 381,-63 381,-63 381,-63 751.5,-63 791.91,-63 837.47,-61.16 872.25,-59.36"/>
+<polygon fill="black" stroke="black" points="872.88,-62.83 882.68,-58.81 872.51,-55.84 872.88,-62.83"/>
+</g>
+<!-- Pool -->
+<g id="node18" class="node">
+<title>Pool</title>
+<path fill="none" stroke="black" d="M1169,-196C1169,-196 1047,-196 1047,-196 1041,-196 1035,-190 1035,-184 1035,-184 1035,-172 1035,-172 1035,-166 1041,-160 1047,-160 1047,-160 1169,-160 1169,-160 1175,-160 1181,-166 1181,-172 1181,-172 1181,-184 1181,-184 1181,-190 1175,-196 1169,-196"/>
+<text text-anchor="middle" x="1108" y="-175.5" font-family="Arial" font-size="10.00">SQLServerResource / DBCP</text>
+</g>
+<!-- App&#45;&gt;Pool -->
+<g id="edge20" class="edge">
+<title>App&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M233.17,-169.87C238.32,-166.5 243.09,-162.57 247,-158 263.01,-139.31 250.15,-125.98 263,-105 299.66,-45.13 310.8,0 381,0 381,0 381,0 930.5,0 1014.34,0 1071.95,-100.81 1095.33,-150.7"/>
+<polygon fill="black" stroke="black" points="1092.21,-152.3 1099.55,-159.95 1098.58,-149.4 1092.21,-152.3"/>
+</g>
+<!-- Cipher -->
+<g id="node5" class="node">
+<title>Cipher</title>
+<path fill="none" stroke="black" d="M606.5,-418C606.5,-418 513.5,-418 513.5,-418 507.5,-418 501.5,-412 501.5,-406 501.5,-406 501.5,-394 501.5,-394 501.5,-388 507.5,-382 513.5,-382 513.5,-382 606.5,-382 606.5,-382 612.5,-382 618.5,-388 618.5,-394 618.5,-394 618.5,-406 618.5,-406 618.5,-412 612.5,-418 606.5,-418"/>
+<text text-anchor="middle" x="560" y="-397.5" font-family="Arial" font-size="10.00">RSA Password Cipher</text>
+</g>
+<!-- Bootstrap&#45;&gt;Cipher -->
+<g id="edge3" class="edge">
+<title>Bootstrap&#45;&gt;Cipher</title>
+<path fill="none" stroke="black" d="M428.78,-400C447.86,-400 470.42,-400 491.34,-400"/>
+<polygon fill="black" stroke="black" points="491.46,-403.5 501.46,-400 491.46,-396.5 491.46,-403.5"/>
+</g>
+<!-- FileSource -->
+<g id="node7" class="node">
+<title>FileSource</title>
+<path fill="none" stroke="black" d="M616,-296C616,-296 504,-296 504,-296 498,-296 492,-290 492,-284 492,-284 492,-272 492,-272 492,-266 498,-260 504,-260 504,-260 616,-260 616,-260 622,-260 628,-266 628,-272 628,-272 628,-284 628,-284 628,-290 622,-296 616,-296"/>
+<text text-anchor="middle" x="560" y="-275.5" font-family="Arial" font-size="10.00">Classpath Property Source</text>
+</g>
+<!-- Register&#45;&gt;FileSource -->
+<g id="edge4" class="edge">
+<title>Register&#45;&gt;FileSource</title>
+<path fill="none" stroke="black" d="M435.33,-320.86C454.84,-314.1 477.16,-306.37 497.42,-299.34"/>
+<polygon fill="black" stroke="black" points="498.57,-302.65 506.87,-296.07 496.28,-296.03 498.57,-302.65"/>
+</g>
+<!-- DbSource -->
+<g id="node8" class="node">
+<title>DbSource</title>
+<path fill="none" stroke="black" d="M607.5,-357C607.5,-357 512.5,-357 512.5,-357 506.5,-357 500.5,-351 500.5,-345 500.5,-345 500.5,-333 500.5,-333 500.5,-327 506.5,-321 512.5,-321 512.5,-321 607.5,-321 607.5,-321 613.5,-321 619.5,-327 619.5,-333 619.5,-333 619.5,-345 619.5,-345 619.5,-351 613.5,-357 607.5,-357"/>
+<text text-anchor="middle" x="560" y="-336.5" font-family="Arial" font-size="10.00">JDBC Property Source</text>
+</g>
+<!-- Register&#45;&gt;DbSource -->
+<g id="edge5" class="edge">
+<title>Register&#45;&gt;DbSource</title>
+<path fill="none" stroke="black" d="M435.81,-339C452.9,-339 472.11,-339 490.19,-339"/>
+<polygon fill="black" stroke="black" points="490.39,-342.5 500.38,-339 490.38,-335.5 490.39,-342.5"/>
+</g>
+<!-- DbSource&#45;&gt;Pool -->
+<g id="edge21" class="edge">
+<title>DbSource&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M612.82,-357.05C630.43,-362.33 650.36,-367.38 669,-370 740.74,-380.09 761.36,-386.09 832,-370 906.04,-353.13 923.78,-339.53 986,-296 1024.4,-269.14 1061.98,-229.86 1084.82,-204.12"/>
+<polygon fill="black" stroke="black" points="1087.74,-206.1 1091.7,-196.27 1082.48,-201.49 1087.74,-206.1"/>
+</g>
+<!-- Definitions&#45;&gt;FileSource -->
+<g id="edge14" class="edge">
+<title>Definitions&#45;&gt;FileSource</title>
+<path fill="none" stroke="black" d="M443.08,-278C455.49,-278 468.73,-278 481.66,-278"/>
+<polygon fill="black" stroke="black" points="481.95,-281.5 491.95,-278 481.95,-274.5 481.95,-281.5"/>
+</g>
+<!-- Definitions&#45;&gt;DbSource -->
+<g id="edge15" class="edge">
+<title>Definitions&#45;&gt;DbSource</title>
+<path fill="none" stroke="black" d="M435.33,-296.14C454.84,-302.9 477.16,-310.63 497.42,-317.66"/>
+<polygon fill="black" stroke="black" points="496.28,-320.97 506.87,-320.93 498.57,-314.35 496.28,-320.97"/>
+</g>
+<!-- Factory -->
+<g id="node11" class="node">
+<title>Factory</title>
+<path fill="none" stroke="black" d="M597.5,-206C597.5,-206 522.5,-206 522.5,-206 516.5,-206 510.5,-200 510.5,-194 510.5,-194 510.5,-182 510.5,-182 510.5,-176 516.5,-170 522.5,-170 522.5,-170 597.5,-170 597.5,-170 603.5,-170 609.5,-176 609.5,-182 609.5,-182 609.5,-194 609.5,-194 609.5,-200 603.5,-206 597.5,-206"/>
+<text text-anchor="middle" x="560" y="-185.5" font-family="Arial" font-size="10.00">Reflection Factory</text>
+</g>
+<!-- Ofgem -->
+<g id="node13" class="node">
+<title>Ofgem</title>
+<path fill="none" stroke="black" d="M765.5,-267C765.5,-267 735.5,-267 735.5,-267 729.5,-267 723.5,-261 723.5,-255 723.5,-255 723.5,-243 723.5,-243 723.5,-237 729.5,-231 735.5,-231 735.5,-231 765.5,-231 765.5,-231 771.5,-231 777.5,-237 777.5,-243 777.5,-243 777.5,-255 777.5,-255 777.5,-261 771.5,-267 765.5,-267"/>
+<text text-anchor="middle" x="750.5" y="-246.5" font-family="Arial" font-size="10.00">Ofgem</text>
+</g>
+<!-- Factory&#45;&gt;Ofgem -->
+<g id="edge16" class="edge">
+<title>Factory&#45;&gt;Ofgem</title>
+<path fill="none" stroke="black" d="M609.54,-203.71C642.04,-214.22 684.09,-227.83 713.59,-237.38"/>
+<polygon fill="black" stroke="black" points="712.87,-240.82 723.46,-240.57 715.02,-234.16 712.87,-240.82"/>
+</g>
+<!-- Meteo -->
+<g id="node14" class="node">
+<title>Meteo</title>
+<path fill="none" stroke="black" d="M773,-328C773,-328 728,-328 728,-328 722,-328 716,-322 716,-316 716,-316 716,-304 716,-304 716,-298 722,-292 728,-292 728,-292 773,-292 773,-292 779,-292 785,-298 785,-304 785,-304 785,-316 785,-316 785,-322 779,-328 773,-328"/>
+<text text-anchor="middle" x="750.5" y="-307.5" font-family="Arial" font-size="10.00">OpenMeteo</text>
+</g>
+<!-- Factory&#45;&gt;Meteo -->
+<g id="edge17" class="edge">
+<title>Factory&#45;&gt;Meteo</title>
+<path fill="none" stroke="black" d="M586.37,-206.21C601.25,-217.23 620.17,-231.85 636,-246 651.7,-260.03 651.37,-268.49 669,-280 680.23,-287.34 693.51,-293.22 706.01,-297.77"/>
+<polygon fill="black" stroke="black" points="705.22,-301.2 715.81,-301.13 707.49,-294.58 705.22,-301.2"/>
+</g>
+<!-- Octopus -->
+<g id="node15" class="node">
+<title>Octopus</title>
+<path fill="none" stroke="black" d="M766,-206C766,-206 735,-206 735,-206 729,-206 723,-200 723,-194 723,-194 723,-182 723,-182 723,-176 729,-170 735,-170 735,-170 766,-170 766,-170 772,-170 778,-176 778,-182 778,-182 778,-194 778,-194 778,-200 772,-206 766,-206"/>
+<text text-anchor="middle" x="750.5" y="-185.5" font-family="Arial" font-size="10.00">Octopus</text>
+</g>
+<!-- Factory&#45;&gt;Octopus -->
+<g id="edge18" class="edge">
+<title>Factory&#45;&gt;Octopus</title>
+<path fill="none" stroke="black" d="M609.54,-188C641.7,-188 683.23,-188 712.67,-188"/>
+<polygon fill="black" stroke="black" points="712.93,-191.5 722.93,-188 712.93,-184.5 712.93,-191.5"/>
+</g>
+<!-- Coordinator&#45;&gt;Factory -->
+<g id="edge6" class="edge">
+<title>Coordinator&#45;&gt;Factory</title>
+<path fill="none" stroke="black" d="M439.66,-188C459.08,-188 480.85,-188 500.42,-188"/>
+<polygon fill="black" stroke="black" points="500.44,-191.5 510.44,-188 500.44,-184.5 500.44,-191.5"/>
+</g>
+<!-- Audit -->
+<g id="node17" class="node">
+<title>Audit</title>
+<path fill="none" stroke="black" d="M963,-135C963,-135 896,-135 896,-135 890,-135 884,-129 884,-123 884,-123 884,-111 884,-111 884,-105 890,-99 896,-99 896,-99 963,-99 963,-99 969,-99 975,-105 975,-111 975,-111 975,-123 975,-123 975,-129 969,-135 963,-135"/>
+<text text-anchor="middle" x="929.5" y="-114.5" font-family="Arial" font-size="10.00">JDBC Run Audit</text>
+</g>
+<!-- Coordinator&#45;&gt;Audit -->
+<g id="edge19" class="edge">
+<title>Coordinator&#45;&gt;Audit</title>
+<path fill="none" stroke="black" d="M439.7,-170.37C456.41,-165.73 474.82,-161.15 492,-158 627.88,-133.12 790.48,-122.91 873.62,-119.07"/>
+<polygon fill="black" stroke="black" points="874.01,-122.56 883.85,-118.62 873.7,-115.57 874.01,-122.56"/>
+</g>
+<!-- Ofgem&#45;&gt;Pool -->
+<g id="edge23" class="edge">
+<title>Ofgem&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M777.81,-250.59C825.73,-252.61 929.75,-252.85 1011,-224 1028.91,-217.64 1047.92,-208.97 1064.25,-200.87"/>
+<polygon fill="black" stroke="black" points="1066.18,-203.82 1073.53,-196.19 1063.03,-197.57 1066.18,-203.82"/>
+</g>
+<!-- Files -->
+<g id="node20" class="node">
+<title>Files</title>
+<polygon fill="none" stroke="black" points="986,-196 983,-200 962,-200 959,-196 873,-196 873,-160 986,-160 986,-196"/>
+<text text-anchor="middle" x="929.5" y="-175.5" font-family="Arial" font-size="10.00">Work / Input / Archive</text>
+</g>
+<!-- Ofgem&#45;&gt;Files -->
+<g id="edge26" class="edge">
+<title>Ofgem&#45;&gt;Files</title>
+<path fill="none" stroke="black" d="M777.72,-239.57C793.51,-233.8 813.99,-226.18 832,-219 846.84,-213.08 862.85,-206.41 877.48,-200.18"/>
+<polygon fill="black" stroke="black" points="879.05,-203.32 886.87,-196.17 876.3,-196.88 879.05,-203.32"/>
+</g>
+<!-- Meteo&#45;&gt;Pool -->
+<g id="edge24" class="edge">
+<title>Meteo&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M785.35,-306.91C832.06,-301.73 918.22,-288.88 986,-260 1019.89,-245.56 1054.25,-221.13 1077.66,-202.68"/>
+<polygon fill="black" stroke="black" points="1080.15,-205.17 1085.76,-196.18 1075.77,-199.71 1080.15,-205.17"/>
+</g>
+<!-- Octopus&#45;&gt;Pool -->
+<g id="edge25" class="edge">
+<title>Octopus&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M778.37,-194.41C801.24,-199.52 835.07,-206.25 865,-209 918.55,-213.91 932.64,-215.73 986,-209 1003.36,-206.81 1021.79,-202.92 1038.9,-198.63"/>
+<polygon fill="black" stroke="black" points="1040,-201.96 1048.8,-196.06 1038.24,-195.18 1040,-201.96"/>
+</g>
+<!-- Octopus&#45;&gt;Files -->
+<g id="edge27" class="edge">
+<title>Octopus&#45;&gt;Files</title>
+<path fill="none" stroke="black" d="M778.38,-186.48C800.7,-185.22 833.4,-183.37 862.59,-181.72"/>
+<polygon fill="black" stroke="black" points="862.96,-185.21 872.74,-181.15 862.56,-178.22 862.96,-185.21"/>
+</g>
+<!-- Audit&#45;&gt;Pool -->
+<g id="edge22" class="edge">
+<title>Audit&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M975.04,-132.39C996.22,-139.71 1021.89,-148.58 1044.94,-156.55"/>
+<polygon fill="black" stroke="black" points="1044.04,-159.94 1054.63,-159.9 1046.33,-153.33 1044.04,-159.94"/>
+</g>
+<!-- DB -->
+<g id="node19" class="node">
+<title>DB</title>
+<path fill="none" stroke="black" d="M1300,-192.73C1300,-194.53 1284.31,-196 1265,-196 1245.69,-196 1230,-194.53 1230,-192.73 1230,-192.73 1230,-163.27 1230,-163.27 1230,-161.47 1245.69,-160 1265,-160 1284.31,-160 1300,-161.47 1300,-163.27 1300,-163.27 1300,-192.73 1300,-192.73"/>
+<path fill="none" stroke="black" d="M1300,-192.73C1300,-190.92 1284.31,-189.45 1265,-189.45 1245.69,-189.45 1230,-190.92 1230,-192.73"/>
+<text text-anchor="middle" x="1265" y="-175.5" font-family="Arial" font-size="10.00">SQL Server</text>
+</g>
+<!-- Pool&#45;&gt;DB -->
+<g id="edge7" class="edge">
+<title>Pool&#45;&gt;DB</title>
+<path fill="none" stroke="black" d="M1181.05,-178C1194.14,-178 1207.43,-178 1219.43,-178"/>
+<polygon fill="black" stroke="black" points="1219.61,-181.5 1229.61,-178 1219.61,-174.5 1219.61,-181.5"/>
+</g>
+</g>
+</svg>

@@ -1,47 +1,56 @@
 # Documentation Audit
 
 **Document ID:** REVIEW-DOC-AUDIT-001  
-**Version:** 1.2  
-**Status:** Superseded by the 26 July review  
-**Baseline date:** 26 July 2026
+**Version:** 2.0  
+**Status:** Current Version 2.0.0 implementation audit  
+**Baseline date:** 3 August 2026
 
 ## Summary
 
-The 22 July audit correctly separated the original framework design from the
-then-current implementation. The code has since advanced. The authoritative
-gap list is now
-[DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md](../review/DOCUMENTATION-GAP-ANALYSIS-2026-07-26.md).
+The uploaded Version 2.0.0 source has advanced beyond the 26 July documentation
+baseline. Database-backed configuration registration and the local-file Octopus
+pipeline are implemented and must no longer be described as future or
+placeholder work.
 
 ## Corrected statements
 
-| Earlier statement | Current wording |
+| Superseded statement | Current wording |
 |---|---|
-| Production ready | Active development; foundations implemented |
-| Full plugin architecture | Registry, reflection factory and execution coordinator are implemented for Ofgem and OpenMeteo |
-| Scheduling support | Internal scheduler deferred; use external scheduling |
-| Database independent | Repository abstraction exists; SQL Server is the only current implementation |
-| Complete ETL pipeline | Concrete plugin flows execute; generic ETL stage contracts are not the active runtime coordinator |
-| Current version 0.1.0 | Maven version is 2.0.0; runtime reports the manifest version or `development` |
-| Only original package list | Added current `cli` package and current configuration service design |
+| Octopus has placeholder extract/load/finalise stages | The normal write path implements local PDF discovery, hashing, parsing, transactional persistence and post-commit archive; dry run still fails at the processed-ledger lookup |
+| Database-backed plugin settings are future work | Application and plugin property tables, registration and JDBC loading are implemented |
+| Configuration remains packaged only | The bootstrap remains local, while runtime/plugin values can be SQL Server-backed after `--register` |
+| Password protection is not implemented | RSA OAEP encryption/decryption is implemented, but key separation and tracked-source remediation are inadequate |
+| Only Ofgem and OpenMeteo are executable reference plugins | Ofgem, OpenMeteo and Octopus are executable through the same coordinator |
+| Bootstrap class is `Main` | The current entry class is `OpenData` |
+| Current baseline is 26 July | This audit is based on the uploaded 3 August 2026 archive |
 
-## Documents that should be treated as target-state material
+## Material that remains future or transitional
 
-Any document describing the following without an implementation qualifier must
-still be marked future-state or transitional:
+Documents must retain implementation qualifiers for:
 
-- plugin discovery without the explicit classpath index;
-- internal scheduler;
-- database-backed plugin settings;
+- dynamic plugin installation or database-backed implementation registry;
+- internal scheduling;
 - multiple database engines;
-- a unified run/provenance audit model;
-- executable/fat-JAR packaging;
-- process exit-code mapping;
-- production secret-provider integration.
+- a unified run/provenance identity model;
+- installed/executable packaging with external writable configuration;
+- non-zero process exit-code mapping;
+- managed secret-provider integration;
+- direct Octopus account/API or IMAP statement acquisition;
+- completed live SQL Server acceptance and production hardening.
+
+## Release-blocking documentation finding
+
+The source archive contains sensitive bootstrap material. Documentation must not
+suggest that RSA encryption alone makes this safe. The private key store and any
+usable plaintext password must be excluded from source and release archives,
+and affected credentials should be rotated.
 
 ## Recommended repository cleanup
 
-1. Remove the unused legacy `src/main/resources/application.properties`.
-2. Remove the classpath database password and require an external value.
-3. Unify `core.PluginRun` and `core.ingestion_run`.
-4. Configure executable packaging and explicit process exit codes.
-5. Complete live SQL Server, rollback and permission verification.
+1. remove plaintext credentials and private key material from tracked history;
+2. externalise bootstrap and key-store paths;
+3. protect the PKCS#12 password outside source control;
+4. unify `core.PluginRun` and domain ingestion identities;
+5. remove or deprecate duplicate compatibility classes;
+6. configure executable packaging and process exit codes;
+7. complete live SQL Server, rollback, idempotency and permission verification.

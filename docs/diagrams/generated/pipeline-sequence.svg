@@ -1,1 +1,138 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="SEQUENCE" height="499px" preserveAspectRatio="none" style="width:858px;height:499px;background:#FFFFFF;" version="1.1" viewBox="0 0 858 499" width="858px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="1"><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="203.0479" x="324.4409" y="29.5332">Current Plugin Task Sequence</text></g><rect fill="none" height="155.5938" style="stroke:#000000;stroke-width:1.5;" width="832.9297" x="10" y="257.9766"/><g class="participant-lifeline" data-entity-uid="part1" data-qualified-name="Coordinator" data-source-line="2" id="part1-lifeline"><g><title>PluginExecutionCoordinator</title><rect fill="#000000" fill-opacity="0.00000" height="384.7031" width="8" x="109.7754" y="76.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="113" x2="113" y1="76.2188" y2="460.9219"/></g></g><g class="participant-lifeline" data-entity-uid="part2" data-qualified-name="Audit" data-source-line="3" id="part2-lifeline"><g><title>PluginRunAudit</title><rect fill="#000000" fill-opacity="0.00000" height="384.7031" width="8" x="268.8057" y="76.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="272.5508" x2="272.5508" y1="76.2188" y2="460.9219"/></g></g><g class="participant-lifeline" data-entity-uid="part3" data-qualified-name="Factory" data-source-line="4" id="part3-lifeline"><g><title>ReflectionPluginFactory</title><rect fill="#000000" fill-opacity="0.00000" height="384.7031" width="8" x="414.9844" y="76.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="418.0605" x2="418.0605" y1="76.2188" y2="460.9219"/></g></g><g class="participant-lifeline" data-entity-uid="part4" data-qualified-name="Plugin" data-source-line="5" id="part4-lifeline"><g><title>OpenDataPlugin</title><rect fill="#000000" fill-opacity="0.00000" height="384.7031" width="8" x="564.2769" y="76.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="567.9082" x2="567.9082" y1="76.2188" y2="460.9219"/></g></g><g class="participant-lifeline" data-entity-uid="part5" data-qualified-name="Database" data-source-line="6" id="part5-lifeline"><g><title>DatabaseResourceManager</title><rect fill="#000000" fill-opacity="0.00000" height="384.7031" width="8" x="734.3784" y="76.2188"/><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5,5;" x1="737.8271" x2="737.8271" y1="76.2188" y2="460.9219"/></g></g><g class="participant participant-head" data-entity-uid="part1" data-qualified-name="Coordinator" data-source-line="2" id="part1-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="187.5508" x="20" y="43.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5508" x="27" y="65.1426">PluginExecutionCoordinator</text></g><g class="participant participant-tail" data-entity-uid="part1" data-qualified-name="Coordinator" data-source-line="2" id="part1-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="187.5508" x="20" y="459.9219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5508" x="27" y="481.4551">PluginExecutionCoordinator</text></g><g class="participant participant-head" data-entity-uid="part2" data-qualified-name="Audit" data-source-line="3" id="part2-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="110.5098" x="217.5508" y="43.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="96.5098" x="224.5508" y="65.1426">PluginRunAudit</text></g><g class="participant participant-tail" data-entity-uid="part2" data-qualified-name="Audit" data-source-line="3" id="part2-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="110.5098" x="217.5508" y="459.9219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="96.5098" x="224.5508" y="481.4551">PluginRunAudit</text></g><g class="participant participant-head" data-entity-uid="part3" data-qualified-name="Factory" data-source-line="4" id="part3-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="161.8477" x="338.0605" y="43.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8477" x="345.0605" y="65.1426">ReflectionPluginFactory</text></g><g class="participant participant-tail" data-entity-uid="part3" data-qualified-name="Factory" data-source-line="4" id="part3-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="161.8477" x="338.0605" y="459.9219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147.8477" x="345.0605" y="481.4551">ReflectionPluginFactory</text></g><g class="participant participant-head" data-entity-uid="part4" data-qualified-name="Plugin" data-source-line="5" id="part4-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="116.7373" x="509.9082" y="43.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.7373" x="516.9082" y="65.1426">OpenDataPlugin</text></g><g class="participant participant-tail" data-entity-uid="part4" data-qualified-name="Plugin" data-source-line="5" id="part4-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="116.7373" x="509.9082" y="459.9219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.7373" x="516.9082" y="481.4551">OpenDataPlugin</text></g><g class="participant participant-head" data-entity-uid="part5" data-qualified-name="Database" data-source-line="6" id="part5-head"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="189.1025" x="643.8271" y="43.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175.1025" x="650.8271" y="65.1426">DatabaseResourceManager</text></g><g class="participant participant-tail" data-entity-uid="part5" data-qualified-name="Database" data-source-line="6" id="part5-tail"><rect fill="#E2E2F0" height="31.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="189.1025" x="643.8271" y="459.9219"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175.1025" x="650.8271" y="481.4551">DatabaseResourceManager</text></g><g class="message" data-entity-1="part1" data-entity-2="part2" data-source-line="8" id="msg1"><polygon fill="#181818" points="260.8057,104.5703,270.8057,108.5703,260.8057,112.5703,264.8057,108.5703" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="113.7754" x2="266.8057" y1="108.5703" y2="108.5703"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="130.7935" x="120.7754" y="103.7139">started(runId, pluginId)</text></g><g class="message" data-entity-1="part1" data-entity-2="part3" data-source-line="9" id="msg2"><polygon fill="#181818" points="406.9844,134.9219,416.9844,138.9219,406.9844,142.9219,410.9844,138.9219" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="113.7754" x2="412.9844" y1="138.9219" y2="138.9219"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="132.2344" x="120.7754" y="134.0654">create(resolved plugin)</text></g><g class="message" data-entity-1="part3" data-entity-2="part1" data-source-line="10" id="msg3"><polygon fill="#181818" points="124.7754,165.2734,114.7754,169.2734,124.7754,173.2734,120.7754,169.2734" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="118.7754" x2="417.9844" y1="169.2734" y2="169.2734"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="119.2407" x="130.7754" y="164.417">fresh plugin instance</text></g><g class="message" data-entity-1="part1" data-entity-2="part4" data-source-line="11" id="msg4"><polygon fill="#181818" points="556.2769,195.625,566.2769,199.625,556.2769,203.625,560.2769,199.625" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="113.7754" x2="562.2769" y1="199.625" y2="199.625"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="96.1035" x="120.7754" y="194.7686">execute(context)</text></g><g class="message" data-entity-1="part4" data-entity-2="part4" data-source-line="12" id="msg5"><line style="stroke:#181818;stroke-width:1;" x1="568.2769" x2="610.2769" y1="229.9766" y2="229.9766"/><line style="stroke:#181818;stroke-width:1;" x1="610.2769" x2="610.2769" y1="229.9766" y2="242.9766"/><line style="stroke:#181818;stroke-width:1;" x1="569.2769" x2="610.2769" y1="242.9766" y2="242.9766"/><polygon fill="#181818" points="579.2769,238.9766,569.2769,242.9766,579.2769,246.9766,575.2769,242.9766" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="156.1016" x="575.2769" y="225.1201">acquire, parse and validate</text></g><path d="M10,257.9766 L70.1709,257.9766 L70.1709,266.3281 L60.1709,276.3281 L10,276.3281 L10,257.9766" fill="#EEEEEE" style="stroke:#000000;stroke-width:1.5;"/><rect fill="none" height="155.5938" style="stroke:#000000;stroke-width:1.5;" width="832.9297" x="10" y="257.9766"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="700" lengthAdjust="spacing" textLength="15.1709" x="25" y="272.4717">alt</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="700" lengthAdjust="spacing" textLength="45.2192" x="85.1709" y="271.3955">[dry run]</text><g class="message" data-entity-1="part4" data-entity-2="part1" data-source-line="14" id="msg6"><polygon fill="#181818" points="124.7754,294.6797,114.7754,298.6797,124.7754,302.6797,120.7754,298.6797" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="118.7754" x2="567.2769" y1="298.6797" y2="298.6797"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="119.939" x="130.7754" y="293.8232">read/skipped metrics</text></g><line style="stroke:#000000;stroke-width:1;stroke-dasharray:2,2;" x1="10" x2="842.9297" y1="307.6797" y2="307.6797"/><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="700" lengthAdjust="spacing" textLength="53.7754" x="15" y="319.0986">[write run]</text><g class="message" data-entity-1="part4" data-entity-2="part5" data-source-line="16" id="msg7"><polygon fill="#181818" points="726.3784,340.8672,736.3784,344.8672,726.3784,348.8672,730.3784,344.8672" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="568.2769" x2="732.3784" y1="344.8672" y2="344.8672"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="144.5361" x="575.2769" y="340.0107">plugin-owned transaction</text></g><g class="message" data-entity-1="part5" data-entity-2="part4" data-source-line="17" id="msg8"><polygon fill="#181818" points="579.2769,371.2188,569.2769,375.2188,579.2769,379.2188,575.2769,375.2188" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="573.2769" x2="737.3784" y1="375.2188" y2="375.2188"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="101.8799" x="585.2769" y="370.3623">persistence result</text></g><g class="message" data-entity-1="part4" data-entity-2="part1" data-source-line="18" id="msg9"><polygon fill="#181818" points="124.7754,401.5703,114.7754,405.5703,124.7754,409.5703,120.7754,405.5703" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;stroke-dasharray:2,2;" x1="118.7754" x2="567.2769" y1="405.5703" y2="405.5703"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="102.5781" x="130.7754" y="400.7139">read/write metrics</text></g><g class="message" data-entity-1="part1" data-entity-2="part2" data-source-line="20" id="msg10"><polygon fill="#181818" points="260.8057,438.9219,270.8057,442.9219,260.8057,446.9219,264.8057,442.9219" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><line style="stroke:#181818;stroke-width:1;" x1="113.7754" x2="266.8057" y1="442.9219" y2="442.9219"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="100.4263" x="120.7754" y="438.0654">completed(result)</text></g><?plantuml-src XP9DJWCn38NtEOMN7OaH-rbKGWMaBX2eS06Jk2KYJTB4QSljyVngMa3iFChtxFViOSkEO5LI8i_muihEUdZ3_0clT2ZaDQc8YQss4IVWuKowi0r-5K8orYE719XXzlcBQbFyNJ6MMx8hBfWDRHtfjcbFFwAMDbyjF9GN-7CaVu-CWsEX-ke2Qe5tpBIX74hIz8GUTzHP7P-KccUebxqpQ22pD2ApICMlpGt4hllQLDVywBC1dGYP5ac6kIEPGLAfaQY5deiRs0hxCN1WlOniztqrO4ZO07LRfuKEdkdCbHfUvWpgGx69n2-cJ83Um16TDM9CeMCmuaCIAHWbFqr92dERFssCac5FdApEYfnqEoNBT2LVJfiKQP-a3YSlKaxeCtON5NwYwhdTI2dRpErl9dDpSVolizx4vCkRlmwempuwwaxOTQw-0G00?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="1567pt" height="235pt"
+ viewBox="0.00 0.00 1567.20 235.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 213.6)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-213.6 1545.6,-213.6 1545.6,21.6 -21.6,21.6"/>
+<text text-anchor="middle" x="762" y="-172" font-family="Arial" font-size="20.00">Current Provider&#45;Owned Plugin Pipeline</text>
+<!-- coordinator -->
+<g id="node1" class="node">
+<title>coordinator</title>
+<path fill="none" stroke="black" d="M101,-101C101,-101 12,-101 12,-101 6,-101 0,-95 0,-89 0,-89 0,-77 0,-77 0,-71 6,-65 12,-65 12,-65 101,-65 101,-65 107,-65 113,-71 113,-77 113,-77 113,-89 113,-89 113,-95 107,-101 101,-101"/>
+<text text-anchor="middle" x="56.5" y="-80.5" font-family="Arial" font-size="10.00">Execution Coordinator</text>
+</g>
+<!-- audit -->
+<g id="node2" class="node">
+<title>audit</title>
+<path fill="none" stroke="black" d="M310.5,-162C310.5,-162 248.5,-162 248.5,-162 242.5,-162 236.5,-156 236.5,-150 236.5,-150 236.5,-138 236.5,-138 236.5,-132 242.5,-126 248.5,-126 248.5,-126 310.5,-126 310.5,-126 316.5,-126 322.5,-132 322.5,-138 322.5,-138 322.5,-150 322.5,-150 322.5,-156 316.5,-162 310.5,-162"/>
+<text text-anchor="middle" x="279.5" y="-141.5" font-family="Arial" font-size="10.00">PluginRun Audit</text>
+</g>
+<!-- coordinator&#45;&gt;audit -->
+<g id="edge1" class="edge">
+<title>coordinator&#45;&gt;audit</title>
+<path fill="none" stroke="black" d="M93.63,-101.03C107,-107.13 122.44,-113.52 137,-118 166,-126.92 199.34,-133.22 226.37,-137.39"/>
+<polygon fill="black" stroke="black" points="226,-140.87 236.4,-138.89 227.03,-133.95 226,-140.87"/>
+<text text-anchor="middle" x="172" y="-135.8" font-family="Arial" font-size="9.00">started [write]</text>
+</g>
+<!-- coordinator&#45;&gt;audit -->
+<g id="edge10" class="edge">
+<title>coordinator&#45;&gt;audit</title>
+<path fill="none" stroke="black" d="M113.17,-87.68C141.74,-91.14 176.79,-97.04 207,-107 218.09,-110.65 229.55,-115.86 239.97,-121.22"/>
+<polygon fill="black" stroke="black" points="238.34,-124.32 248.81,-125.94 241.63,-118.15 238.34,-124.32"/>
+<text text-anchor="middle" x="172" y="-109.8" font-family="Arial" font-size="9.00">completed [write]</text>
+</g>
+<!-- factory -->
+<g id="node3" class="node">
+<title>factory</title>
+<path fill="none" stroke="black" d="M316,-85C316,-85 243,-85 243,-85 237,-85 231,-79 231,-73 231,-73 231,-61 231,-61 231,-55 237,-49 243,-49 243,-49 316,-49 316,-49 322,-49 328,-55 328,-61 328,-61 328,-73 328,-73 328,-79 322,-85 316,-85"/>
+<text text-anchor="middle" x="279.5" y="-64.5" font-family="Arial" font-size="10.00">Reflection Factory</text>
+</g>
+<!-- coordinator&#45;&gt;factory -->
+<g id="edge2" class="edge">
+<title>coordinator&#45;&gt;factory</title>
+<path fill="none" stroke="black" d="M112.23,-65C120.45,-62.93 128.89,-61.15 137,-60 164.41,-56.11 195.07,-57 220.83,-59.21"/>
+<polygon fill="black" stroke="black" points="220.52,-62.7 230.8,-60.15 221.18,-55.73 220.52,-62.7"/>
+<text text-anchor="middle" x="172" y="-62.8" font-family="Arial" font-size="9.00">create</text>
+</g>
+<!-- init -->
+<g id="node4" class="node">
+<title>init</title>
+<path fill="none" stroke="black" stroke-width="2" d="M526,-85C526,-85 437,-85 437,-85 431,-85 425,-79 425,-73 425,-73 425,-61 425,-61 425,-55 431,-49 437,-49 437,-49 526,-49 526,-49 532,-49 538,-55 538,-61 538,-61 538,-73 538,-73 538,-79 532,-85 526,-85"/>
+<text text-anchor="middle" x="481.5" y="-64.5" font-family="Arial" font-size="10.00">Initialise / Orchestrate</text>
+</g>
+<!-- factory&#45;&gt;init -->
+<g id="edge3" class="edge">
+<title>factory&#45;&gt;init</title>
+<path fill="none" stroke="black" d="M328.15,-67C353.98,-67 386.3,-67 414.51,-67"/>
+<polygon fill="black" stroke="black" points="414.7,-70.5 424.7,-67 414.7,-63.5 414.7,-70.5"/>
+<text text-anchor="middle" x="376.5" y="-69.8" font-family="Arial" font-size="9.00">fresh plugin</text>
+</g>
+<!-- extract -->
+<g id="node5" class="node">
+<title>extract</title>
+<path fill="none" stroke="black" d="M689,-85C689,-85 659,-85 659,-85 653,-85 647,-79 647,-73 647,-73 647,-61 647,-61 647,-55 653,-49 659,-49 659,-49 689,-49 689,-49 695,-49 701,-55 701,-61 701,-61 701,-73 701,-73 701,-79 695,-85 689,-85"/>
+<text text-anchor="middle" x="674" y="-64.5" font-family="Arial" font-size="10.00">Extract</text>
+</g>
+<!-- init&#45;&gt;extract -->
+<g id="edge4" class="edge">
+<title>init&#45;&gt;extract</title>
+<path fill="none" stroke="black" d="M538.11,-67C569.96,-67 608.99,-67 636.86,-67"/>
+<polygon fill="black" stroke="black" points="636.96,-70.5 646.96,-67 636.96,-63.5 636.96,-70.5"/>
+<text text-anchor="middle" x="592.5" y="-69.8" font-family="Arial" font-size="9.00">acquire source</text>
+</g>
+<!-- transform -->
+<g id="node6" class="node">
+<title>transform</title>
+<path fill="none" stroke="black" d="M887,-85C887,-85 807,-85 807,-85 801,-85 795,-79 795,-73 795,-73 795,-61 795,-61 795,-55 801,-49 807,-49 807,-49 887,-49 887,-49 893,-49 899,-55 899,-61 899,-61 899,-73 899,-73 899,-79 893,-85 887,-85"/>
+<text text-anchor="middle" x="847" y="-64.5" font-family="Arial" font-size="10.00">Transform / Validate</text>
+</g>
+<!-- extract&#45;&gt;transform -->
+<g id="edge5" class="edge">
+<title>extract&#45;&gt;transform</title>
+<path fill="none" stroke="black" d="M701.34,-67C723.46,-67 755.92,-67 784.49,-67"/>
+<polygon fill="black" stroke="black" points="784.82,-70.5 794.82,-67 784.82,-63.5 784.82,-70.5"/>
+<text text-anchor="middle" x="748" y="-69.8" font-family="Arial" font-size="9.00">raw source</text>
+</g>
+<!-- load -->
+<g id="node7" class="node">
+<title>load</title>
+<path fill="none" stroke="black" d="M1114,-85C1114,-85 1015,-85 1015,-85 1009,-85 1003,-79 1003,-73 1003,-73 1003,-61 1003,-61 1003,-55 1009,-49 1015,-49 1015,-49 1114,-49 1114,-49 1120,-49 1126,-55 1126,-61 1126,-61 1126,-73 1126,-73 1126,-79 1120,-85 1114,-85"/>
+<text text-anchor="middle" x="1064.5" y="-70" font-family="Arial" font-size="10.00">Load Repository</text>
+<text text-anchor="middle" x="1064.5" y="-59" font-family="Arial" font-size="10.00">(write or dry&#45;run metrics)</text>
+</g>
+<!-- transform&#45;&gt;load -->
+<g id="edge6" class="edge">
+<title>transform&#45;&gt;load</title>
+<path fill="none" stroke="black" d="M899.07,-67C927.03,-67 962.1,-67 992.66,-67"/>
+<polygon fill="black" stroke="black" points="992.84,-70.5 1002.84,-67 992.84,-63.5 992.84,-70.5"/>
+<text text-anchor="middle" x="951" y="-69.8" font-family="Arial" font-size="9.00">typed records</text>
+</g>
+<!-- finalise -->
+<g id="node8" class="node">
+<title>finalise</title>
+<path fill="none" stroke="black" d="M1387,-85C1387,-85 1286,-85 1286,-85 1280,-85 1274,-79 1274,-73 1274,-73 1274,-61 1274,-61 1274,-55 1280,-49 1286,-49 1286,-49 1387,-49 1387,-49 1393,-49 1399,-55 1399,-61 1399,-61 1399,-73 1399,-73 1399,-79 1393,-85 1387,-85"/>
+<text text-anchor="middle" x="1336.5" y="-70" font-family="Arial" font-size="10.00">Finalise</text>
+<text text-anchor="middle" x="1336.5" y="-59" font-family="Arial" font-size="10.00">archive / cleanup / report</text>
+</g>
+<!-- load&#45;&gt;finalise -->
+<g id="edge7" class="edge">
+<title>load&#45;&gt;finalise</title>
+<path fill="none" stroke="black" d="M1126.09,-67C1166.83,-67 1220.71,-67 1263.61,-67"/>
+<polygon fill="black" stroke="black" points="1263.71,-70.5 1273.71,-67 1263.71,-63.5 1263.71,-70.5"/>
+<text text-anchor="middle" x="1200" y="-69.8" font-family="Arial" font-size="9.00">metrics + completed flag</text>
+</g>
+<!-- metrics -->
+<g id="node9" class="node">
+<title>metrics</title>
+<path fill="none" stroke="black" d="M1512,-37C1512,-37 1460,-37 1460,-37 1454,-37 1448,-31 1448,-25 1448,-25 1448,-13 1448,-13 1448,-7 1454,-1 1460,-1 1460,-1 1512,-1 1512,-1 1518,-1 1524,-7 1524,-13 1524,-13 1524,-25 1524,-25 1524,-31 1518,-37 1512,-37"/>
+<text text-anchor="middle" x="1486" y="-16.5" font-family="Arial" font-size="10.00">PluginMetrics</text>
+</g>
+<!-- finalise&#45;&gt;metrics -->
+<g id="edge8" class="edge">
+<title>finalise&#45;&gt;metrics</title>
+<path fill="none" stroke="black" d="M1392.84,-48.99C1407.72,-44.15 1423.67,-38.96 1438.04,-34.28"/>
+<polygon fill="black" stroke="black" points="1439.28,-37.56 1447.71,-31.14 1437.12,-30.9 1439.28,-37.56"/>
+</g>
+<!-- metrics&#45;&gt;coordinator -->
+<g id="edge9" class="edge">
+<title>metrics&#45;&gt;coordinator</title>
+<path fill="none" stroke="black" d="M1447.89,-11.55C1418.16,-6.22 1375.33,0 1337.5,0 278.5,0 278.5,0 278.5,0 210.15,0 137.07,-35.22 94.42,-59.78"/>
+<polygon fill="black" stroke="black" points="92.39,-56.91 85.54,-64.99 95.94,-62.95 92.39,-56.91"/>
+</g>
+</g>
+</svg>

@@ -1,1 +1,170 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="430px" preserveAspectRatio="none" style="width:504px;height:430px;background:#FFFFFF;" version="1.1" viewBox="0 0 504 430" width="504px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="2"><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="148.6133" x="174.1934" y="24.5332">Database Architecture</text></g><!--cluster Application--><g class="cluster" data-qualified-name="Application" data-source-line="5" id="ent0001"><path d="M16.5,50.6094 L93.7207,50.6094 A3.75,3.75 0 0 1 96.2207,53.1094 L103.2207,74.2188 L491.5,74.2188 A2.5,2.5 0 0 1 494,76.7188 L494,122.1094 A2.5,2.5 0 0 1 491.5,124.6094 L16.5,124.6094 A2.5,2.5 0 0 1 14,122.1094 L14,53.1094 A2.5,2.5 0 0 1 16.5,50.6094" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="14" x2="103.2207" y1="74.2188" y2="74.2188"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="76.2207" x="18" y="67.1426">Application</text></g><!--cluster JDBC Infrastructure--><g class="cluster" data-qualified-name="JDBC Infrastructure" data-source-line="11" id="ent0005"><path d="M105.5,132.6094 L239.5273,132.6094 A3.75,3.75 0 0 1 242.0273,135.1094 L249.0273,156.2188 L266.5,156.2188 A2.5,2.5 0 0 1 269,158.7188 L269,352.1094 A2.5,2.5 0 0 1 266.5,354.6094 L105.5,354.6094 A2.5,2.5 0 0 1 103,352.1094 L103,135.1094 A2.5,2.5 0 0 1 105.5,132.6094" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="103" x2="249.0273" y1="156.2188" y2="156.2188"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="133.0273" x="107" y="149.1426">JDBC Infrastructure</text></g><!--entity Core--><g class="entity" data-qualified-name="Core" data-source-line="17" id="ent0009"><path d="M12,392.6094 C12,382.6094 62.0723,382.6094 62.0723,382.6094 C62.0723,382.6094 112.1445,382.6094 112.1445,392.6094 L112.1445,419.2188 C112.1445,429.2188 62.0723,429.2188 62.0723,429.2188 C62.0723,429.2188 12,429.2188 12,419.2188 L12,392.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M12,392.6094 C12,402.6094 62.0723,402.6094 62.0723,402.6094 C62.0723,402.6094 112.1445,402.6094 112.1445,392.6094" fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80.1445" x="22" y="421.1426">core schema</text></g><!--entity OfgemSchema--><g class="entity" data-qualified-name="OfgemSchema" data-source-line="18" id="ent0010"><path d="M130,392.6094 C130,382.6094 185.9102,382.6094 185.9102,382.6094 C185.9102,382.6094 241.8203,382.6094 241.8203,392.6094 L241.8203,419.2188 C241.8203,429.2188 185.9102,429.2188 185.9102,429.2188 C185.9102,429.2188 130,429.2188 130,419.2188 L130,392.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M130,392.6094 C130,402.6094 185.9102,402.6094 185.9102,402.6094 C185.9102,402.6094 241.8203,402.6094 241.8203,392.6094" fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.8203" x="140" y="421.1426">ofgem schema</text></g><!--entity MeteoSchema--><g class="entity" data-qualified-name="MeteoSchema" data-source-line="19" id="ent0011"><path d="M260.5,392.6094 C260.5,382.6094 331.9824,382.6094 331.9824,382.6094 C331.9824,382.6094 403.4648,382.6094 403.4648,392.6094 L403.4648,419.2188 C403.4648,429.2188 331.9824,429.2188 331.9824,429.2188 C331.9824,429.2188 260.5,429.2188 260.5,419.2188 L260.5,392.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M260.5,392.6094 C260.5,402.6094 331.9824,402.6094 331.9824,402.6094 C331.9824,402.6094 403.4648,402.6094 403.4648,392.6094" fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="122.9648" x="270.5" y="421.1426">openmeteo schema</text></g><!--entity Coordinator--><g class="entity" data-qualified-name="Application.Coordinator" data-source-line="6" id="ent0002"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="193.5508" x="22" y="78.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173.5508" x="32" y="103.1426">PluginExecutionCoordinator</text></g><!--entity Ofgem--><g class="entity" data-qualified-name="Application.Ofgem" data-source-line="7" id="ent0003"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100.9307" x="234.5" y="78.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80.9307" x="244.5" y="103.1426">OfgemPlugin</text></g><!--entity Meteo--><g class="entity" data-qualified-name="Application.Meteo" data-source-line="8" id="ent0004"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="132.0752" x="354" y="78.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="112.0752" x="364" y="103.1426">OpenMeteoPlugin</text></g><!--entity Audit--><g class="entity" data-qualified-name="JDBC Infrastructure.Audit" data-source-line="12" id="ent0006"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146.082" x="111" y="160.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126.082" x="121" y="185.1426">JdbcPluginRunAudit</text></g><!--entity Resource--><g class="entity" data-qualified-name="JDBC Infrastructure.Resource" data-source-line="13" id="ent0007"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="149.165" x="111.5" y="234.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129.165" x="121.5" y="259.1426">SQLServerResource</text></g><!--entity Pool--><g class="entity" data-qualified-name="JDBC Infrastructure.Pool" data-source-line="14" id="ent0008"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="142.1787" x="115" y="308.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="122.1787" x="125" y="333.1426">Apache DBCP Pool</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0006" data-link-type="dependency" id="lnk12"><polygon fill="#181818" points="169.3089,160.528,166.738,151.0206,166.1559,156.6474,160.5291,156.0653,169.3089,160.528" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M133.7495,116.7626 C144.3872,129.8551 155.5317,143.5714 166.1559,156.6474" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0003" data-entity-2="ent0007" data-link-type="dependency" id="lnk13"><polygon fill="#181818" points="225.3178,234.4872,235.1029,233.3686,229.6266,231.9507,231.0445,226.4744,225.3178,234.4872" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M285.5999,116.7657 C285.4454,138.0762 282.4268,173.6677 266,198.6094 C256.0458,213.7233 244.561,223.1591 229.6266,231.9507" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0004" data-entity-2="ent0007" data-link-type="dependency" id="lnk14"><polygon fill="#181818" points="224.0447,234.5944,233.8842,234.166,228.5211,232.3669,230.3202,227.0038,224.0447,234.5944" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M398.5731,116.7764 C373.2849,137.7811 329.5352,172.774 289,198.6094 C268.228,211.8486 248.3382,222.5057 228.5211,232.3669" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0006" data-entity-2="ent0007" data-link-type="dependency" id="lnk15"><polygon fill="#181818" points="185.4885,234.1961,189.2371,225.0885,185.3497,229.198,181.2402,225.3106,185.4885,234.1961" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M184.5047,198.778 C184.8056,209.6094 185.0476,218.3237 185.3497,229.198" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0007" data-entity-2="ent0008" data-link-type="dependency" id="lnk16"><polygon fill="#181818" points="186,308.1961,190,299.1961,186,303.1961,182,299.1961,186,308.1961" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M186,272.778 C186,283.6094 186,292.3218 186,303.1961" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0008" data-entity-2="ent0009" data-link-type="dependency" id="lnk17"><polygon fill="#181818" points="98.7243,382.4528,108.4842,381.1316,102.9797,379.8276,104.2837,374.3231,98.7243,382.4528" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M156.6137,346.7388 C139.2821,357.4313 121.4526,368.431 102.9797,379.8276" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0008" data-entity-2="ent0010" data-link-type="dependency" id="lnk18"><polygon fill="#181818" points="186,382.4528,190,373.4528,186,377.4528,182,373.4528,186,382.4528" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M186,346.7388 C186,357.4313 186,366.0562 186,377.4528" fill="none" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ent0008" data-entity-2="ent0011" data-link-type="dependency" id="lnk19"><polygon fill="#181818" points="289.0295,382.594,282.914,374.8738,284.6006,380.2734,279.201,381.96,289.0295,382.594" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M220.6,346.7388 C241.0908,357.4755 262.7958,368.8483 284.6006,380.2734" fill="none" style="stroke:#181818;stroke-width:1;"/></g><?plantuml-src LL3BJWCn3BplLvYzznUGjYq7AX1BzuWuk5bt6tNpKE8WAiI_axWFqalayOoT6J_uW9D1cF7a4aCqn6YnOSqpmHePTnW9kg0Ecabn2jJ4exOU0nfGpdXdoVB0fomFMO1scgbfFAeZJWHjv_si5R9sjeMV1k2ZdzEaxTCtgLIwA-V2g2so2v-04IfSr6_xYSnvH6Z1GdYohyJaAb9myrjzlralL_1izm4ZXoJ-BpOsuqwTHxV9TcdKB2kaAlpm_Z9G-AAmfUXIK2Jq5HH5btyvv2CjLptqpiqYA4LnC5vFroeN269M6cpF0VCD_sbN0jMy91m4rx8SrvHujLJoNgHDTJXOB1ulIMIRu9jrcRflYVQ-TIsaAwdA8qWIt53jzzQidFq1?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="981pt" height="415pt"
+ viewBox="0.00 0.00 981.20 415.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 393.6)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-393.6 959.6,-393.6 959.6,21.6 -21.6,21.6"/>
+<text text-anchor="middle" x="469" y="-352" font-family="Arial" font-size="20.00">OpenData SQL Server Architecture</text>
+<g id="clust1" class="cluster">
+<title>cluster_services</title>
+<path fill="white" stroke="black" d="M20,-8C20,-8 382,-8 382,-8 388,-8 394,-14 394,-20 394,-20 394,-322 394,-322 394,-328 388,-334 382,-334 382,-334 20,-334 20,-334 14,-334 8,-328 8,-322 8,-322 8,-20 8,-20 8,-14 14,-8 20,-8"/>
+<text text-anchor="middle" x="201" y="-314" font-family="Arial" font-size="20.00">Application Services</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_jdbc</title>
+<path fill="white" stroke="black" d="M444,-130C444,-130 701,-130 701,-130 707,-130 713,-136 713,-142 713,-142 713,-200 713,-200 713,-206 707,-212 701,-212 701,-212 444,-212 444,-212 438,-212 432,-206 432,-200 432,-200 432,-142 432,-142 432,-136 438,-130 444,-130"/>
+<text text-anchor="middle" x="572.5" y="-192" font-family="Arial" font-size="20.00">JDBC Infrastructure</text>
+</g>
+<!-- Config -->
+<g id="node1" class="node">
+<title>Config</title>
+<path fill="none" stroke="black" d="M204,-235C204,-235 28,-235 28,-235 22,-235 16,-229 16,-223 16,-223 16,-211 16,-211 16,-205 22,-199 28,-199 28,-199 204,-199 204,-199 210,-199 216,-205 216,-211 216,-211 216,-223 216,-223 216,-229 210,-235 204,-235"/>
+<text text-anchor="middle" x="116" y="-214.5" font-family="Arial" font-size="10.00">Configuration Registration / JDBC Source</text>
+</g>
+<!-- Resource -->
+<g id="node7" class="node">
+<title>Resource</title>
+<path fill="none" stroke="black" d="M535,-174C535,-174 452,-174 452,-174 446,-174 440,-168 440,-162 440,-162 440,-150 440,-150 440,-144 446,-138 452,-138 452,-138 535,-138 535,-138 541,-138 547,-144 547,-150 547,-150 547,-162 547,-162 547,-168 541,-174 535,-174"/>
+<text text-anchor="middle" x="493.5" y="-153.5" font-family="Arial" font-size="10.00">SQLServerResource</text>
+</g>
+<!-- Config&#45;&gt;Resource -->
+<g id="edge3" class="edge">
+<title>Config&#45;&gt;Resource</title>
+<path fill="none" stroke="black" d="M216.19,-202.94C269.06,-195.2 335.16,-185.13 394,-175 405.67,-172.99 418.08,-170.71 430.02,-168.44"/>
+<polygon fill="black" stroke="black" points="430.76,-171.87 439.92,-166.55 429.44,-164.99 430.76,-171.87"/>
+</g>
+<!-- Coordinator -->
+<g id="node2" class="node">
+<title>Coordinator</title>
+<path fill="none" stroke="black" d="M160.5,-296C160.5,-296 71.5,-296 71.5,-296 65.5,-296 59.5,-290 59.5,-284 59.5,-284 59.5,-272 59.5,-272 59.5,-266 65.5,-260 71.5,-260 71.5,-260 160.5,-260 160.5,-260 166.5,-260 172.5,-266 172.5,-272 172.5,-272 172.5,-284 172.5,-284 172.5,-290 166.5,-296 160.5,-296"/>
+<text text-anchor="middle" x="116" y="-275.5" font-family="Arial" font-size="10.00">Execution Coordinator</text>
+</g>
+<!-- Audit -->
+<g id="node3" class="node">
+<title>Audit</title>
+<path fill="none" stroke="black" d="M374,-291C374,-291 282,-291 282,-291 276,-291 270,-285 270,-279 270,-279 270,-267 270,-267 270,-261 276,-255 282,-255 282,-255 374,-255 374,-255 380,-255 386,-261 386,-267 386,-267 386,-279 386,-279 386,-285 380,-291 374,-291"/>
+<text text-anchor="middle" x="328" y="-270.5" font-family="Arial" font-size="10.00">JDBC PluginRun Audit</text>
+</g>
+<!-- Coordinator&#45;&gt;Audit -->
+<g id="edge1" class="edge">
+<title>Coordinator&#45;&gt;Audit</title>
+<path fill="none" stroke="black" d="M172.72,-276.67C199.46,-276.04 231.7,-275.27 259.78,-274.6"/>
+<polygon fill="black" stroke="black" points="260,-278.1 269.92,-274.36 259.84,-271.1 260,-278.1"/>
+</g>
+<!-- Audit&#45;&gt;Resource -->
+<g id="edge4" class="edge">
+<title>Audit&#45;&gt;Resource</title>
+<path fill="none" stroke="black" d="M358.12,-254.86C369.45,-247.63 382.45,-239.11 394,-231 417.14,-214.75 442.5,-195.4 461.7,-180.43"/>
+<polygon fill="black" stroke="black" points="464.07,-183.01 469.79,-174.09 459.76,-177.5 464.07,-183.01"/>
+</g>
+<!-- OfgemRepo -->
+<g id="node4" class="node">
+<title>OfgemRepo</title>
+<path fill="none" stroke="black" d="M152,-174C152,-174 80,-174 80,-174 74,-174 68,-168 68,-162 68,-162 68,-150 68,-150 68,-144 74,-138 80,-138 80,-138 152,-138 152,-138 158,-138 164,-144 164,-150 164,-150 164,-162 164,-162 164,-168 158,-174 152,-174"/>
+<text text-anchor="middle" x="116" y="-153.5" font-family="Arial" font-size="10.00">Ofgem Repository</text>
+</g>
+<!-- OfgemRepo&#45;&gt;Resource -->
+<g id="edge5" class="edge">
+<title>OfgemRepo&#45;&gt;Resource</title>
+<path fill="none" stroke="black" d="M164.18,-156C231.34,-156 354.65,-156 429.55,-156"/>
+<polygon fill="black" stroke="black" points="429.78,-159.5 439.78,-156 429.78,-152.5 429.78,-159.5"/>
+</g>
+<!-- MeteoRepo -->
+<g id="node5" class="node">
+<title>MeteoRepo</title>
+<path fill="none" stroke="black" d="M162.5,-113C162.5,-113 69.5,-113 69.5,-113 63.5,-113 57.5,-107 57.5,-101 57.5,-101 57.5,-89 57.5,-89 57.5,-83 63.5,-77 69.5,-77 69.5,-77 162.5,-77 162.5,-77 168.5,-77 174.5,-83 174.5,-89 174.5,-89 174.5,-101 174.5,-101 174.5,-107 168.5,-113 162.5,-113"/>
+<text text-anchor="middle" x="116" y="-92.5" font-family="Arial" font-size="10.00">OpenMeteo Repository</text>
+</g>
+<!-- MeteoRepo&#45;&gt;Resource -->
+<g id="edge6" class="edge">
+<title>MeteoRepo&#45;&gt;Resource</title>
+<path fill="none" stroke="black" d="M174.85,-104.4C243.77,-115.59 358.5,-134.23 429.58,-145.78"/>
+<polygon fill="black" stroke="black" points="429.31,-149.28 439.74,-147.43 430.43,-142.37 429.31,-149.28"/>
+</g>
+<!-- OctopusRepo -->
+<g id="node6" class="node">
+<title>OctopusRepo</title>
+<path fill="none" stroke="black" d="M156,-52C156,-52 76,-52 76,-52 70,-52 64,-46 64,-40 64,-40 64,-28 64,-28 64,-22 70,-16 76,-16 76,-16 156,-16 156,-16 162,-16 168,-22 168,-28 168,-28 168,-40 168,-40 168,-46 162,-52 156,-52"/>
+<text text-anchor="middle" x="116" y="-31.5" font-family="Arial" font-size="10.00">Octopus Repository</text>
+</g>
+<!-- OctopusRepo&#45;&gt;Resource -->
+<g id="edge7" class="edge">
+<title>OctopusRepo&#45;&gt;Resource</title>
+<path fill="none" stroke="black" d="M168.14,-46.77C224.17,-61.22 316.43,-86.38 394,-114 410.39,-119.84 427.96,-127.02 443.65,-133.78"/>
+<polygon fill="black" stroke="black" points="442.59,-137.14 453.16,-137.92 445.39,-130.72 442.59,-137.14"/>
+</g>
+<!-- Pool -->
+<g id="node8" class="node">
+<title>Pool</title>
+<path fill="none" stroke="black" d="M693,-174C693,-174 613,-174 613,-174 607,-174 601,-168 601,-162 601,-162 601,-150 601,-150 601,-144 607,-138 613,-138 613,-138 693,-138 693,-138 699,-138 705,-144 705,-150 705,-150 705,-162 705,-162 705,-168 699,-174 693,-174"/>
+<text text-anchor="middle" x="653" y="-153.5" font-family="Arial" font-size="10.00">Apache DBCP Pool</text>
+</g>
+<!-- Resource&#45;&gt;Pool -->
+<g id="edge2" class="edge">
+<title>Resource&#45;&gt;Pool</title>
+<path fill="none" stroke="black" d="M547.38,-156C561.26,-156 576.35,-156 590.63,-156"/>
+<polygon fill="black" stroke="black" points="590.86,-159.5 600.86,-156 590.86,-152.5 590.86,-159.5"/>
+</g>
+<!-- Core -->
+<g id="node9" class="node">
+<title>Core</title>
+<path fill="none" stroke="black" d="M938,-271.98C938,-274.06 897.88,-275.75 848.5,-275.75 799.12,-275.75 759,-274.06 759,-271.98 759,-271.98 759,-238.02 759,-238.02 759,-235.94 799.12,-234.25 848.5,-234.25 897.88,-234.25 938,-235.94 938,-238.02 938,-238.02 938,-271.98 938,-271.98"/>
+<path fill="none" stroke="black" d="M938,-271.98C938,-269.9 897.88,-268.21 848.5,-268.21 799.12,-268.21 759,-269.9 759,-271.98"/>
+<text text-anchor="middle" x="848.5" y="-258" font-family="Arial" font-size="10.00">core</text>
+<text text-anchor="middle" x="848.5" y="-247" font-family="Arial" font-size="10.00">configuration, PluginRun, provenance</text>
+</g>
+<!-- Pool&#45;&gt;Core -->
+<g id="edge8" class="edge">
+<title>Pool&#45;&gt;Core</title>
+<path fill="none" stroke="black" d="M679.46,-174.08C700.22,-188.3 730.63,-207.98 759,-222 765.12,-225.03 771.6,-227.94 778.15,-230.7"/>
+<polygon fill="black" stroke="black" points="777.18,-234.09 787.76,-234.63 779.83,-227.61 777.18,-234.09"/>
+</g>
+<!-- Ofgem -->
+<g id="node10" class="node">
+<title>Ofgem</title>
+<path fill="none" stroke="black" d="M905,-205.98C905,-208.06 879.68,-209.75 848.5,-209.75 817.32,-209.75 792,-208.06 792,-205.98 792,-205.98 792,-172.02 792,-172.02 792,-169.94 817.32,-168.25 848.5,-168.25 879.68,-168.25 905,-169.94 905,-172.02 905,-172.02 905,-205.98 905,-205.98"/>
+<path fill="none" stroke="black" d="M905,-205.98C905,-203.9 879.68,-202.21 848.5,-202.21 817.32,-202.21 792,-203.9 792,-205.98"/>
+<text text-anchor="middle" x="848.5" y="-192" font-family="Arial" font-size="10.00">ofgem</text>
+<text text-anchor="middle" x="848.5" y="-181" font-family="Arial" font-size="10.00">periods, facts, lineage</text>
+</g>
+<!-- Pool&#45;&gt;Ofgem -->
+<g id="edge9" class="edge">
+<title>Pool&#45;&gt;Ofgem</title>
+<path fill="none" stroke="black" d="M705.09,-164.71C728.51,-168.71 756.57,-173.49 781.56,-177.75"/>
+<polygon fill="black" stroke="black" points="781.25,-181.25 791.7,-179.48 782.43,-174.35 781.25,-181.25"/>
+</g>
+<!-- Meteo -->
+<g id="node11" class="node">
+<title>Meteo</title>
+<path fill="none" stroke="black" d="M908,-139.98C908,-142.06 881.33,-143.75 848.5,-143.75 815.67,-143.75 789,-142.06 789,-139.98 789,-139.98 789,-106.02 789,-106.02 789,-103.94 815.67,-102.25 848.5,-102.25 881.33,-102.25 908,-103.94 908,-106.02 908,-106.02 908,-139.98 908,-139.98"/>
+<path fill="none" stroke="black" d="M908,-139.98C908,-137.9 881.33,-136.21 848.5,-136.21 815.67,-136.21 789,-137.9 789,-139.98"/>
+<text text-anchor="middle" x="848.5" y="-126" font-family="Arial" font-size="10.00">openmeteo</text>
+<text text-anchor="middle" x="848.5" y="-115" font-family="Arial" font-size="10.00">locations, daily weather</text>
+</g>
+<!-- Pool&#45;&gt;Meteo -->
+<g id="edge10" class="edge">
+<title>Pool&#45;&gt;Meteo</title>
+<path fill="none" stroke="black" d="M705.09,-147.29C727.73,-143.43 754.69,-138.83 779.03,-134.68"/>
+<polygon fill="black" stroke="black" points="779.65,-138.12 788.92,-132.99 778.48,-131.22 779.65,-138.12"/>
+</g>
+<!-- Octopus -->
+<g id="node12" class="node">
+<title>Octopus</title>
+<path fill="none" stroke="black" d="M912.5,-73.98C912.5,-76.06 883.81,-77.75 848.5,-77.75 813.19,-77.75 784.5,-76.06 784.5,-73.98 784.5,-73.98 784.5,-40.02 784.5,-40.02 784.5,-37.94 813.19,-36.25 848.5,-36.25 883.81,-36.25 912.5,-37.94 912.5,-40.02 912.5,-40.02 912.5,-73.98 912.5,-73.98"/>
+<path fill="none" stroke="black" d="M912.5,-73.98C912.5,-71.9 883.81,-70.21 848.5,-70.21 813.19,-70.21 784.5,-71.9 784.5,-73.98"/>
+<text text-anchor="middle" x="848.5" y="-60" font-family="Arial" font-size="10.00">octopus</text>
+<text text-anchor="middle" x="848.5" y="-49" font-family="Arial" font-size="10.00">file ledger, electricity, gas</text>
+</g>
+<!-- Pool&#45;&gt;Octopus -->
+<g id="edge11" class="edge">
+<title>Pool&#45;&gt;Octopus</title>
+<path fill="none" stroke="black" d="M679.46,-137.92C700.22,-123.7 730.63,-104.02 759,-90 765.93,-86.58 773.3,-83.3 780.72,-80.22"/>
+<polygon fill="black" stroke="black" points="782.15,-83.42 790.12,-76.44 779.53,-76.93 782.15,-83.42"/>
+</g>
+</g>
+</svg>

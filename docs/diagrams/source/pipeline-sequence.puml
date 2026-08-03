@@ -1,22 +1,31 @@
 @startuml
-title Current Plugin Task Sequence
+title Current Provider-Owned Plugin Pipeline
 participant PluginExecutionCoordinator as Coordinator
 participant PluginRunAudit as Audit
 participant ReflectionPluginFactory as Factory
-participant OpenDataPlugin as Plugin
-participant DatabaseResourceManager as Database
+participant "Plugin Initialise" as Initialise
+participant "Extract" as Extract
+participant "Transform / Validate" as Transform
+participant "Load Repository" as Load
+participant "Finalise" as Finalise
 
-Coordinator -> Audit : started(runId, pluginId)
+Coordinator -> Audit : started(runId) [write run]
 Coordinator -> Factory : create(resolved plugin)
 Factory --> Coordinator : fresh plugin instance
-Coordinator -> Plugin : execute(context)
-Plugin -> Plugin : acquire, parse and validate
+Coordinator -> Initialise : execute(context)
+Initialise -> Extract : acquire or discover source
+Extract --> Initialise : raw source / extracted statements
+Initialise -> Transform : parse, map and validate
+Transform --> Initialise : typed records
 alt dry run
-  Plugin --> Coordinator : read/skipped metrics
+  Initialise -> Load : calculate read/skipped metrics only
+  Load --> Initialise : metrics without database write
 else write run
-  Plugin -> Database : plugin-owned transaction
-  Database --> Plugin : persistence result
-  Plugin --> Coordinator : read/write metrics
+  Initialise -> Load : persist(records, runId)
+  Load --> Initialise : inserted/updated/skipped
 end
-Coordinator -> Audit : completed(result)
+Initialise -> Finalise : cleanup/archive/report(completed flag)
+Finalise --> Initialise : complete
+Initialise --> Coordinator : PluginMetrics
+Coordinator -> Audit : completed(result) [write run]
 @enduml

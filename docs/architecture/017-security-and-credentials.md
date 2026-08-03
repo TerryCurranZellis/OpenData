@@ -1,25 +1,61 @@
 # Security and Credentials
 
 **Document ID:** ARCH-017  
-**Version:** 1.2  
-**Status:** Partial; critical credential remediation required  
-**Baseline date:** 26 July 2026  
+**Version:** 2.0  
+**Status:** Encryption implemented; source-baseline remediation required  
+**Baseline date:** 3 August 2026  
 **Minimum Java version:** 17
 
 ---
 
-## Credential rule
+## Security objective
 
-The target rule is that secrets are never committed to Git, copied into example
-files, written to logs or stored in execution snapshots. The maintained
-bootstrap resource at `src/main/resources/config/application.properties`
-currently leaves `database.password` blank in Git, but any environment-specific
-override file still requires the same protection.
+Secrets must not be committed to Git, copied into examples, written to logs,
+stored in documentation or retained in ordinary source resources. Encryption is
+one control; key separation, operating-system permissions and deployment design
+are equally important.
 
-`OverrideConfiguration` can supply
-`application.database.password` from a protected external properties file.
-There is no environment-variable or secret-provider integration. The
-credential-reference model is not resolved at runtime.
+## Implemented password protection
+
+`RsaConfigurationPasswordCipher` uses
+`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`:
+
+- the public X.509 certificate encrypts the database password;
+- the matching PKCS#12 private key store decrypts it;
+- encrypted values use the `{enc}` prefix followed by Base64;
+- an already encrypted value is not encrypted a second time;
+- `ApplicationBootstrapPropertiesLoader` decrypts before constructing runtime
+  database configuration;
+- `--register` stores the encrypted password in both
+  `core.application_property` and the rewritten bootstrap file.
+
+A PKCS#12 password can be supplied through the configured Java system property
+or environment lookup. That mechanism must not be documented as a managed
+secret provider; it is a local password input only.
+
+## Critical baseline finding
+
+The uploaded project baseline includes a non-blank plaintext database password
+in the tracked bootstrap resource and a private PKCS#12 key store below
+`src/main/resources/config/security`. Co-locating encrypted values and the
+private decryption key in the repository removes most of the protection offered
+by encryption and risks publishing live credentials.
+
+Before release or production use:
+
+1. rotate the database password if the committed value has ever been usable;
+2. remove plaintext credentials and private key stores from Git history and the
+   distributable source archive;
+3. add local bootstrap, private key and certificate-output paths to an explicit
+   ignore/deployment policy;
+4. generate environment-specific key material outside the repository;
+5. restrict the bootstrap and private key store to the service identity;
+6. use a strong PKCS#12 password supplied outside source control;
+7. verify that build, release and documentation archives exclude private key
+   material.
+
+The public certificate may be distributed when appropriate. The private key
+must not be treated as an application resource.
 
 ## SQL Server identity and permissions
 
@@ -28,38 +64,31 @@ credential-reference model is not resolved at runtime.
 - application role: `opendata_app`;
 - database: `OpenData`.
 
-SQL scripts create the intended least-privilege role. The broader
-`GRANT ... ON SCHEMA::core` in `sql/009-grant-shared-schema-permissions.sql`
-should still be reviewed as the permission model evolves.
+The role should receive only required read/write and execute rights. Broad
+schema grants must be reviewed against the configuration, audit and plugin
+operations actually performed.
 
 ## Transport security
 
-The local-development JDBC URL uses encryption with
-`trustServerCertificate=true`. This encrypts traffic but does not validate the
-server certificate chain. Production must use a trusted SQL Server certificate
-and `trustServerCertificate=false`.
+The local development URL uses `encrypt=true` with
+`trustServerCertificate=true`. That encrypts traffic without validating the
+server identity. Production requires a trusted SQL Server certificate and
+`trustServerCertificate=false`.
 
-## Logging controls
+## Logging and files
 
-Connection URLs may be logged only after removing user information and secret
-parameters. Passwords, tokens, complete authentication headers and credential
-provider payloads are prohibited at every log level.
+Passwords, private-key passwords, tokens, authentication headers and decrypted
+configuration values are prohibited at every log level. Source files may contain
+personal or commercially sensitive data; Octopus statements and archives need
+restricted directory permissions and an explicit retention policy.
 
-## Files and provenance
+## Remaining hardening
 
-The reusable `HttpDataDownloader` enforces a size limit, but the active Ofgem
-`DirectHttpDownloadStrategy` and OpenMeteo response path do not. Ofgem stores
-SHA-256 source provenance; it is not a malware check. Source workbook names and
-cell references are retained as non-secret lineage metadata.
-
-## Required production hardening
-
-- protected credential provider;
-- continued exclusion of live credentials from tracked configuration;
+- external writable configuration location;
+- managed or operating-system-backed secret retrieval;
 - trusted SQL Server certificate;
-- bounded downloads on active plugin paths;
-- restricted network path to SQL Server;
-- operating-system permissions on configuration and staging directories;
-- database backup and restore testing;
-- dependency and secret scanning in CI;
-- retention rules for source files and error details.
+- bounded downloads and retry policies;
+- restricted database and filesystem access;
+- backup/restore tests;
+- dependency, secret and release-archive scanning;
+- secure deletion and retention rules for customer statements and failure data.

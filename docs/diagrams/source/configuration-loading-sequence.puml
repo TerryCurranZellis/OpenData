@@ -1,23 +1,37 @@
 @startuml
-title Configuration Loading
+title Runtime Configuration Loading
 actor Operator
 participant CommandLineArgumentsProcessor as CLI
 participant OverrideConfiguration as Override
+participant ApplicationBootstrapPropertiesLoader as Bootstrap
+participant RsaConfigurationPasswordCipher as Cipher
+participant OpenDataApplication as Application
+participant ConfigurationPropertiesSource as Source
 participant ApplicationRuntimeConfiguration as Runtime
 participant ClasspathPluginRegistry as Registry
 participant PropertiesPluginDefinitionLoader as Loader
-participant OpenDataApplication as Application
 
-Operator -> CLI : --plugin id [--file settings]
+Operator -> CLI : --plugin id|all [--file settings]
 CLI --> Application : CommandLineArguments
 Application -> Override : load(optional file)
-Override --> Application : application and plugin scopes
-Application -> Runtime : load(application overrides)
-Runtime --> Application : database, execution, logging
+Override --> Application : scoped override values
+Application -> Bootstrap : load(application overrides)
+Bootstrap -> Cipher : decrypt database password when {enc}
+Cipher --> Bootstrap : plaintext for runtime use
+Bootstrap --> Application : bootstrap values and source-mode flag
+alt database-backed properties
+  Application -> Source : JdbcConfigurationPropertiesSource
+  Source --> Application : core.application_property
+else classpath properties
+  Application -> Source : ClasspathConfigurationPropertiesSource
+  Source --> Application : packaged application values
+end
+Application -> Runtime : load(source + overrides)
+Runtime --> Application : database, execution and logging
 Application -> Registry : resolve enabled descriptors
 Registry --> Application : selected descriptors
 loop each selected plugin
-  Application -> Loader : classpath properties + scoped overrides
+  Application -> Loader : source plugin values + scoped overrides
   Loader --> Application : validated PluginDefinition
 end
 @enduml
