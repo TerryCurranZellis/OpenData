@@ -13,10 +13,24 @@ import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * Load the octopus data
+ *
+ * @author terry
+ * @version 2.0.0
+ */
 public final class OctopusLoad {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusLoad.class.getName());
 
+    /**
+     * Load the data
+     *
+     * @param result load results
+     * @param configuration configuration for the loader
+     * @param context current context
+     * @return metrics for the load
+     */
     public PluginMetrics load(OctopusParseResult result, OctopusConfiguration configuration, PluginExecutionContext context) {
         Objects.requireNonNull(result);
         Objects.requireNonNull(configuration);
@@ -28,7 +42,7 @@ public final class OctopusLoad {
         if (result.statements().isEmpty()) {
             return PluginMetrics.ZERO;
         }
-        OctopusPersistenceResult saved = new OctopusPersistenceRepository(context.database()).save(result, context.runId());
+        var saved = new OctopusPersistenceRepository(context.database()).save(result, context.runId());
         return new PluginMetrics(result.totalRecords(), saved.inserted(), saved.updated(), saved.skipped());
     }
 }

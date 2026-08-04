@@ -6,7 +6,7 @@
 package com.towermarsh.opendata.plugin.openmeteo.download;
 
 import com.towermarsh.opendata.exception.PluginException;
-import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
+import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;

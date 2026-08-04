@@ -10,8 +10,10 @@
  * statement PDF files that will be parsed by the transform step.
  *
  * <ul>
- * <li>{@link OctopusExtract} – extract step (placeholder; lists available PDFs)</li>
+ * <li>{@link OctopusExtract} – extract step lists available PDFs</li>
  * <li>{@link PdfTextExtractor} – utility for extracting plain text from a PDF file</li>
+ * <li>{@link ExtractOctopusStatemen} - Immutable content and provenance for one extracted Octopus statement.</li>
+ * <li>{@link OctopusProcessedFileRepository} - Reads the names and hashes of successfully processed Octopus statements..</li>
  * </ul>
  */
 package com.towermarsh.opendata.plugin.octopus.extract;

@@ -8,7 +8,7 @@ package com.towermarsh.opendata.plugin.openmeteo.download;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.towermarsh.opendata.plugin.openmeteo.config.OpenMeteoConfiguration;
+import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;

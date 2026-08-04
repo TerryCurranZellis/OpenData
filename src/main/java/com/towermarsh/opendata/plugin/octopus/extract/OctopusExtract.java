@@ -25,33 +25,48 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-/** Discovers, filters and reads local Octopus Energy statement PDFs. */
+/**
+ * Discovers, filters and reads local Octopus Energy statement PDFs.
+ * 
+ * @author Terry Curran
+ * @version 2.0.0
+ */
 public final class OctopusExtract {
+
     private static final Logger LOGGER = Logger.getLogger(OctopusExtract.class.getName());
+    
+    /**
+     * look for statements matching pattern
+     */
     private static final Pattern FILE_PATTERN = Pattern.compile(
             "^octopus-energy-statement-(\\d{4}-\\d{2}-\\d{2})\\.pdf$",
             Pattern.CASE_INSENSITIVE);
 
     /**
-     * Reads all new statement files as one extraction batch.
-     * A file is considered already processed only when both its name and SHA-256
-     * hash match a completed row in {@code octopus.statement_file}.
+     * Reads all new statement files as one extraction batch. A file is
+     * considered already processed only when both its name and SHA-256 hash
+     * match a completed row in {@code octopus.statement_file}.
+     *
+     * @param configuration plugin configuration
+     * @param context current settings
+     * @return list os statement records
+     * @throws java.io.IOException
      */
     public List<ExtractedOctopusStatement> extract(
             final OctopusConfiguration configuration,
             final PluginExecutionContext context) throws IOException {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(context, "context");
-        final Path inputDirectory = configuration.inputDirectory();
+        final var inputDirectory = configuration.inputDirectory();
         if (!Files.isDirectory(inputDirectory)) {
             throw new IOException("Octopus input directory does not exist or is not a directory: " + inputDirectory);
         }
 
-        final Set<String> processed = context.dryRun()
+        final var processed = context.dryRun()
                 ? Set.of()
                 : new OctopusProcessedFileRepository(context.database()).findProcessedFileKeys();
         final List<Path> candidates;
-        try (Stream<Path> files = Files.list(inputDirectory)) {
+        try (var files = Files.list(inputDirectory)) {
             candidates = files.filter(Files::isRegularFile)
                     .filter(path -> FILE_PATTERN.matcher(path.getFileName().toString()).matches())
                     .sorted(Comparator.comparing(OctopusExtract::statementDate)
@@ -60,10 +75,10 @@ public final class OctopusExtract {
         }
 
         final List<ExtractedOctopusStatement> extracted = new ArrayList<>();
-        int skipped = 0;
-        for (Path path : candidates) {
-            final String fileName = path.getFileName().toString();
-            final String hash = sha256(path);
+        var skipped = 0;
+        for (var path : candidates) {
+            final var fileName = path.getFileName().toString();
+            final var hash = sha256(path);
             if (processed.contains(OctopusProcessedFileRepository.key(fileName, hash))) {
                 skipped++;
                 continue;
@@ -76,14 +91,19 @@ public final class OctopusExtract {
                     Files.size(path),
                     PdfTextExtractor.extract(path)));
         }
-        final int skippedCount = skipped;
+        final var skippedCount = skipped;
         LOGGER.info(() -> "Octopus extract: discovered %d matching PDF(s), selected %d new/changed file(s), skipped %d completed file(s)"
                 .formatted(candidates.size(), extracted.size(), skippedCount));
         return List.copyOf(extracted);
     }
 
+    /**
+     * Find the statement date
+     * @param path path to file
+     * @return  the statement date
+     */
     static LocalDate statementDate(final Path path) {
-        final Matcher matcher = FILE_PATTERN.matcher(path.getFileName().toString());
+        final var matcher = FILE_PATTERN.matcher(path.getFileName().toString());
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid Octopus statement filename: " + path.getFileName());
         }
@@ -94,14 +114,22 @@ public final class OctopusExtract {
         }
     }
 
+    /**
+     * calculate the file hash
+     * @param path file to has
+     * @return the file hash
+     * @throws IOException 
+     */
     private static String sha256(final Path path) throws IOException {
         try {
-            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            try (InputStream input = Files.newInputStream(path)) {
-                final byte[] buffer = new byte[8192];
+            final var digest = MessageDigest.getInstance("SHA-256");
+            try (var input = Files.newInputStream(path)) {
+                final var buffer = new byte[8192];
                 int count;
                 while ((count = input.read(buffer)) >= 0) {
-                    if (count > 0) digest.update(buffer, 0, count);
+                    if (count > 0) {
+                        digest.update(buffer, 0, count);
+                    }
                 }
             }
             return HexFormat.of().formatHex(digest.digest());

@@ -10,7 +10,7 @@
  * run statistics.
  *
  * <ul>
- * <li>{@link OctopusFinalise} – finalise step (placeholder; archiving pending)</li>
+ * <li>{@link OctopusFinalise} – finalise step archiving</li>
  * </ul>
  */
 package com.towermarsh.opendata.plugin.octopus.finalise;

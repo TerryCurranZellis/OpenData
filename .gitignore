@@ -42,6 +42,9 @@ docs/diagrams/generated/*
 !docs/diagrams/generated/.gitkeep
 !docs/diagrams/generated/*.svg
 
+# ssms artifacts
+sql/.vs/
+
 # Optional local tools and templates
 tools/plantuml.jar
 config/OpenData-Reference.docx

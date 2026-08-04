@@ -45,7 +45,9 @@ import java.util.logging.Logger;
  */
 public final class OctopusPlugin implements OpenDataPlugin {
 
-    /** Stable plugin identifier used in configuration and CLI selection. */
+    /** 
+     * Stable plugin identifier used in configuration and CLI selection. 
+     */
     public static final String PLUGIN_ID = "octopus";
 
     private static final Logger LOGGER = Logger.getLogger(OctopusPlugin.class.getName());
@@ -85,7 +87,7 @@ public final class OctopusPlugin implements OpenDataPlugin {
         LOGGER.info(() -> "OctopusPlugin.execute starting (runId=%s, dryRun=%s)"
                 .formatted(context.runId(), context.dryRun()));
 
-        final PluginMetrics metrics = initialise.execute(context);
+        final var metrics = initialise.execute(context);
 
         LOGGER.info(() -> "OctopusPlugin.execute complete: read=%d inserted=%d updated=%d skipped=%d"
                 .formatted(metrics.read(), metrics.inserted(), metrics.updated(), metrics.skipped()));

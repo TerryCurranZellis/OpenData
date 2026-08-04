@@ -8,12 +8,11 @@ package com.towermarsh.opendata.plugin.octopus.initialise;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.octopus.extract.OctopusExtract;
-import com.towermarsh.opendata.plugin.octopus.finalise.OctopusFinalise;
-import com.towermarsh.opendata.plugin.octopus.load.OctopusLoad;
+import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusTransform;
-
-import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
+import com.towermarsh.opendata.plugin.octopus.load.OctopusLoad;
+import com.towermarsh.opendata.plugin.octopus.finalise.OctopusFinalise;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -88,9 +87,9 @@ public final class OctopusInitialise {
                 .formatted(context.dryRun()));
 
         List<ExtractedOctopusStatement> statements = List.of();
-        OctopusParseResult parseResult = new OctopusParseResult(List.of(), List.of(), List.of());
-        PluginMetrics metrics = PluginMetrics.ZERO;
-        boolean completed = false;
+        var parseResult = new OctopusParseResult(List.of(), List.of(), List.of());
+        var metrics = PluginMetrics.ZERO;
+        var completed = false;
         try {
             statements = extractor.extract(configuration, context);
             parseResult = transformer.transform(statements);

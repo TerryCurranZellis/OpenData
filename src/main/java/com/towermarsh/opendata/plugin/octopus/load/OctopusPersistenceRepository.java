@@ -30,8 +30,15 @@ import java.util.UUID;
  */
 public final class OctopusPersistenceRepository {
 
+    /**
+     * database connection
+     */
     private final DatabaseResourceManager database;
 
+    /**
+     * instantiate
+     * @param database 
+     */
     public OctopusPersistenceRepository(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }

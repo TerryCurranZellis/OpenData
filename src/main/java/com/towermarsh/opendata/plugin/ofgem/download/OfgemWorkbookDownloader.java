@@ -8,7 +8,7 @@ package com.towermarsh.opendata.plugin.ofgem.download;
 import com.towermarsh.opendata.download.strategy.HtmlLinkDiscoveryStrategy;
 import com.towermarsh.opendata.download.strategy.ResolvedDownload;
 import com.towermarsh.opendata.exception.DownloadException;
-import com.towermarsh.opendata.plugin.ofgem.config.OfgemConfiguration;
+import com.towermarsh.opendata.plugin.ofgem.initialise.OfgemConfiguration;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

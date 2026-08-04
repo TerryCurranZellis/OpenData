@@ -6,32 +6,47 @@ package com.towermarsh.opendata.plugin.octopus.extract;
 
 import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
-/** Reads the names and hashes of successfully processed Octopus statements. */
+/**
+ * Reads the names and hashes of successfully processed Octopus statements.
+ *
+ * @author Terry Curran
+ * @version 2.0.0
+ */
 public final class OctopusProcessedFileRepository {
+
+    /**
+     * database connection
+     */
     private final DatabaseResourceManager database;
 
+    /**
+     * instantiate 
+     * @param database database connection 
+     */
     public OctopusProcessedFileRepository(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }
 
-    /** Returns keys in the form {@code fileName|sha256}. */
+    /**
+     * Returns keys in the form {@code fileName|sha256}.
+     *
+     * @return a set of processed files
+     */
     public Set<String> findProcessedFileKeys() {
         final String sql = """
                 SELECT [file_name], [sha256]
                   FROM [octopus].[statement_file]
                  WHERE [status] = 'COMPLETED'
                 """;
-        try (Connection connection = database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet results = statement.executeQuery()) {
+        try (var connection = database.getConnection(); 
+             var statement = connection.prepareStatement(sql); 
+             var results = statement.executeQuery()) {
             final Set<String> keys = new HashSet<>();
             while (results.next()) {
                 keys.add(key(results.getString(1), results.getString(2)));
@@ -44,7 +59,13 @@ public final class OctopusProcessedFileRepository {
         }
     }
 
+    /**
+     * get the key hash
+     * @param fileName filename for statement
+     * @param sha256 the hash
+     * @return the key has
+     */
     public static String key(final String fileName, final String sha256) {
-        return fileName.toLowerCase(java.util.Locale.ROOT) + "|" + sha256.toLowerCase(java.util.Locale.ROOT);
+        return fileName.toLowerCase(Locale.ROOT) + "|" + sha256.toLowerCase(Locale.ROOT);
     }
 }

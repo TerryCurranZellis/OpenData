@@ -13,7 +13,7 @@
     Do not commit the real password. SQLCMD performs textual substitution, so
     use a password without a single-quote character when running this script.
 */
-:setvar OpenDataPassword "OpenData"
+
 
 USE [master];
 GO
