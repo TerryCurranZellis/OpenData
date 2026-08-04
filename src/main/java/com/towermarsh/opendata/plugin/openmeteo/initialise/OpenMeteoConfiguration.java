@@ -6,6 +6,9 @@
 package com.towermarsh.opendata.plugin.openmeteo.initialise;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
+import com.towermarsh.opendata.validation.PluginPropertyValues;
+import com.towermarsh.opendata.validation.SqlIdentifiers;
+import com.towermarsh.opendata.validation.ValidationRules;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -15,28 +18,29 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Typed Open-Meteo API and persistence configuration. *
+ * Typed Open-Meteo API and persistence configuration.
  *
- * @param endpoint endpoint name
- * @param locationKey location key id
- * @param locationName location name
+ * @param endpoint Open-Meteo archive endpoint
+ * @param locationKey stable location key
+ * @param locationName location display name
  * @param latitude location latitude
  * @param longitude location longitude
- * @param timezone location timezone e.g. Europe/London
- * @param connectTimeout how long to try to connect
- * @param requestTimeout how long to wait for a result to be returned
- * @param startDate start date for query default 2000-01-01
- * @param endDate end date for query default today - 1 day
- * @param defaultStartDaysAgo get data for this many days - ignored now
- * @param includeCurrentDate data includes today
- * @param targetSchema where the database table is
- * @param locationTable name of the table
- * @param dailyTable data is recorded by day
- * @param databaseBatchSize how many records to load in a batch
- * @param databaseLockTimeout how long to keep database connection open
+ * @param timezone location timezone, for example {@code Europe/London}
+ * @param connectTimeout HTTP connection timeout
+ * @param requestTimeout HTTP request timeout
+ * @param startDate optional query start date
+ * @param endDate optional query end date
+ * @param defaultStartDaysAgo retained legacy relative-range setting
+ * @param includeCurrentDate whether queries may include the current date
+ * @param targetSchema target database schema
+ * @param locationTable location table name
+ * @param dailyTable daily observation table name
+ * @param databaseBatchSize staging insert batch size
+ * @param databaseLockTimeout SQL Server application-lock timeout
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
+ * @since 2.0.0
  */
 public record OpenMeteoConfiguration(
         URI endpoint,
@@ -58,107 +62,126 @@ public record OpenMeteoConfiguration(
         Duration databaseLockTimeout) {
 
     /**
-     * default end point
+     * Name of the Open-Meteo archive endpoint in the plugin definition.
+     *
+     * @since 2.0.0
      */
     public static final String ENDPOINT_NAME = "archive";
 
     /**
      * Validates and normalises record components.
+     *
+     * @since 2.0.0
      */
     public OpenMeteoConfiguration {
         Objects.requireNonNull(endpoint, "endpoint");
-        locationKey = requireText(locationKey, "location-key", 100);
-        locationName = requireText(locationName, "location-name", 200);
-        Objects.requireNonNull(timezone, "timezone");
-        requireText(timezone.getId(), "timezone", 100);
-        Objects.requireNonNull(connectTimeout, "connectTimeout");
-        Objects.requireNonNull(requestTimeout, "requestTimeout");
+        locationKey = ValidationRules.requireText(locationKey, "location-key", 100);
+        locationName = ValidationRules.requireText(locationName, "location-name", 200);
+        latitude = ValidationRules.requireRange(latitude, -90.0, 90.0, "latitude");
+        longitude = ValidationRules.requireRange(longitude, -180.0, 180.0, "longitude");
+
+        timezone = Objects.requireNonNull(timezone, "timezone");
+        ValidationRules.requireText(timezone.getId(), "timezone", 100);
+        connectTimeout = ValidationRules.requirePositive(
+                connectTimeout,
+                "connect-timeout-seconds");
+        requestTimeout = ValidationRules.requirePositive(
+                requestTimeout,
+                "request-timeout-seconds");
+
         startDate = startDate == null ? Optional.empty() : startDate;
         endDate = endDate == null ? Optional.empty() : endDate;
-        targetSchema = sqlIdentifier(targetSchema, "database.target-schema");
-        locationTable = sqlIdentifier(locationTable, "database.location-table");
-        dailyTable = sqlIdentifier(dailyTable, "database.daily-table");
-        Objects.requireNonNull(databaseLockTimeout, "databaseLockTimeout");
-        if (latitude < -90.0 || latitude > 90.0) {
-            throw new IllegalArgumentException("latitude must be between -90 and 90");
+        defaultStartDaysAgo = ValidationRules.requireNonNegative(
+                defaultStartDaysAgo,
+                "default-start-days-ago");
+
+        targetSchema = SqlIdentifiers.requireSafe(
+                targetSchema,
+                "database.target-schema");
+        locationTable = SqlIdentifiers.requireSafe(
+                locationTable,
+                "database.location-table");
+        dailyTable = SqlIdentifiers.requireSafe(
+                dailyTable,
+                "database.daily-table");
+        databaseBatchSize = ValidationRules.requireRange(
+                databaseBatchSize,
+                1,
+                10_000,
+                "database.batch-size");
+        databaseLockTimeout = ValidationRules.requirePositive(
+                databaseLockTimeout,
+                "database.lock-timeout-seconds");
+
+        if (databaseLockTimeout.compareTo(
+                Duration.ofMillis(Integer.MAX_VALUE)) > 0) {
+            throw new IllegalArgumentException(
+                    "database lock timeout exceeds the SQL Server integer limit");
         }
-        if (longitude < -180.0 || longitude > 180.0) {
-            throw new IllegalArgumentException("longitude must be between -180 and 180");
-        }
-        if (connectTimeout.isZero() || connectTimeout.isNegative()
-                || requestTimeout.isZero() || requestTimeout.isNegative()) {
-            throw new IllegalArgumentException("HTTP timeouts must be positive");
-        }
-        if (databaseLockTimeout.isZero() || databaseLockTimeout.isNegative()) {
-            throw new IllegalArgumentException("database lock timeout must be positive");
-        }
-        if (databaseLockTimeout.toMillis() > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException("database lock timeout exceeds the SQL Server integer limit");
-        }
-        if (defaultStartDaysAgo < 0) {
-            throw new IllegalArgumentException("default-start-days-ago must not be negative");
-        }
-        if (databaseBatchSize < 1 || databaseBatchSize > 10_000) {
-            throw new IllegalArgumentException("database.batch-size must be between 1 and 10000");
-        }
-        if (startDate.isPresent() && endDate.isPresent() && startDate.get().isAfter(endDate.get())) {
-            throw new IllegalArgumentException("start-date must not be after end-date");
+        if (startDate.isPresent() && endDate.isPresent()) {
+            ValidationRules.requireDateOrder(
+                    startDate.get(),
+                    endDate.get(),
+                    "Open-Meteo query range");
         }
     }
 
     /**
-     * Get the configuration settings
+     * Builds typed Open-Meteo configuration from a resolved plugin definition.
      *
-     * @param definition definition
-     * @return the settings
+     * @param definition resolved plugin definition
+     * @return typed Open-Meteo configuration
+     * @since 2.0.0
      */
     public static OpenMeteoConfiguration from(final PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!"openmeteo".equalsIgnoreCase(definition.id())) {
-            throw new IllegalArgumentException("Expected plugin id 'openmeteo' but received '" + definition.id() + "'");
+            throw new IllegalArgumentException(
+                    "Expected plugin id 'openmeteo' but received '"
+                            + definition.id() + "'");
         }
+
+        final PluginPropertyValues properties = new PluginPropertyValues(definition);
+        final String locationName = properties.requiredText("location-name");
+
         return new OpenMeteoConfiguration(
                 definition.requireEndpoint(ENDPOINT_NAME).uri(),
-                value(definition, "location-key", slug(value(definition, "location-name", "location"))),
-                required(definition, "location-name"),
-                decimal(definition, "latitude"),
-                decimal(definition, "longitude"),
-                ZoneId.of(required(definition, "timezone")),
-                Duration.ofSeconds(integer(definition, "connect-timeout-seconds", 30)),
-                Duration.ofSeconds(integer(definition, "request-timeout-seconds", 60)),
-                optionalDate(definition, "start-date"),
-                optionalDate(definition, "end-date"),
-                integer(definition, "default-start-days-ago", 365),
-                bool(definition, "include-current-date", false),
-                value(definition, "database.target-schema", "openmeteo"),
-                value(definition, "database.location-table", "Location"),
-                value(definition, "database.daily-table", "DailyWeather"),
-                integer(definition, "database.batch-size", 500),
-                Duration.ofSeconds(integer(definition, "database.lock-timeout-seconds", 30)));
+                properties.text("location-key", slug(locationName)),
+                locationName,
+                properties.requiredDouble("latitude"),
+                properties.requiredDouble("longitude"),
+                properties.parseRequired(
+                        "timezone",
+                        ZoneId::of,
+                        "an IANA timezone id"),
+                Duration.ofSeconds(properties.integer(
+                        "connect-timeout-seconds",
+                        30)),
+                Duration.ofSeconds(properties.integer(
+                        "request-timeout-seconds",
+                        60)),
+                properties.optionalDate("start-date"),
+                properties.optionalDate("end-date"),
+                properties.integer("default-start-days-ago", 365),
+                properties.booleanValue("include-current-date", false),
+                properties.text("database.target-schema", "openmeteo"),
+                properties.text("database.location-table", "Location"),
+                properties.text("database.daily-table", "DailyWeather"),
+                properties.integer("database.batch-size", 500),
+                Duration.ofSeconds(properties.integer(
+                        "database.lock-timeout-seconds",
+                        30)));
     }
 
     /**
-     * Resolve the date range
-     * <p>
-     * Default values
-     * <table>
-     * <caption>Default date values</caption>
-     * <tr>
-     * <th>Property</th>
-     * <th>Default value</th>
-     * </tr>
-     * <tr>
-     * <td>StartDate</td>
-     * <td>2000-01-01</td>
-     * </tr>
-     * <tr>
-     * <td>EndDate</td>
-     * <td>Current date minus one day</td>
-     * </tr>
-     * </table>
+     * Resolves the inclusive query date range.
      *
-     * @param today today's date
-     * @return the date range required
+     * <p>The default start date is {@code 2000-01-01}. The default end date is
+     * the supplied current date minus one day.
+     *
+     * @param today current date in the configured location timezone
+     * @return inclusive query date range
+     * @since 2.0.0
      */
     public DateRange resolveDateRange(final LocalDate today) {
         Objects.requireNonNull(today, "today");
@@ -168,168 +191,47 @@ public record OpenMeteoConfiguration(
     }
 
     /**
-     * Returns a required plugin property value.
+     * Validates one SQL identifier.
      *
-     * @param definition plugin definition
-     * @param name property name
-     * @return property value
+     * @param value identifier value
+     * @param name property name used in error reporting
+     * @return validated SQL identifier
+     * @deprecated Use {@link SqlIdentifiers#requireSafe(String, String)}.
+     * @since 2.0.0
      */
-    private static String required(final PluginDefinition definition, final String name) {
-        return definition.requireProperty(name);
+    @Deprecated(since = "2.0.0", forRemoval = false)
+    public static String sqlIdentifier(final String value, final String name) {
+        return SqlIdentifiers.requireSafe(value, name);
     }
 
-    /**
-     * Returns a plugin property value or a default.
-     *
-     * @param definition plugin definition
-     * @param name property name
-     * @param defaultValue fallback value
-     * @return resolved property value
-     */
-    private static String value(final PluginDefinition definition, final String name, final String defaultValue) {
-        return definition.findProperty(name)
-                .map(property -> property.value().trim())
-                .filter(text -> !text.isEmpty())
-                .orElse(defaultValue);
-    }
-
-    /**
-     * Returns an integer plugin property or a default.
-     *
-     * @param definition plugin definition
-     * @param name property name
-     * @param defaultValue fallback value
-     * @return parsed integer value
-     */
-    private static int integer(final PluginDefinition definition, final String name, final int defaultValue) {
-        final String text = value(definition, name, Integer.toString(defaultValue));
-        try {
-            return Integer.parseInt(text);
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("OpenMeteo property '" + name + "' must be an integer", exception);
-        }
-    }
-
-    /**
-     * Returns a required decimal plugin property.
-     *
-     * @param definition plugin definition
-     * @param name property name
-     * @return parsed decimal value
-     */
-    private static double decimal(final PluginDefinition definition, final String name) {
-        try {
-            return Double.parseDouble(required(definition, name));
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("OpenMeteo property '" + name + "' must be a decimal", exception);
-        }
-    }
-
-    /**
-     * Returns a boolean plugin property or a default.
-     *
-     * @param definition plugin definition
-     * @param name property name
-     * @param defaultValue fallback value
-     * @return parsed boolean value
-     */
-    private static boolean bool(final PluginDefinition definition, final String name, final boolean defaultValue) {
-        return switch (value(definition, name, Boolean.toString(defaultValue)).toLowerCase(Locale.ROOT)) {
-            case "true", "yes", "1", "on" ->
-                true;
-            case "false", "no", "0", "off" ->
-                false;
-            default ->
-                throw new IllegalArgumentException("OpenMeteo property '" + name + "' must be a boolean");
-        };
-    }
-
-    /**
-     * Returns an optional date property.
-     *
-     * @param definition plugin definition
-     * @param name property name
-     * @return optional parsed date
-     */
-    private static Optional<LocalDate> optionalDate(final PluginDefinition definition, final String name) {
-        return definition.findProperty(name)
-                .map(property -> property.value().trim())
-                .filter(text -> !text.isEmpty())
-                .map(LocalDate::parse);
-    }
-
-    /**
-     * Converts free text into a stable slug.
-     *
-     * @param value text to normalise
-     * @return slug value
-     */
     private static String slug(final String value) {
-        final var result = value.trim().toLowerCase(Locale.ROOT)
+        final String result = ValidationRules.requireText(value, "location-name")
+                .toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("(^-|-$)", "");
         return result.isBlank() ? "location" : result;
     }
 
     /**
-     * Returns a required non-blank text value.
-     *
-     * @param value value to validate
-     * @param name field name for error reporting
-     * @return trimmed text value
-     */
-    private static String requireText(final String value, final String name) {
-        return requireText(value, name, Integer.MAX_VALUE);
-    }
-
-    private static String requireText(
-            final String value,
-            final String name,
-            final int maximumLength) {
-        Objects.requireNonNull(value, name);
-        final var result = value.trim();
-        if (result.isBlank()) {
-            throw new IllegalArgumentException(name + " must not be blank");
-        }
-        if (result.length() > maximumLength) {
-            throw new IllegalArgumentException(name + " must not exceed " + maximumLength + " characters");
-        }
-        return result;
-    }
-
-    /**
-     * Validates one SQL identifier used by the plugin-local load package.
-     *
-     * @param value identifier value to validate
-     * @param name property name for error reporting
-     * @return validated SQL identifier
-     */
-    public static String sqlIdentifier(final String value, final String name) {
-        final var result = requireText(value, name);
-        if (!result.matches("[A-Za-z_][A-Za-z0-9_]*")) {
-            throw new IllegalArgumentException(name + " is not a safe SQL identifier: " + result);
-        }
-        return result;
-    }
-
-    /**
-     *
      * Inclusive Open-Meteo query date range.
      *
      * @param startDate inclusive start date
      * @param endDate inclusive end date
+     *
+     * @since 2.0.0
      */
     public record DateRange(LocalDate startDate, LocalDate endDate) {
 
         /**
-         * Validates and normalises record components.
+         * Validates the inclusive date order.
+         *
+         * @since 2.0.0
          */
         public DateRange {
-            Objects.requireNonNull(startDate, "startDate");
-            Objects.requireNonNull(endDate, "endDate");
-            if (startDate.isAfter(endDate)) {
-                throw new IllegalArgumentException("startDate must not be after endDate");
-            }
+            ValidationRules.requireDateOrder(
+                    startDate,
+                    endDate,
+                    "Open-Meteo query range");
         }
     }
 }

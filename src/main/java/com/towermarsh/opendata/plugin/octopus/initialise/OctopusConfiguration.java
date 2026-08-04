@@ -6,49 +6,42 @@
 package com.towermarsh.opendata.plugin.octopus.initialise;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
-import com.towermarsh.opendata.config.model.PluginPropertyDefinition;
-
+import com.towermarsh.opendata.validation.PluginPropertyValues;
 import java.nio.file.Path;
 import java.util.Objects;
 
 /**
  * Typed configuration for the Octopus plugin.
  *
- * <p>
- * Holds the paths and settings resolved from the plugin property definitions at
- * startup. This class is populated by {@link OctopusInitialise} before the ETL
- * pipeline begins.
+ * <p>Holds the paths resolved from the plugin property definitions before the
+ * ETL pipeline begins.
  *
  * @param inputDirectory directory containing Octopus Energy statement PDF files
- * named {@code octopus-energy-statement-YYYY-MM-DD.pdf}
- * @param workingDirectory temporary working directory used during processing;
- * created if absent
- * @param archiveDirectory directory to which processed PDF files are moved
- * after a successful write run
+ * @param workingDirectory temporary working directory used during processing
+ * @param archiveDirectory directory receiving successfully processed statements
  *
  * @author Terry Curran
  * @version 2.0.0
+ * @since 2.0.0
  */
 public record OctopusConfiguration(
         Path inputDirectory,
         Path workingDirectory,
         Path archiveDirectory) {
 
-    /**
-     * Property key for the PDF input directory.
-     */
+    /** Property key for the PDF input directory. */
     public static final String PROP_INPUT_DIRECTORY = "input.directory";
-    /**
-     * Property key for the working/temp directory.
-     */
+
+    /** Property key for the working directory. */
     public static final String PROP_WORKING_DIRECTORY = "working.directory";
-    /**
-     * Property key for the archive directory.
-     */
+
+    /** Property key for the archive directory. */
     public static final String PROP_ARCHIVE_DIRECTORY = "archive.directory";
 
     /**
-     * Validates and normalises record components.
+     * Validates record components.
+     *
+     * @since 2.0.0
      */
     public OctopusConfiguration {
         Objects.requireNonNull(inputDirectory, "inputDirectory");
@@ -61,28 +54,19 @@ public record OctopusConfiguration(
      *
      * @param definition resolved plugin definition
      * @return typed Octopus configuration
+     * @since 2.0.0
      */
     public static OctopusConfiguration from(final PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
+        if (!"octopus".equalsIgnoreCase(definition.id())) {
+            throw new IllegalArgumentException(
+                    "Expected plugin id 'octopus' but received '" + definition.id() + "'");
+        }
 
+        final var properties = new PluginPropertyValues(definition);
         return new OctopusConfiguration(
-                requirePath(definition, PROP_INPUT_DIRECTORY),
-                requirePath(definition, PROP_WORKING_DIRECTORY),
-                requirePath(definition, PROP_ARCHIVE_DIRECTORY));
-    }
-
-    /**
-     * Check that a required directory path exists
-     *
-     * @param definition plugin definition
-     * @param key file to check
-     * @return path if its correct
-     */
-    private static Path requirePath(final PluginDefinition definition, final String key) {
-        return definition.findProperty(key)
-                .map(PluginPropertyDefinition::value)
-                .map(Path::of)
-                .orElseThrow(() -> new IllegalArgumentException(
-                "Plugin '%s' requires property '%s'.".formatted(definition.id(), key)));
+                properties.requiredPath(PROP_INPUT_DIRECTORY),
+                properties.requiredPath(PROP_WORKING_DIRECTORY),
+                properties.requiredPath(PROP_ARCHIVE_DIRECTORY));
     }
 }
