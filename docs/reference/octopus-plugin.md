@@ -1,49 +1,38 @@
 # Octopus Plugin Reference
 
-**Document ID:** REF-OCTOPUS-001  
-**Version:** 2.0  
-**Status:** Current implementation reference  
-**Baseline date:** 3 August 2026
+**Document ID:** REF-OCTOPUS-PLUGIN-001
+**Version:** 2.1
+**Baseline date:** 4 August 2026
 
----
+## Public processing types
 
-| Item | Value |
+| Type | Responsibility |
 |---|---|
-| Plugin id | `octopus` |
-| Implementation | `com.towermarsh.opendata.plugin.octopus.OctopusPlugin` |
-| Source | Local PDFs named `octopus-energy-statement-YYYY-MM-DD.pdf` |
-| Registration source | Packaged definition or one complete external properties file |
-| Runtime status | Must be registered and enabled in `core.plugin_registry` |
+| `OctopusConfiguration` | required input, working and archive paths |
+| `OctopusPersistenceRepository` | atomic energy-row and statement-ledger persistence |
+| `OctopusPersistenceResult` | combined inserted, updated and skipped counts |
 
-## Commands
+## Internal typed adapters
 
-```text
-opendata --plugin octopus --register
-opendata --plugin octopus --register --file C:\OpenData\octopus.properties
-opendata --plugin octopus --dry-run
-opendata --plugin octopus
-opendata --plugin octopus --disable
-opendata --plugin octopus --enable
-opendata --plugin octopus --unregister
-```
+| Type | Responsibility |
+|---|---|
+| `AbstractOctopusUpsertAdapter<T>` | common prepared-statement adapter mechanics |
+| `ElectricityRecordUpsertAdapter` | electricity key, SQL and bindings |
+| `GasRecordUpsertAdapter` | gas key, SQL and bindings |
 
-## Dry run
+The adapters implement the shared `JdbcUpsertAdapter<T, UUID>` contract and are
+executed by `JdbcUpsertExecutor`. They are provider implementation details, not
+cross-plugin domain models.
 
-The extractor deliberately bypasses the processed-file repository during dry
-run. Every matching file is hashed, read and parsed; no provider data, completion
-ledger, generic run audit or archive movement occurs.
+## Transaction contract
 
-## Write run
+`OctopusPersistenceRepository.save(...)` executes electricity records, gas
+records and statement-file `MERGE` operations inside one
+`JdbcTransactionTemplate` transaction. Any SQL or runtime failure prevents the
+batch from committing.
 
-Write mode queries completed `(file_name, sha256)` pairs, excludes exact matches,
-persists the entire statement batch and completion ledger in one transaction,
-and archives source PDFs after commit.
+## Compatibility
 
-## Configuration properties
-
-- `property.input.directory.value`
-- `property.working.directory.value` (currently unused)
-- `property.archive.directory.value`
-
-Use an external file only to register a complete definition. Runtime invocation
-files are not supported.
+The public repository constructor and `save(OctopusParseResult, UUID)` signature
+are unchanged and documented with `@since 2.0.0`. The removed path helper was
+private, so no deprecated wrapper is provided.

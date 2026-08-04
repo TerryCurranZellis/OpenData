@@ -1,9 +1,9 @@
 # Reference Documentation
 
-**Document ID:** REF-INDEX-001  
-**Version:** 2.1  
-**Status:** Version 2.0.0 documentation index  
-**Baseline date:** 3 August 2026
+**Document ID:** REF-INDEX-001
+**Version:** 2.2
+**Status:** Version 2.0.0 documentation index
+**Baseline date:** 4 August 2026
 
 ---
 
@@ -15,6 +15,7 @@
 - [Plugin API reference](plugin-api-reference.md)
 - [Plugin registry reference](plugin-registry-reference.md)
 - [Plugin properties reference](plugin-properties-reference.md)
+- [Shared validation and JDBC reference](shared-validation-and-jdbc-reference.md)
 
 ## Database and audit
 

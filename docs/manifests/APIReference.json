@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "API and configuration reference",
     "audience": "Plugin developers, integrators and support engineers",
-    "revisionSummary": "Version 2.0.0 baseline including governance, compliance, attribution and privacy controls"
+    "revisionSummary": "Version 2.0.0 complete shared and provider processing API reference"
   },
   "sections": [
     "shared/introduction.md",
@@ -17,6 +17,7 @@
     "reference/plugin-api-reference.md",
     "reference/plugin-registry-reference.md",
     "reference/plugin-properties-reference.md",
+    "reference/shared-validation-and-jdbc-reference.md",
     "reference/download-and-discovery-reference.md",
     "reference/supported-data-formats.md",
     "reference/csv-parsing.md",

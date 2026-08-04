@@ -1,9 +1,9 @@
 # Plugin Properties Reference
 
-**Document ID:** REF-PLUGIN-PROP-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation reference  
-**Baseline date:** 3 August 2026  
+**Document ID:** REF-PLUGIN-PROP-001
+**Version:** 2.1
+**Status:** Version 2.0.0 implementation reference
+**Baseline date:** 4 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -13,8 +13,9 @@
 Packaged plugin property files are the default registration definitions.
 `--plugin <id|all> --register` parses selected packaged definitions, while
 `--plugin <id> --register --file <filename>` parses one complete external
-definition. Registration stores the flattened properties and metadata in SQL Server. Ordinary runs load their property set from
-`core.plugin_property` and reconstruct the immutable `PluginDefinition`.
+definition. Registration stores flattened properties and metadata in SQL Server.
+Ordinary runs load their property set from `core.plugin_property` and reconstruct
+the immutable `PluginDefinition`.
 
 Editing a classpath file does not change an existing runtime definition until
 registration is run again.
@@ -31,7 +32,8 @@ plugin.configuration-version=1
 dataset.id=example-dataset
 ```
 
-For packaged definitions, catalogue ID, `plugin.id` and resource filename must agree. For external registration, `plugin.id` must match the one named command-line id.
+For packaged definitions, catalogue ID, `plugin.id` and resource filename must
+agree. For external registration, `plugin.id` must match the command-line ID.
 
 ## Endpoint groups
 
@@ -84,11 +86,45 @@ property.request-timeout-seconds.description=Complete request timeout.
 ```
 
 Declared types are `STRING`, `INTEGER`, `LONG`, `BOOLEAN`, `DECIMAL`,
-`DURATION`, `PATH` and `URI`. The definition retains the declaration but
-`requireProperty` returns text; provider typed configuration performs conversion
-and domain validation.
+`DURATION`, `PATH` and `URI`. The declaration is registration metadata. The
+typed plugin configuration chooses a Java accessor and applies domain rules.
 
-Property names are normalised to lowercase for lookup.
+Use `PluginPropertyValues` rather than plugin-local parsing helpers:
+
+```java
+final var properties = new PluginPropertyValues(definition);
+final int timeoutSeconds = ValidationRules.requireRange(
+        properties.integer("request-timeout-seconds", 60),
+        1,
+        600,
+        "request-timeout-seconds");
+```
+
+Supported shared conversions include text, integer, long, double,
+`BigDecimal`, boolean, ISO-8601 duration, ISO date, path and URI. A plugin may
+supply `ValueParser<T>` for a provider-specific type.
+
+Boolean values accept `true`, `false`, `yes`, `no`, `1`, `0`, `on` and `off`
+case-insensitively.
+
+Missing or invalid values produce messages identifying the plugin and property
+without echoing the configured value. Property names are normalised to lowercase
+for lookup.
+
+For full method details see
+[Shared Validation and JDBC Reference](shared-validation-and-jdbc-reference.md).
+
+## Configurable SQL identifiers
+
+When a property supplies a schema or table name, validate it with
+`SqlIdentifiers`. Identifiers cannot be parameterised, but all data values still
+must use prepared-statement parameters.
+
+```java
+final String qualifiedTable = SqlIdentifiers.qualify(schema, table);
+```
+
+Do not accept arbitrary SQL fragments through plugin properties.
 
 ## Credential references
 
@@ -98,4 +134,6 @@ are not implemented. Never store an actual key or token in the properties file.
 
 ## Enabled status
 
-`plugin.enabled` sets initial status only for a newly registered row. Re-registration preserves current persistent status. Use `--enable` and `--disable` for lifecycle administration.
+`plugin.enabled` sets initial status only for a newly registered row.
+Re-registration preserves current persistent status. Use `--enable` and
+`--disable` for lifecycle administration.

@@ -1,18 +1,18 @@
 # OpenData Architecture Manual
 
 **Document ID:** ARCH-INDEX-001
-**Version:** 2.0
+**Version:** 2.1
 **Status:** Version 2.0.0 implementation baseline
-**Baseline date:** 3 August 2026
+**Baseline date:** 4 August 2026
 **Minimum Java version:** 17
 
 ---
 
 The numbered documents describe the current OpenData modular monolith as
-implemented in the uploaded Version 2.0.0 source baseline. The application has a packaged registration catalogue, persistent SQL Server
-plugin registry, database-backed configuration, bounded
-parallel execution, contextual logging, pooled SQL Server access and three
-executable plugins: Ofgem, OpenMeteo and Octopus Energy.
+implemented in the Version 2.0.0 source baseline. The application has a packaged
+registration catalogue, persistent SQL Server plugin registry, database-backed
+configuration, bounded parallel execution, contextual logging, pooled SQL Server
+access and three executable plugins: Ofgem, OpenMeteo and Octopus Energy.
 
 The documentation distinguishes implemented behaviour from remaining release
 hardening. In particular, RSA password encryption is implemented, but encryption
@@ -51,6 +51,7 @@ release issue, not a future architecture feature.
 | [025](025-manifest-driven-documentation-engine.md) | Manifest-Driven Documentation Engine |
 | [026](026-openmeteo-historical-weather-architecture.md) | OpenMeteo Historical Weather Architecture |
 | [027](027-octopus-energy-statement-architecture.md) | Octopus Energy Statement Architecture |
+| [028](028-shared-validation-and-jdbc-infrastructure.md) | Shared Validation and JDBC Infrastructure |
 
 :::
 

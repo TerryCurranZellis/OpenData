@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="390" viewBox="0 0 1400 390">
+<defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7"/></marker></defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="700.0" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="bold">OpenMeteo Staged Persistence and Pooled-Session Cleanup</text>
+<rect x="25" y="85" width="416" height="55" rx="8" fill="#f7f7f7" stroke="#333" stroke-width="2"/>
+<text x="233.0" y="119" text-anchor="middle" font-family="Arial, sans-serif" font-size="17">OpenMeteoRepository</text>
+<rect x="25" y="190" width="416" height="55" rx="8" fill="#f7f7f7" stroke="#333" stroke-width="2"/>
+<text x="233.0" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="17">SqlIdentifiers</text>
+<rect x="491" y="85" width="416" height="55" rx="8" fill="#f7f7f7" stroke="#333" stroke-width="2"/>
+<text x="699.0" y="119" text-anchor="middle" font-family="Arial, sans-serif" font-size="17">JdbcTransactionTemplate</text>
+<rect x="491" y="190" width="416" height="55" rx="8" fill="#f7f7f7" stroke="#333" stroke-width="2"/>
+<text x="699.0" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="17">JdbcBatchExecutor</text>
+<rect x="957" y="85" width="416" height="55" rx="8" fill="#f7f7f7" stroke="#333" stroke-width="2"/>
+<text x="1165.0" y="119" text-anchor="middle" font-family="Arial, sans-serif" font-size="17">SQL Server pooled session</text>
+<line x1="441" y1="112.5" x2="491" y2="112.5" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="466.0" y="105.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">work + cleanup</text>
+<line x1="441" y1="112.5" x2="491" y2="217.5" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="466.0" y="158.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">stage records</text>
+<line x1="441" y1="112.5" x2="25" y2="217.5" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="233.0" y="158.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">safe table names</text>
+<line x1="907" y1="112.5" x2="957" y2="112.5" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="932.0" y="105.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">transaction + restore</text>
+<line x1="907" y1="217.5" x2="957" y2="112.5" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="932.0" y="158.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">batch stage</text>
+<line x1="441" y1="217.5" x2="957" y2="112.5" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="699.0" y="158.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="13">qualified SQL</text>
+</svg>

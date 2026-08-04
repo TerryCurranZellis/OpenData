@@ -1,9 +1,9 @@
 # PlantUML Diagram Index
 
 **Document ID:** DIAG-INDEX-001
-**Version:** 2.1
+**Version:** 2.3
 **Status:** Version 2.0.0 baseline
-**Baseline date:** 3 August 2026
+**Baseline date:** 4 August 2026
 
 ---
 
@@ -33,7 +33,7 @@ under `docs/diagrams` or another legacy subdirectory.
 | Download strategies | `download-strategy-classes.puml` | [image](generated/download-strategy-classes.svg) |
 | Database architecture | `database-architecture.puml` | [image](generated/database-architecture.svg) |
 | Database schemas | `opendata-database.puml` | [image](generated/opendata-database.svg) |
-| Database persistence components | `database-persistence-components.puml` | [image](generated/database-persistence-components.svg) |
+| Shared validation and persistence | `database-persistence-components.puml` | [image](generated/database-persistence-components.svg) |
 | Database persistence sequence | `database-persistence-sequence.puml` | [image](generated/database-persistence-sequence.svg) |
 | Ofgem import | `ofgem-price-cap-import-sequence.puml` | [image](generated/ofgem-price-cap-import-sequence.svg) |
 | SQL Server deployment | `sql-server-deployment.puml` | [image](generated/sql-server-deployment.svg) |
@@ -49,3 +49,6 @@ under `docs/diagrams` or another legacy subdirectory.
 Run the documentation build with `-RenderDiagrams`. Markdown embeds the committed
 SVG files, and documentation validation fails when a referenced rendered image is
 missing.
+
+The Ofgem import, OpenMeteo persistence and Octopus statement-processing diagrams
+were refreshed for the shared processing refactor.

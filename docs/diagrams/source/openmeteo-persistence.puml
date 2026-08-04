@@ -1,32 +1,27 @@
 @startuml
-title OpenMeteo Plugin Pipeline and Persistence
-participant OpenMeteoPlugin as Plugin
-participant "initialise.OpenMeteoInitialise" as Initialise
-participant "extract.OpenMeteoDownloader" as Download
-participant "transform.OpenMeteoResponseExtractor" as Extract
-participant "transform.validate.OpenMeteoResponseValidator" as Validate
-participant "transform.OpenMeteoTransformer" as Transform
-participant "load.OpenMeteoRepository" as Load
-database "OpenData SQL Server" as SQLServer
+!pragma layout smetana
+title OpenMeteo Staged Persistence and Pooled-Session Cleanup
 
-Plugin -> Initialise : execute(context)
-Initialise -> Download : download(resolved date range)
-Download --> Initialise : raw JSON
-Initialise -> Extract : parse JSON
-Extract --> Initialise : response arrays
-Initialise -> Validate : validate aligned daily values
-Validate --> Initialise : validated response
-Initialise -> Transform : create DailyWeatherRecord values
-Transform --> Initialise : records
-alt dry run
-  Initialise --> Plugin : read/skipped metrics
-else write run
-  Initialise -> Load : save(configuration, records, runId)
-  Load -> SQLServer : BEGIN + location applock
-  Load -> SQLServer : upsert Location
-  Load -> SQLServer : stage, update, insert daily rows
-  Load -> SQLServer : COMMIT and restore session state
-  Load --> Initialise : inserted/updated/skipped
-  Initialise --> Plugin : metrics
-end
+participant OpenMeteoRepository
+participant JdbcTransactionTemplate
+participant JdbcBatchExecutor
+participant SqlIdentifiers
+database "SQL Server pooled session" as DB
+
+OpenMeteoRepository -> JdbcTransactionTemplate : execute(work, cleanup)
+JdbcTransactionTemplate -> DB : borrow / autoCommit=false
+JdbcTransactionTemplate -> OpenMeteoRepository : transaction connection
+OpenMeteoRepository -> DB : XACT_ABORT ON + application lock
+OpenMeteoRepository -> SqlIdentifiers : qualify(schema, tables)
+SqlIdentifiers --> OpenMeteoRepository : safe bracketed names
+OpenMeteoRepository -> DB : upsert location + create #OpenMeteoDaily
+OpenMeteoRepository -> JdbcBatchExecutor : stage(records, configured size)
+JdbcBatchExecutor -> DB : parameterised batches
+OpenMeteoRepository -> DB : set-based UPDATE changed
+OpenMeteoRepository -> DB : set-based INSERT missing
+OpenMeteoRepository --> JdbcTransactionTemplate : counts
+JdbcTransactionTemplate -> DB : commit / rollback
+JdbcTransactionTemplate -> OpenMeteoRepository : cleanup callback
+OpenMeteoRepository -> DB : DROP temp table + XACT_ABORT OFF
+JdbcTransactionTemplate -> DB : restore auto-commit / return to pool
 @enduml
