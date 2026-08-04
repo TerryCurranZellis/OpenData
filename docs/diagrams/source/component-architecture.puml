@@ -10,8 +10,7 @@ package "Application" {
 package "Configuration and Registry" {
   [ApplicationBootstrapPropertiesLoader] as Bootstrap
   [RsaConfigurationPasswordCipher] as Cipher
-  [ClasspathPluginRegistry
-Registration Catalogue] as Catalogue
+  [ClasspathPluginRegistry\nRegistration Catalogue] as Catalogue
   [PropertiesFileConfigurationPropertiesSource] as External
   [ConfigurationRegistrationService] as Register
   [JdbcPluginRegistry] as Registry

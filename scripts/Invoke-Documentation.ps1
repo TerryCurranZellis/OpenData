@@ -1,4 +1,4 @@
-<#
+﻿<#
     Copyright © 2026 Terry Curran
     SPDX-License-Identifier: Apache-2.0
 #>
@@ -9,43 +9,59 @@ function Invoke-Documentation {
   <#
       .SYNOPSIS
       Builds, validates or cleans manifest-driven OpenData documentation.
+
       .DESCRIPTION
       Discovers document manifests from the configured manifest directory. The
       engine contains no document-specific names or source lists.
+
       .PARAMETER Action
       Build, Test, Clean, ALL
+
       .PARAMETER ProjectRoot
       Top level of project
+
       .PARAMETER Document
       Currently all which means build everything
+
       .PARAMETER Format
       Docs, PDF, HTML
+
       .PARAMETER ReferenceDoc
       A word document to use as a formatting template
+
       .PARAMETER RenderDiagrams
       Create at the diagrams by converting the .PUML into .SVG files
+
       .PARAMETER FailOnWarning
       When testing if the are any warnings then stop
+
   #>
+
   [CmdletBinding(SupportsShouldProcess)]
   param(
     [ValidateSet('Build', 'Test', 'Clean', 'All')]
     [string] $Action = 'Build',
+
     [Parameter(Mandatory=$true)]
     [string] $ProjectRoot,
+
     [string[]] $Document = @('All'),
+
     [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
     [string] $Format = 'All',
+
     [AllowNull()]
     [string] $ReferenceDoc,
+
     [switch] $RenderDiagrams,
+
     [switch] $FailOnWarning
   )
+
   $ErrorActionPreference = 'Stop'
   
   #-------------------------------------------------------------------------------
   # Resolve-ProjectRoot
-  # not required as hard coded root set in initial call
   #-------------------------------------------------------------------------------
   function Resolve-ProjectRoot {
     <#
@@ -71,14 +87,11 @@ function Invoke-Documentation {
   # Read-JsonFile
   #-------------------------------------------------------------------------------
   function Read-JsonFile {
-    <#
-        .SYNOPSIS
-        Reads a JSON file, in this instance its the document configuration settings
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Path
     )
+
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
       throw ('JSON file was not found: {0}' -f $Path)
     }
@@ -92,10 +105,6 @@ function Invoke-Documentation {
   # Read-DocumentConfig
   #-------------------------------------------------------------------------------
   function Read-DocumentationConfig {
-    <#
-        .SYNOPSIS
-        Calls the routine to read the JOSN config file
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root
@@ -108,17 +117,13 @@ function Invoke-Documentation {
   # Get-ObjectProperty
   #-------------------------------------------------------------------------------
   function Get-ObjectProperty {
-    <#
-        .SYNOPSIS
-        Gets an object propertie for a specific key
-    #>
     param(
       [AllowNull()] 
       [PSCustomObject] $Object,
       [Parameter(Mandatory)]
       [string] $Name,
       [AllowNull()] 
-      [PSCustomObject] $DefaultValue
+      $DefaultValue
     )
 
     if ($null -eq $Object) {
@@ -135,15 +140,12 @@ function Invoke-Documentation {
   # ConvertTo-Hashtable
   #-------------------------------------------------------------------------------
   function ConvertTo-Hashtable {
-    <#
-        .SYNOPSIS
-        Converts the list of objects into a hashtable
-    #>
     [CmdletBinding()]
     param(
       [AllowNull()] 
       [PSCustomObject] $Object
     )
+
     $result = @{}
     if ($null -ne $Object) {
       foreach ($property in $Object.PSObject.Properties) {
@@ -156,10 +158,6 @@ function Invoke-Documentation {
   # Get-ManifestSetting
   #-------------------------------------------------------------------------------
   function Get-ManifestSetting {
-    <#
-        .SYNOPSIS
-        Creates a list of object for the document manifest
-    #>
     param(
       [Parameter(Mandatory)] 
       [PSCustomObject] $Manifest,
@@ -168,8 +166,9 @@ function Invoke-Documentation {
       [Parameter(Mandatory)]
       [string] $Name,
       [AllowNull()] 
-      [PSCustomObject] $Fallback
+      $Fallback
     )
+
     $manifestProperty = $Manifest.PSObject.Properties[$Name]
     if ($null -ne $manifestProperty -and $null -ne $manifestProperty.Value) {
       return $manifestProperty.Value
@@ -186,14 +185,11 @@ function Invoke-Documentation {
   # Assert-Directory
   #-------------------------------------------------------------------------------
   function Assert-Directory {
-    <#
-        .SYNOPSIS
-        Checks if a directory exists, if its missing creates it
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Path
     )
+
     if (-not (Test-Path -LiteralPath $Path -PathType Container)) {
       $null = New-Item -ItemType Directory -Path $Path -Force
     }
@@ -202,14 +198,11 @@ function Invoke-Documentation {
   # Assert-Command
   #-------------------------------------------------------------------------------
   function Assert-Command {
-    <#
-        .SYNOPSIS
-        Checks if a specific command exists as we need, Java, and Pandoc to run successfully
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Name
     )
+
     if (-not (Get-Command -Name $Name -ErrorAction SilentlyContinue)) {
       throw ("Required command '{0}' was not found." -f $Name)
     }
@@ -218,12 +211,6 @@ function Invoke-Documentation {
   # Sync-NoticeFiles
   #--------------------------------------------------------------------------------
   function Sync-NoticeFiles {
-    <#
-        .SYNOPSIS
-        There are a couple of notice files in the top level root directory, copy these into the build
-        directory to include in the documents.
-    #>
-
     param(
       [Parameter(Mandatory)]
       [string] $Root
@@ -251,16 +238,13 @@ function Invoke-Documentation {
   # ConvertTo-NormalisedManifest
   #-------------------------------------------------------------------------------
   function ConvertTo-NormalisedManifest {
-    <#
-        .SYNOPSIS
-        We have a complete manifest file, lets make it usable, by turning it into a load of settings
-    #>
     param(
       [Parameter(Mandatory)]
       [System.IO.FileInfo] $ManifestFile,
       [Parameter(Mandatory)] 
       [PSCustomObject] $Config
     )
+
     $raw = Read-JsonFile -Path $ManifestFile.FullName
     $defaults = Get-ObjectProperty -Object $Config -Name 'defaultDocument' -DefaultValue $null
     $id = [string](Get-ManifestSetting -Manifest $raw -Defaults $defaults -Name 'id' -Fallback $ManifestFile.BaseName)
@@ -313,10 +297,6 @@ function Invoke-Documentation {
   # Get-DocumentManifests
   #-------------------------------------------------------------------------------
   function Get-DocumentationManifests {
-    <#
-        .SYNOPSIS
-        Turn the manifest into a list sections
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root
@@ -354,10 +334,6 @@ function Invoke-Documentation {
   # Select-DocumentManifests
   #-------------------------------------------------------------------------------
   function Select-DocumentationManifests {
-    <#
-        .SYNOPSIS
-        Turn the manifest into a list of files to include
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -393,10 +369,6 @@ function Invoke-Documentation {
   # Convert-TemplateTokens
   #-------------------------------------------------------------------------------
   function Convert-TemplateTokens {
-    <#
-        .SYNOPSIS
-        The document has placeholders for tokens, so lets turn them into values
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Content,
@@ -414,10 +386,6 @@ function Invoke-Documentation {
   # Assert-NoUnresolvedTokens
   #-------------------------------------------------------------------------------
   function Assert-NoUnresolvedTokens {
-    <#
-        .SYNOPSIS
-        Make sure all tokens are populated
-    #>
     param(
       [Parameter(Mandatory)][string] $Content,
       [Parameter(Mandatory)][string] $SourceName
@@ -433,10 +401,6 @@ function Invoke-Documentation {
   # Convert-ManifestGlobToRegex
   #-------------------------------------------------------------------------------
   function Convert-ManifestGlobToRegex {
-    <#
-        .SYNOPSIS
-        Convert manifest into a gloabl regular expression
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Pattern
@@ -454,10 +418,6 @@ function Invoke-Documentation {
   # Get-ManifestSourceMatches
   #-------------------------------------------------------------------------------
   function Get-ManifestSourceMatches {
-    <#
-        .SYNOPSIS
-        Match the manifest sections to real source files
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $DocsRoot,
@@ -487,10 +447,6 @@ function Invoke-Documentation {
   # Resolve-DocumentationContenFile
   #-------------------------------------------------------------------------------
   function Resolve-DocumentationContentFile {
-    <#
-        .SYNOPSIS
-        Make sure all documents have contents, and exist
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -514,10 +470,6 @@ function Invoke-Documentation {
   # Get-DocumentationFiles
   #-------------------------------------------------------------------------------
   function Get-DocumentationFiles {
-    <#
-        .SYNOPSIS
-        Now we can build the list of files
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -551,10 +503,6 @@ function Invoke-Documentation {
   # Get-ManifestFrontMatterFiles
   #-------------------------------------------------------------------------------
   function Get-ManifestFrontMatterFiles {
-    <#
-        .SYNOPSIS
-        Put together the cover page
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -582,10 +530,6 @@ function Invoke-Documentation {
   # Remove-DocumentHeader
   #-------------------------------------------------------------------------------
   function Remove-DocumentHeader {
-    <#
-        .SYNOPSIS
-        Each document has an internal identifier, remove it from the source so its not included in the final output
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Content
@@ -599,10 +543,6 @@ function Invoke-Documentation {
   # ConvertTo-YamlSingleQuotedString
   #-------------------------------------------------------------------------------
   function ConvertTo-YamlSingleQuotedString {
-    <#
-        .SYNOPSIS
-        We have some YAML definitions, convert them into quoted strings
-    #>
     param(
       [Parameter(Mandatory)]
       [AllowEmptyString()]
@@ -615,10 +555,6 @@ function Invoke-Documentation {
   # Test-TrailingLandscapeBlock
   #-------------------------------------------------------------------------------
   function Test-TrailingLandscapeBlock {
-    <#
-        .SYNOPSIS
-        We are looking for pages that change from portrait -> landscape -> portrait
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Content
@@ -630,13 +566,9 @@ function Invoke-Documentation {
   # New-DocumentationTokens
   #-------------------------------------------------------------------------------
   function New-DocumentationTokens {
-    <#
-        .SYNOPSIS
-        Build a list of tokens from the YAML strings
-    #>
     param(
       [Parameter(Mandatory)] 
-      [PSCustomObject] $Config,
+      $Config,
       [Parameter(Mandatory)] 
       [PSCustomObject] $Manifest,
       [Parameter(Mandatory)]
@@ -669,10 +601,6 @@ function Invoke-Documentation {
   # Get-OutputBaseName
   #-------------------------------------------------------------------------------
   function Get-OutputBaseName {
-    <#
-        .SYNOPSIS
-        Create a new name for the output we are generating
-    #>
     param(
       [Parameter(Mandatory)] 
       [PSCustomObject]$Manifest
@@ -688,10 +616,6 @@ function Invoke-Documentation {
   # New-DocumentInventory
   #-------------------------------------------------------------------------------
   function New-DocumentInventory {
-    <#
-        .SYNOPSIS
-        Build the document inventory
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -748,10 +672,6 @@ function Invoke-Documentation {
   # Merge-Documentation
   #-------------------------------------------------------------------------------
   function Merge-Documentation {
-    <#
-        .SYNOPSIS
-        Merge al the individual files that make up the documentation into a single document
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -826,10 +746,6 @@ function Invoke-Documentation {
   # Get-PandocResourcePath
   #-------------------------------------------------------------------------------
   function Get-PandocResourcePath {
-    <#
-        .SYNOPSIS
-        setup for Pandoc
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -862,10 +778,6 @@ function Invoke-Documentation {
   # Invoke-PlantUmlRender
   #-------------------------------------------------------------------------------
   function Invoke-PlantUmlRender {
-    <#
-        .SYNOPSIS
-        run the image converter to convert images into .svg files
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -885,10 +797,6 @@ function Invoke-Documentation {
   # Test-Documentation
   #-------------------------------------------------------------------------------
   function Test-Documentation {
-    <#
-        .SYNOPSIS
-        Confirm all needed files for each document are available
-    #>
     param(
       [Parameter(Mandatory)][string] $Root,
       [switch] $WarningsAreErrors
@@ -988,10 +896,6 @@ function Invoke-Documentation {
   # Convert-SvgAssetsForPdf
   #-------------------------------------------------------------------------------
   function Convert-SvgAssetsForPdf {
-    <#
-        .SYNOPSIS
-        Svg files cannot be used by pdf, so we need to modify them
-    #>
     param([Parameter(Mandatory)][string] $Root)
 
     $config = Read-DocumentationConfig -Root $Root
@@ -1027,14 +931,64 @@ function Invoke-Documentation {
     }
   }
   #--------------------------------------------------------------------------------
+  # Remove-InvalidXmlCharacters
+  #--------------------------------------------------------------------------------
+  function Remove-InvalidXmlCharacters {
+    <#
+        .SYNOPSIS
+        Removes characters that are not permitted in XML 1.0 documents.
+
+        .DESCRIPTION
+        Pandoc can preserve control characters from source Markdown or generated
+        metadata in a DOCX XML part. System.Xml.XmlDocument rejects those
+        characters when the documentation engine subsequently updates the DOCX.
+    #>
+    [CmdletBinding()]
+    param(
+      [AllowEmptyString()]
+      [string] $Content,
+
+      [Parameter(Mandatory)]
+      [string] $PartName
+    )
+
+    if ([string]::IsNullOrEmpty($Content)) {
+      return $Content
+    }
+
+    $invalidXmlPattern = '[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFE\uFFFF]'
+    $invalidCharacters = [Text.RegularExpressions.Regex]::Matches(
+      $Content,
+      $invalidXmlPattern)
+
+    if ($invalidCharacters.Count -eq 0) {
+      return $Content
+    }
+
+    $characterCodes = @(
+      $invalidCharacters |
+      ForEach-Object {
+        '0x{0:X4}' -f [int][char]$_.Value[0]
+      } |
+      Select-Object -Unique
+    )
+
+    Write-Warning (
+      'Removed {0} invalid XML character(s) ({1}) from {2}.' -f
+      $invalidCharacters.Count,
+      ($characterCodes -join ', '),
+      $PartName)
+
+    return [Text.RegularExpressions.Regex]::Replace(
+      $Content,
+      $invalidXmlPattern,
+      '')
+  }
+
+  #--------------------------------------------------------------------------------
   # Set-DocxFieldRefresh
   #--------------------------------------------------------------------------------
   function Set-DocxFieldRefresh {
-    <#
-        .SYNOPSIS
-        we need to force word to rebuilt the TOC when the document is opened, as we have to add after the cover page,
-        if we let pandoc add the TOC it adds it before the cover page
-    #>
     param([Parameter(Mandatory)][string] $Path)
 
     Add-Type -AssemblyName System.IO.Compression
@@ -1065,6 +1019,9 @@ function Invoke-Documentation {
         $true)
         try {
           $settingsXml = $reader.ReadToEnd()
+          $settingsXml = Remove-InvalidXmlCharacters `
+          -Content $settingsXml `
+          -PartName 'word/settings.xml'
         } finally {
           $reader.Dispose()
         }
@@ -1114,21 +1071,12 @@ function Invoke-Documentation {
   # Set-DocxPageLayout
   #--------------------------------------------------------------------------------
   function Set-DocxPageLayout {
-    <#
-        .SYNOPSIS
-        switch document from portrait -> landscape -> portrait where required
-    #>
     param(
-      [Parameter(Mandatory)]
-      [string] $Path,
-      [Parameter(Mandatory)]
-      [double] $PortraitWidthCm,
-      [Parameter(Mandatory)]
-      [double] $PortraitHeightCm,
-      [Parameter(Mandatory)]
-      [double] $LandscapeWidthCm,
-      [Parameter(Mandatory)]
-      [double] $LandscapeHeightCm
+      [Parameter(Mandatory)][string] $Path,
+      [Parameter(Mandatory)][double] $PortraitWidthCm,
+      [Parameter(Mandatory)][double] $PortraitHeightCm,
+      [Parameter(Mandatory)][double] $LandscapeWidthCm,
+      [Parameter(Mandatory)][double] $LandscapeHeightCm
     )
 
     Add-Type -AssemblyName System.IO.Compression
@@ -1163,6 +1111,9 @@ function Invoke-Documentation {
         $true)
         try {
           $documentXml = $reader.ReadToEnd()
+          $documentXml = Remove-InvalidXmlCharacters `
+          -Content $documentXml `
+          -PartName 'word/document.xml'
         } finally {
           $reader.Dispose()
         }
@@ -1283,13 +1234,9 @@ function Invoke-Documentation {
     Write-Output -InputObject ('Sized {0} DOCX image(s) to fit their A4 section.' -f $resized)
   }
   #-------------------------------------------------------------------------------
-  # Publish-Document
+  # Publish=Document
   #-------------------------------------------------------------------------------
   function Publish-Document {
-    <#
-        .SYNOPSIS
-        sets everything off
-    #>
     param(
       [Parameter(Mandatory)]
       [string] $Root,
@@ -1398,9 +1345,6 @@ function Invoke-Documentation {
     }
   }
 
-  #-------------------------------------------------------------------------------
-  # main code starts here
-  #-------------------------------------------------------------------------------
   $ProjectRoot = if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
     Resolve-ProjectRoot
   } else {
@@ -1455,13 +1399,6 @@ function Invoke-Documentation {
     }
   }
 }
-$Parameters = @{
+$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
 
-  ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
-  Action = 'All' 
-  Format = 'pdf' 
-  RenderDiagrams = $FALSe
-  FailOnWarning = $true
-}
-
-Invoke-Documentation @Parameters
+Invoke-Documentation -Action All -ProjectRoot $ProjectRoot -Format pdf -FailOnWarning -verbose

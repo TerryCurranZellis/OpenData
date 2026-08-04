@@ -3,12 +3,10 @@
 title Packaged Catalogue and Persistent Plugin Registry
 skinparam componentStyle rectangle
 [CommandLineArgumentsProcessor] as CLI
-[ClasspathPluginRegistry
-registration catalogue] as Catalogue
+[ClasspathPluginRegistry\nregistration catalogue] as Catalogue
 [index.properties + packaged definitions] as Packaged
 [PropertiesFileConfigurationPropertiesSource] as External
-[JdbcPluginRegistry
-authoritative lifecycle registry] as Registry
+[JdbcPluginRegistry\nauthoritative lifecycle registry] as Registry
 [core.plugin_registry] as RegistryTable
 [core.plugin_property] as PropertyTable
 [PluginSelectionResolver] as Selection

@@ -21,15 +21,15 @@ The versions below are declared in `pom.xml` in the reviewed baseline.
 
 | Component | Coordinate | Version | Purpose | Principal licence |
 |---|---|---:|---|---|
-| Jackson Databind | `com.fasterxml.jackson.core:jackson-databind` | 2.22.1 | JSON binding | Apache-2.0 |
-| Apache Commons CSV | `org.apache.commons:commons-csv` | 1.14.1 | CSV parsing | Apache-2.0 |
 | Apache Commons CLI | `commons-cli:commons-cli` | 1.11.0 | Command-line parsing | Apache-2.0 |
+| Apache Commons CSV | `org.apache.commons:commons-csv` | 1.14.1 | CSV parsing | Apache-2.0 |
 | Apache Commons DBCP | `org.apache.commons:commons-dbcp2` | 2.14.0 | JDBC pooling | Apache-2.0 |
-| jsoup | `org.jsoup:jsoup` | 1.22.2 | HTML parsing and link discovery | MIT |
-| Apache POI OOXML | `org.apache.poi:poi-ooxml` | 5.5.1 | Excel/OOXML processing | Apache-2.0 |
 | Log4j-to-JUL adapter | `org.apache.logging.log4j:log4j-to-jul` | 2.26.1 | Routes supported Log4j calls to JUL | Apache-2.0 |
-| Microsoft JDBC Driver for SQL Server | `com.microsoft.sqlserver:mssql-jdbc` | 13.5.0.jre11-preview | SQL Server access | MIT |
 | Apache PDFBox | `org.apache.pdfbox:pdfbox` | 3.0.7 | PDF text extraction | Apache-2.0 |
+| Apache POI OOXML | `org.apache.poi:poi-ooxml` | 5.5.1 | Excel/OOXML processing | Apache-2.0 |
+| Jackson Databind | `com.fasterxml.jackson.core:jackson-databind` | 2.22.1 | JSON binding | Apache-2.0 |
+| jsoup | `org.jsoup:jsoup` | 1.22.2 | HTML parsing and link discovery | MIT |
+| Microsoft JDBC Driver for SQL Server | `com.microsoft.sqlserver:mssql-jdbc` | 13.5.0.jre11-preview | SQL Server access | MIT |
 
 The Microsoft JDBC coordinate is a **preview** release. That is a dependency and
 release-readiness concern, not a licensing exception. A formal OpenData release
@@ -56,18 +56,18 @@ build image is distributed.
 
 | Tool | Principal licence or licensing note |
 |---|---|
-| Apache Maven and Apache Maven plugins | Apache-2.0 |
-| Checkstyle | LGPL-2.1-or-later |
-| SpotBugs | LGPL-2.1 |
-| PMD | BSD-style licence; inspect the resolved distribution |
-| JaCoCo | EPL-2.0 |
-| Apache NetBeans | Apache-2.0; not required and not distributed by OpenData |
+| Apache Maven and Apache Maven plugins | Apache-2.0; not distributed by OpenData  |
+| Apache NetBeans | Apache-2.0; not distributed by OpenData |
+| Checkstyle | LGPL-2.1-or-later; not distributed by OpenData |
+| SpotBugs | LGPL-2.1; not distributed by OpenData |
+| PMD | BSD-style licence; not distributed by OpenData|
+| JaCoCo | EPL-2.0;not distributed by OpenData |
 
 ## Documentation tools
 
 | Tool | Use | Compliance rule |
 |---|---|---|
-| Pandoc | Markdown conversion | Not distributed by default; retain its licence if bundled |
+| Pandoc | Markdown conversion | Not distributed by default
 | PlantUML | Diagram rendering | Record the licence of the exact PlantUML distribution/JAR used |
 | Graphviz | Diagram layout | Not distributed by default; retain applicable licence if bundled |
 | PowerShell | Repository automation | PowerShell 7 is MIT; Windows PowerShell follows Microsoft product terms |

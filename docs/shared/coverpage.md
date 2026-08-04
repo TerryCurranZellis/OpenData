@@ -10,7 +10,5 @@
 **Author:** {{author}}  
 **Version:** {{version}}  
 **Generated:** {{date}}
-**Licence:** {{licence}}
-**Copyright:** {{copyright}}
 
 \newpage
