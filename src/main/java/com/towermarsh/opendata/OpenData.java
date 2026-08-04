@@ -101,6 +101,7 @@ public final class OpenData {
      */
     private static String messageFor(final Throwable exception) {
         var current = exception;
+        // Suppresses false positive: This is intentional reference equality check
         while (current.getCause() != null && current.getCause() != current) {
             current = current.getCause();
         }
