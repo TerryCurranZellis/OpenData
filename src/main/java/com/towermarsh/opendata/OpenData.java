@@ -93,9 +93,9 @@ public final class OpenData {
             logger.log(Level.SEVERE, "Unexpected application failure: {0}", messageFor(exception));
             logger.log(Level.FINE, "Unexpected application failure details.", exception);
         } finally {
-            final var duration = Duration.between(startedAt, Instant.now())
+            final var duration = Duration.between(startedAt, Instant.now());
             logger.log(Level.INFO, "OpenData finished with status {0}; duration {1}",
-                    new Object[]{status.displayName(), format(duratiomn)});
+                    new Object[]{status.displayName(), format(duration)});
             LoggingManager.shutdown();
         }
     }

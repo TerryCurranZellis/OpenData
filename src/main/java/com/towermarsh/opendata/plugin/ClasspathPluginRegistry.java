@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.plugin;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -22,19 +21,20 @@ import java.util.Properties;
 /**
  * Packaged plugin catalogue backed by an explicit classpath index.
  *
- * <p>An index is used instead of scanning a resource directory because
- * directory scanning is not portable once the application is packaged in a
- * JAR. The index resource is {@code config/plugins/index.properties}.</p>
-  *
+ * <p>
+ * An index is used instead of scanning a resource directory because directory
+ * scanning is not portable once the application is packaged in a JAR. The index
+ * resource is {@code config/plugins/index.properties}.</p>
+ *
  * @author Terry Curran
  * @version 2.0.0
  */
 public final class ClasspathPluginRegistry implements PluginRegistry {
 
-    private static final String INDEX_RESOURCE =
-            "config/plugins/index.properties";
-    private static final String PLUGIN_RESOURCE_PATTERN =
-            "config/plugins/%s.properties";
+    private static final String INDEX_RESOURCE
+            = "config/plugins/index.properties";
+    private static final String PLUGIN_RESOURCE_PATTERN
+            = "config/plugins/%s.properties";
 
     private final Map<String, PluginDescriptor> plugins;
 
@@ -69,9 +69,9 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
 
     @Override
     public PluginDescriptor requireEnabled(final String pluginId) {
-        final PluginDescriptor descriptor = find(pluginId)
+        final var descriptor = find(pluginId)
                 .orElseThrow(() -> new PluginRegistryException(
-                        "Packaged plugin definition was not found: " + pluginId));
+                "Packaged plugin definition was not found: " + pluginId));
 
         if (!descriptor.enabled()) {
             throw new PluginRegistryException(
@@ -84,29 +84,27 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
     private static Map<String, PluginDescriptor> loadPlugins(
             final ClassLoader classLoader) {
 
-        final Properties index = loadRequiredProperties(
+        final var index = loadRequiredProperties(
                 classLoader,
                 INDEX_RESOURCE);
 
-        final String configuredIds = required(index, "plugins");
+        final var configuredIds = required(index, "plugins");
         final Map<String, PluginDescriptor> result = new LinkedHashMap<>();
 
         Arrays.stream(configuredIds.split(","))
                 .map(ClasspathPluginRegistry::normaliseId)
                 .filter(id -> !id.isBlank())
-                .forEach(id -> {
-                    final String resource =
-                            PLUGIN_RESOURCE_PATTERN.formatted(id);
-                    final PluginDescriptor descriptor =
-                            readDescriptor(
+                .forEach((var id) -> {
+                    final var resource = PLUGIN_RESOURCE_PATTERN.formatted(id);
+                    final var descriptor
+                            = readDescriptor(
                                     id,
                                     loadRequiredProperties(
                                             classLoader,
                                             resource),
                                     resource);
 
-                    final PluginDescriptor existing =
-                            result.putIfAbsent(id, descriptor);
+                    final var existing = result.putIfAbsent(id, descriptor);
                     if (existing != null) {
                         throw new PluginRegistryException(
                                 "Duplicate plugin id in registry index: " + id);
@@ -121,8 +119,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final Properties properties,
             final String resource) {
 
-        final String declaredId =
-                normaliseId(required(properties, "plugin.id"));
+        final var declaredId = normaliseId(required(properties, "plugin.id"));
 
         if (!indexedId.equals(declaredId)) {
             throw new PluginRegistryException(
@@ -146,24 +143,22 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final ClassLoader classLoader,
             final String resourceName) {
 
-        try (InputStream input =
-                     classLoader.getResourceAsStream(resourceName)) {
+        try (var input = classLoader.getResourceAsStream(resourceName)) {
 
             if (input == null) {
                 throw new PluginRegistryException(
                         "Plugin registry resource was not found: "
-                                + resourceName);
+                        + resourceName);
             }
-
-            final Properties properties = new Properties();
-            properties.load(new InputStreamReader(
-                    input,
-                    StandardCharsets.UTF_8));
+            final var properties = new Properties();
+            try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+                properties.load(reader);
+            }
             return properties;
         } catch (IOException exception) {
             throw new PluginRegistryException(
                     "Unable to read plugin registry resource: "
-                            + resourceName,
+                    + resourceName,
                     exception);
         }
     }
@@ -176,7 +171,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
                 .map(String::trim)
                 .filter(value -> !value.isEmpty())
                 .orElseThrow(() -> new PluginRegistryException(
-                        "Required registry property is missing: " + key));
+                "Required registry property is missing: " + key));
     }
 
     private static boolean booleanValue(
@@ -190,11 +185,14 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         }
 
         return switch (value.trim().toLowerCase(Locale.ROOT)) {
-            case "true", "yes", "1", "on" -> true;
-            case "false", "no", "0", "off" -> false;
-            default -> throw new PluginRegistryException(
-                    "Invalid boolean value for '%s': %s"
-                            .formatted(key, value));
+            case "true", "yes", "1", "on" ->
+                true;
+            case "false", "no", "0", "off" ->
+                false;
+            default ->
+                throw new PluginRegistryException(
+                        "Invalid boolean value for '%s': %s"
+                                .formatted(key, value));
         };
     }
 
@@ -203,7 +201,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final String key,
             final int defaultValue) {
 
-        final String value = properties.getProperty(key);
+        final var value = properties.getProperty(key);
         if (value == null) {
             return defaultValue;
         }
@@ -220,8 +218,8 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
 
     private static String normaliseId(final String pluginId) {
         Objects.requireNonNull(pluginId, "pluginId");
-        final String result =
-                pluginId.trim().toLowerCase(Locale.ROOT);
+        final var result
+                = pluginId.trim().toLowerCase(Locale.ROOT);
 
         if (result.isEmpty()) {
             throw new PluginRegistryException(

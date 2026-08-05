@@ -65,27 +65,37 @@ public record CommandLineArguments(
         return helpRequested || aboutRequested || listPluginsRequested;
     }
 
-    /** @return whether plugin registration was requested */
+    /** 
+     * @return whether plugin registration was requested 
+     */
     public boolean registerRequested() {
         return command == PluginCommand.REGISTER;
     }
 
-    /** @return whether plugin removal was requested */
+    /** 
+     * @return whether plugin removal was requested 
+     */
     public boolean unregisterRequested() {
         return command == PluginCommand.UNREGISTER;
     }
 
-    /** @return whether plugin enablement was requested */
+    /** 
+     * @return whether plugin enable was requested 
+     */
     public boolean enableRequested() {
         return command == PluginCommand.ENABLE;
     }
 
-    /** @return whether plugin disablement was requested */
+    /** 
+     * @return whether plugin disable was requested 
+     */
     public boolean disableRequested() {
         return command == PluginCommand.DISABLE;
     }
 
-    /** @return whether normal plugin execution was requested */
+    /** 
+     * @return whether normal plugin execution was requested
+     */
     public boolean runRequested() {
         return command == PluginCommand.RUN && !informationalRequest();
     }

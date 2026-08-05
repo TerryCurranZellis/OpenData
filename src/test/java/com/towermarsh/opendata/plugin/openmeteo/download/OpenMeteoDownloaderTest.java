@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.plugin.openmeteo.download;
 
+import com.towermarsh.opendata.plugin.openmeteo.extract.OpenMeteoDownloader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

@@ -39,8 +39,8 @@ public final class CommandLineArgumentsProcessor {
      */
     private final Options options = createOptions();
 
-    /** 
-     * Creates a command-line processor. 
+    /**
+     * Creates a command-line processor.
      */
     public CommandLineArgumentsProcessor() {
     }
@@ -65,8 +65,9 @@ public final class CommandLineArgumentsProcessor {
     /**
      * Normalises launcher input before Commons CLI parsing.
      *
-     * <p>Some IDE and wrapper configurations pass the complete command line as
-     * one argument. This method expands only that single-element form.</p>
+     * <p>
+     * Some IDE and wrapper configurations pass the complete command line as one
+     * argument. This method expands only that single-element form.</p>
      *
      * @param arguments array of command line arguments
      * @return normalised argument array
@@ -107,6 +108,7 @@ public final class CommandLineArgumentsProcessor {
 
     /**
      * check if a string contains white space
+     *
      * @param value string to check
      * @return true or false
      */
@@ -116,6 +118,7 @@ public final class CommandLineArgumentsProcessor {
 
     /**
      * add token to the list
+     *
      * @param tokens token list
      * @param token token to add
      */
@@ -172,6 +175,7 @@ public final class CommandLineArgumentsProcessor {
 
     /**
      * create all the command line options
+     *
      * @return the available command line options
      */
     private static Options createOptions() {
@@ -267,9 +271,9 @@ public final class CommandLineArgumentsProcessor {
         }
         final var command = register ? PluginCommand.REGISTER
                 : unregister ? PluginCommand.UNREGISTER
-                : enable ? PluginCommand.ENABLE
-                : disable ? PluginCommand.DISABLE
-                : PluginCommand.RUN;
+                        : enable ? PluginCommand.ENABLE
+                                : disable ? PluginCommand.DISABLE
+                                        : PluginCommand.RUN;
 
         final var dryRun = commandLine.hasOption("dry-run");
         final var fileSpecified = commandLine.hasOption("file");
@@ -325,8 +329,9 @@ public final class CommandLineArgumentsProcessor {
 
     /**
      * find the plugins on the command line
+     *
      * @param commandLine the commandline
-     * @return 
+     * @return
      */
     private static List<String> parsePluginIds(final CommandLine commandLine) {
         final List<String> rawIds = new ArrayList<>();
@@ -346,6 +351,7 @@ public final class CommandLineArgumentsProcessor {
 
     /**
      * count the number of information arguments
+     *
      * @param values information arguments
      * @return number of information arguments
      */

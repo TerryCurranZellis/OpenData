@@ -123,7 +123,7 @@ public final class OpenMeteoDownloader {
      * @param endDate inclusive end date
      * @return configured HTTP request
      */
-    HttpRequest buildRequest(final LocalDate startDate, final LocalDate endDate) {
+    public HttpRequest buildRequest(final LocalDate startDate, final LocalDate endDate) {
         return HttpRequest.newBuilder()
                 .uri(buildUri(startDate, endDate))
                 .GET()

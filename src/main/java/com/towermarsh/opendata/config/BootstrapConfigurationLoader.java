@@ -60,9 +60,9 @@ public final class BootstrapConfigurationLoader {
                         "Bootstrap resource was not found: " + RESOURCE);
             }
             final var properties = new Properties();
-            properties.load(new InputStreamReader(
-                    input,
-                    StandardCharsets.UTF_8));
+            try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+                properties.load(reader);
+            }
             final Map<String, String> values = new LinkedHashMap<>();
             properties.stringPropertyNames().forEach(
                     name -> values.put(name, properties.getProperty(name).trim()));
