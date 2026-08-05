@@ -87,17 +87,28 @@ public final class OpenData {
             logger.log(Level.SEVERE, "Unexpected application failure: {0}", messageFor(exception));
             logger.log(Level.FINE, "Unexpected application failure details.", exception);
         } finally {
-            final var duration = Duration.between(startedAt, Instant.now());
-            logger.log(Level.INFO, "OpenData finished with status {0}; duration {1} ms",
-                    new Object[]{status.displayName(), duration.toMillis()});
+            final var duration = Duration.between(startedAt, Instant.now())
+            logger.log(Level.INFO, "OpenData finished with status {0}; duration {1}",
+                    new Object[]{status.displayName(), format(duratiomn)});
             LoggingManager.shutdown();
         }
     }
 
     /**
+     * Format duration as HH:mm:ss
+     *
+     * @param duration duration to format
+     * @return formatted string
+     */
+    private static String format( Duration duration ) {
+        return String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
+    }
+    
+    /**
      * display the exception message
      *
      * @param exception the exception details
+     * @return the exception message
      */
     private static String messageFor(final Throwable exception) {
         var current = exception;
