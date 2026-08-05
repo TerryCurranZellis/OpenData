@@ -57,6 +57,9 @@ import java.util.logging.Logger;
  */
 public final class OpenDataApplication {
 
+	/**
+	 * default logger for this class
+	 */
     private static final Logger LOGGER = Logger.getLogger(OpenDataApplication.class.getName());
 
     /**
@@ -77,6 +80,7 @@ public final class OpenDataApplication {
             return ExecutionStatus.SUCCESS;
         }
 
+		// read the password for the database
         final ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
         final var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
         final var bootstrap = bootstrapLoader.load(Map.of());
@@ -88,6 +92,7 @@ public final class OpenDataApplication {
                     bootstrap.toDatabasePoolConfiguration());
             final var registeredPlugins = new JdbcPluginRegistry(configurationDatabase);
 
+			// decide what to do
             if (arguments.listPluginsRequested()) {
                 printRegisteredPlugins(registeredPlugins);
                 return ExecutionStatus.SUCCESS;
@@ -121,6 +126,17 @@ public final class OpenDataApplication {
         }
     }
 
+	/**
+	 * decide which plugin to run
+	 *
+	 * @param arguments command line arguments
+     * @param bootstrap boostrap loader
+     * @param configurationDatabase configuration is in the database
+	 * @param registry source for the configuration if its in the database
+     * @return plugin execution status
+     * @throws IOException on I/O failure
+     * @throws InterruptedException when concurrent execution is interrupted
+     */	 
     private static ExecutionStatus runPlugins(
             final CommandLineArguments arguments,
             final ApplicationBootstrapProperties bootstrap,
@@ -177,6 +193,9 @@ public final class OpenDataApplication {
         }
     }
 
+	/**
+	 * register one of more plugins
+	 */
     private static void registerPlugins(
             final CommandLineArguments arguments,
             final ApplicationBootstrapProperties bootstrap,
@@ -214,6 +233,9 @@ public final class OpenDataApplication {
         noteIgnoredParallelism(arguments);
     }
 
+    /**
+	 * Read plugin details from a file
+	 */
     private static PluginRegistration registrationFromFile(
             final String requestedPluginId,
             final java.nio.file.Path file) {
@@ -225,6 +247,9 @@ public final class OpenDataApplication {
         return new PluginRegistration(toDescriptor(definition), properties);
     }
 
+    /**
+	 * get list of registered plugins
+	 */
     private static List<PluginRegistration> registrationsFromClasspath(
             final CommandLineArguments arguments,
             final ClasspathConfigurationPropertiesSource source) {
@@ -249,6 +274,9 @@ public final class OpenDataApplication {
         return List.copyOf(registrations);
     }
 
+    /*
+	 * return plugin details
+	 */
     private static PluginDescriptor toDescriptor(final PluginDefinition definition) {
         return new PluginDescriptor(
                 definition.id(),
@@ -259,6 +287,9 @@ public final class OpenDataApplication {
                 definition.configurationVersion());
     }
 
+	/**
+	 * validate the plugin
+	 */
     private static void validateImplementation(final String className) {
         try {
             final var implementation = Class.forName(
@@ -274,6 +305,9 @@ public final class OpenDataApplication {
         }
     }
 
+	/**
+	 * wer are deciding what to do with a plugin
+	 */
     private static void administerSelected(
             final CommandLineArguments arguments,
             final JdbcPluginRegistry registry,
@@ -297,6 +331,9 @@ public final class OpenDataApplication {
         noteIgnoredParallelism(arguments);
     }
 
+	/**
+	 * show list of plugins
+	 */
     private static void printRegisteredPlugins(final JdbcPluginRegistry registry) {
         final var plugins = registry.list();
         if (plugins.isEmpty()) {
@@ -314,6 +351,9 @@ public final class OpenDataApplication {
         }
     }
 
+	/**
+	 * get the database password so we can register plugins
+	 */
     private static void requireDatabasePassword(
             final ApplicationBootstrapProperties bootstrap,
             final CommandLineArguments arguments) {
@@ -326,6 +366,9 @@ public final class OpenDataApplication {
         }
     }
 
+    /**
+	 * An information message as we don't care about running in paralel
+	 */
     private static void noteIgnoredParallelism(final CommandLineArguments arguments) {
         if (arguments.parallelism().isPresent()) {
             LOGGER.log(Level.INFO,
@@ -333,6 +376,9 @@ public final class OpenDataApplication {
         }
     }
 
+    /**
+	 * disconnect from the database and close down
+	 */
     private static void closeDatabase(final DatabaseResourceManager database) {
         if (database == null) {
             return;
@@ -345,6 +391,9 @@ public final class OpenDataApplication {
         }
     }
 
+    /**
+	 * get the exception message
+	 */
     private static String messageFor(final Throwable exception) {
         var current = exception;
         while (current.getCause() != null && current.getCause() != current) {
@@ -356,12 +405,15 @@ public final class OpenDataApplication {
                 : message;
     }
 
+	/**
+	 * show the execution summary
+	 */
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach(result -> LOGGER.log(
                 result.successful() ? Level.INFO : Level.SEVERE,
-                "Plugin summary: id={0}, status={1}, durationMs={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
+                "Plugin summary: id={0}, status={1}, duration={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
                 new Object[]{
-                    result.pluginId(), result.status().name(), result.duration().toMillis(),
+                    result.pluginId(), result.status().name(), format(result.duration()),
                     result.metrics().read(), result.metrics().inserted(), result.metrics().updated(),
                     result.metrics().skipped(), result.errorMessage().orElse("")
                 }));
@@ -369,8 +421,21 @@ public final class OpenDataApplication {
                 "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
                 new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
     }
+    /**
+     * Format duration as HH:mm:ss
+     *
+     * @param duration duration to format
+     * @return formatted string
+     */
+    private static String format( Duration duration ) {
+        return String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
+    }
 
+	/**
+	 * plugin status
+	 */
     private enum AdministrationAction {
+		REGISTERED("Registered"),
         UNREGISTER("Unregistered"),
         ENABLE("Enabled"),
         DISABLE("Disabled");

@@ -34,9 +34,15 @@ import java.util.logging.Logger;
  */
 public final class OpenData {
 
+	/**
+	 * Instantiate main code
+	 */
     private OpenData() {
     }
 
+	/**
+	 * setup a default logger
+	 */
     @SuppressWarnings("NonConstantLogger")
     private static Logger logger = Logger.getLogger(OpenData.class.getName());
 
@@ -131,7 +137,7 @@ public final class OpenData {
             System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
             System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
         } catch (Exception e) {
-            logger.log(Level.INFO, "UTF‑8 console could not be enabled", e);
+            logger.log(Level.INFO, "UTF-8 console could not be enabled", e);
         }
     }
 }

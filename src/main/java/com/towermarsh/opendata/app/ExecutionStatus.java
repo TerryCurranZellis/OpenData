@@ -7,7 +7,10 @@ package com.towermarsh.opendata.app;
 
 /**
  * Final status reported by one OpenData process invocation.
-  *
+ * <p>
+ * StatusCode is not yet used as it will be a return stats for the
+ * application to be interpreted by the OS.
+ *
  * @author Terry Curran
  * @version 1.0.0
  */
