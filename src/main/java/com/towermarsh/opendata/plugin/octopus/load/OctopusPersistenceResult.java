@@ -10,7 +10,7 @@ package com.towermarsh.opendata.plugin.octopus.load;
 /**
  * results of loading the octopus data
  * 
- * @patam inserted number of records inserted
+ * @param inserted number of records inserted
  * @param updated number of records updates
  * @param skipped number of records rejected
  * 

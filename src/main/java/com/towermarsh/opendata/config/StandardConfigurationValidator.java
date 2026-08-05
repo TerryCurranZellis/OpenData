@@ -18,9 +18,7 @@ import com.towermarsh.opendata.exception.ConfigurationException;
 public final class StandardConfigurationValidator implements ConfigurationValidator {
 
     /**
-     * validate the configuration
-     * @inheritdoc
-     * @param configuration configuration to validate
+     * {@inheritDoc}
      */
     @Override
     public void validate(final ApplicationConfig configuration) {

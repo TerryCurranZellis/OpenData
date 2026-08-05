@@ -50,8 +50,7 @@ public final class ClasspathConfigurationPropertiesSource
     }
 
     /**
-     * @inheritdoc
-     * @return 
+     * {@inheritDoc}
      */
     @Override
     public Map<String, String> loadApplicationProperties() {
@@ -59,9 +58,7 @@ public final class ClasspathConfigurationPropertiesSource
     }
 
     /**
-     * @inheritdoc
-     * @param pluginId
-     * @return 
+     * {@inheritDoc}
      */
     @Override
     public Map<String, String> loadPluginProperties(final String pluginId) {

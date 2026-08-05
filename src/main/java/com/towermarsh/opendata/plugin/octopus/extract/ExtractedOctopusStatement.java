@@ -12,7 +12,7 @@ import java.util.Objects;
  * Immutable content and provenance for one extracted Octopus statement.
  *
  * @param path path to file location
- * @param filename name of the file
+ * @param fileName name of the file
  * @param statementDate date of this statement (taken from filename)
  * @param sha256 file hash
  * @param sizeBytes size of the file in bytes
@@ -33,7 +33,7 @@ public record ExtractedOctopusStatement(
      * Load the record
      *
      * @param path path to file location
-     * @param filename name of the file
+     * @param fileName name of the file
      * @param statementDate date of this statement (taken from filename)
      * @param sha256 file hash
      * @param sizeBytes size of the file in bytes

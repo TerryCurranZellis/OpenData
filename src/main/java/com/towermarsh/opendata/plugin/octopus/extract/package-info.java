@@ -12,7 +12,7 @@
  * <ul>
  * <li>{@link OctopusExtract} – extract step lists available PDFs</li>
  * <li>{@link PdfTextExtractor} – utility for extracting plain text from a PDF file</li>
- * <li>{@link ExtractOctopusStatemen} - Immutable content and provenance for one extracted Octopus statement.</li>
+ * <li>{@link ExtractedOctopusStatement} - Immutable content and provenance for one extracted Octopus statement.</li>
  * <li>{@link OctopusProcessedFileRepository} - Reads the names and hashes of successfully processed Octopus statements..</li>
  * </ul>
  */
