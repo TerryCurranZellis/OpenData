@@ -1,7 +1,0 @@
-BATCH-2-README.md
-BATCH-2-FILES.txt
-BATCH-2-VALIDATION.txt
-src/main/java/com/towermarsh/opendata/plugin/openmeteo/initialise/OpenMeteoConfiguration.java
-src/main/java/com/towermarsh/opendata/plugin/openmeteo/load/OpenMeteoRepository.java
-src/test/java/com/towermarsh/opendata/plugin/openmeteo/initialise/OpenMeteoConfigurationTest.java
-src/test/java/com/towermarsh/opendata/plugin/openmeteo/load/OpenMeteoRepositoryTest.java

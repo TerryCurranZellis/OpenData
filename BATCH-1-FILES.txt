@@ -1,7 +1,0 @@
-BATCH-1-README.md
-BATCH-1-FILES.txt
-BATCH-1-VALIDATION.txt
-src/main/java/com/towermarsh/opendata/plugin/ofgem/initialise/OfgemConfiguration.java
-src/main/java/com/towermarsh/opendata/plugin/ofgem/load/OfgemPersistenceRepository.java
-src/test/java/com/towermarsh/opendata/plugin/ofgem/initialise/OfgemConfigurationTest.java
-src/test/java/com/towermarsh/opendata/plugin/ofgem/load/OfgemPersistenceRepositoryTest.java
