@@ -1,38 +1,63 @@
 # Java Plugin Template
 
-**Document ID:** TEMPLATE-PLUGIN-JAVA-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 structural template  
-**Baseline date:** 3 August 2026
+**Document ID:** TEMPLATE-PLUGIN-JAVA-001
+**Version:** 2.1
+**Status:** Version 2.0.0 shared-processing template
+**Baseline date:** 4 August 2026
 
 ---
 
 Copy the `example` package into
-`src/main/java/com/towermarsh/opendata/plugin`, rename it to the new provider ID
-and replace every `Example` symbol.
+`src/main/java/com/towermarsh/opendata/plugin`, rename it to the provider ID and
+replace every `Example` symbol.
 
-The template follows the current framework contract:
+## Required framework use
 
-- `ExamplePlugin` is the thin `OpenDataPlugin` entry point;
+New plugins must begin with the shared Version 2.0.0 infrastructure:
+
+- `PluginPropertyValues` for typed registered properties;
+- `ValidationRules` for domain-independent rules;
+- `SqlIdentifiers` when configuration controls SQL identifiers;
+- `JdbcTransactionTemplate` for write transactions;
+- `JdbcBatchExecutor` for parameterised batches; and
+- `JdbcUpsertExecutor` only when record-by-record exists/insert/update is the
+  correct provider strategy.
+
+Do not copy private parsing or transaction helpers from an existing provider.
+Keep provider defaults, business validation, SQL and natural keys in the new
+plugin.
+
+## Template stages
+
+- `ExamplePlugin` is the thin framework entry point;
 - `initialise` owns typed configuration and orchestration;
-- `download` is an optional acquisition helper used by `extract`;
 - `extract` obtains the source representation;
-- `transform` converts extracted values into immutable records;
-- `transform.validate` enforces cross-record rules;
-- `load` owns dry-run handling and the future SQL transaction;
-- `finalise` owns cleanup and final reporting.
+- `transform` creates immutable records;
+- `transform.validate` enforces provider and cross-record rules;
+- `load` applies dry-run policy and delegates to the repository;
+- `finalise` owns cleanup/archive/reporting.
 
-`ExampleLoad` deliberately throws in write mode until real SQL, rollback and
-load counts are implemented. It is safe to use for structural development and
-dry-run testing, but it cannot report false write success.
+`ExampleConfiguration` demonstrates shared URI/path/duration/long parsing.
+`ExampleLoader` demonstrates a transaction and insert batch. Replace the example
+schema/table/columns and decide whether insert-only, set-based staging or typed
+upsert is correct for the provider.
 
-After copying:
+## API documentation rule
 
-1. add `<id>.properties` and the registry index entry;
-2. add ordered SQL and least-privilege grants;
-3. replace the placeholder source and transformation logic;
-4. add unit, SQL Server integration and acceptance tests;
-5. add plugin/user/reference documentation and source notices; and
-6. run registration before ordinary database-backed execution.
+Every new or amended public Version 2.0.0 API must include Javadoc
+`@since 2.0.0`. A retained obsolete public API must also include Java
+`@Deprecated` and Javadoc `@deprecated`. Do not retain unused private methods as
+deprecated wrappers.
 
-See [Adding a plugin](../../guides/adding-a-plugin.md).
+## Completion checklist
+
+1. add complete registration properties and registry index entry;
+2. add ordered SQL, constraints, indexes and least-privilege grants;
+3. replace placeholder source/transform/load logic;
+4. add unit and live SQL Server tests;
+5. add plugin/user/reference documentation, diagrams and source notices;
+6. register the plugin before ordinary database-backed execution; and
+7. run Maven and documentation validation.
+
+See [Adding a plugin](../../guides/adding-a-plugin.md) and the
+[shared validation/JDBC reference](../../reference/shared-validation-and-jdbc-reference.md).

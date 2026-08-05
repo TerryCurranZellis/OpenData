@@ -1,9 +1,9 @@
 # Adding a Plugin
 
-**Document ID:** GUIDE-PLUGIN-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 developer procedure  
-**Baseline date:** 3 August 2026  
+**Document ID:** GUIDE-PLUGIN-001
+**Version:** 2.1
+**Status:** Version 2.0.0 developer procedure
+**Baseline date:** 4 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -42,21 +42,44 @@ The root class implements `OpenDataPlugin` and has a public
 `PluginDefinition` constructor. `ReflectionPluginFactory` uses that constructor
 before falling back to a no-argument constructor.
 
-## 3. Implement the five stages
+## 3. Implement the lifecycle stages
 
 | Stage | Required outcome |
 |---|---|
-| `initialise` | Parse typed configuration and orchestrate all stages |
+| `initialise` | Build typed configuration and orchestrate all stages |
 | `extract` | Obtain and decode the provider source |
 | `transform` | Produce immutable domain records |
 | `transform.validate` | Reject invalid response or record sets |
-| `load` | Own SQL transaction and return accurate counts |
+| `load` | Own provider SQL, idempotency and accurate load counts |
 | `finalise` | Cleanup/archive/report without hiding primary failures |
 
 Dry run must stop before load and before archive or other persistent side
 effects.
 
-## 4. Add classpath registration properties
+## 4. Use shared typed configuration
+
+Construct `PluginPropertyValues` inside the typed configuration factory. Do not
+copy parsing helpers from another plugin.
+
+```java
+final var properties = new PluginPropertyValues(definition);
+final Duration timeout = ValidationRules.requirePositive(
+        properties.duration("download.request-timeout", Duration.ofSeconds(60)),
+        "download.request-timeout");
+```
+
+Use:
+
+- `PluginPropertyValues` for strings, numbers, booleans, durations, dates, paths,
+  URIs and caller-defined types;
+- `ValidationRules` for lengths, positive values, ranges and date ordering;
+- `SqlIdentifiers` only for configurable schema/table identifiers that must be
+  composed into SQL.
+
+Conversion error messages must not expose property values. Apply domain
+validation after conversion.
+
+## 5. Add classpath registration properties
 
 Create:
 
@@ -77,28 +100,73 @@ and ordinary runs resolve plugin configuration from the database.
 
 Do not add provider selection code to the application main class.
 
-## 5. Add SQL
+## 6. Select the persistence strategy
+
+Provider SQL remains in `plugin.<id>.load`; shared JDBC classes provide the
+mechanics.
+
+| Data pattern | Use |
+|---|---|
+| Simple insert batches | `JdbcTransactionTemplate` plus `JdbcBatchExecutor` |
+| Natural-key row upserts | typed `JdbcUpsertAdapter` plus `JdbcUpsertExecutor` |
+| Larger staged loads | transaction template, batch staging and provider set-based SQL |
+| Period/snapshot replacement | transaction template with explicit provider replacement SQL |
+
+Example transaction:
+
+```java
+return new JdbcTransactionTemplate(database).execute(
+        "Unable to persist example data",
+        connection -> persist(connection, records));
+```
+
+The plugin retains schema names, SQL, bindings, natural keys, lock strategy,
+provenance and result semantics. Do not create a universal repository or use
+reflection to generate SQL.
+
+When temporary tables or `SET` options can survive a pooled logical connection,
+provide `JdbcConnectionCleanup` to restore the session after success or failure.
+
+## 7. Add SQL
 
 Use ordered, idempotent SQL scripts for schema, tables, constraints, indexes,
 permissions and verification. The application principal receives only required
-rights. The load component owns its borrowed connection and transaction.
+rights. Prepared statements remain mandatory for values. Validate configured SQL
+identifiers before composing schema or table names.
 
-## 6. Test
+## 8. Apply API lifecycle metadata
+
+Every new or materially changed public API for this release uses:
+
+```java
+@since 2.0.0
+```
+
+When an obsolete public procedure must remain temporarily, add both Java
+`@Deprecated` and Javadoc `@deprecated`, and name the replacement. Remove private
+obsolete helpers when they have no external callers instead of preserving dead
+wrappers.
+
+## 9. Test
 
 At minimum cover:
 
-- required/default/invalid configuration;
+- required/default/invalid typed configuration;
+- domain ranges and date ordering;
 - endpoint construction and extraction failures;
 - representative and malformed source fixtures;
 - transformation and cross-record validation;
 - dry-run absence of database and archive side effects;
-- transaction commit, rollback, repeat load and accurate metrics;
+- transaction commit, rollback and auto-commit restoration;
+- configured batch boundaries or upsert insert/update branches;
+- pooled-session cleanup where connection-local state is used;
+- repeat load, accurate metrics and SQL Server permissions;
 - registry loading and reflection construction; and
-- live SQL Server permissions and idempotency.
+- deprecation annotations for any retained compatibility API.
 
 Mock JDBC tests are not SQL Server integration tests.
 
-## 7. Document and register
+## 10. Document and register
 
 Add:
 
@@ -111,5 +179,8 @@ Add:
 - source notice and third-party notice changes; and
 - ADR status updates.
 
-Run documentation validation, diagram rendering, `mvn clean verify`, strict
-quality review and the release acceptance matrix.
+Update the relevant generated-document manifests so new material is included in
+the delivered manuals. Run documentation validation, diagram rendering,
+`mvn clean verify`, strict quality review and the release acceptance matrix.
+
+See [Shared Validation and JDBC Reference](../reference/shared-validation-and-jdbc-reference.md).

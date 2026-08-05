@@ -1,9 +1,9 @@
 # Architecture Decision Register
 
 **Document ID:** ADR-REGISTER-001
-**Version:** 2.0
+**Version:** 2.1
 **Status:** Baseline
-**Baseline date:** 3 August 2026
+**Baseline date:** 4 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -68,5 +68,6 @@
 | [ADR-0046](ADR-0046-manifest-driven-documentation-engine.md) | Use a manifest-driven documentation engine | Accepted | Implemented |
 | [ADR-0047](ADR-0047-database-backed-configuration-registration.md) | Register configuration in SQL Server and bootstrap from encrypted file settings | Accepted | Implemented for version 2 bootstrap |
 | [ADR-0048](ADR-0048-persistent-plugin-registry-and-cli-lifecycle.md) | Persist plugin lifecycle state and administer it through the CLI | Accepted | Implemented; extends ADR-0013/0047 |
-|
+| [ADR-0049](ADR-0049-shared-validation-and-jdbc-execution.md) | Share validation and JDBC execution mechanics | Accepted | Implemented across Ofgem, OpenMeteo and Octopus |
+
 :::

@@ -1,0 +1,18 @@
+OpenData Refactoring Batch 0 Validation
+=======================================
+
+Base repository revision reviewed:
+d352a0015aa46f436512182523fbfffe628c22fa
+
+Validation performed:
+- Production source compilation with javac --release 17: PASSED
+- Typed property parsing smoke test: PASSED
+- SQL identifier validation smoke test: PASSED
+- JDBC transaction commit/restore smoke test: PASSED
+- Generic typed upsert execution smoke test: PASSED
+
+Limitations:
+- The execution environment could not clone GitHub or run the repository's full
+  Maven build because direct network/DNS access is unavailable.
+- The included JUnit/Mockito tests should be run using `mvn clean verify` after
+  the archive is merged into a local OpenData branch.

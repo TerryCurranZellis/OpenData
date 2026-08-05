@@ -1,45 +1,32 @@
 @startuml
-title Octopus Energy Statement Processing
-actor Operator
-participant OctopusPlugin as Plugin
-participant "initialise.OctopusInitialise" as Initialise
-participant "extract.OctopusExtract" as Extract
-participant "OctopusProcessedFileRepository" as LedgerRead
-participant PdfTextExtractor as Pdf
-participant "transform.OctopusStatementParser" as Parser
-participant "load.OctopusPersistenceRepository" as Repository
-participant "finalise.OctopusFinalise" as Finalise
-database "OpenData SQL Server" as Database
-collections "Input PDFs" as Input
-collections "Archive" as Archive
+!pragma layout smetana
+title Octopus Statement Processing — Generic Typed Upserts
 
-Operator -> Plugin : --plugin octopus
-Plugin -> Initialise : execute(context)
-Initialise -> Extract : extract(configuration, context)
-Extract -> Input : list matching filename pattern
-Extract -> LedgerRead : find completed filename+hash keys
-LedgerRead -> Database : SELECT octopus.statement_file
-LedgerRead --> Extract : completed keys
-loop each new or changed PDF
-  Extract -> Pdf : extract text + SHA-256 metadata
-  Pdf --> Extract : ExtractedOctopusStatement
-end
-Extract --> Initialise : statements
-Initialise -> Parser : parse electricity and gas
-Parser --> Initialise : typed records
-alt dry run (current defect)
-  note over Extract,Database
-    Framework database is unavailable during plugin dry run,
-    so the ledger read fails before this point.
-  end note
-else write run
-  Initialise -> Repository : save complete batch
-  Repository -> Database : BEGIN
-  Repository -> Database : insert/update facts + mark files COMPLETED
-  Repository -> Database : COMMIT
-  Repository --> Initialise : metrics
-  Initialise -> Finalise : finalise(completed=true)
-  Finalise -> Input : move successful PDFs
-  Finalise -> Archive : replace/move by filename
-end
+actor Operator
+participant OctopusPlugin
+participant OctopusConfiguration
+participant PluginPropertyValues
+participant OctopusPersistenceRepository
+participant JdbcTransactionTemplate
+participant JdbcUpsertExecutor
+participant ElectricityRecordUpsertAdapter
+participant GasRecordUpsertAdapter
+database "SQL Server" as DB
+
+Operator -> OctopusPlugin : --plugin octopus
+OctopusPlugin -> OctopusConfiguration : from(definition)
+OctopusConfiguration -> PluginPropertyValues : requiredPath x3
+OctopusPlugin -> OctopusPersistenceRepository : save(parseResult, runId)
+OctopusPersistenceRepository -> JdbcTransactionTemplate : execute(...)
+JdbcTransactionTemplate -> DB : begin transaction
+OctopusPersistenceRepository -> JdbcUpsertExecutor : electricity records
+JdbcUpsertExecutor -> ElectricityRecordUpsertAdapter : exists / insert / update
+ElectricityRecordUpsertAdapter -> DB : electricity SQL
+OctopusPersistenceRepository -> JdbcUpsertExecutor : gas records
+JdbcUpsertExecutor -> GasRecordUpsertAdapter : exists / insert / update
+GasRecordUpsertAdapter -> DB : gas SQL
+OctopusPersistenceRepository -> DB : MERGE statement_file COMPLETED
+OctopusPersistenceRepository --> JdbcTransactionTemplate : combined counts
+JdbcTransactionTemplate -> DB : commit / rollback
+JdbcTransactionTemplate --> OctopusPlugin : result
 @enduml

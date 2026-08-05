@@ -1,17 +1,18 @@
 # Database Persistence and Connection Pooling
 
-**Document ID:** ARCH-019  
-**Version:** 1.1  
-**Status:** Implemented  
-**Baseline date:** 26 July 2026
+**Document ID:** ARCH-019
+**Version:** 2.0
+**Status:** Implemented in Version 2.0.0
+**Baseline date:** 4 August 2026
 
 ---
 
 ## Purpose
 
-The database layer supports the current command-line application and future
-parallel plugin work without opening a new physical SQL Server connection for
-every statement.
+The database layer supports bounded parallel plugin execution without opening a
+new physical SQL Server connection for every statement. Provider repositories
+retain explicit SQL and schema ownership while shared JDBC components implement
+repeated connection, transaction, batch and typed upsert mechanics.
 
 ## Components
 
@@ -19,9 +20,12 @@ every statement.
 |---|---|
 | `DatabasePoolConfiguration` | Runtime SQL Server and pool settings |
 | `SQLServerResource` | Process singleton backed by DBCP `GenericObjectPool` and `PoolingDriver` |
-| `DatabaseResourceManager` | Connection/pool facade supplied in plugin execution context |
-| `DatabasePoolSnapshot` | Reports active, idle and configured capacity |
-| repository implementations | Own prepared SQL and transaction boundaries |
+| `DatabaseResourceManager` | Connection and pool facade supplied to runtime components |
+| `DatabasePoolSnapshot` | Active, idle and configured pool capacity |
+| `JdbcTransactionTemplate` | Borrow, commit, roll back, clean and restore a connection |
+| `JdbcBatchExecutor` | Prepared-statement batching and result counting |
+| `JdbcUpsertExecutor` | Common typed exists/insert/update control flow |
+| plugin repositories and adapters | Provider SQL, natural keys, bindings and persistence policy |
 
 ## Pool defaults
 
@@ -34,33 +38,56 @@ every statement.
 | validation query | `SELECT 1` | Verify a borrowed SQL Server connection |
 
 These are conservative application defaults, not universal production values.
-Pool sizing must account for plugin concurrency, SQL Server capacity and the
+Pool sizing must account for plugin parallelism, SQL Server capacity and the
 number of application processes.
 
-## Lifecycle
+## Transaction lifecycle
 
-1. configuration is resolved and validated;
-2. `SQLServerResource.initialise` creates or returns the process singleton;
-3. repositories borrow logical connections;
-4. try-with-resources returns each connection to the pool;
-5. application shutdown closes the resource, DBCP pool and singleton once;
-6. shutdown records the final run status and duration before resources disappear.
+1. a repository calls `JdbcTransactionTemplate.execute`;
+2. the template borrows one logical connection from `DatabaseResourceManager`;
+3. the original auto-commit state is retained and auto-commit is disabled;
+4. the provider callback executes explicit SQL;
+5. success commits, while failure triggers rollback;
+6. optional `JdbcConnectionCleanup` removes connection-scoped state;
+7. the original auto-commit state is restored;
+8. try-with-resources returns the logical connection to the pool.
 
-`DatabasePoolConfig` and `DatabaseConnectionManager` remain from the earlier
-persistence layer and are used by older repository classes/tests, not by the
-current application runtime. Consolidating those parallel abstractions is an
-open cleanup task.
+Rollback and cleanup failures are attached to the primary failure as suppressed
+exceptions. Checked callback failures are translated to
+`DatabaseAccessException` at the template boundary.
+
+## Pooled SQL Server session state
+
+Closing a pooled logical connection does not guarantee that a local temporary
+table or SQL Server `SET` option has disappeared from the underlying physical
+session. A repository that creates such state must provide a cleanup callback.
+OpenMeteo uses this mechanism to remove `#OpenMeteoDaily` and reset
+`XACT_ABORT` after commit or rollback.
+
+## Persistence strategy ownership
+
+Ofgem uses explicit provenance and period-replacement SQL plus shared transaction
+and batch mechanics. OpenMeteo uses a staged set-based strategy plus shared
+transaction and staging batches. Octopus uses separate electricity and gas SQL
+adapters with a shared typed upsert executor.
+
+The shared package does not infer schemas, columns or natural keys and does not
+replace prepared statements or provider integration tests.
 
 ## Failure behaviour
 
-- invalid pool values fail during configuration construction;
-- exhaustion fails after `database.pool.max-wait-seconds` rather than blocking
-  forever;
-- validation failure prevents a bad connection being handed to a repository;
-- repository SQL exceptions are translated at the service boundary;
+- invalid pool or batch values fail during configuration or call validation;
+- pool exhaustion fails after `database.pool.max-wait-seconds`;
+- connection validation prevents a failed session being handed to a repository;
+- batch execution fails if the JDBC driver reports `EXECUTE_FAILED`;
+- repository SQL exceptions are translated at the transaction boundary;
+- cleanup failures do not conceal an earlier SQL or transformation failure;
 - closing an individual borrowed connection must not close the pool;
 - closing the pool makes later borrows fail clearly.
 
+See [Shared Validation and JDBC Infrastructure](028-shared-validation-and-jdbc-infrastructure.md)
+for plugin-author guidance.
+
 ::: {.landscape}
-![Database persistence components](../diagrams/generated/database-persistence-components.svg){width=22.5cm}
+![Shared validation and database persistence components](../diagrams/generated/database-persistence-components.svg){width=22.5cm}
 :::

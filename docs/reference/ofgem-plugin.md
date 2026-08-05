@@ -1,50 +1,44 @@
 # Ofgem Plugin Reference
 
-**Document ID:** REF-PLUGIN-OFGEM-001
-**Version:** 2.0
-**Status:** Version 2.0.0 implementation reference
-**Baseline date:** 3 August 2026
+**Document ID:** REF-OFGEM-PLUGIN-001
+**Version:** 2.1
+**Baseline date:** 4 August 2026
 
----
+## Public processing types
 
-| Item | Value |
+| Type | Responsibility |
 |---|---|
-| Plugin id | `ofgem` |
-| Implementation class | `com.towermarsh.opendata.plugin.ofgem.OfgemPlugin` |
-| Dataset id | `ofgem-energy-price-cap` |
-| Endpoint | `price-cap-publication` |
-| Source | Official Ofgem publication page and discovered XLSX workbook |
-| Primary worksheet | `1a Levelised DTC` |
-| Write model | Transactional period/fact replacement |
+| `OfgemConfiguration` | typed endpoint, file, timeout and archive settings |
+| `OfgemPersistenceRepository` | transactional provenance and period replacement |
+| `OfgemPersistenceResult` | inserted, updated and skipped counts |
 
-## Active class flow
+## Shared dependencies
 
-```text
-OfgemPlugin
- -> initialise.OfgemInitialise
- -> extract.OfgemWorkbookDownloader
- -> transform.OfgemPriceCapWorkbookExtractor
- -> transform.validate.OfgemWorkbookDataValidator
- -> load.OfgemLoad / OfgemPersistenceRepository
- -> finalise.OfgemFinalise
+`OfgemConfiguration` uses `PluginPropertyValues` and `ValidationRules`.
+`OfgemPersistenceRepository` uses `JdbcTransactionTemplate` and
+`JdbcBatchExecutor` with a fixed level batch size of 500.
+
+Provider SQL remains explicit. The shared layer does not determine the Ofgem
+business key, period identity, provenance rows or current-period rule.
+
+## Compatibility
+
+These public signatures remain unchanged and are marked `@since 2.0.0`:
+
+```java
+OfgemConfiguration.from(PluginDefinition definition)
+OfgemConfiguration.downloadPath()
+new OfgemPersistenceRepository(DatabaseResourceManager database)
+repository.persist(PluginDefinition definition,
+                   ResolvedDownload download,
+                   OfgemPriceCapWorkbookData data)
 ```
 
-## Metrics
+No public procedure is deprecated by the Ofgem refactor.
 
-`read` is the number of extracted `OfgemPriceCapLevel` values. A dry run reports
-all read rows as skipped. A write run returns repository insert/update/skip
-counts.
+## Failure contract
 
-## Failure conditions
-
-- no matching workbook link;
-- HTTP or file-write failure;
-- missing worksheet or structural labels;
-- invalid/duplicate period or business keys;
-- missing source-cell lineage;
-- SQL/provenance/transaction failure;
-- archive failure after successful processing.
-
-See the [configuration reference](ofgem-plugin-configuration.md),
-[data dictionary](ofgem-price-cap-data-dictionary.md) and
-[plugin documentation](../plugins/ofgem/README.md).
+Checked JDBC, file hashing and digest failures are translated by the shared
+transaction boundary into `DatabaseAccessException` using the Ofgem failure
+message. Runtime failures remain runtime failures. Rollback failure is attached
+to the primary failure.

@@ -1,60 +1,41 @@
 # OpenMeteo Plugin Reference
 
-**Document ID:** REF-PLUGIN-OPENMETEO-001
-**Version:** 2.0
-**Status:** Version 2.0.0 implementation reference
-**Baseline date:** 3 August 2026
+**Document ID:** REF-OPENMETEO-PLUGIN-001
+**Version:** 2.1
+**Baseline date:** 4 August 2026
 
----
+## Public processing types
 
-| Item | Value |
+| Type | Responsibility |
 |---|---|
-| Plugin id | `openmeteo` |
-| Implementation class | `com.towermarsh.opendata.plugin.openmeteo.OpenMeteoPlugin` |
-| Dataset id | `openmeteo-daily-weather` |
-| Endpoint name | `archive` |
-| Source format | JSON |
-| Persistence | Location/date idempotent upsert |
+| `OpenMeteoConfiguration` | typed API, location, date and SQL settings |
+| `OpenMeteoRepository` | locked, staged and set-based persistence |
+| `OpenMeteoPersistenceResult` | inserted, updated and skipped counts |
 
-## Active class flow
+## Shared dependencies
 
-```text
-OpenMeteoPlugin
- -> initialise.OpenMeteoInitialise
- -> extract.OpenMeteoExtract / OpenMeteoDownloader
- -> transform.OpenMeteoResponseExtractor
- -> transform.validate.OpenMeteoResponseValidator
- -> transform.OpenMeteoTransformer
- -> load.OpenMeteoLoad / OpenMeteoRepository
- -> finalise.OpenMeteoFinalise
+Configuration uses `PluginPropertyValues`, `ValidationRules` and
+`SqlIdentifiers`. Persistence uses `JdbcTransactionTemplate`,
+`JdbcBatchExecutor` and a `JdbcConnectionCleanup` callback.
+
+## Deprecated compatibility procedure
+
+```java
+@Deprecated(since = "2.0.0", forRemoval = false)
+OpenMeteoConfiguration.sqlIdentifier(String value, String name)
 ```
 
-## API query
+The method delegates to `SqlIdentifiers.requireSafe(...)`. It is retained for
+source compatibility and also carries Javadoc `@deprecated` and
+`@since 2.0.0`. New code must call `SqlIdentifiers` directly.
 
-The plugin sends latitude, longitude, inclusive start/end dates, timezone and the
-following daily variables: maximum/minimum/mean temperature, sunrise, sunset,
-daylight duration and weather code.
+## Repository result rules
 
-The public archive endpoint does not require an API key in the current design.
+- an empty input list returns zero counts without borrowing a connection;
+- staged row count must equal input record count;
+- changed rows are updated;
+- missing rows are inserted; and
+- remaining rows are reported as skipped.
 
-## Date behavior
-
-Blank start resolves to `2000-01-01`; blank end resolves to yesterday in the
-configured timezone. `default-start-days-ago` and `include-current-date` are
-currently parsed but not applied by `resolveDateRange`.
-
-## Persistence
-
-A stable `location-key` identifies `openmeteo.Location`. Daily rows are keyed by
-location/date and linked to `core.PluginRun`. The repository uses a SQL Server
-application lock for the location, staging and one transaction. Inserted,
-changed and unchanged rows become inserted, updated and skipped metrics.
-
-## Dry run
-
-The plugin performs the API request and all validation/transformation, then
-returns read/skipped metrics without plugin database access. Database-backed
-configuration can still require SQL Server during application startup.
-
-See [plugin documentation](../plugins/openmeteo/README.md) and
-[schema reference](openmeteo-schema.md).
+The cleanup callback removes connection-scoped temporary state before the
+connection returns to the pool.

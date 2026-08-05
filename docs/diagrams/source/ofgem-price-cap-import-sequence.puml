@@ -1,37 +1,29 @@
 @startuml
-title Ofgem Price-Cap Import
-actor Operator
-participant OpenDataApplication as Application
-participant PluginExecutionCoordinator as Coordinator
-participant OfgemPlugin as Plugin
-participant "initialise.OfgemInitialise" as Initialise
-participant "extract.OfgemWorkbookDownloader" as Downloader
-participant "transform.OfgemPriceCapWorkbookExtractor" as Extractor
-participant "transform.validate.OfgemWorkbookDataValidator" as Validator
-participant "load.OfgemPersistenceRepository" as Repository
-participant "finalise.OfgemFinalise" as Finalise
-database "OpenData SQL Server" as Database
+!pragma layout smetana
+title Ofgem Price-Cap Import — Shared Processing Infrastructure
 
-Operator -> Application : --plugin ofgem [--dry-run]
-Application -> Coordinator : execute(resolved plugin)
-Coordinator -> Plugin : execute(context)
-Plugin -> Initialise : execute(context)
-Initialise -> Downloader : discover and download workbook
-Downloader --> Initialise : ResolvedDownload
-Initialise -> Extractor : extract(local XLSX)
-Extractor --> Initialise : period and cap levels
-Initialise -> Validator : validate workbook data
-Validator --> Initialise : validated data
-alt dry run
-  Initialise --> Coordinator : read/skipped metrics
-else write run
-  Initialise -> Repository : persist(download, data)
-  Repository -> Database : BEGIN + provenance + period/facts
-  Repository -> Database : COMMIT
-  Repository --> Initialise : inserted/updated/skipped
-  Initialise -> Finalise : archive successful workbook
-  Finalise --> Initialise : complete
-  Initialise --> Coordinator : metrics
-end
-Coordinator --> Application : summary
+actor Operator
+participant OfgemPlugin
+participant OfgemConfiguration
+participant PluginPropertyValues
+participant OfgemPersistenceRepository
+participant JdbcTransactionTemplate
+participant JdbcBatchExecutor
+database "SQL Server" as DB
+
+Operator -> OfgemPlugin : --plugin ofgem
+OfgemPlugin -> OfgemConfiguration : from(definition)
+OfgemConfiguration -> PluginPropertyValues : text/duration/boolean
+PluginPropertyValues --> OfgemConfiguration : typed values
+OfgemPlugin -> OfgemPersistenceRepository : persist(definition, download, data)
+OfgemPersistenceRepository -> JdbcTransactionTemplate : execute(...)
+JdbcTransactionTemplate -> DB : borrow connection / begin
+JdbcTransactionTemplate -> OfgemPersistenceRepository : transaction connection
+OfgemPersistenceRepository -> DB : ingestion + source + period SQL
+OfgemPersistenceRepository -> JdbcBatchExecutor : insert levels (batch 500)
+JdbcBatchExecutor -> DB : parameterised batches
+JdbcBatchExecutor --> OfgemPersistenceRepository : affected count
+OfgemPersistenceRepository --> JdbcTransactionTemplate : result
+JdbcTransactionTemplate -> DB : commit / rollback
+JdbcTransactionTemplate --> OfgemPlugin : persistence result
 @enduml

@@ -1,9 +1,9 @@
 # Developer Documentation
 
-**Document ID:** DEV-INDEX-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026  
+**Document ID:** DEV-INDEX-001
+**Version:** 2.1
+**Status:** Version 2.0.0 implementation baseline
+**Baseline date:** 4 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -20,6 +20,8 @@
 ## Extending OpenData
 
 - [Adding a plugin](../guides/adding-a-plugin.md)
+- [Shared validation and JDBC reference](../reference/shared-validation-and-jdbc-reference.md)
+- [Shared validation and JDBC architecture](../architecture/028-shared-validation-and-jdbc-infrastructure.md)
 - [Adding a CSV plugin](../guides/adding-a-csv-plugin.md)
 - [Adding a JSON plugin](../guides/adding-a-json-plugin.md)
 - [Adding an Excel plugin](../guides/adding-an-excel-plugin.md)
@@ -45,3 +47,8 @@ The executable plugin contract is
 organised around `initialise`, `extract`, `transform`, `load` and `finalise`.
 The root plugin class is a thin framework entry point and
 `ReflectionPluginFactory` constructs it from the resolved `PluginDefinition`.
+
+New typed configuration uses `PluginPropertyValues`, `ValidationRules` and
+`SqlIdentifiers`. New repositories keep provider SQL explicit while using the
+shared `database.jdbc` transaction, batch or typed upsert components where the
+pattern applies.

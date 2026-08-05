@@ -1,38 +1,44 @@
 @startuml
 !pragma layout smetana
-title Database Persistence Components
+title Shared Validation and Database Persistence Components
 skinparam componentStyle rectangle
+skinparam packageStyle rectangle
 
-package "Runtime audit" {
-  [JdbcPluginRunAudit] as PluginAudit
+package "Configuration" {
+  [PluginDefinition] as Definition
+  [Shared validation\nPluginPropertyValues\nValidationRules\nSqlIdentifiers] as Validation
+  [Typed plugin configuration\nOfgemConfiguration\nOpenMeteoConfiguration\nOctopusConfiguration] as PluginConfiguration
 }
 
-package "Ofgem" {
-  [OfgemPlugin] as OfgemPlugin
-  [load.OfgemPersistenceRepository] as OfgemRepository
+package "Plugin-owned persistence" {
+  [Provider repositories\nOfgem period replacement\nOpenMeteo staged set-based load\nOctopus statement transaction] as Repositories
+  [Typed Octopus adapters\nElectricityRecordUpsertAdapter\nGasRecordUpsertAdapter] as Adapters
 }
 
-package "OpenMeteo" {
-  [OpenMeteoPlugin] as MeteoPlugin
-  [load.OpenMeteoRepository] as MeteoRepository
+package "Shared JDBC execution" {
+  [Transaction and cleanup\nJdbcTransactionTemplate\nJdbcConnectionCleanup] as Transactions
+  [Batch execution\nJdbcBatchExecutor\nJdbcStatementBinder] as Batches
+  [Typed upsert flow\nJdbcUpsertExecutor\nJdbcUpsertAdapter\nJdbcUpsertResult] as Upserts
 }
 
 package "Database access" {
   interface DatabaseResourceManager
-  [SQLServerResource] as Resource
-  [DBCP PoolingDriver] as Driver
-  [GenericObjectPool] as Pool
+  [SQLServerResource and DBCP pool] as Resource
 }
 
 database "OpenData SQL Server" as Database
 
-OfgemPlugin --> OfgemRepository
-MeteoPlugin --> MeteoRepository
-PluginAudit --> DatabaseResourceManager
-OfgemRepository --> DatabaseResourceManager
-MeteoRepository --> DatabaseResourceManager
+Definition --> Validation
+Validation --> PluginConfiguration
+PluginConfiguration --> Repositories
+Repositories --> Transactions
+Repositories --> Batches
+Repositories --> Upserts
+Repositories --> Adapters
+Adapters ..> Upserts
+Transactions --> DatabaseResourceManager
+Batches --> DatabaseResourceManager
+Upserts --> DatabaseResourceManager
 Resource ..|> DatabaseResourceManager
-Resource --> Driver
-Driver --> Pool
-Pool --> Database
+Resource --> Database
 @enduml

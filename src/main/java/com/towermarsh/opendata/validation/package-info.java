@@ -4,15 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Validation contracts and result models.
+ * Shared validation contracts, typed plugin-property parsing, and reusable
+ * validation rules.
  *
  * <ul>
- * <li>{@link DataQualityValidator}</li>
- * <li>{@link ValidationResult}</li>
- * <li>{@link Validator}</li>
+ * <li>{@link com.towermarsh.opendata.validation.PluginPropertyValues}</li>
+ * <li>{@link com.towermarsh.opendata.validation.ValidationRules}</li>
+ * <li>{@link com.towermarsh.opendata.validation.SqlIdentifiers}</li>
+ * <li>{@link com.towermarsh.opendata.validation.DataQualityValidator}</li>
+ * <li>{@link com.towermarsh.opendata.validation.ValidationResult}</li>
+ * <li>{@link com.towermarsh.opendata.validation.Validator}</li>
  * </ul>
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.0.0
  */
 package com.towermarsh.opendata.validation;

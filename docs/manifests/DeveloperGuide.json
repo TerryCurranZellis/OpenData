@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 2.0.0 complete release-candidate documentation and readiness baseline"
+    "revisionSummary": "Version 2.0.0 complete shared and provider processing-refactor documentation"
   },
   "sections": [
     "shared/introduction.md",
@@ -24,6 +24,7 @@
     "standards/plugin-package-architecture.md",
     "standards/documentation-standard.md",
     "guides/adding-a-plugin.md",
+    "reference/shared-validation-and-jdbc-reference.md",
     "guides/adding-a-csv-plugin.md",
     "guides/adding-a-json-plugin.md",
     "guides/adding-an-excel-plugin.md",
@@ -34,8 +35,13 @@
     "architecture/005-dependency-rules.md",
     "architecture/007-plugin-architecture.md",
     "architecture/008-pipeline-engine.md",
+    "architecture/021-ofgem-price-cap-architecture.md",
+    "architecture/026-openmeteo-historical-weather-architecture.md",
+    "architecture/027-octopus-energy-statement-architecture.md",
+    "architecture/028-shared-validation-and-jdbc-infrastructure.md",
     "architecture/018-testing-and-quality.md",
     "architecture/024-architecture-traceability.md",
+    "architecture/CURRENT-CODE-INVENTORY.md",
     "decisions/README.md",
     "decisions/ADR-REGISTER.md",
     "governance/README.md",
@@ -46,6 +52,7 @@
     "release/Distribution-Contents.md",
     "release/Final-Release-Checklist.md",
     "review/RELEASE-READINESS-STATUS-2.0.0.md",
+    "review/FINAL-DOCUMENTATION-AUDIT-2026-08-04.md",
     "release/Release-Evidence-Index.md",
     "shared/glossary.md",
     "shared/licence.md",

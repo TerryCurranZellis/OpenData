@@ -1,55 +1,36 @@
-# Octopus Schema Reference
+# Octopus Schema and Persistence Reference
 
-**Document ID:** REF-SCHEMA-OCTOPUS-001
-**Version:** 2.0
-**Status:** Implemented SQL Server schema
-**Baseline date:** 3 August 2026
+**Document ID:** REF-OCTOPUS-SCHEMA-001
+**Version:** 2.1
+**Baseline date:** 4 August 2026
 
----
+## Tables
 
-Created by `sql/007a-create-octopus-schema.sql`.
-
-## `octopus.statement_file`
-
-Tracks successfully processed source documents.
-
-| Column group | Purpose |
+| Table | Purpose |
 |---|---|
-| `statement_file_id` | Identity primary key |
-| `file_name`, `sha256` | Unique source-content identity |
-| `statement_date`, `size_bytes` | Source metadata |
-| `status` | `COMPLETED` or `FAILED` constraint; current loader writes `COMPLETED` |
-| `last_run_id` | Foreign key to `core.PluginRun` |
-| `processed_at`, `failure_message` | Completion/failure metadata |
+| `octopus.electric_data` | electricity tariff-period and meter-reading facts |
+| `octopus.gas_data` | gas tariff-period, meter-reading and conversion facts |
+| `octopus.statement_file` | source-file hash, status and processing ledger |
 
-The extractor skips only `COMPLETED` rows matching both filename and hash.
+## Natural-key upserts
 
-## `octopus.electric_data`
+Electricity and gas each retain a provider-specific natural key composed from
+bill date, tariff-period dates, tariff name, supply identifier, meter id and
+reading dates. `JdbcUpsertExecutor` performs the common decision loop, while the
+typed adapters own key queries and column bindings.
 
-Stores one electricity tariff/meter/reading-period record. The composite primary
-key is:
+This is a record-by-record upsert strategy. It is suitable for statement-sized
+batches and is intentionally distinct from OpenMeteo's set-based staging model.
 
-```text
-bill_date + tariff_period_start + tariff_period_end + tariff_name
-+ mpan + meter_id + start_reading_date + end_reading_date
-```
+## Atomic statement processing
 
-Measures include meter readings, energy used in kWh, unit-rate p/kWh, standing
-charge p/day and GBP totals. `last_run_id` links to `core.PluginRun`.
+Electricity, gas and statement-ledger operations use one
+`JdbcTransactionTemplate` transaction. The `statement_file` row is marked
+`COMPLETED` only after both record groups have been processed successfully in
+the transaction.
 
-## `octopus.gas_data`
+## Source-file identity
 
-Uses the corresponding composite key with MPRN and includes consumption in cubic
-metres as well as energy used in kWh, rates and GBP totals.
-
-## Write behavior
-
-`OctopusPersistenceRepository` checks each natural key, inserts missing rows,
-updates existing rows, marks all batch source files completed and commits once.
-Any SQL/runtime failure rolls back the complete batch.
-
-The archive move is outside this SQL transaction.
-
-::: {.landscape}
-![Octopus data model](../diagrams/generated/octopus-data-model.svg){width=22.5cm}
-:::
+The completion ledger uses filename plus SHA-256. A changed file with the same
+name is eligible for processing. Archive movement follows commit and is not part
+of the SQL transaction.

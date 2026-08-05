@@ -1401,4 +1401,4 @@ function Invoke-Documentation {
 }
 $ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
 
-Invoke-Documentation -Action All -ProjectRoot $ProjectRoot -Format pdf -FailOnWarning -verbose
+Invoke-Documentation -Action All -ProjectRoot $ProjectRoot -Format docx -FailOnWarning -verbose -RenderDiagrams
