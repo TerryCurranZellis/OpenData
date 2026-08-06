@@ -535,9 +535,119 @@ function Invoke-Documentation {
       [string] $Content
     )
 
-    $result = $Content -replace '(?ms)^---\s*\r?\n.*?\r?\n---\s*\r?\n', ''
-    $result = $result -replace '(?ms)^\*\*Document ID:\*\*.*?\r?\n---\s*\r?\n', ''
-    return $result.Trim()
+    # Remove a UTF-8 BOM if the content was read from a file that contains one,
+    # and retain the source newline convention when rebuilding the text.
+    $text = $Content -replace '^\uFEFF', ''
+    $newLine = if ($text.Contains("`r`n")) { "`r`n" } else { "`n" }
+    [string[]] $lines = [regex]::Split($text, '\r\n|\n|\r')
+
+    # Remove YAML front matter only when it is a complete block at the start of
+    # the document. An unclosed block is left unchanged rather than discarding
+    # the remainder of the document.
+    $firstIndex = 0
+    while ($firstIndex -lt $lines.Count -and
+      [string]::IsNullOrWhiteSpace($lines[$firstIndex])) {
+      $firstIndex++
+    }
+
+    if ($firstIndex -lt $lines.Count -and
+      $lines[$firstIndex].Trim() -eq '---') {
+      $closingIndex = $firstIndex + 1
+      while ($closingIndex -lt $lines.Count -and
+        $lines[$closingIndex].Trim() -ne '---') {
+        $closingIndex++
+      }
+
+      if ($closingIndex -lt $lines.Count) {
+        if (($closingIndex + 1) -lt $lines.Count) {
+          $lines = @($lines[($closingIndex + 1)..($lines.Count - 1)])
+        } else {
+          $lines = @()
+        }
+      }
+    }
+
+    # Locate the level-one document title. It is deliberately retained because
+    # it becomes the section heading in the merged manual. Also support the old
+    # layout where metadata starts at the first line without a title.
+    $firstIndex = 0
+    while ($firstIndex -lt $lines.Count -and
+      [string]::IsNullOrWhiteSpace($lines[$firstIndex])) {
+      $firstIndex++
+    }
+
+    $titleIndex = -1
+    $cursor = $firstIndex
+    if ($firstIndex -lt $lines.Count -and
+      $lines[$firstIndex] -match '^\s*#(?!#)\s+\S') {
+      $titleIndex = $firstIndex
+      $cursor = $titleIndex + 1
+    }
+
+    # Remove one or more leading Markdown metadata blocks. This covers:
+    #   * metadata followed by a horizontal rule;
+    #   * metadata with no horizontal rule;
+    #   * wrapped metadata values; and
+    #   * an additional metadata block after the horizontal rule.
+    $metadataRemoved = $false
+    $bodyStart = $cursor
+
+    while ($cursor -lt $lines.Count) {
+      $probe = $cursor
+      while ($probe -lt $lines.Count -and
+        [string]::IsNullOrWhiteSpace($lines[$probe])) {
+        $probe++
+      }
+
+      if ($probe -ge $lines.Count) {
+        $bodyStart = $probe
+        break
+      }
+
+      if ($metadataRemoved -and $lines[$probe].Trim() -eq '---') {
+        $cursor = $probe + 1
+        $bodyStart = $cursor
+        continue
+      }
+
+      if ($lines[$probe] -notmatch '^\s*\*\*[^*\r\n]+:\*\*') {
+        $bodyStart = $probe
+        break
+      }
+
+      $metadataRemoved = $true
+      $cursor = $probe + 1
+
+      # Continue to the blank line, horizontal rule or next Markdown heading.
+      # This also removes a metadata value that wraps onto another line.
+      while ($cursor -lt $lines.Count -and
+        -not [string]::IsNullOrWhiteSpace($lines[$cursor]) -and
+        $lines[$cursor].Trim() -ne '---' -and
+        $lines[$cursor] -notmatch '^\s*#{1,6}\s+\S') {
+        $cursor++
+      }
+      $bodyStart = $cursor
+    }
+
+    if (-not $metadataRemoved) {
+      return ([string]::Join($newLine, $lines)).Trim()
+    }
+
+    $outputLines = New-Object -TypeName 'System.Collections.Generic.List[string]'
+    if ($titleIndex -ge 0) {
+      for ($index = 0; $index -le $titleIndex; $index++) {
+        $outputLines.Add($lines[$index])
+      }
+      if ($bodyStart -lt $lines.Count) {
+        $outputLines.Add('')
+      }
+    }
+
+    for ($index = $bodyStart; $index -lt $lines.Count; $index++) {
+      $outputLines.Add($lines[$index])
+    }
+
+    return ([string]::Join($newLine, $outputLines.ToArray())).Trim()
   }
   #-------------------------------------------------------------------------------
   # ConvertTo-YamlSingleQuotedString
