@@ -6,8 +6,7 @@
 package com.towermarsh.opendata.database;
 
 import com.towermarsh.opendata.exception.ImportException;
-
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +45,12 @@ public final class SqlServerRepository
         }
         var sql = buildInsertStatement(tableName, records.get(0));
         var inserted = 0L;
-        try (var connection
-                = connectionManager.getConnection(); var statement
+        try (var connection = connectionManager.getConnection(); var statement
                 = connection.prepareStatement(sql)) {
             for (var record : records) {
                 var index = 1;
-                for (var column : record.keySet()) {
-                    statement.setString(index++, record.get(column));
+                for (var entry : record.entrySet()) {
+                    statement.setString(index++, entry.getValue());
                 }
                 statement.addBatch();
             }

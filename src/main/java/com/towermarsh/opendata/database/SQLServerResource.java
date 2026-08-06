@@ -1,3 +1,4 @@
+
 /*
  * Copyright © 2026 Terry Curran
  *
@@ -89,7 +90,6 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     /**
-     *
      * Initialises the singleton SQL Server resource when required.
      *
      * @param configuration database pool configuration
@@ -104,11 +104,9 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     /**
-     *
      * Returns the already-initialised singleton SQL Server resource.
      *
      * @return singleton SQL Server resource
-     *
      */
     public static synchronized SQLServerResource getInstance() {
         if (instance == null || instance.closed.get()) {
@@ -118,79 +116,58 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     /**
-     *
-     * @return @throws DatabaseException
-     */
-    @Override
-    /**
      * Borrows a connection from the registered DBCP pool.
      *
      * @return pooled SQL Server connection
      * @throws DatabaseException if the pool is closed or a connection cannot be
      * obtained
      */
+    @Override
     public Connection getConnection() throws DatabaseException {
         if (closed.get()) {
             throw new DatabaseException("SQL Server connection pool is closed.");
         }
         try {
             return DriverManager.getConnection(poolUrl);
-
         } catch (SQLException exception) {
             throw new DatabaseException("Unable to initialise the SQL Server connection pool.", exception);
-
         }
     }
 
-    /**
-     *
-     * @param connection
-     */
-    @Override
     /**
      * Closes a borrowed JDBC connection.
      *
      * @param connection connection to close
      */
+    @Override
     public void close(final Connection connection) {
         closeAndLog(connection, "connection");
     }
 
     /**
-     *
-     * @param statement
-     */
-    @Override
-    /**
      * Closes a prepared statement.
      *
      * @param statement statement to close
      */
+    @Override
     public void close(final PreparedStatement statement) {
         closeAndLog(statement, "prepared statement");
     }
 
     /**
-     *
-     * @param resultSet
-     */
-    @Override
-    /**
      * Closes a result set.
      *
      * @param resultSet result set to close
      */
+    @Override
     public void close(final ResultSet resultSet) {
         closeAndLog(resultSet, "result set");
     }
 
     /**
-     *
-     */
-    @Override
-    /**
      * Closes the registered SQL Server connection pool.
      */
+    @Override
     public void close() {
         if (!closed.compareAndSet(false, true)) {
             return;
@@ -202,10 +179,16 @@ public final class SQLServerResource implements DatabaseResourceManager {
         } catch (SQLException exception) {
             throw new DatabaseException("Unable to close SQL Server pool " + poolName, exception);
         } finally {
-            synchronized (SQLServerResource.class) {
-                instance = null;
-            }
+            clearInstance();
         }
+    }
+
+    /**
+     * Clears the singleton instance in a thread-safe manner. This method uses
+     * synchronization to safely write to the static field.
+     */
+    private static synchronized void clearInstance() {
+        instance = null;
     }
 
     /**
@@ -218,7 +201,6 @@ public final class SQLServerResource implements DatabaseResourceManager {
     }
 
     /**
-     *
      * Returns the number of idle pooled connections.
      *
      * @return idle connection count
@@ -230,7 +212,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
     /**
      * Gets the number of active, and idle connections in the pool
      *
-     * @return
+     * @return pool snapshot with connection counts and state
      */
     @Override
     public DatabasePoolSnapshot getPoolSnapshot() {

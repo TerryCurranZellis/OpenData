@@ -34,15 +34,15 @@ import java.util.logging.Logger;
  */
 public final class OpenData {
 
-	/**
-	 * Instantiate main code
-	 */
+    /**
+     * Instantiate main code
+     */
     private OpenData() {
     }
 
-	/**
-	 * setup a default logger
-	 */
+    /**
+     * setup a default logger
+     */
     @SuppressWarnings("NonConstantLogger")
     private static Logger logger = Logger.getLogger(OpenData.class.getName());
 
@@ -106,10 +106,10 @@ public final class OpenData {
      * @param duration duration to format
      * @return formatted string
      */
-    private static String format( Duration duration ) {
+    private static String format(Duration duration) {
         return String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
     }
-    
+
     /**
      * display the exception message
      *

@@ -43,7 +43,9 @@ public final class DatabaseHealthCheck {
      * successfully
      */
     public Result check() throws DatabaseException {
-        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(SQL); var resultSet = statement.executeQuery()) {
+        try (var connection = connectionManager.getConnection(); var statement
+                = connection.prepareStatement(SQL); var resultSet
+                = statement.executeQuery()) {
             if (!resultSet.next()) {
                 throw new DatabaseException("SQL Server health check returned no row");
             }

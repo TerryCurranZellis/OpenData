@@ -78,9 +78,9 @@ public final class OpenMeteoRepository {
         execute(connection, "SET XACT_ABORT ON");
         acquireApplicationLock(connection, configuration);
 
-        final long locationId = upsertLocation(connection, configuration);
+        final var locationId = upsertLocation(connection, configuration);
         createStageTable(connection);
-        final int staged = stage(
+        final var staged = stage(
                 connection,
                 records,
                 configuration.databaseBatchSize());
@@ -95,12 +95,12 @@ public final class OpenMeteoRepository {
                 configuration,
                 locationId,
                 runId);
-        final long inserted = insertMissing(
+        final var inserted = insertMissing(
                 connection,
                 configuration,
                 locationId,
                 runId);
-        final long skipped = records.size() - inserted - updated;
+        final var skipped = records.size() - inserted - updated;
 
         return new OpenMeteoPersistenceResult(
                 inserted,
@@ -111,7 +111,7 @@ public final class OpenMeteoRepository {
     private static void acquireApplicationLock(
             final Connection connection,
             final OpenMeteoConfiguration configuration) throws SQLException {
-        final String sql = """
+        final var sql = """
                 DECLARE @result int;
                 EXEC @result = sys.sp_getapplock
                     @Resource = ?,
@@ -123,11 +123,9 @@ public final class OpenMeteoRepository {
                 """;
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(
-                    1,
-                    "OpenData:openmeteo:" + configuration.locationKey());
+                    1, "OpenData:openmeteo:" + configuration.locationKey());
             statement.setInt(
-                    2,
-                    Math.toIntExact(configuration.databaseLockTimeout().toMillis()));
+                    2, Math.toIntExact(configuration.databaseLockTimeout().toMillis()));
             try (var result = statement.executeQuery()) {
                 if (!result.next() || result.getInt(1) < 0) {
                     throw new SQLException(
@@ -140,10 +138,10 @@ public final class OpenMeteoRepository {
     private static long upsertLocation(
             final Connection connection,
             final OpenMeteoConfiguration configuration) throws SQLException {
-        final String table = SqlIdentifiers.qualify(
+        final var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.locationTable());
-        final String update = """
+        final var update = """
                 UPDATE %s WITH (UPDLOCK, HOLDLOCK)
                    SET [LocationName] = ?, [Latitude] = ?, [Longitude] = ?,
                        [TimeZone] = ?, [UpdatedAt] = SYSUTCDATETIME()
@@ -160,7 +158,7 @@ public final class OpenMeteoRepository {
             }
         }
 
-        final String select = "SELECT [LocationId] FROM %s WITH "
+        final var select = "SELECT [LocationId] FROM %s WITH "
                 + "(UPDLOCK, HOLDLOCK) WHERE [LocationKey] = ?";
         try (var statement = connection.prepareStatement(select.formatted(table))) {
             statement.setString(1, configuration.locationKey());
@@ -178,10 +176,8 @@ public final class OpenMeteoRepository {
             final Connection connection,
             final OpenMeteoConfiguration configuration,
             final String table) throws SQLException {
-        final String insert = """
-                INSERT INTO %s
-                    ([LocationKey], [LocationName], [Latitude], [Longitude], [TimeZone])
-                VALUES (?, ?, ?, ?, ?)
+        final var insert = """
+                INSERT INTO %s ([LocationKey], [LocationName], [Latitude], [Longitude], [TimeZone]) VALUES (?, ?, ?, ?, ?)
                 """.formatted(table);
         try (var statement = connection.prepareStatement(insert)) {
             statement.setString(1, configuration.locationKey());
@@ -213,7 +209,7 @@ public final class OpenMeteoRepository {
             final Connection connection,
             final List<DailyWeatherRecord> records,
             final int batchSize) throws SQLException {
-        final String sql = """
+        final var sql = """
                 INSERT INTO #OpenMeteoDaily
                     ([ObservationDate], [MinimumTemperatureC], [MaximumTemperatureC],
                      [MeanTemperatureC], [Sunrise], [Sunset], [DaylightMinutes],
@@ -243,10 +239,10 @@ public final class OpenMeteoRepository {
             final OpenMeteoConfiguration configuration,
             final long locationId,
             final UUID runId) throws SQLException {
-        final String table = SqlIdentifiers.qualify(
+        final var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.dailyTable());
-        final String sql = """
+        final var sql = """
                 UPDATE target WITH (UPDLOCK, HOLDLOCK)
                    SET [MinimumTemperatureC] = source.[MinimumTemperatureC],
                        [MaximumTemperatureC] = source.[MaximumTemperatureC],
@@ -283,10 +279,10 @@ public final class OpenMeteoRepository {
             final OpenMeteoConfiguration configuration,
             final long locationId,
             final UUID runId) throws SQLException {
-        final String table = SqlIdentifiers.qualify(
+        final var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.dailyTable());
-        final String sql = """
+        final var sql = """
                 INSERT INTO %s
                     ([LocationId], [ObservationDate], [MinimumTemperatureC],
                      [MaximumTemperatureC], [MeanTemperatureC], [Sunrise], [Sunset],
