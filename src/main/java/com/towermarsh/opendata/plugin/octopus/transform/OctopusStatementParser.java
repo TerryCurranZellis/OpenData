@@ -30,16 +30,15 @@ import java.util.regex.Pattern;
  *
  * <p>
  * Parses Octopus Energy statement PDF files (after text extraction) and
- * produces {@link ElectricityRecord} and {@link GasRecord} lists that can
- * be written to CSV files or merged directly into the database layer for
+ * produces {@link ElectricityRecord} and {@link GasRecord} lists that can be
+ * written to CSV files or merged directly into the database layer for
  * subsequent analysis.
  *
  * <p>
  * The PDF bills use a two-column page layout. When text is extracted by PDFBox
  * the two columns are interleaved on the same lines. This parser handles that
- * by joining every line into one long string and collapsing consecutive
- * white space before applying regex patterns — exactly as the PowerShell script
- * does.
+ * by joining every line into one long string and collapsing consecutive white
+ * space before applying regex patterns — exactly as the PowerShell script does.
  * <p>
  * <b>Example</b>
  * <pre>
@@ -154,10 +153,9 @@ public final class OctopusStatementParser {
     }
 
     // ── Public API ───────────────────────────────────────────────────────────
-
     /**
-     * Parse electricity records from a single PDF file that does not follow
-     * the {@code octopus-energy-statement-YYYY-MM-DD.pdf} naming convention.
+     * Parse electricity records from a single PDF file that does not follow the
+     * {@code octopus-energy-statement-YYYY-MM-DD.pdf} naming convention.
      *
      * <p>
      * This method is intended for "catch-up" or summary billing PDFs whose
@@ -207,8 +205,8 @@ public final class OctopusStatementParser {
      *
      * @param pdfPath path to the PDF file to parse
      * @return list of extracted gas records; never {@code null}; will be empty
-     *         for files that contain no gas section (e.g. electricity-only
-     *         adjustment bills)
+     * for files that contain no gas section (e.g. electricity-only adjustment
+     * bills)
      * @throws IOException if the PDF cannot be read
      */
     public static List<GasRecord> parseGasFromFile(Path pdfPath)
@@ -236,41 +234,8 @@ public final class OctopusStatementParser {
     }
 
     /**
-     * Parse both electricity and gas records from a single PDF file that does
-     * not follow the {@code octopus-energy-statement-YYYY-MM-DD.pdf} naming
-     * convention.
-     *
-     * <p>
-     * This is a single-pass convenience method that combines
-     * {@link #parseElectricityFromFile(Path)} and
-     * {@link #parseGasFromFile(Path)}: the PDF text is extracted only once,
-     * making it more efficient than calling the two methods separately.
-     *
-     * <p>
-     * <b>Example</b>
-     * <pre>
-     *   Path adj = Path.of("C:/Attachments/octopus/A-5F191685-419015087-1.pdf");
-     *   Object[] both = OctopusStatementParser.parseBothFromFile(adj);
-     *   List&lt;ElectricityRecord&gt; elec = (List&lt;ElectricityRecord&gt;) both[0];
-     *   List&lt;GasRecord&gt;         gas  = (List&lt;GasRecord&gt;)         both[1];
-     * </pre>
-     *
-     * @param pdfPath path to the PDF file to parse
-     * @return two-element array where index&nbsp;0 holds a
-     *         {@code List<ElectricityRecord>} and index&nbsp;1 holds a
-     *         {@code List<GasRecord>}; neither element is {@code null}
-     * @throws IOException if the PDF cannot be read
-     */
-    @Deprecated(since = "2.0.0", forRemoval = false)
-    public static Object[] parseBothFromFile(Path pdfPath) throws IOException {
-        final var result = parseAllFromFile(pdfPath);
-        return new Object[]{result.electricityRecords(), result.gasRecords()};
-    }
-
-
-    /**
-     * Parses one already-extracted statement. The statement date is supplied
-     * by the filename-aware extract step, so the PDF is not read a second time.
+     * Parses one already-extracted statement. The statement date is supplied by
+     * the filename-aware extract step, so the PDF is not read a second time.
      *
      * @param rawText extracted PDF text
      * @param sourceName source filename for logging
@@ -399,27 +364,6 @@ public final class OctopusStatementParser {
     }
 
     /**
-     * Parse all PDF files and report the bill count per file to standard
-     * output.
-     *
-     * <p>
-     * This method extracts both electricity and gas data in a single pass (one
-     * PDF read per file) and is therefore more efficient than calling
-     * {@link #parseElectricity()} and {@link #parseGas()} separately. The
-     * returned pair contains the complete electricity and gas record lists.
-     *
-     * @return a two-element array where index 0 holds the electricity records
-     * and index 1 holds the gas records
-     * @throws IOException if any PDF file cannot be read or its text cannot be
-     * extracted
-     */
-    @Deprecated(since = "2.0.0", forRemoval = false)
-    public Object[] parseBoth() throws IOException {
-        final var result = parseAll();
-        return new Object[]{result.electricityRecords(), result.gasRecords()};
-    }
-
-    /**
      * Parse all matching PDF files and return a typed combined result.
      *
      * @return combined typed parse result
@@ -457,8 +401,13 @@ public final class OctopusStatementParser {
         return new OctopusParseResult(elecRecords, gasRecords, List.of());
     }
 
-    
-    /** Parses exactly the PDF files supplied by the Extract phase. */
+    /**
+     * Parses exactly the PDF files supplied by the Extract phase.
+     *
+     * @param pdfFiles list of pdf files
+     * @return decoded file
+     * @throws java.io.IOException error in file
+     */
     public static OctopusParseResult parseAll(final List<Path> pdfFiles) throws IOException {
         Objects.requireNonNull(pdfFiles, "pdfFiles");
         final List<ElectricityRecord> electricity = new ArrayList<>();
@@ -489,7 +438,10 @@ public final class OctopusStatementParser {
             }).forEach((var p) -> {
                 var m = PDF_DATE_PATTERN.matcher(p.getFileName().toString());
                 if (m.matches()) {
-                    entries.add(new PdfEntry(p, m.group(1)));
+                    var dateStr = m.group(1);
+                    if (dateStr != null) {
+                        entries.add(new PdfEntry(p, dateStr));
+                    }
                 }
             });
         }
@@ -820,8 +772,8 @@ public final class OctopusStatementParser {
      * may be empty
      * @param billPeriodEnd overall bill period end ({@code yyyy-MM-dd}); may be
      * empty
-     * @return a fully populated {@link ElectricityRecord}; fields that
-     * cannot be parsed are empty strings
+     * @return a fully populated {@link ElectricityRecord}; fields that cannot
+     * be parsed are empty strings
      */
     static ElectricityRecord newElectricityRecord(
             String sectionText, String billDate,
@@ -936,8 +888,8 @@ public final class OctopusStatementParser {
      * may be empty
      * @param billPeriodEnd overall bill period end ({@code yyyy-MM-dd}); may be
      * empty
-     * @return a fully populated {@link GasRecord}; fields that cannot be
-     * parsed are empty strings
+     * @return a fully populated {@link GasRecord}; fields that cannot be parsed
+     * are empty strings
      */
     static GasRecord newGasRecord(
             String sectionText, String billDate,

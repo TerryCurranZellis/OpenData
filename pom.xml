@@ -6,7 +6,6 @@
     <version>2.0.0</version>
     <name>OpenData Processing Framework</name>
     <description>Java framework for downloading, validating and importing OpenData sources.</description>
-
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -14,7 +13,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <developers>
         <developer>
             <name>Terry Curran</name>
@@ -24,7 +22,6 @@
             </roles>
         </developer>
     </developers>
-
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,17 +33,17 @@
         <jsoup.version>1.22.2</jsoup.version>
         <poi.version>5.5.1</poi.version>
         <log4j.version>2.26.1</log4j.version>
-        <junit.version>6.1.1</junit.version>
+        <junit.version>6.1.2</junit.version>
         <commons.dbcp2.version>2.14.0</commons.dbcp2.version>
         <checkstyle.version>10.26.1</checkstyle.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
-        <spotbugs.plugin.version>4.9.3.1</spotbugs.plugin.version>
-        <pmd.plugin.version>3.27.0</pmd.plugin.version>
-        <javadoc.plugin.version>3.11.2</javadoc.plugin.version>
+        <spotbugs.plugin.version>4.10.3.0</spotbugs.plugin.version>
+        <pmd.plugin.version>3.28.0</pmd.plugin.version>
+        <javadoc.plugin.version>3.12.0</javadoc.plugin.version>
         <maven.enforcer.plugin.version>3.6.2</maven.enforcer.plugin.version>
-        <jacoco.plugin.version>0.8.13</jacoco.plugin.version>
-        <dependency.plugin.version>3.8.1</dependency.plugin.version>
-        <project.build.outputTimestamp>2026-01-01T00:00:00Z</project.build.outputTimestamp>
+        <jacoco.plugin.version>0.8.15</jacoco.plugin.version>
+        <dependency.plugin.version>3.11.0</dependency.plugin.version>
+        <project.build.outputTimestamp>2026-08-06T00:00:00Z</project.build.outputTimestamp>
         <quality.failOnViolation>false</quality.failOnViolation>
     </properties>
     <dependencies>
@@ -95,7 +92,7 @@
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>3.0.7</version>
+            <version>3.0.8</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

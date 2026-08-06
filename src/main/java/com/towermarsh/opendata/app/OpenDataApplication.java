@@ -226,10 +226,10 @@ public final class OpenDataApplication {
                     .orElseThrow(() -> new PluginRegistryException(
                     "Registered plugin could not be read back: "
                     + registration.descriptor().id()));
-            System.out.printf(
+            LOGGER.info(String.format(
                     "Registered plugin: %s (%s)%n",
                     actual.id(),
-                    actual.enabled() ? "enabled" : "disabled");
+                    actual.enabled() ? "enabled" : "disabled"));
         });
         noteIgnoredParallelism(arguments);
     }
@@ -317,7 +317,7 @@ public final class OpenDataApplication {
                 ? registry.list().stream().map(PluginDescriptor::id).toList()
                 : arguments.pluginIds();
         if (pluginIds.isEmpty()) {
-            System.out.println("No registered plugins matched the request.");
+            LOGGER.warning("No registered plugins matched the request.");
             return;
         }
         for (var pluginId : pluginIds) {
@@ -331,7 +331,7 @@ public final class OpenDataApplication {
                 default ->
                     throw new IllegalStateException("Unsupported administration action: " + action);
             }
-            System.out.printf("%s plugin: %s%n", action.displayText, pluginId);
+            LOGGER.log(Level.INFO, "{0} plugin: {1}", new Object[]{action.displayText, pluginId});
         }
         noteIgnoredParallelism(arguments);
     }
@@ -342,17 +342,17 @@ public final class OpenDataApplication {
     private static void printRegisteredPlugins(final JdbcPluginRegistry registry) {
         final var plugins = registry.list();
         if (plugins.isEmpty()) {
-            System.out.println("No plugins are registered.");
+            LOGGER.info("No plugins are registered.");
             return;
         }
-        System.out.printf("%-20s %-10s %-32s %s%n", "PLUGIN", "STATUS", "NAME", "IMPLEMENTATION");
+        LOGGER.info(String.format("%-20s %-10s %-32s %s%n", "PLUGIN", "STATUS", "NAME", "IMPLEMENTATION"));
         plugins.forEach((var plugin) -> {
-            System.out.printf(
+            LOGGER.info(String.format(
                     "%-20s %-10s %-32s %s%n",
                     plugin.id(),
                     plugin.enabled() ? "enabled" : "disabled",
                     plugin.displayName(),
-                    plugin.implementationClass());
+                    plugin.implementationClass()));
         });
     }
 
