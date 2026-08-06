@@ -10,6 +10,14 @@ import java.util.Objects;
 
 /** Loads transformed Open-Meteo records into the database. */
 public final class OpenMeteoLoad {
+
+    /**
+     *
+     * @param configuration
+     * @param records
+     * @param context
+     * @return
+     */
     public PluginMetrics load(final OpenMeteoConfiguration configuration,
             final List<DailyWeatherRecord> records, final PluginExecutionContext context) {
         Objects.requireNonNull(records, "records");

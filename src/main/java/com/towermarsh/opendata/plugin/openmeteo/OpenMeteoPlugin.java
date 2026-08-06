@@ -14,15 +14,49 @@ import java.util.Objects;
 
 /** Open-Meteo plugin entry point; delegates flow control to Initialise. */
 public final class OpenMeteoPlugin implements OpenDataPlugin {
+
+    /**
+     *
+     */
     public static final String PLUGIN_ID = "openmeteo";
     private final OpenMeteoInitialise initialise;
+
+    /**
+     *
+     * @param definition
+     */
     public OpenMeteoPlugin(final PluginDefinition definition) { this(OpenMeteoConfiguration.from(definition)); }
+
+    /**
+     *
+     * @param configuration
+     */
     public OpenMeteoPlugin(final OpenMeteoConfiguration configuration) { this.initialise = new OpenMeteoInitialise(configuration); }
+
+    /**
+     *
+     * @param context
+     * @return
+     * @throws Exception
+     */
     @Override public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
         return initialise.execute(Objects.requireNonNull(context, "context"));
     }
+
+    /**
+     *
+     * @param start
+     * @param end
+     * @return
+     * @throws Exception
+     */
     public List<DailyWeatherRecord> execute(final LocalDate start, final LocalDate end) throws Exception {
         return initialise.execute(start, end);
     }
+
+    /**
+     *
+     * @return
+     */
     public OpenMeteoConfiguration configuration() { return initialise.configuration(); }
 }

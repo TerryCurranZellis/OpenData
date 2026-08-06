@@ -9,6 +9,14 @@ import java.util.Objects;
 
 /** Loads transformed Ofgem records into the configured database tables. */
 public final class OfgemLoad {
+
+    /**
+     *
+     * @param context
+     * @param download
+     * @param data
+     * @return
+     */
     public PluginMetrics load(final PluginExecutionContext context,
             final ResolvedDownload download,
             final OfgemPriceCapWorkbookData data) {

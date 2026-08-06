@@ -15,9 +15,23 @@ import java.util.logging.Logger;
 public final class OfgemFinalise {
     private static final Logger LOGGER = Logger.getLogger(OfgemFinalise.class.getName());
     private final OfgemWorkbookDownloader downloader;
+
+    /**
+     *
+     * @param downloader
+     */
     public OfgemFinalise(final OfgemWorkbookDownloader downloader) {
         this.downloader = Objects.requireNonNull(downloader, "downloader");
     }
+
+    /**
+     *
+     * @param context
+     * @param download
+     * @param data
+     * @param metrics
+     * @throws IOException
+     */
     public void complete(final PluginExecutionContext context, final ResolvedDownload download,
             final OfgemPriceCapWorkbookData data, final PluginMetrics metrics) throws IOException {
         if (context.dryRun() || download == null || data == null) return;

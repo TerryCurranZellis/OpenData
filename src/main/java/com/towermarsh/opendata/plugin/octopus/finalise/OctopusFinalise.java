@@ -25,6 +25,15 @@ import java.util.logging.Logger;
 public final class OctopusFinalise {
     private static final Logger LOGGER = Logger.getLogger(OctopusFinalise.class.getName());
 
+    /**
+     *
+     * @param configuration
+     * @param statements
+     * @param parseResult
+     * @param metrics
+     * @param dryRun
+     * @param completed
+     */
     public void finalise(
             final OctopusConfiguration configuration,
             final List<ExtractedOctopusStatement> statements,

@@ -18,7 +18,13 @@ import java.util.Objects;
  */
 public final class PluginExceptionHandler {
 
-    /** Executes a plugin and normalises any stage failure. */
+    /** Executes a plugin and normalises any stage failure.
+     * @param pluginId
+     * @param plugin
+     * @param context
+     * @return 
+     * @throws com.towermarsh.opendata.exception.PluginException
+     * @throws java.lang.InterruptedException */
     public PluginMetrics execute(
             final String pluginId,
             final OpenDataPlugin plugin,

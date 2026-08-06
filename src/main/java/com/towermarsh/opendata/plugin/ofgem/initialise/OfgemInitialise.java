@@ -21,6 +21,10 @@ public final class OfgemInitialise {
     private final OfgemLoad load;
     private final OfgemFinalise finalise;
 
+    /**
+     *
+     * @param configuration
+     */
     public OfgemInitialise(final OfgemConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.extract = new OfgemWorkbookDownloader(configuration);
@@ -30,6 +34,12 @@ public final class OfgemInitialise {
         this.finalise = new OfgemFinalise(extract);
     }
 
+    /**
+     *
+     * @param context
+     * @return
+     * @throws Exception
+     */
     public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         ResolvedDownload download = null;
@@ -45,5 +55,9 @@ public final class OfgemInitialise {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public OfgemConfiguration configuration() { return configuration; }
 }

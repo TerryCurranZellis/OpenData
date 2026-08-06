@@ -16,6 +16,11 @@ import java.util.logging.Logger;
 public final class OctopusTransform {
     private static final Logger LOGGER = Logger.getLogger(OctopusTransform.class.getName());
 
+    /**
+     *
+     * @param statements
+     * @return
+     */
     public OctopusParseResult transform(final List<ExtractedOctopusStatement> statements) {
         Objects.requireNonNull(statements, "statements");
         final List<ElectricityRecord> electricity = new ArrayList<>();

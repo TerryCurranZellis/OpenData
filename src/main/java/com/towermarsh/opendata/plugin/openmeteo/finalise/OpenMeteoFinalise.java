@@ -8,6 +8,11 @@ import java.util.logging.Logger;
 /** Performs Open-Meteo cleanup and final phase reporting. */
 public final class OpenMeteoFinalise {
     private static final Logger LOGGER = Logger.getLogger(OpenMeteoFinalise.class.getName());
+
+    /**
+     *
+     * @param metrics
+     */
     public void complete(final PluginMetrics metrics) {
         LOGGER.log(Level.INFO, "OpenMeteo finalise complete; read={0}, inserted={1}, updated={2}, skipped={3}",
                 new Object[]{metrics.read(), metrics.inserted(), metrics.updated(), metrics.skipped()});

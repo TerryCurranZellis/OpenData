@@ -11,12 +11,38 @@ import java.util.Objects;
 
 /** Ofgem plugin entry point; delegates all flow control to Initialise. */
 public final class OfgemPlugin implements OpenDataPlugin {
+
+    /**
+     *
+     */
     public static final String PLUGIN_ID = "ofgem";
     private final OfgemInitialise initialise;
+
+    /**
+     *
+     * @param definition
+     */
     public OfgemPlugin(final PluginDefinition definition) { this(OfgemConfiguration.from(definition)); }
+
+    /**
+     *
+     * @param configuration
+     */
     public OfgemPlugin(final OfgemConfiguration configuration) { this.initialise = new OfgemInitialise(configuration); }
+
+    /**
+     *
+     * @param context
+     * @return
+     * @throws Exception
+     */
     @Override public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
         return initialise.execute(Objects.requireNonNull(context, "context"));
     }
+
+    /**
+     *
+     * @return
+     */
     public OfgemConfiguration configuration() { return initialise.configuration(); }
 }

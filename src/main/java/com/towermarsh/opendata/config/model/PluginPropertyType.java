@@ -51,5 +51,20 @@ public enum PluginPropertyType {
     /**
      * URI
      */
-    URI
+    URI,
+    
+    /**
+     * Date
+     */
+    DATE,
+    
+    /**
+     * Time
+     */
+    TIME,
+    
+    /**
+     * Date and time
+     */
+    DATETIME
 }
