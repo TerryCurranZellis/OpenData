@@ -40,7 +40,11 @@ public enum DataFormat {
      */
     public static DataFormat fromPath(Path file) {
         Objects.requireNonNull(file, "file");
-        String name = file.getFileName().toString().toLowerCase(Locale.ROOT);
+        final var fileName = file.getFileName();
+        if (fileName == null) {
+            throw new IllegalArgumentException("Path must include a file name: " + file);
+        }
+        String name = fileName.toString().toLowerCase(Locale.ROOT);
         if (name.endsWith(".csv")) {
             return CSV;
         }

@@ -44,6 +44,21 @@ public record LinkDiscoveryRequest(
         excludedTerms = normalizeTerms(excludedTerms);
     }
 
+    @Override
+    public Set<String> allowedExtensions() {
+        return Set.copyOf(allowedExtensions);
+    }
+
+    @Override
+    public List<String> requiredTerms() {
+        return List.copyOf(requiredTerms);
+    }
+
+    @Override
+    public List<String> excludedTerms() {
+        return List.copyOf(excludedTerms);
+    }
+
     /**
      * Creates a request for Excel and CSV files without text restrictions.
      *

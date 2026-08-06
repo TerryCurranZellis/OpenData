@@ -68,24 +68,24 @@ public final class OctopusExtract {
         final List<Path> candidates;
         try (var files = Files.list(inputDirectory)) {
             candidates = files.filter(Files::isRegularFile)
-                    .filter(path -> FILE_PATTERN.matcher(path.getFileName().toString()).matches())
+                    .filter(path -> FILE_PATTERN.matcher(fileName(path)).matches())
                     .sorted(Comparator.comparing(OctopusExtract::statementDate)
-                            .thenComparing(path -> path.getFileName().toString()))
+                            .thenComparing(OctopusExtract::fileName))
                     .toList();
         }
 
         final List<ExtractedOctopusStatement> extracted = new ArrayList<>();
         var skipped = 0;
         for (var path : candidates) {
-            final var fileName = path.getFileName().toString();
+            final var candidateFileName = fileName(path);
             final var hash = sha256(path);
-            if (processed.contains(OctopusProcessedFileRepository.key(fileName, hash))) {
+            if (processed.contains(OctopusProcessedFileRepository.key(candidateFileName, hash))) {
                 skipped++;
                 continue;
             }
             extracted.add(new ExtractedOctopusStatement(
                     path,
-                    fileName,
+                    candidateFileName,
                     statementDate(path),
                     hash,
                     Files.size(path),
@@ -103,15 +103,23 @@ public final class OctopusExtract {
      * @return  the statement date
      */
     static LocalDate statementDate(final Path path) {
-        final var matcher = FILE_PATTERN.matcher(path.getFileName().toString());
+        final var matcher = FILE_PATTERN.matcher(fileName(path));
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("Invalid Octopus statement filename: " + path.getFileName());
+            throw new IllegalArgumentException("Invalid Octopus statement filename: " + fileName(path));
         }
         try {
             return LocalDate.parse(matcher.group(1));
         } catch (DateTimeParseException exception) {
-            throw new IllegalArgumentException("Invalid statement date in filename: " + path.getFileName(), exception);
+            throw new IllegalArgumentException("Invalid statement date in filename: " + fileName(path), exception);
         }
+    }
+
+    private static String fileName(final Path path) {
+        final var fileName = Objects.requireNonNull(path, "path").getFileName();
+        if (fileName == null) {
+            throw new IllegalArgumentException("Path must include a file name: " + path);
+        }
+        return fileName.toString();
     }
 
     /**

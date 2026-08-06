@@ -70,7 +70,11 @@ public final class OfgemWorkbookDownloader {
                 .resolve(effectiveFrom.toString())
                 .resolve(configuration.outputFilename())
                 .normalize();
-        Files.createDirectories(archive.getParent());
+        final var archiveParent = archive.getParent();
+        if (archiveParent == null) {
+            throw new IOException("Archive path must include a parent directory: " + archive);
+        }
+        Files.createDirectories(archiveParent);
         Files.copy(downloadedFile, archive, StandardCopyOption.REPLACE_EXISTING);
         LOGGER.info(() -> "Archived Ofgem workbook to " + archive.toAbsolutePath());
     }

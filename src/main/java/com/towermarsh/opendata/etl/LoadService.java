@@ -11,6 +11,7 @@ import com.towermarsh.opendata.model.ImportResult;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Loads transformed data into persistent storage.
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public final class LoadService {
 
-    private final DatabaseRepository repository;
+    private final Loader loader;
 
     /**
      * Creates a load service.
@@ -30,7 +31,7 @@ public final class LoadService {
     public LoadService(
             DatabaseRepository repository) {
 
-        this.repository = repository;
+        this.loader = Objects.requireNonNull(repository, "repository")::insert;
     }
 
     /**
@@ -51,7 +52,7 @@ public final class LoadService {
             throws ImportException {
 
         long inserted
-                = repository.insert(
+                = loader.insert(
                         tableName,
                         records);
 
@@ -60,5 +61,13 @@ public final class LoadService {
                 inserted,
                 records.size() - inserted,
                 true);
+    }
+
+    @FunctionalInterface
+    private interface Loader {
+        long insert(
+                String tableName,
+                List<Map<String, String>> records)
+                throws ImportException;
     }
 }

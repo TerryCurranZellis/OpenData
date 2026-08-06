@@ -110,7 +110,7 @@ public final class LoggingManager {
      *
      */
     public static Logger getLogger() {
-        return LOGGER;
+        return Logger.getLogger(LOGGER_NAME);
     }
 
     /**

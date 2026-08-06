@@ -16,6 +16,7 @@ import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkboo
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -188,7 +189,7 @@ public final class OfgemPersistenceRepository {
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, ingestionRunId);
             statement.setString(2, download.resolvedUri().toString());
-            statement.setString(3, download.localFile().getFileName().toString());
+            statement.setString(3, localFileName(download.localFile()));
             statement.setString(4, download.contentType().orElse(null));
             statement.setLong(5, download.byteCount());
             statement.setString(6, sha256(download.localFile()));
@@ -198,6 +199,14 @@ public final class OfgemPersistenceRepository {
             statement.executeUpdate();
             return generatedKey(statement, "source file");
         }
+    }
+
+    private static String localFileName(final Path localFile) {
+        final var fileName = Objects.requireNonNull(localFile, "localFile").getFileName();
+        if (fileName == null) {
+            throw new IllegalArgumentException("Path must include a file name: " + localFile);
+        }
+        return fileName.toString();
     }
 
     private static Long findPeriodId(

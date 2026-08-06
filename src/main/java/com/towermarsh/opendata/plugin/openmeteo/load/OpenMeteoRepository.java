@@ -141,12 +141,12 @@ public final class OpenMeteoRepository {
         final var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.locationTable());
-        final var update = """
-                UPDATE %s WITH (UPDLOCK, HOLDLOCK)
-                   SET [LocationName] = ?, [Latitude] = ?, [Longitude] = ?,
-                       [TimeZone] = ?, [UpdatedAt] = SYSUTCDATETIME()
-                 WHERE [LocationKey] = ?
-                """.formatted(table);
+        final var update = (
+                "UPDATE %s WITH (UPDLOCK, HOLDLOCK) "
+                        + "SET [LocationName] = ?, [Latitude] = ?, [Longitude] = ?, "
+                        + "[TimeZone] = ?, [UpdatedAt] = SYSUTCDATETIME() "
+                        + "WHERE [LocationKey] = ?")
+                .formatted(table);
         try (var statement = connection.prepareStatement(update)) {
             statement.setString(1, configuration.locationName());
             statement.setDouble(2, configuration.latitude());
@@ -176,9 +176,11 @@ public final class OpenMeteoRepository {
             final Connection connection,
             final OpenMeteoConfiguration configuration,
             final String table) throws SQLException {
-        final var insert = """
-                INSERT INTO %s ([LocationKey], [LocationName], [Latitude], [Longitude], [TimeZone]) VALUES (?, ?, ?, ?, ?)
-                """.formatted(table);
+        final var insert = (
+                "INSERT INTO %s "
+                        + "([LocationKey], [LocationName], [Latitude], [Longitude], [TimeZone]) "
+                        + "VALUES (?, ?, ?, ?, ?)")
+                .formatted(table);
         try (var statement = connection.prepareStatement(insert)) {
             statement.setString(1, configuration.locationKey());
             statement.setString(2, configuration.locationName());
@@ -242,31 +244,31 @@ public final class OpenMeteoRepository {
         final var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.dailyTable());
-        final var sql = """
-                UPDATE target WITH (UPDLOCK, HOLDLOCK)
-                   SET [MinimumTemperatureC] = source.[MinimumTemperatureC],
-                       [MaximumTemperatureC] = source.[MaximumTemperatureC],
-                       [MeanTemperatureC] = source.[MeanTemperatureC],
-                       [Sunrise] = source.[Sunrise],
-                       [Sunset] = source.[Sunset],
-                       [DaylightMinutes] = source.[DaylightMinutes],
-                       [WeatherCode] = source.[WeatherCode],
-                       [WeatherDescription] = source.[WeatherDescription],
-                       [LastRunId] = ?,
-                       [UpdatedAt] = SYSUTCDATETIME()
-                  FROM %s AS target
-                  JOIN #OpenMeteoDaily AS source
-                    ON source.[ObservationDate] = target.[ObservationDate]
-                 WHERE target.[LocationId] = ?
-                   AND (target.[MinimumTemperatureC] <> source.[MinimumTemperatureC]
-                     OR target.[MaximumTemperatureC] <> source.[MaximumTemperatureC]
-                     OR target.[MeanTemperatureC] <> source.[MeanTemperatureC]
-                     OR target.[Sunrise] <> source.[Sunrise]
-                     OR target.[Sunset] <> source.[Sunset]
-                     OR target.[DaylightMinutes] <> source.[DaylightMinutes]
-                     OR target.[WeatherCode] <> source.[WeatherCode]
-                     OR target.[WeatherDescription] <> source.[WeatherDescription])
-                """.formatted(table);
+        final var sql = (
+                "UPDATE target WITH (UPDLOCK, HOLDLOCK) "
+                        + "SET [MinimumTemperatureC] = source.[MinimumTemperatureC], "
+                        + "[MaximumTemperatureC] = source.[MaximumTemperatureC], "
+                        + "[MeanTemperatureC] = source.[MeanTemperatureC], "
+                        + "[Sunrise] = source.[Sunrise], "
+                        + "[Sunset] = source.[Sunset], "
+                        + "[DaylightMinutes] = source.[DaylightMinutes], "
+                        + "[WeatherCode] = source.[WeatherCode], "
+                        + "[WeatherDescription] = source.[WeatherDescription], "
+                        + "[LastRunId] = ?, "
+                        + "[UpdatedAt] = SYSUTCDATETIME() "
+                        + "FROM %s AS target "
+                        + "JOIN #OpenMeteoDaily AS source "
+                        + "ON source.[ObservationDate] = target.[ObservationDate] "
+                        + "WHERE target.[LocationId] = ? "
+                        + "AND (target.[MinimumTemperatureC] <> source.[MinimumTemperatureC] "
+                        + "OR target.[MaximumTemperatureC] <> source.[MaximumTemperatureC] "
+                        + "OR target.[MeanTemperatureC] <> source.[MeanTemperatureC] "
+                        + "OR target.[Sunrise] <> source.[Sunrise] "
+                        + "OR target.[Sunset] <> source.[Sunset] "
+                        + "OR target.[DaylightMinutes] <> source.[DaylightMinutes] "
+                        + "OR target.[WeatherCode] <> source.[WeatherCode] "
+                        + "OR target.[WeatherDescription] <> source.[WeatherDescription])")
+                .formatted(table);
         try (var statement = connection.prepareStatement(sql)) {
             statement.setObject(1, runId);
             statement.setLong(2, locationId);
@@ -282,22 +284,21 @@ public final class OpenMeteoRepository {
         final var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.dailyTable());
-        final var sql = """
-                INSERT INTO %s
-                    ([LocationId], [ObservationDate], [MinimumTemperatureC],
-                     [MaximumTemperatureC], [MeanTemperatureC], [Sunrise], [Sunset],
-                     [DaylightMinutes], [WeatherCode], [WeatherDescription], [LastRunId])
-                SELECT ?, source.[ObservationDate], source.[MinimumTemperatureC],
-                       source.[MaximumTemperatureC], source.[MeanTemperatureC],
-                       source.[Sunrise], source.[Sunset], source.[DaylightMinutes],
-                       source.[WeatherCode], source.[WeatherDescription], ?
-                  FROM #OpenMeteoDaily AS source
-                 WHERE NOT EXISTS (
-                       SELECT 1
-                         FROM %s AS target WITH (UPDLOCK, HOLDLOCK)
-                        WHERE target.[LocationId] = ?
-                          AND target.[ObservationDate] = source.[ObservationDate])
-                """.formatted(table, table);
+        final var sql = (
+                "INSERT INTO %s "
+                        + "([LocationId], [ObservationDate], [MinimumTemperatureC], "
+                        + "[MaximumTemperatureC], [MeanTemperatureC], [Sunrise], [Sunset], "
+                        + "[DaylightMinutes], [WeatherCode], [WeatherDescription], [LastRunId]) "
+                        + "SELECT ?, source.[ObservationDate], source.[MinimumTemperatureC], "
+                        + "source.[MaximumTemperatureC], source.[MeanTemperatureC], "
+                        + "source.[Sunrise], source.[Sunset], source.[DaylightMinutes], "
+                        + "source.[WeatherCode], source.[WeatherDescription], ? "
+                        + "FROM #OpenMeteoDaily AS source "
+                        + "WHERE NOT EXISTS ("
+                        + "SELECT 1 FROM %s AS target WITH (UPDLOCK, HOLDLOCK) "
+                        + "WHERE target.[LocationId] = ? "
+                        + "AND target.[ObservationDate] = source.[ObservationDate])")
+                .formatted(table, table);
         try (var statement = connection.prepareStatement(sql)) {
             statement.setLong(1, locationId);
             statement.setObject(2, runId);

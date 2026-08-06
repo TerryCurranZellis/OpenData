@@ -21,7 +21,7 @@ package com.towermarsh.opendata.exception;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class PluginException extends OpenDataException {
+public final class PluginException extends OpenDataException {
 
     private final String pluginName;
 

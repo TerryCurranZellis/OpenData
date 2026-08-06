@@ -26,6 +26,18 @@ public record OpenMeteoResponse(
         String timezone,
         Daily daily) {
 
+    public OpenMeteoResponse {
+        daily = daily == null ? null : new Daily(
+                daily.time(),
+                daily.maximumTemperatures(),
+                daily.minimumTemperatures(),
+                daily.meanTemperatures(),
+                daily.sunrise(),
+                daily.sunset(),
+                daily.daylightDurationSeconds(),
+                daily.weatherCodes());
+    }
+
     /**
      * Daily weather arrays returned by the Open-Meteo archive API.
      *
@@ -54,5 +66,59 @@ public record OpenMeteoResponse(
             @JsonProperty("weather_code")
             List<Integer> weatherCodes) {
 
+        public Daily {
+            time = immutableCopy(time);
+            maximumTemperatures = immutableCopy(maximumTemperatures);
+            minimumTemperatures = immutableCopy(minimumTemperatures);
+            meanTemperatures = immutableCopy(meanTemperatures);
+            sunrise = immutableCopy(sunrise);
+            sunset = immutableCopy(sunset);
+            daylightDurationSeconds = immutableCopy(daylightDurationSeconds);
+            weatherCodes = immutableCopy(weatherCodes);
+        }
+
+        @Override
+        public List<String> time() {
+            return List.copyOf(time);
+        }
+
+        @Override
+        public List<Double> maximumTemperatures() {
+            return List.copyOf(maximumTemperatures);
+        }
+
+        @Override
+        public List<Double> minimumTemperatures() {
+            return List.copyOf(minimumTemperatures);
+        }
+
+        @Override
+        public List<Double> meanTemperatures() {
+            return List.copyOf(meanTemperatures);
+        }
+
+        @Override
+        public List<String> sunrise() {
+            return List.copyOf(sunrise);
+        }
+
+        @Override
+        public List<String> sunset() {
+            return List.copyOf(sunset);
+        }
+
+        @Override
+        public List<Double> daylightDurationSeconds() {
+            return List.copyOf(daylightDurationSeconds);
+        }
+
+        @Override
+        public List<Integer> weatherCodes() {
+            return List.copyOf(weatherCodes);
+        }
+    }
+
+    private static <T> List<T> immutableCopy(final List<T> values) {
+        return values == null ? List.of() : List.copyOf(values);
     }
 }

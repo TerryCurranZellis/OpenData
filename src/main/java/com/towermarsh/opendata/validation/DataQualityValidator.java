@@ -29,7 +29,7 @@ public final class DataQualityValidator
             List<String> requiredColumns) {
 
         this.requiredColumns
-                = requiredColumns;
+                = List.copyOf(requiredColumns);
     }
 
     /**
