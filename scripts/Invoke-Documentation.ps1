@@ -1400,5 +1400,15 @@ function Invoke-Documentation {
   }
 }
 $ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
+$ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath 'docs\templates\Reference Styles.docx'
+$Parameters = @{
+	Action         = 'All' 
+	ProjectRoot    = $ProjectRoot
+	Format         = 'docx' 
+	FailOnWarning  = $true
+	verbose        = $true
+	RenderDiagrams = $true
+	ReferenceDoc   = $ReferenceDoc
+}
 
-Invoke-Documentation -Action All -ProjectRoot $ProjectRoot -Format docx -FailOnWarning -verbose -RenderDiagrams
+Invoke-Documentation @Parameters
