@@ -185,3 +185,4 @@ $($results | Format-Table -AutoSize | Out-String)
 $report | Out-File -FilePath $outputFile -Encoding UTF8
 Write-Host "`nReport saved to: $outputFile" -ForegroundColor Green
 Write-Host $report
+$results | Out-GridView
