@@ -5,7 +5,11 @@
  */
 package com.towermarsh.opendata.ui;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * Supplies display information used by the splash and About windows.
@@ -15,7 +19,7 @@ import java.util.Optional;
  * to {@code development}.</p>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.1
  */
 public record ApplicationInfo(
         String productName,
@@ -31,14 +35,15 @@ public record ApplicationInfo(
      */
     public static ApplicationInfo current() {
         final var applicationPackage = ApplicationInfo.class.getPackage();
+        final var metadata = loadMetadata(ApplicationInfo.class.getClassLoader());
         final var implementationVersion = Optional
                 .ofNullable(applicationPackage.getImplementationVersion())
                 .filter(value -> !value.isBlank())
-                .orElse("development");
+                .orElseGet(() -> metadata.getProperty("application.version", "development"));
         final String javaVersion = System.getProperty("java.version", "unknown");
 
         return new ApplicationInfo(
-                "OpenData",
+                metadata.getProperty("application.name", "OpenData"),
                 "Transforming data for innovation",
                 implementationVersion,
                 "Downloads and transforms internet and file-based data, then loads it "
@@ -46,5 +51,17 @@ public record ApplicationInfo(
                 "Java " + javaVersion,
                 "Apache License 2.0",
                 "Copyright © 2026 Terry Curran");
+    }
+
+    private static Properties loadMetadata(final ClassLoader classLoader) {
+        final var properties = new Properties();
+        try (var input = classLoader.getResourceAsStream("application-metadata.properties")) {
+            if (input != null) {
+                properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
+            }
+        } catch (IOException ignored) {
+            // Metadata is optional; manifest and development fallbacks remain available.
+        }
+        return properties;
     }
 }

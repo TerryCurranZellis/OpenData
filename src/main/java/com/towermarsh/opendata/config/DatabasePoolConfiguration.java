@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
+import com.towermarsh.opendata.validation.ValidationRules;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ import java.util.Objects;
  * @param validationQuery SQL query used to validate pooled connections
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.1
  */
 public record DatabasePoolConfiguration(
         String driverClass,
@@ -63,10 +64,10 @@ public record DatabasePoolConfiguration(
      * @return trimmed text value
      */
     private static String requireText(final String value, final String name) {
-        Objects.requireNonNull(value, name);
-        if (value.isBlank()) {
-            throw new OpenDataConfigurationException(name + " must not be blank.");
+        try {
+            return ValidationRules.requireText(value, name);
+        } catch (IllegalArgumentException exception) {
+            throw new OpenDataConfigurationException(name + " must not be blank.", exception);
         }
-        return value.trim();
     }
 }

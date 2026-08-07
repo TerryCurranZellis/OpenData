@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
+import com.towermarsh.opendata.validation.ValidationRules;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
  * @param append whether existing log files are appended to
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.1
  */
 public record LoggingConfiguration(Path directory, int fileLimitBytes, int fileCount, boolean append) {
     /** 
@@ -24,11 +25,12 @@ public record LoggingConfiguration(Path directory, int fileLimitBytes, int fileC
      */
     public LoggingConfiguration {
         Objects.requireNonNull(directory, "directory");
-        if (fileLimitBytes < 1024) {
-            throw new OpenDataConfigurationException("logging.file-limit-bytes must be at least 1024.");
-        }
-        if (fileCount < 1 || fileCount > 100) {
-            throw new OpenDataConfigurationException("logging.file-count must be between 1 and 100.");
+        try {
+            fileLimitBytes = ValidationRules.requireRange(
+                    fileLimitBytes, 1024, Integer.MAX_VALUE, "logging.file-limit-bytes");
+            fileCount = ValidationRules.requireRange(fileCount, 1, 100, "logging.file-count");
+        } catch (IllegalArgumentException exception) {
+            throw new OpenDataConfigurationException(exception.getMessage(), exception);
         }
     }
 }

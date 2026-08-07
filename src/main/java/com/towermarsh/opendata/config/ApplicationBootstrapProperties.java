@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
+import com.towermarsh.opendata.validation.ValidationRules;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -20,7 +21,7 @@ import java.util.Objects;
  * @param useDatabaseProperties whether runtime properties are loaded from the database
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 2.1
  */
 public record ApplicationBootstrapProperties(
         String applicationVersion,
@@ -120,35 +121,13 @@ public record ApplicationBootstrapProperties(
      * @return merged bootstrap properties
      */
     public ApplicationBootstrapProperties merge(final Map<String, String> values) {
-        final var applicationVersionValue = values.getOrDefault("version", applicationVersion);
-        final var databaseUrlValue = values.getOrDefault("database.url", databaseUrl);
-        final var databaseUserValue = values.getOrDefault("database.user", databaseUser);
-        final var databasePasswordValue = values.getOrDefault("database.password", databasePassword);
-        final var useDatabaseValue = values.getOrDefault(
-                "use-database-properties",
-                Boolean.toString(useDatabaseProperties));
+        final var properties = new ApplicationPropertyValues(values);
         return new ApplicationBootstrapProperties(
-                applicationVersionValue,
-                databaseUrlValue,
-                databaseUserValue,
-                databasePasswordValue,
-                parseBoolean(useDatabaseValue, "use-database-properties"));
-    }
-
-    /**
-     * Parses a boolean bootstrap flag.
-     *
-     * @param value raw text
-     * @param key property name
-     * @return parsed boolean value
-     */
-    private static boolean parseBoolean(final String value, final String key) {
-        return switch (Objects.requireNonNull(value, key).trim().toLowerCase()) {
-            case "true", "yes", "1", "on" -> true;
-            case "false", "no", "0", "off" -> false;
-            default -> throw new OpenDataConfigurationException(
-                    "Application property must be a boolean: " + key);
-        };
+                properties.text("version", applicationVersion),
+                properties.text("database.url", databaseUrl),
+                properties.text("database.user", databaseUser),
+                properties.text("database.password", databasePassword),
+                properties.bool("use-database-properties", useDatabaseProperties));
     }
 
     /**
@@ -159,11 +138,10 @@ public record ApplicationBootstrapProperties(
      * @return trimmed value
      */
     private static String requireText(final String value, final String fieldName) {
-        Objects.requireNonNull(value, fieldName);
-        final var result = value.trim();
-        if (result.isBlank()) {
-            throw new OpenDataConfigurationException(fieldName + " must not be blank.");
+        try {
+            return ValidationRules.requireText(value, fieldName);
+        } catch (IllegalArgumentException exception) {
+            throw new OpenDataConfigurationException(fieldName + " must not be blank.", exception);
         }
-        return result;
     }
 }

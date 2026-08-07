@@ -25,6 +25,7 @@
  * <li>{@link PropertiesPluginDefinitionLoader}</li>
  * <li>{@link ResolvedConfigurationValue}</li>
  * <li>{@link StandardConfigurationValidator}</li>
+ * <li>{@link ApplicationPropertyValues}</li>
  * </ul>
   *
  * @author Terry Curran

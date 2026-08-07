@@ -37,12 +37,13 @@ import com.towermarsh.opendata.plugin.PluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginSelectionResolver;
 import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
 import com.towermarsh.opendata.plugin.ResolvedPlugin;
+import com.towermarsh.opendata.util.DurationFormatter;
+import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Clock;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ import java.util.logging.Logger;
  * database access, and plugin execution.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 2.1
  */
 public final class OpenDataApplication {
 
@@ -391,7 +392,7 @@ public final class OpenDataApplication {
         try {
             database.close();
         } catch (RuntimeException exception) {
-            LOGGER.log(Level.SEVERE, "Database shutdown failed: {0}", messageFor(exception));
+            LOGGER.log(Level.SEVERE, "Database shutdown failed: {0}", ExceptionMessages.rootCauseMessage(exception));
             LOGGER.log(Level.FINE, "Database shutdown failure details.", exception);
         }
     }
@@ -399,17 +400,6 @@ public final class OpenDataApplication {
     /**
      * get the exception message
      */
-    private static String messageFor(final Throwable exception) {
-        var current = exception;
-        while (current.getCause() != null && current.getCause() != current) {
-            current = current.getCause();
-        }
-        final var message = current.getMessage();
-        return message == null || message.isBlank()
-                ? current.getClass().getSimpleName()
-                : message;
-    }
-
     /**
      * show the execution summary
      */
@@ -419,7 +409,7 @@ public final class OpenDataApplication {
                     result.successful() ? Level.INFO : Level.SEVERE,
                     "Plugin summary: id={0}, status={1}, duration={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
                     new Object[]{
-                        result.pluginId(), result.status().name(), format(result.duration()),
+                        result.pluginId(), result.status().name(), DurationFormatter.formatElapsed(result.duration()),
                         result.metrics().read(), result.metrics().inserted(), result.metrics().updated(),
                         result.metrics().skipped(), result.errorMessage().orElse("")
                     });
@@ -427,16 +417,6 @@ public final class OpenDataApplication {
         LOGGER.log(Level.INFO,
                 "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
                 new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
-    }
-
-    /**
-     * Format duration as HH:mm:ss
-     *
-     * @param duration duration to format
-     * @return formatted string
-     */
-    private static String format(Duration duration) {
-        return String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
     }
 
     /**

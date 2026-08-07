@@ -19,7 +19,7 @@ import org.junit.jupiter.api.io.TempDir;
  * Tests bootstrap property loading and encrypted password persistence.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 2.1
  */
 class ApplicationBootstrapPropertiesLoaderTest {
 
@@ -54,7 +54,7 @@ class ApplicationBootstrapPropertiesLoaderTest {
                 Thread.currentThread().getContextClassLoader(),
                 cipher);
         final var bootstrap = new ApplicationBootstrapProperties(
-                "2.0.0",
+                "2.1.0",
                 "jdbc:sqlserver://localhost;databaseName=OpenData",
                 "OpenData",
                 "secret-value",

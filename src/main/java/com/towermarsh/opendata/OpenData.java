@@ -16,6 +16,8 @@ import com.towermarsh.opendata.logging.LoggingManager;
 import com.towermarsh.opendata.ui.AboutDialog;
 import com.towermarsh.opendata.ui.ApplicationInfo;
 import com.towermarsh.opendata.ui.StartupSplashScreen;
+import com.towermarsh.opendata.util.DurationFormatter;
+import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
  * OpenData application entry point.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 2.1
  */
 public final class OpenData {
 
@@ -62,6 +64,7 @@ public final class OpenData {
             logger = LoggingManager.getLogger();
             final var arguments = processor.parse(args);
             LoggingManager.setVerbose(arguments.verbose());
+            logStartup(ApplicationInfo.current(), arguments);
             if (arguments.aboutRequested()) {
                 AboutDialog.showAndWait(ApplicationInfo.current());
                 status = ExecutionStatus.SUCCESS;
@@ -73,59 +76,49 @@ public final class OpenData {
             }
         } catch (CommandLineProcessingException exception) {
             status = ExecutionStatus.COMMAND_LINE_ERROR;
-            logger.log(Level.SEVERE, "Command-line error: {0}", messageFor(exception));
+            logger.log(Level.SEVERE, "Command-line error: {0}", ExceptionMessages.rootCauseMessage(exception));
             processor.printHelp(new PrintWriter(System.err, true, StandardCharsets.UTF_8));
         } catch (PluginDefinitionException | OpenDataConfigurationException exception) {
             status = ExecutionStatus.CONFIGURATION_ERROR;
-            logger.log(Level.SEVERE, "Configuration error: {0}", messageFor(exception));
+            logger.log(Level.SEVERE, "Configuration error: {0}", ExceptionMessages.rootCauseMessage(exception));
         } catch (DatabaseException exception) {
             status = ExecutionStatus.DATABASE_FAILURE;
-            logger.log(Level.SEVERE, "Database failure: {0}", messageFor(exception));
+            logger.log(Level.SEVERE, "Database failure: {0}", ExceptionMessages.rootCauseMessage(exception));
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
             status = ExecutionStatus.INTERRUPTED;
-            logger.log(Level.WARNING, "Application execution was interrupted: {0}", messageFor(exception));
+            logger.log(Level.WARNING, "Application execution was interrupted: {0}", ExceptionMessages.rootCauseMessage(exception));
         } catch (IOException exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
-            logger.log(Level.SEVERE, "Application I/O failure: {0}", messageFor(exception));
+            logger.log(Level.SEVERE, "Application I/O failure: {0}", ExceptionMessages.rootCauseMessage(exception));
         } catch (Exception exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
-            logger.log(Level.SEVERE, "Unexpected application failure: {0}", messageFor(exception));
+            logger.log(Level.SEVERE, "Unexpected application failure: {0}", ExceptionMessages.rootCauseMessage(exception));
             logger.log(Level.FINE, "Unexpected application failure details.", exception);
         } finally {
             final var duration = Duration.between(startedAt, Instant.now());
             logger.log(Level.INFO, "OpenData finished with status {0}; duration {1}",
-                    new Object[]{status.displayName(), format(duration)});
+                    new Object[]{status.displayName(), DurationFormatter.formatElapsed(duration)});
             LoggingManager.shutdown();
         }
     }
 
-    /**
-     * Format duration as HH:mm:ss
-     *
-     * @param duration duration to format
-     * @return formatted string
-     */
-    private static String format(Duration duration) {
-        return String.format("%02d:%02d:%02d", duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart());
-    }
-
-    /**
-     * display the exception message
-     *
-     * @param exception the exception details
-     * @return the exception message
-     */
-    private static String messageFor(final Throwable exception) {
-        var current = exception;
-        // Suppresses false positive: This is intentional reference equality check
-        while (current.getCause() != null && current.getCause() != current) {
-            current = current.getCause();
-        }
-        final var message = current.getMessage();
-        return message == null || message.isBlank()
-                ? current.getClass().getSimpleName()
-                : message;
+    /** Logs non-sensitive application identity and invocation details. */
+    private static void logStartup(
+            final ApplicationInfo information,
+            final com.towermarsh.opendata.cli.CommandLineArguments arguments) {
+        logger.log(Level.INFO, "{0} {1} starting", new Object[]{information.productName(), information.version()});
+        logger.log(Level.INFO,
+                "Runtime: {0}; OS: {1} {2}; workingDirectory={3}",
+                new Object[]{
+                    information.runtime(),
+                    System.getProperty("os.name", "unknown"),
+                    System.getProperty("os.version", "unknown"),
+                    Path.of("").toAbsolutePath().normalize()
+                });
+        logger.log(Level.INFO,
+                "Invocation: command={0}; dryRun={1}; verbose={2}",
+                new Object[]{arguments.command(), arguments.dryRun(), arguments.verbose()});
     }
 
     /**

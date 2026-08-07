@@ -69,5 +69,6 @@
 | [ADR-0047](ADR-0047-database-backed-configuration-registration.md) | Register configuration in SQL Server and bootstrap from encrypted file settings | Accepted | Implemented for version 2 bootstrap |
 | [ADR-0048](ADR-0048-persistent-plugin-registry-and-cli-lifecycle.md) | Persist plugin lifecycle state and administer it through the CLI | Accepted | Implemented; extends ADR-0013/0047 |
 | [ADR-0049](ADR-0049-shared-validation-and-jdbc-execution.md) | Share validation and JDBC execution mechanics | Accepted | Implemented across Ofgem, OpenMeteo and Octopus |
+| [ADR-0050](ADR-0050-application-metadata-validation-and-utilities.md) | Centralise application metadata, validation and focused utilities | Accepted | Implemented in version 2.1 |
 
 :::

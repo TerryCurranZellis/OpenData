@@ -5,8 +5,8 @@
  */
 package com.towermarsh.opendata.config;
 
+import com.towermarsh.opendata.validation.ValidationRules;
 import java.time.Duration;
-import java.util.Objects;
 
 /** 
  * Bounded plugin executor settings.
@@ -14,19 +14,20 @@ import java.util.Objects;
  * @param shutdownTimeout maximum time to wait for plugin shutdown
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 2.1
  */
 public record ExecutionConfiguration(int maxParallelPlugins, Duration shutdownTimeout) {
     /** 
      * Validates and normalises record components. 
      */
     public ExecutionConfiguration {
-        Objects.requireNonNull(shutdownTimeout, "shutdownTimeout");
-        if (maxParallelPlugins < 1 || maxParallelPlugins > 64) {
-            throw new OpenDataConfigurationException("execution.max-parallel-plugins must be between 1 and 64.");
-        }
-        if (shutdownTimeout.isNegative() || shutdownTimeout.isZero()) {
-            throw new OpenDataConfigurationException("execution.shutdown-timeout-seconds must be positive.");
+        try {
+            maxParallelPlugins = ValidationRules.requireRange(
+                    maxParallelPlugins, 1, 64, "execution.max-parallel-plugins");
+            shutdownTimeout = ValidationRules.requirePositive(
+                    shutdownTimeout, "execution.shutdown-timeout-seconds");
+        } catch (IllegalArgumentException exception) {
+            throw new OpenDataConfigurationException(exception.getMessage(), exception);
         }
     }
 }

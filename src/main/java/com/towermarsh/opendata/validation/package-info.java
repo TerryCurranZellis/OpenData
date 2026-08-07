@@ -11,12 +11,9 @@
  * <li>{@link com.towermarsh.opendata.validation.PluginPropertyValues}</li>
  * <li>{@link com.towermarsh.opendata.validation.ValidationRules}</li>
  * <li>{@link com.towermarsh.opendata.validation.SqlIdentifiers}</li>
- * <li>{@link com.towermarsh.opendata.validation.DataQualityValidator}</li>
- * <li>{@link com.towermarsh.opendata.validation.ValidationResult}</li>
- * <li>{@link com.towermarsh.opendata.validation.Validator}</li>
  * </ul>
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 2.1
  */
 package com.towermarsh.opendata.validation;

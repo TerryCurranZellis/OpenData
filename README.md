@@ -9,13 +9,15 @@ registered and selectable plugins.
 
 ## Current baseline
 
-The repository and documentation describe **OpenData 2.0.0** as a development
+The repository and documentation describe **OpenData 2.1.0** as a development
 and release-candidate baseline. It is not yet a production-ready release. The
 remaining mandatory blockers and environment-dependent acceptance checks are
 listed in the [final release checklist](docs/release/Final-Release-Checklist.md)
 and [current readiness assessment](docs/review/RELEASE-READINESS-STATUS-2.0.0.md).
 
-Version 2.0.0 introduces a persistent plugin registry, database-backed
+Version 2.1.0 centralises application validation, exception messages, elapsed
+duration formatting and build-derived application identity, and logs the
+product name and version at startup. Version 2.0.0 introduced a persistent plugin registry, database-backed
 configuration, certificate-based bootstrap password protection, the common
 five-phase plugin lifecycle, local Octopus statement ingestion, and an explicit
 `--Execute`/`-x` execution gate. Version 1.0.0 material is retained as historical
@@ -52,7 +54,7 @@ release documentation.
 
 ## Installed plugin definitions
 
-| ID | Source | Version 2.0.0 acquisition |
+| ID | Source | Version 2.1.0 acquisition |
 |---|---|---|
 | `ofgem` | Ofgem Energy Price Cap publication | Web discovery and workbook download |
 | `openmeteo` | Open-Meteo Historical Weather API | HTTPS JSON API |
@@ -79,7 +81,7 @@ mvn clean verify
 mvn package
 ```
 
-The reviewed POM creates `target/opendata-2.0.0.jar` but does not establish a
+The reviewed POM creates `target/opendata-2.1.0.jar` but does not establish a
 verified self-contained executable. Launch `com.towermarsh.opendata.OpenData`
 from NetBeans or another classpath-aware launcher.
 
