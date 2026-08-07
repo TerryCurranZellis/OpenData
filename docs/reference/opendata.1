@@ -1,0 +1,224 @@
+.TH OPENDATA 1 "7 August 2026" "OpenData 2.0.0" "OpenData Manual"
+.SH NAME
+opendata \- acquire, transform and load external data through registered plugins
+.SH SYNOPSIS
+.B opendata
+.BR --plugin " " \fIid\fR|\fBall\fR
+.RB [ --plugin " " \fIid\fR ]
+.B --Execute
+.RI [ run-options ]
+.PP
+.B opendata
+.BR --plugin " " \fIid\fR|\fBall\fR
+.RB [ --plugin " " \fIid\fR ]
+.I administration-operation
+.RI [ options ]
+.PP
+.B opendata
+.RB ( --help " | " --about " | " --list-plugins )
+.SH DESCRIPTION
+.B OpenData
+is a Java command-line framework that acquires external data, transforms it
+through registered plugins, validates plugin-specific records, and can load
+the resulting data into Microsoft SQL Server.
+.PP
+Beginning with the OpenData 2.0.0 command-line contract, selecting a plugin does
+not by itself authorise execution.  Normal execution and dry-run execution both
+require the explicit
+.B --Execute
+switch, or its short form
+.BR -x .
+.PP
+For example,
+.PP
+.nf
+opendata --plugin ofgem
+.fi
+.PP
+is rejected.  To run the plugin use:
+.PP
+.nf
+opendata --plugin ofgem --Execute
+.fi
+.PP
+Administration commands do not require
+.B --Execute
+and must not be combined with it.
+.SH OPTIONS
+.TP
+.BR -p ", " --plugin " " \fIid\fR|\fBall\fR
+Select a plugin.  The option may be repeated, comma-separated identifiers are
+accepted, and
+.B all
+selects all eligible plugins for the requested operation.
+.TP
+.BR -x ", " --Execute
+Explicitly authorise plugin execution.  This switch is required for normal
+execution and for
+.BR --dry-run .
+It takes no argument and cannot be combined with plugin administration
+operations.
+.TP
+.BR -n ", " --dry-run
+Execute the selected plugin or plugins without provider-data writes or generic
+run-audit rows.  This is still an execution operation and therefore requires
+.BR --Execute .
+.TP
+.BR -j ", " --parallelism " " \fI1-64\fR
+Set the maximum number of plugins that may execute concurrently.  The option is
+effective only for normal and dry-run execution.
+.TP
+.BR -v ", " --verbose
+Enable FINE java.util.logging output.
+.TP
+.BR -r ", " --register
+Register or replace selected plugin definitions and configuration.
+.TP
+.BR -u ", " --unregister
+Remove selected plugins and their stored plugin configuration.
+.TP
+.B --remove
+Alias for
+.BR --unregister .
+.TP
+.BR -e ", " --enable
+Enable selected registered plugins.
+.TP
+.BR -d ", " --disable
+Disable selected registered plugins.
+.TP
+.BR -f ", " --file " " \fIplugin.properties\fR
+Use an external UTF-8 plugin definition when registering exactly one named
+plugin.  This option is valid only with
+.BR --register .
+.TP
+.BR -l ", " --list-plugins
+List registered plugins and their enabled or disabled status.
+.TP
+.BR -h ", " --help
+Display command-line help.
+.TP
+.BR -a ", " --about
+Display the graphical About and version window.
+.SH EXECUTION RULES
+A normal or dry-run invocation requires both a plugin selection and explicit
+execution authorisation:
+.PP
+.nf
+opendata --plugin ofgem --Execute
+opendata --plugin ofgem --Execute --dry-run
+.fi
+.PP
+The
+.B --Execute
+switch is not valid with
+.BR --register ,
+.BR --unregister ,
+.BR --remove ,
+.BR --enable ,
+or
+.BR --disable .
+.PP
+.B --plugin all
+cannot be combined with a named plugin identifier.  Duplicate plugin selections
+are rejected.
+.PP
+During execution,
+.B --plugin all
+selects registered and enabled plugins.  A named plugin must be registered and
+enabled.
+.SH ADMINISTRATION
+Register all packaged definitions:
+.PP
+.nf
+opendata --plugin all --register
+.fi
+.PP
+Register one external definition:
+.PP
+.nf
+opendata --plugin example --register --file C:\eOpenData\eexample.properties
+.fi
+.PP
+Disable, enable, and unregister a plugin:
+.PP
+.nf
+opendata --plugin octopus --disable
+opendata --plugin octopus --enable
+opendata --plugin octopus --unregister
+.fi
+.SH EXAMPLES
+Run the Ofgem plugin:
+.PP
+.nf
+opendata --plugin ofgem --Execute
+.fi
+.PP
+Run Ofgem and OpenMeteo with two workers:
+.PP
+.nf
+opendata --plugin ofgem --plugin openmeteo --Execute --parallelism 2
+.fi
+.PP
+Dry-run every enabled registered plugin:
+.PP
+.nf
+opendata --plugin all --Execute --dry-run
+.fi
+.PP
+Use short options for execution and dry-run:
+.PP
+.nf
+opendata -p ofgem -x -n
+.fi
+.SH FILES
+.TP
+.I src/main/resources/config/application.properties
+Repository-local bootstrap configuration used to reach the configuration store
+and persistent plugin registry.
+.TP
+.I src/main/resources/config/plugins/
+Packaged plugin definitions used as registration sources.
+.TP
+.I logs/
+Default application logging directory.
+.PP
+Runtime registration and configuration are stored in SQL Server, including
+.B core.plugin_registry
+and
+.BR core.plugin_property .
+.SH EXIT STATUS
+OpenData records an internal
+.B ExecutionStatus
+for each invocation.  The current Java entry point does not yet propagate the
+stored numeric status code to the operating system with
+.BR System.exit (3).
+Operators should therefore inspect the final application status and plugin
+summaries in the log.
+.SH NOTES
+The short option
+.B -d
+means
+.BR --disable .
+The short option for
+.B --dry-run
+is
+.BR -n .
+.PP
+The long execution switch is intentionally spelled
+.B --Execute
+with a capital E.
+.SH SEE ALSO
+The repository documentation:
+.PP
+.nf
+docs/reference/command-line-reference.md
+docs/guides/quick-start.md
+docs/user-guide/05-command-line-use.md
+docs/operations/operations-runbook.md
+.fi
+.SH AUTHOR
+Terry Curran.
+.SH COPYRIGHT
+Copyright \(co 2026 Terry Curran.
+Licensed under the Apache License, Version 2.0.

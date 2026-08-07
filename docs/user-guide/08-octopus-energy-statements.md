@@ -1,9 +1,9 @@
 # 8. Octopus Energy Statements
 
 **Document ID:** USER-008-OCTOPUS  
-**Version:** 2.0  
+**Version:** 2.1  
 **Status:** Runtime and dry-run implemented; live acceptance required  
-**Baseline date:** 3 August 2026
+**Baseline date:** 7 August 2026
 
 ---
 
@@ -28,7 +28,7 @@ Copy the complete packaged Octopus definition and set explicit paths:
 ```properties
 property.input.directory.value=C:\Attachments\octopus\incoming
 property.working.directory.value=C:\Attachments\octopus\working
-property.archive.directory.value=C:\Attachments\octopusrchive
+property.archive.directory.value=C:\Attachments\octopus\archive
 ```
 
 ```text
@@ -41,9 +41,11 @@ for a write run because a blank path resolves to the process working directory.
 ## Controlled acceptance
 
 ```text
-opendata --plugin octopus --dry-run
-opendata --plugin octopus
+opendata --plugin octopus --Execute --dry-run
+opendata --plugin octopus --Execute
 ```
+
+Normal and dry-run execution both require `--Execute` or `-x`.
 
 Dry run lists and parses candidate PDFs without reading/writing the completion
 ledger, loading provider rows, writing `core.PluginRun`, or moving source files.

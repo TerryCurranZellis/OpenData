@@ -17,8 +17,9 @@ and [current readiness assessment](docs/review/RELEASE-READINESS-STATUS-2.0.0.md
 
 Version 2.0.0 introduces a persistent plugin registry, database-backed
 configuration, certificate-based bootstrap password protection, the common
-five-phase plugin lifecycle, and local Octopus statement ingestion. Version
-1.0.0 material is retained as historical release documentation.
+five-phase plugin lifecycle, local Octopus statement ingestion, and an explicit
+`--Execute`/`-x` execution gate. Version 1.0.0 material is retained as historical
+release documentation.
 
 ## Implemented capabilities
 
@@ -28,9 +29,11 @@ five-phase plugin lifecycle, and local Octopus statement ingestion. Version
 - Persist registered plugin metadata, enabled/disabled status and complete
   plugin configuration in SQL Server.
 - List, enable, disable and unregister plugins from the command line.
-- Run one, several, or all enabled registered plugins.
+- Run one, several, or all enabled registered plugins only when execution is
+  explicitly authorised with `--Execute` or `-x`.
 - Perform side-effect-free dry runs for Ofgem, OpenMeteo and Octopus without
-  plugin data writes or generic run-audit rows.
+  plugin data writes or generic run-audit rows; dry-runs also require
+  `--Execute`.
 - Execute multiple plugins concurrently with bounded parallelism.
 - Build Technical, Administrator, Developer and API manuals from JSON manifests,
   Markdown and generated SVG diagrams.
@@ -111,12 +114,14 @@ present in tracked history before production use.
 --plugin octopus --disable
 --plugin octopus --enable
 --plugin octopus --unregister
---plugin ofgem --dry-run
---plugin all --dry-run --parallelism 3
---plugin openmeteo --plugin ofgem --parallelism 2
+--plugin ofgem --Execute
+--plugin ofgem --Execute --dry-run
+--plugin all --Execute --dry-run --parallelism 3
+--plugin openmeteo --plugin ofgem --Execute --parallelism 2
 ```
 
-The short option `-d` is reserved for `--disable`; use `-n` for `--dry-run`.
+Normal and dry-run plugin execution requires `--Execute` or `-x`. The short
+option `-d` is reserved for `--disable`; use `-n` for `--dry-run`.
 
 ## Documentation map
 
@@ -128,6 +133,7 @@ The short option `-d` is reserved for `--disable`; use `-n` for `--dry-run`.
 | Architecture | [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) |
 | Plugin development | [docs/development/README.md](docs/development/README.md) |
 | API/configuration reference | [docs/reference/README.md](docs/reference/README.md) |
+| Unix manual page | [docs/reference/opendata.1](docs/reference/opendata.1) |
 | Governance and compliance | [docs/governance/README.md](docs/governance/README.md) |
 | Release process | [docs/release/Release-Process.md](docs/release/Release-Process.md) |
 | Documentation framework | [docs/README.md](docs/README.md) |

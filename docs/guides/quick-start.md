@@ -1,9 +1,9 @@
 # OpenData 2.0.0 Quick Start
 
 **Document ID:** GUIDE-QUICKSTART-001  
-**Version:** 2.0  
+**Version:** 2.1  
 **Status:** Current  
-**Baseline date:** 3 August 2026
+**Baseline date:** 7 August 2026
 
 ---
 
@@ -41,11 +41,14 @@ and registry metadata, encrypts the password and enables database-backed mode.
 
 ## 5. Dry-run
 
+Execution is explicit. `--plugin` selects what should run; `--Execute` (or `-x`)
+authorises the run.
+
 ```text
-opendata --plugin ofgem --dry-run
-opendata --plugin openmeteo --dry-run
-opendata --plugin octopus --dry-run
-opendata --plugin all --dry-run --parallelism 3
+opendata --plugin ofgem --Execute --dry-run
+opendata --plugin openmeteo --Execute --dry-run
+opendata --plugin octopus --Execute --dry-run
+opendata --plugin all --Execute --dry-run --parallelism 3
 ```
 
 Dry run still reads the SQL registry/configuration, but plugin execution creates
@@ -60,9 +63,18 @@ opendata --plugin octopus --unregister
 opendata --plugin octopus --register
 ```
 
-Use `-n` for dry run; `-d` means disable.
+Administration commands do not use `--Execute`. Use `-x` for execution,
+`-n` for dry run, and remember that `-d` means disable.
 
 ## 7. First write run
 
-Back up SQL Server, run one plugin at a time, reconcile logs/audit/provider rows,
-then test repeated and parallel execution before routine scheduling.
+Back up SQL Server, then explicitly authorise one plugin at a time:
+
+```text
+opendata --plugin ofgem --Execute
+opendata --plugin openmeteo --Execute
+opendata --plugin octopus --Execute
+```
+
+Reconcile logs/audit/provider rows, then test repeated and parallel execution
+before routine scheduling.

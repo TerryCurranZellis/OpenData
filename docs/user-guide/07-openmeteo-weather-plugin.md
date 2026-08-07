@@ -1,9 +1,9 @@
 # 7. OpenMeteo Weather Plugin
 
 **Document ID:** USER-007  
-**Version:** 2.0  
+**Version:** 2.1  
 **Status:** Runtime implemented; acceptance required  
-**Baseline date:** 3 August 2026
+**Baseline date:** 7 August 2026
 
 ---
 
@@ -14,9 +14,11 @@ Register and test:
 
 ```text
 opendata --plugin openmeteo --register
-opendata --plugin openmeteo --dry-run
-opendata --plugin openmeteo
+opendata --plugin openmeteo --Execute --dry-run
+opendata --plugin openmeteo --Execute
 ```
+
+Normal and dry-run execution both require `--Execute` or `-x`.
 
 To change location or dates, copy the complete packaged
 `config/plugins/openmeteo.properties` definition, amend values such as these,

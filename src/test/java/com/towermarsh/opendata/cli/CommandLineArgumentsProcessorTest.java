@@ -22,19 +22,47 @@ class CommandLineArgumentsProcessorTest {
     @Test
     void acceptsRepeatedAndCommaSeparatedPluginsInOrder() {
         final var arguments = processor.parse(new String[]{
-            "--plugin", "openmeteo,ofgem", "--plugin", "octopus", "--parallelism", "3"
+            "--plugin", "openmeteo,ofgem", "--plugin", "octopus",
+            "--Execute", "--parallelism", "3"
         });
         assertEquals(List.of("openmeteo", "ofgem", "octopus"), arguments.pluginIds());
         assertEquals(3, arguments.parallelism().orElseThrow());
         assertEquals(PluginCommand.RUN, arguments.command());
+        assertTrue(arguments.executeRequested());
     }
 
     @Test
     void recognisesAllForRun() {
-        final var arguments = processor.parse(new String[]{"--plugin", "all"});
+        final var arguments = processor.parse(new String[]{"--plugin", "all", "--Execute"});
         assertTrue(arguments.allPluginsRequested());
         assertTrue(arguments.pluginIds().isEmpty());
+        assertTrue(arguments.executeRequested());
         assertTrue(arguments.runRequested());
+    }
+
+    @Test
+    void acceptsExecuteShortOption() {
+        final var arguments = processor.parse(new String[]{"-p", "ofgem", "-x"});
+        assertTrue(arguments.executeRequested());
+        assertTrue(arguments.runRequested());
+    }
+
+    @Test
+    void requiresExecuteForPluginRunsAndDryRuns() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--dry-run"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--parallelism", "2"}));
+    }
+
+    @Test
+    void rejectsExecuteWithAdministrationOperations() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--register", "--Execute"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--disable", "-x"}));
     }
 
     @Test
@@ -80,15 +108,17 @@ class CommandLineArgumentsProcessorTest {
         assertTrue(disable.disableRequested());
         assertFalse(disable.dryRun());
 
-        final var dryRun = processor.parse(new String[]{"--plugin", "ofgem", "-n"});
+        final var dryRun = processor.parse(new String[]{"--plugin", "ofgem", "-x", "-n"});
         assertEquals(PluginCommand.RUN, dryRun.command());
+        assertTrue(dryRun.executeRequested());
         assertTrue(dryRun.dryRun());
     }
 
     @Test
     void acceptsLongDryRun() {
-        final var arguments = processor.parse(new String[]{"--plugin all --dry-run"});
+        final var arguments = processor.parse(new String[]{"--plugin all --Execute --dry-run"});
         assertTrue(arguments.allPluginsRequested());
+        assertTrue(arguments.executeRequested());
         assertTrue(arguments.dryRun());
     }
 
@@ -126,6 +156,8 @@ class CommandLineArgumentsProcessorTest {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--disable"}));
         assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--Execute"}));
+        assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--dry-run"}));
     }
 
@@ -150,7 +182,7 @@ class CommandLineArgumentsProcessorTest {
     void rejectsInvalidFileCombinations() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
-                    "--plugin", "ofgem", "--file", "ofgem.properties"}));
+                    "--plugin", "ofgem", "--Execute", "--file", "ofgem.properties"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
                     "--plugin", "all", "--register", "--file", "plugins.properties"}));
@@ -164,26 +196,26 @@ class CommandLineArgumentsProcessorTest {
     void rejectsDuplicateAndAllCombinedPluginSelections() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
-                    "--plugin", "openmeteo", "--plugin", "openmeteo"}));
+                    "--plugin", "openmeteo", "--plugin", "openmeteo", "--Execute"}));
         assertThrows(CommandLineProcessingException.class,
-                () -> processor.parse(new String[]{"--plugin", "all,openmeteo"}));
+                () -> processor.parse(new String[]{"--plugin", "all,openmeteo", "--Execute"}));
     }
 
     @Test
     void validatesParallelismRangeAndType() {
         assertEquals(1, processor.parse(new String[]{
-            "--plugin", "ofgem", "--parallelism", "1"}).parallelism().orElseThrow());
+            "--plugin", "ofgem", "--Execute", "--parallelism", "1"}).parallelism().orElseThrow());
         assertEquals(64, processor.parse(new String[]{
-            "--plugin", "ofgem", "--parallelism", "64"}).parallelism().orElseThrow());
+            "--plugin", "ofgem", "--Execute", "--parallelism", "64"}).parallelism().orElseThrow());
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
-                    "--plugin", "ofgem", "--parallelism", "0"}));
+                    "--plugin", "ofgem", "--Execute", "--parallelism", "0"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
-                    "--plugin", "ofgem", "--parallelism", "65"}));
+                    "--plugin", "ofgem", "--Execute", "--parallelism", "65"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
-                    "--plugin", "ofgem", "--parallelism", "many"}));
+                    "--plugin", "ofgem", "--Execute", "--parallelism", "many"}));
     }
 
     @Test
@@ -192,11 +224,13 @@ class CommandLineArgumentsProcessorTest {
                 () -> processor.parse(new String[]{"--help", "--plugin", "ofgem"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--about", "--list-plugins"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--help", "--Execute"}));
     }
 
     @Test
     void reservesShortVForVerboseLogging() {
-        final var arguments = processor.parse(new String[]{"--plugin", "example", "-v"});
+        final var arguments = processor.parse(new String[]{"--plugin", "example", "--Execute", "-v"});
         assertTrue(arguments.verbose());
         assertFalse(arguments.aboutRequested());
     }

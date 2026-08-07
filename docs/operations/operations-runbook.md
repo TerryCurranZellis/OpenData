@@ -1,9 +1,9 @@
 # Operations Runbook
 
 **Document ID:** OPS-RUNBOOK-001  
-**Version:** 2.0  
+**Version:** 2.1  
 **Status:** Version 2.0.0 pre-production baseline  
-**Baseline date:** 3 August 2026
+**Baseline date:** 7 August 2026
 
 ---
 
@@ -28,15 +28,28 @@ opendata --plugin octopus --enable
 ```
 
 External definitions are accepted only as
-`--plugin <id> --register --file <complete-file>`.
+`--plugin <id> --register --file <complete-file>`. Administration operations do
+not use `--Execute`.
 
 ## Safe acceptance
 
-1. dry-run each enabled plugin and then `--plugin all --dry-run`;
-2. perform one controlled write per plugin;
+1. dry-run each enabled plugin and then
+   `opendata --plugin all --Execute --dry-run`;
+2. perform one controlled write per plugin with `--Execute`;
 3. verify audit/provider rows, idempotent replay and archive behaviour;
 4. test repeated plugin selection and bounded parallelism;
 5. test lifecycle operations in a disposable environment.
+
+Examples:
+
+```text
+opendata --plugin ofgem --Execute --dry-run
+opendata --plugin ofgem --Execute
+opendata --plugin openmeteo --plugin ofgem --Execute --parallelism 2
+```
+
+The explicit execution switch is a safety gate: `--plugin ofgem` by itself is
+rejected and cannot start a data load.
 
 ## Stop conditions
 

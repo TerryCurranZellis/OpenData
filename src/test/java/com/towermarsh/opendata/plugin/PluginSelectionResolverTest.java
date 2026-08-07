@@ -64,6 +64,7 @@ class PluginSelectionResolverTest {
                 Optional.empty(),
                 OptionalInt.empty(),
                 false,
+                true,
                 false,
                 false,
                 false,

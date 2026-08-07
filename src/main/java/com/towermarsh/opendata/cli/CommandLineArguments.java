@@ -19,6 +19,7 @@ import java.util.OptionalInt;
  * @param pluginFile optional plugin definition file used only for registration
  * @param parallelism optional plugin parallelism override
  * @param dryRun whether plugin data writes and run-audit rows are disabled
+ * @param executeRequested whether plugin execution was explicitly authorised
  * @param verbose whether verbose logging is requested
  * @param helpRequested whether help output was requested
  * @param aboutRequested whether the graphical About window was requested
@@ -34,6 +35,7 @@ public record CommandLineArguments(
         Optional<Path> pluginFile,
         OptionalInt parallelism,
         boolean dryRun,
+        boolean executeRequested,
         boolean verbose,
         boolean helpRequested,
         boolean aboutRequested,
@@ -65,38 +67,40 @@ public record CommandLineArguments(
         return helpRequested || aboutRequested || listPluginsRequested;
     }
 
-    /** 
-     * @return whether plugin registration was requested 
+    /**
+     * @return whether plugin registration was requested
      */
     public boolean registerRequested() {
         return command == PluginCommand.REGISTER;
     }
 
-    /** 
-     * @return whether plugin removal was requested 
+    /**
+     * @return whether plugin removal was requested
      */
     public boolean unregisterRequested() {
         return command == PluginCommand.UNREGISTER;
     }
 
-    /** 
-     * @return whether plugin enable was requested 
+    /**
+     * @return whether plugin enable was requested
      */
     public boolean enableRequested() {
         return command == PluginCommand.ENABLE;
     }
 
-    /** 
-     * @return whether plugin disable was requested 
+    /**
+     * @return whether plugin disable was requested
      */
     public boolean disableRequested() {
         return command == PluginCommand.DISABLE;
     }
 
-    /** 
-     * @return whether normal plugin execution was requested
+    /**
+     * @return whether normal plugin execution was explicitly requested
      */
     public boolean runRequested() {
-        return command == PluginCommand.RUN && !informationalRequest();
+        return command == PluginCommand.RUN
+                && executeRequested
+                && !informationalRequest();
     }
 }

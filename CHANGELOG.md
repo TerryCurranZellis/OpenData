@@ -17,10 +17,17 @@ contain release blockers.
   `--plugin <id> --register --file <filename>`.
 - `--verbose` and bounded `--parallelism 1-64` validation for the expanded CLI.
 - New `-n` short option for `--dry-run`; `-d` is reserved for `--disable`.
+- Explicit `--Execute` / `-x` execution authorisation required for normal and
+  dry-run plugin execution.
+- Unix-style `opendata(1)` manual page source in `docs/reference/opendata.1`.
 - SQL migration and grants for persistent plugin metadata/status.
 
 ### Changed
 
+- Selecting `--plugin <id|all>` no longer starts execution by itself. Normal and
+  dry-run execution must include `--Execute` or `-x`.
+- `--Execute` is rejected with register, unregister/remove, enable and disable
+  administration operations.
 - Normal execution now selects only plugins that are both registered and
   enabled in SQL Server.
 - Packaged classpath plugin definitions are a registration catalogue rather than

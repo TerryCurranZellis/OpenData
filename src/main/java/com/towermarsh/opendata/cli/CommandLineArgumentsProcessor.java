@@ -141,14 +141,14 @@ public final class CommandLineArgumentsProcessor {
         formatter.printHelp(
                 writer,
                 124,
-                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] [operation] [options]",
+                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] (--Execute [run options] | [operation] [options])",
                 System.lineSeparator()
                 + "Runs or administers registered OpenData plugins. Named --plugin options may be repeated."
                 + System.lineSeparator() + System.lineSeparator()
                 + "Run examples:" + System.lineSeparator()
-                + "  opendata --plugin openmeteo" + System.lineSeparator()
-                + "  opendata --plugin openmeteo --plugin ofgem --parallelism 2" + System.lineSeparator()
-                + "  opendata --plugin all --dry-run" + System.lineSeparator()
+                + "  opendata --plugin openmeteo --Execute" + System.lineSeparator()
+                + "  opendata --plugin openmeteo --plugin ofgem --Execute --parallelism 2" + System.lineSeparator()
+                + "  opendata --plugin all --Execute --dry-run" + System.lineSeparator()
                 + System.lineSeparator()
                 + "Administration examples:" + System.lineSeparator()
                 + "  opendata --plugin all --register" + System.lineSeparator()
@@ -161,6 +161,10 @@ public final class CommandLineArgumentsProcessor {
                 2,
                 4,
                 System.lineSeparator()
+                + "--Execute (-x) is required for normal and dry-run plugin execution."
+                + System.lineSeparator()
+                + "--Execute cannot be combined with plugin administration operations."
+                + System.lineSeparator()
                 + "Exactly one of --register, --unregister/--remove, --enable, or --disable may be used."
                 + System.lineSeparator()
                 + "The -d short option means --disable. Use -n or --dry-run for dry-run execution."
@@ -184,6 +188,10 @@ public final class CommandLineArgumentsProcessor {
                 .longOpt("plugin")
                 .hasArg().argName("id|all")
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
+                .get());
+        result.addOption(Option.builder("x")
+                .longOpt("Execute")
+                .desc("Explicitly authorise plugin execution; required for normal and dry-run execution.")
                 .get());
         result.addOption(Option.builder("f")
                 .longOpt("file")
@@ -217,7 +225,7 @@ public final class CommandLineArgumentsProcessor {
                 .get());
         result.addOption(Option.builder("n")
                 .longOpt("dry-run")
-                .desc("Run without plugin data writes or run-audit rows.")
+                .desc("Run without plugin data writes or run-audit rows; requires --Execute.")
                 .get());
         result.addOption(Option.builder("v")
                 .longOpt("verbose")
@@ -275,18 +283,28 @@ public final class CommandLineArgumentsProcessor {
                                 : disable ? PluginCommand.DISABLE
                                         : PluginCommand.RUN;
 
+        final var execute = commandLine.hasOption("Execute");
         final var dryRun = commandLine.hasOption("dry-run");
         final var fileSpecified = commandLine.hasOption("file");
         final var parallelismSpecified = commandLine.hasOption("parallelism");
         final var pluginSpecified = !rawIds.isEmpty();
         final var informational = informationalCount == 1;
 
-        if (informational && (pluginSpecified || actionCount > 0 || dryRun || fileSpecified || parallelismSpecified)) {
+        if (informational
+                && (pluginSpecified || actionCount > 0 || execute || dryRun || fileSpecified || parallelismSpecified)) {
             throw new IllegalArgumentException(
                     "Informational options cannot be combined with plugin selection or operational options.");
         }
         if (!informational && !pluginSpecified) {
             throw new IllegalArgumentException("Missing required option: --plugin <id|all>.");
+        }
+        if (execute && command != PluginCommand.RUN) {
+            throw new IllegalArgumentException(
+                    "--Execute cannot be combined with a plugin administration operation.");
+        }
+        if (!informational && command == PluginCommand.RUN && !execute) {
+            throw new IllegalArgumentException(
+                    "Missing required option for plugin execution: --Execute (-x).");
         }
         if (dryRun && command != PluginCommand.RUN) {
             throw new IllegalArgumentException("--dry-run cannot be combined with a plugin administration operation.");
@@ -320,6 +338,7 @@ public final class CommandLineArgumentsProcessor {
                 Optional.ofNullable(commandLine.getOptionValue("file")).map(Path::of),
                 parallelism,
                 dryRun,
+                execute,
                 commandLine.hasOption("verbose"),
                 help,
                 about,

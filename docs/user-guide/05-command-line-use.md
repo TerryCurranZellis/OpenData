@@ -1,14 +1,17 @@
 # Command-Line Use
 
 **Document ID:** USER-CLI-005  
-**Version:** 2.1  
+**Version:** 2.2  
 **Status:** OpenData 2.0.0 implementation guidance  
-**Baseline date:** 3 August 2026
+**Baseline date:** 7 August 2026
 
 ---
 
 OpenData uses one or more `--plugin` selections followed by either an
-administration operation or normal execution.
+administration operation or explicitly authorised execution.
+
+Selecting a plugin no longer starts it. Normal execution and dry-run execution
+must include `--Execute` or the short form `-x`.
 
 ## Common commands
 
@@ -21,8 +24,9 @@ opendata --plugin example --register --file C:\OpenData\example.properties
 opendata --plugin octopus --disable
 opendata --plugin octopus --enable
 opendata --plugin octopus --unregister
-opendata --plugin ofgem --dry-run
-opendata --plugin all --dry-run --parallelism 3
+opendata --plugin ofgem --Execute
+opendata --plugin ofgem --Execute --dry-run
+opendata --plugin all --Execute --dry-run --parallelism 3
 ```
 
 ## Option summary
@@ -30,6 +34,7 @@ opendata --plugin all --dry-run --parallelism 3
 | Option | Meaning |
 |---|---|
 | `-p`, `--plugin` | Plugin id, repeated/comma-separated ids, or `all` |
+| `-x`, `--Execute` | Explicitly authorise normal or dry-run plugin execution |
 | `-r`, `--register` | Register selected packaged plugins or one plugin supplied by `--file` |
 | `-u`, `--unregister` | Remove selected registered plugins and stored plugin properties |
 | `--remove` | Alias for `--unregister` |
@@ -37,7 +42,7 @@ opendata --plugin all --dry-run --parallelism 3
 | `-d`, `--disable` | Disable selected registered plugins |
 | `-f`, `--file` | Plugin definition file; registration only, one named plugin only |
 | `-j`, `--parallelism` | Maximum concurrent plugin tasks, integer 1–64 |
-| `-n`, `--dry-run` | Run without plugin data writes or run-audit rows |
+| `-n`, `--dry-run` | Run without plugin data writes or run-audit rows; requires `--Execute` |
 | `-v`, `--verbose` | Detailed `FINE` logging |
 | `-h`, `--help` | Command help |
 | `-a`, `--about` | Graphical version/about information |
@@ -46,9 +51,35 @@ opendata --plugin all --dry-run --parallelism 3
 The original requested option list used `-d` twice. OpenData uses `-d` for
 **disable** and `-n` for **dry-run**. The long form `--dry-run` is unchanged.
 
+## Explicit execution
+
+The following command is intentionally incomplete and is rejected:
+
+```text
+opendata --plugin ofgem
+```
+
+Use either form:
+
+```text
+opendata --plugin ofgem --Execute
+opendata --plugin ofgem -x
+```
+
+A dry run is still an execution request:
+
+```text
+opendata --plugin ofgem --Execute --dry-run
+```
+
+`--Execute` cannot be combined with register, unregister/remove, enable, or
+disable.
+
 ## Rules that prevent ambiguous commands
 
-- Plugin execution and every administration operation require `--plugin`.
+- Plugin execution requires both `--plugin` and `--Execute`.
+- Every administration operation requires `--plugin` but does not use
+  `--Execute`.
 - `--plugin all` cannot be mixed with named plugins.
 - Register, unregister, enable and disable cannot be combined with each other.
 - `--dry-run` cannot be combined with an administration operation.
@@ -59,17 +90,17 @@ The original requested option list used `-d` twice. OpenData uses `-d` for
 ## Repeated plugin selection
 
 ```text
-opendata --plugin ofgem --plugin openmeteo --parallelism 2
+opendata --plugin ofgem --plugin openmeteo --Execute --parallelism 2
 ```
 
 Comma-separated selection remains supported:
 
 ```text
-opendata --plugin ofgem,openmeteo --parallelism 2
+opendata --plugin ofgem,openmeteo --Execute --parallelism 2
 ```
 
-A named plugin runs only when it is registered and enabled. `--plugin all` runs
-all registered enabled plugins.
+A named plugin runs only when it is registered and enabled. `--plugin all` with
+`--Execute` runs all registered enabled plugins.
 
 ## Plugin administration
 
@@ -103,4 +134,5 @@ opendata --plugin example --unregister
 
 Unregister does not delete imported provider data or run history.
 
-See the complete [Command-Line Reference](../reference/command-line-reference.md).
+See the complete [Command-Line Reference](../reference/command-line-reference.md)
+or the Unix-style [`opendata(1)` manual page](../reference/opendata.1).
