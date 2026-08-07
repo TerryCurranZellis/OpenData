@@ -7,6 +7,7 @@ package com.towermarsh.opendata;
 
 import com.towermarsh.opendata.app.ExecutionStatus;
 import com.towermarsh.opendata.app.OpenDataApplication;
+import com.towermarsh.opendata.cli.CommandLineArguments;
 import com.towermarsh.opendata.cli.CommandLineArgumentsProcessor;
 import com.towermarsh.opendata.cli.CommandLineProcessingException;
 import com.towermarsh.opendata.config.OpenDataConfigurationException;
@@ -103,10 +104,12 @@ public final class OpenData {
         }
     }
 
-    /** Logs non-sensitive application identity and invocation details. */
-    private static void logStartup(
-            final ApplicationInfo information,
-            final com.towermarsh.opendata.cli.CommandLineArguments arguments) {
+    /** 
+     * Logs non-sensitive application identity and invocation details. 
+     * @param information product information
+     * @param arguments command line arguments
+     */
+    private static void logStartup(final ApplicationInfo information,final CommandLineArguments arguments) {
         logger.log(Level.INFO, "{0} {1} starting", new Object[]{information.productName(), information.version()});
         logger.log(Level.INFO,
                 "Runtime: {0}; OS: {1} {2}; workingDirectory={3}",

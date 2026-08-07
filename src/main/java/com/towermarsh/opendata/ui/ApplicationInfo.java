@@ -14,10 +14,17 @@ import java.util.Properties;
 /**
  * Supplies display information used by the splash and About windows.
  *
- * <p>The implementation version is normally written into the JAR manifest by
- * the build. When the application is run from an IDE, the version falls back
- * to {@code development}.</p>
+ * <p>
+ * The implementation version is normally written into the JAR manifest by the
+ * build. When the application is run from an IDE, the version falls back
  *
+ * @param productName product name in this case OpenData
+ * @param slogan slogan for application
+ * @param version which version we are running
+ * @param description more descriptive details
+ * @param runtime run time version of java
+ * @param licence license to the product
+ * @param copyright copyright info
  * @author Terry Curran
  * @version 2.1
  */
@@ -30,8 +37,10 @@ public record ApplicationInfo(
         String licence,
         String copyright) {
 
-    /** 
-     * Creates information for the currently running OpenData application. 
+    /**
+     * Creates information for the currently running OpenData application.
+     *
+     * @return the current application details
      */
     public static ApplicationInfo current() {
         final var applicationPackage = ApplicationInfo.class.getPackage();
@@ -47,12 +56,18 @@ public record ApplicationInfo(
                 "Transforming data for innovation",
                 implementationVersion,
                 "Downloads and transforms internet and file-based data, then loads it "
-                        + "into a local database for use by other projects.",
+                + "into a local database for use by other projects.",
                 "Java " + javaVersion,
                 "Apache License 2.0",
                 "Copyright © 2026 Terry Curran");
     }
 
+    /**
+     * Loads the metadata describing the produce
+     *
+     * @param classLoader load Java class
+     * @return Java properties
+     */
     private static Properties loadMetadata(final ClassLoader classLoader) {
         final var properties = new Properties();
         try (var input = classLoader.getResourceAsStream("application-metadata.properties")) {

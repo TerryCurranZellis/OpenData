@@ -5,16 +5,19 @@
  */
 package com.towermarsh.opendata.ui;
 
+import static com.towermarsh.opendata.ui.OpenDataImageLoader.loadScaled;
+
+import static java.awt.GraphicsEnvironment.isHeadless;
+import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GraphicsEnvironment;
-import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Displays the OpenData startup splash for at least four seconds.
@@ -43,7 +46,7 @@ public final class StartupSplashScreen {
      * Shows the splash and schedules its dismissal after the minimum period.
      */
     public void show() {
-        if (GraphicsEnvironment.isHeadless()) {
+        if (isHeadless()) {
             return;
         }
         runOnEventThread(() -> {
@@ -53,16 +56,14 @@ public final class StartupSplashScreen {
             final var splash = new JWindow();
             splash.getContentPane().setLayout(new BorderLayout());
             splash.getContentPane().setBackground(BACKGROUND);
-
-            final JLabel image = new JLabel(
-                    OpenDataImageLoader.loadScaled(600), SwingConstants.CENTER);
+            final var image = new JLabel(
+                    loadScaled(600), SwingConstants.CENTER);
             image.setBorder(BorderFactory.createLineBorder(new Color(35, 188, 238), 1));
             splash.add(image, BorderLayout.CENTER);
             splash.pack();
             splash.setLocationRelativeTo(null);
             window.set(splash);
             splash.setVisible(true);
-
             final var timer = new Timer(MINIMUM_DISPLAY_MILLISECONDS, event -> close());
             timer.setRepeats(false);
             timer.start();
@@ -73,11 +74,11 @@ public final class StartupSplashScreen {
      * Closes the splash when it is currently visible.
      */
     public void close() {
-        if (GraphicsEnvironment.isHeadless()) {
+        if (isHeadless()) {
             return;
         }
         runOnEventThread(() -> {
-            final JWindow splash = window.getAndSet(null);
+            final var splash = window.getAndSet(null);
             if (splash != null) {
                 splash.setVisible(false);
                 splash.dispose();
@@ -89,10 +90,10 @@ public final class StartupSplashScreen {
      * starts the splash screen
      */
     private static void runOnEventThread(final Runnable action) {
-        if (SwingUtilities.isEventDispatchThread()) {
+        if (isEventDispatchThread()) {
             action.run();
         } else {
-            SwingUtilities.invokeLater(action);
+            invokeLater(action);
         }
     }
 }

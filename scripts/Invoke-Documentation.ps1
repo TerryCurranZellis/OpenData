@@ -1517,8 +1517,10 @@ $Parameters = @{
 	Format         = 'docx' 
 	FailOnWarning  = $true
 	verbose        = $true
-	RenderDiagrams = $true
+	RenderDiagrams = $False
 	ReferenceDoc   = $ReferenceDoc
 }
 
 Invoke-Documentation @Parameters
+
+Start-Sleep -Seconds 10

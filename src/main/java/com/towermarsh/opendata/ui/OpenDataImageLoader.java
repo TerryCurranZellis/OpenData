@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.ui;
 
 import java.awt.Image;
-import java.net.URL;
 import javax.swing.ImageIcon;
 
 /**
@@ -35,11 +34,11 @@ final class OpenDataImageLoader {
      * @param maxwidth maximum width of image
      */
     static ImageIcon loadScaled(final int maximumWidth) {
-        final URL resource = OpenDataImageLoader.class.getResource(IMAGE_RESOURCE);
+        final var resource = OpenDataImageLoader.class.getResource(IMAGE_RESOURCE);
         if (resource == null) {
             throw new IllegalStateException("Splash image resource is missing: " + IMAGE_RESOURCE);
         }
-        final ImageIcon source = new ImageIcon(resource);
+        final var source = new ImageIcon(resource);
         if (source.getIconWidth() <= maximumWidth) {
             return source;
         }

@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import static java.awt.GraphicsEnvironment.isHeadless;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.BorderFactory;
@@ -21,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import static javax.swing.SwingUtilities.invokeAndWait;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 /**
  * Displays version and product information in a modal About window.
@@ -57,17 +60,17 @@ public final class AboutDialog {
      * @param information application information to display
      */
     public static void showAndWait(final ApplicationInfo information) {
-        if (GraphicsEnvironment.isHeadless()) {
+        if (isHeadless()) {
             printToConsole(information);
             return;
         }
         final Runnable display = () -> createDialog(information).setVisible(true);
-        if (SwingUtilities.isEventDispatchThread()) {
+        if (isEventDispatchThread()) {
             display.run();
             return;
         }
         try {
-            SwingUtilities.invokeAndWait(display);
+            invokeAndWait(display);
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
         } catch (InvocationTargetException exception) {
@@ -86,7 +89,6 @@ public final class AboutDialog {
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.getContentPane().setLayout(new BorderLayout());
         dialog.getContentPane().setBackground(BACKGROUND);
-
         final var image = new JLabel(
                 OpenDataImageLoader.loadScaled(960), SwingConstants.CENTER);
         dialog.add(image, BorderLayout.CENTER);
@@ -147,7 +149,7 @@ public final class AboutDialog {
     }
 
     /**
-     * display the information on the cosole window
+     * display the information on the console window
      *
      * @param information application information
      */
