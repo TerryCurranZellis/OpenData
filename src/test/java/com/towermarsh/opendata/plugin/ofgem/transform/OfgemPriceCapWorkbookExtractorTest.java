@@ -8,7 +8,7 @@ package com.towermarsh.opendata.plugin.ofgem.transform;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.extract.OfgemPriceCapWorkbookExtractor;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -6,9 +6,9 @@
 package com.towermarsh.opendata.plugin.ofgem.extract;
 
 import com.towermarsh.opendata.exception.ImportException;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapLevel;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapPeriod;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapLevel;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapPeriod;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;

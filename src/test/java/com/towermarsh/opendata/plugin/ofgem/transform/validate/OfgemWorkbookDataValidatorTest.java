@@ -9,9 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.towermarsh.opendata.exception.ImportException;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapLevel;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapPeriod;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapLevel;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapPeriod;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

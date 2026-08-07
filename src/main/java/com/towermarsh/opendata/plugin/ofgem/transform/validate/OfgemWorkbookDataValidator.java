@@ -6,7 +6,7 @@
 package com.towermarsh.opendata.plugin.ofgem.transform.validate;
 
 import com.towermarsh.opendata.exception.ImportException;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

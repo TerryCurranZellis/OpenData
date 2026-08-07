@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.ofgem.transform.model;
+package com.towermarsh.opendata.plugin.ofgem.transform;
 
 import java.math.BigDecimal;
 import java.util.Objects;

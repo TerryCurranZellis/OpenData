@@ -5,6 +5,8 @@
  */
 package com.towermarsh.opendata.plugin.ofgem.transform.model;
 
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapPeriod;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapLevel;
 import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;

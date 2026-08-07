@@ -7,8 +7,9 @@ import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.ofgem.extract.OfgemWorkbookDownloader;
 import com.towermarsh.opendata.plugin.ofgem.finalise.OfgemFinalise;
 import com.towermarsh.opendata.plugin.ofgem.load.OfgemLoad;
-import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookExtractor;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.extract.OfgemPriceCapWorkbookExtractor;
+
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import com.towermarsh.opendata.plugin.ofgem.transform.validate.OfgemWorkbookDataValidator;
 import java.util.Objects;
 

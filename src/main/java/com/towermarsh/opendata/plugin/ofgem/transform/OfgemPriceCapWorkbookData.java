@@ -3,8 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.ofgem.transform.model;
+package com.towermarsh.opendata.plugin.ofgem.transform;
 
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapPeriod;
 import java.util.List;
 import java.util.Objects;
 

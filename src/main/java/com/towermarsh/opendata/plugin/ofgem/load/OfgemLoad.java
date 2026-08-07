@@ -4,7 +4,7 @@ package com.towermarsh.opendata.plugin.ofgem.load;
 import com.towermarsh.opendata.download.strategy.ResolvedDownload;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import java.util.Objects;
 
 /** Loads transformed Ofgem records into the configured database tables. */

@@ -5,7 +5,7 @@ import com.towermarsh.opendata.download.strategy.ResolvedDownload;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.ofgem.extract.OfgemWorkbookDownloader;
-import com.towermarsh.opendata.plugin.ofgem.transform.model.OfgemPriceCapWorkbookData;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Level;
