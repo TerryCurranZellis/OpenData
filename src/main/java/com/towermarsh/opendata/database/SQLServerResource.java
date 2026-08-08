@@ -39,6 +39,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
     private static final Logger LOGGER = Logger.getLogger(SQLServerResource.class.getName());
     private static final String POOL_URL_PREFIX = "jdbc:apache:commons:dbcp:";
+    private static final Object LOCK = new Object();
     private static SQLServerResource instance;
 
     private final String poolName;
@@ -95,12 +96,14 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param configuration database pool configuration
      * @return initialised singleton resource
      */
-    public static synchronized SQLServerResource initialise(final DatabasePoolConfiguration configuration) {
-        if (instance != null && !instance.closed.get()) {
+    public static SQLServerResource initialise(final DatabasePoolConfiguration configuration) {
+        synchronized (LOCK) {
+            if (instance != null && !instance.closed.get()) {
+                return instance;
+            }
+            instance = new SQLServerResource(configuration);
             return instance;
         }
-        instance = new SQLServerResource(configuration);
-        return instance;
     }
 
     /**
@@ -108,11 +111,13 @@ public final class SQLServerResource implements DatabaseResourceManager {
      *
      * @return singleton SQL Server resource
      */
-    public static synchronized SQLServerResource getInstance() {
-        if (instance == null || instance.closed.get()) {
-            throw new IllegalStateException("SQLServerResource has not been initialised.");
+    public static SQLServerResource getInstance() {
+        synchronized (LOCK) {
+            if (instance == null || instance.closed.get()) {
+                throw new IllegalStateException("SQLServerResource has not been initialised.");
+            }
+            return instance;
         }
-        return instance;
     }
 
     /**
@@ -185,10 +190,12 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
     /**
      * Clears the singleton instance in a thread-safe manner. This method uses
-     * synchronization to safely write to the static field.
+     * synchronization on the private lock to safely write to the static field.
      */
-    private static synchronized void clearInstance() {
-        instance = null;
+    private static void clearInstance() {
+        synchronized (LOCK) {
+            instance = null;
+        }
     }
 
     /**

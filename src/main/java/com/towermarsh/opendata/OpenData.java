@@ -121,7 +121,7 @@ public final class OpenData {
                 });
         logger.log(Level.INFO,
                 "Invocation: command={0}; dryRun={1}; verbose={2}",
-                new Object[]{arguments.command(), arguments.dryRun(), arguments.verbose()});
+                new Object[]{arguments.command().displayName(), arguments.dryRun(), arguments.verbose()});
     }
 
     /**

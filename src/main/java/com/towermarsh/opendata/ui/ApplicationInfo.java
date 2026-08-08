@@ -72,11 +72,14 @@ public record ApplicationInfo(
         final var properties = new Properties();
         try (var input = classLoader.getResourceAsStream("application-metadata.properties")) {
             if (input != null) {
-                properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
+                try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+                    properties.load(reader);
+                }
             }
         } catch (IOException ignored) {
             // Metadata is optional; manifest and development fallbacks remain available.
         }
         return properties;
     }
+
 }

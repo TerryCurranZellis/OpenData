@@ -12,24 +12,42 @@ package com.towermarsh.opendata.cli;
  * @version 2.0.0
  */
 public enum PluginCommand {
-    /** 
-     * Execute the selected enabled plugins. 
+    /**
+     * Execute the selected enabled plugins.
      */
-    RUN,
-    /** 
-     * Register or replace the selected plugin definitions. 
+    RUN("run"),
+    /**
+     * Register or replace the selected plugin definitions.
      */
-    REGISTER,
-    /** 
-     * Remove the selected plugins from the persistent registry. 
+    REGISTER("register"),
+    /**
+     * Remove the selected plugins from the persistent registry.
      */
-    UNREGISTER,
-    /** 
-     * Mark the selected registered plugins as enabled. 
+    UNREGISTER("unresister"),
+    /**
+     * Mark the selected registered plugins as enabled.
      */
-    ENABLE,
-    /** 
-     * Mark the selected registered plugins as disabled. 
+    ENABLE("enable"),
+    /**
+     * Mark the selected registered plugins as disabled.
      */
-    DISABLE
+    DISABLE("disable");
+
+    /**
+     * friendly status name
+     */
+    private final String displayName;
+
+    PluginCommand(final String displayName) {
+        this.displayName = displayName;
+    }
+
+    /**
+     * Returns the human-readable status description.
+     *
+     * @return display name
+     */
+    public String displayName() {
+        return displayName;
+    }
 }

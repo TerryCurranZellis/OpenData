@@ -433,14 +433,21 @@ public final class OctopusStatementParser {
         List<PdfEntry> entries = new ArrayList<>();
         try (var stream = Files.list(inputDirectory)) {
             stream.filter((var p) -> {
-                var m = PDF_DATE_PATTERN.matcher(p.getFileName().toString());
+                var fileName = p.getFileName();
+                if (fileName == null) {
+                    return false;
+                }
+                var m = PDF_DATE_PATTERN.matcher(fileName.toString());
                 return m.matches();
             }).forEach((var p) -> {
-                var m = PDF_DATE_PATTERN.matcher(p.getFileName().toString());
-                if (m.matches()) {
-                    var dateStr = m.group(1);
-                    if (dateStr != null) {
-                        entries.add(new PdfEntry(p, dateStr));
+                var fileName = p.getFileName();
+                if (fileName != null) {
+                    var m = PDF_DATE_PATTERN.matcher(fileName.toString());
+                    if (m.matches()) {
+                        var dateStr = m.group(1);
+                        if (dateStr != null) {
+                            entries.add(new PdfEntry(p, dateStr));
+                        }
                     }
                 }
             });
