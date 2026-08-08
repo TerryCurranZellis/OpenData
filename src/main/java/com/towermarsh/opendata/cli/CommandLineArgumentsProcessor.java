@@ -146,9 +146,9 @@ public final class CommandLineArgumentsProcessor {
                 + "Runs or administers registered OpenData plugins. Named --plugin options may be repeated."
                 + System.lineSeparator() + System.lineSeparator()
                 + "Run examples:" + System.lineSeparator()
-                + "  opendata --plugin openmeteo --Execute" + System.lineSeparator()
-                + "  opendata --plugin openmeteo --plugin ofgem --Execute --parallelism 2" + System.lineSeparator()
-                + "  opendata --plugin all --Execute --dry-run" + System.lineSeparator()
+                + "  opendata --plugin openmeteo --execute" + System.lineSeparator()
+                + "  opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2" + System.lineSeparator()
+                + "  opendata --plugin all --execute --dry-run" + System.lineSeparator()
                 + System.lineSeparator()
                 + "Plugin information example:" + System.lineSeparator()
                 + "  opendata --plugin ofgem --detail" + System.lineSeparator()
@@ -164,7 +164,7 @@ public final class CommandLineArgumentsProcessor {
                 2,
                 4,
                 System.lineSeparator()
-                + "--Execute (-x) is required for normal and dry-run plugin execution."
+                + "--execute (-x) is required for normal and dry-run plugin execution."
                 + System.lineSeparator()
                 + "--Execute cannot be combined with plugin information or administration operations."
                 + System.lineSeparator()
@@ -195,7 +195,7 @@ public final class CommandLineArgumentsProcessor {
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
                 .get());
         result.addOption(Option.builder("x")
-                .longOpt("Execute")
+                .longOpt("execute")
                 .desc("Explicitly authorise plugin execution; required for normal and dry-run execution.")
                 .get());
         result.addOption(Option.builder()
@@ -294,7 +294,7 @@ public final class CommandLineArgumentsProcessor {
                                         : detail ? PluginCommand.DETAIL
                                                 : PluginCommand.RUN;
 
-        final var execute = commandLine.hasOption("Execute");
+        final var execute = commandLine.hasOption("execute");
         final var dryRun = commandLine.hasOption("dry-run");
         final var fileSpecified = commandLine.hasOption("file");
         final var parallelismSpecified = commandLine.hasOption("parallelism");
