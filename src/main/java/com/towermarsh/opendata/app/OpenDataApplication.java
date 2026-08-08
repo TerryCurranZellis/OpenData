@@ -37,7 +37,7 @@ import com.towermarsh.opendata.plugin.PluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginSelectionResolver;
 import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
 import com.towermarsh.opendata.plugin.ResolvedPlugin;
-import com.towermarsh.opendata.util.DurationFormatter;
+import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
 import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -409,9 +409,9 @@ public final class OpenDataApplication {
                     result.successful() ? Level.INFO : Level.SEVERE,
                     "Plugin summary: id={0}, status={1}, duration={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
                     new Object[]{
-                        result.pluginId(), result.status().name(), DurationFormatter.formatElapsed(result.duration()),
+                        result.pluginId(), result.status().name(), formatElapsed(result.duration()),
                         result.metrics().read(), result.metrics().inserted(), result.metrics().updated(),
-                        result.metrics().skipped(), result.errorMessage().orElse("")
+                        result.metrics().skipped(), result.errorMessage().orElse("no error")
                     });
         });
         LOGGER.log(Level.INFO,

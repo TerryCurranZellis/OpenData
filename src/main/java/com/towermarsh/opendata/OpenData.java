@@ -15,10 +15,11 @@ import com.towermarsh.opendata.config.PluginDefinitionException;
 import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.logging.LoggingManager;
 import com.towermarsh.opendata.ui.AboutDialog;
+import static com.towermarsh.opendata.ui.AboutDialog.showAndWait;
 import com.towermarsh.opendata.ui.ApplicationInfo;
 import com.towermarsh.opendata.ui.StartupSplashScreen;
-import com.towermarsh.opendata.util.DurationFormatter;
-import com.towermarsh.opendata.util.ExceptionMessages;
+import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
+import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -67,7 +68,7 @@ public final class OpenData {
             LoggingManager.setVerbose(arguments.verbose());
             logStartup(ApplicationInfo.current(), arguments);
             if (arguments.aboutRequested()) {
-                AboutDialog.showAndWait(ApplicationInfo.current());
+                showAndWait(ApplicationInfo.current());
                 status = ExecutionStatus.SUCCESS;
             } else {
                 if (arguments.runRequested()) {
@@ -77,29 +78,29 @@ public final class OpenData {
             }
         } catch (CommandLineProcessingException exception) {
             status = ExecutionStatus.COMMAND_LINE_ERROR;
-            logger.log(Level.SEVERE, "Command-line error: {0}", ExceptionMessages.rootCauseMessage(exception));
+            logger.log(Level.SEVERE, "Command-line error: {0}", rootCauseMessage(exception));
             processor.printHelp(new PrintWriter(System.err, true, StandardCharsets.UTF_8));
         } catch (PluginDefinitionException | OpenDataConfigurationException exception) {
             status = ExecutionStatus.CONFIGURATION_ERROR;
-            logger.log(Level.SEVERE, "Configuration error: {0}", ExceptionMessages.rootCauseMessage(exception));
+            logger.log(Level.SEVERE, "Configuration error: {0}", rootCauseMessage(exception));
         } catch (DatabaseException exception) {
             status = ExecutionStatus.DATABASE_FAILURE;
-            logger.log(Level.SEVERE, "Database failure: {0}", ExceptionMessages.rootCauseMessage(exception));
+            logger.log(Level.SEVERE, "Database failure: {0}", rootCauseMessage(exception));
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
             status = ExecutionStatus.INTERRUPTED;
-            logger.log(Level.WARNING, "Application execution was interrupted: {0}", ExceptionMessages.rootCauseMessage(exception));
+            logger.log(Level.WARNING, "Application execution was interrupted: {0}", rootCauseMessage(exception));
         } catch (IOException exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
-            logger.log(Level.SEVERE, "Application I/O failure: {0}", ExceptionMessages.rootCauseMessage(exception));
+            logger.log(Level.SEVERE, "Application I/O failure: {0}", rootCauseMessage(exception));
         } catch (Exception exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
-            logger.log(Level.SEVERE, "Unexpected application failure: {0}", ExceptionMessages.rootCauseMessage(exception));
+            logger.log(Level.SEVERE, "Unexpected application failure: {0}", rootCauseMessage(exception));
             logger.log(Level.FINE, "Unexpected application failure details.", exception);
         } finally {
             final var duration = Duration.between(startedAt, Instant.now());
             logger.log(Level.INFO, "OpenData finished with status {0}; duration {1}",
-                    new Object[]{status.displayName(), DurationFormatter.formatElapsed(duration)});
+                    new Object[]{status.displayName(), formatElapsed(duration)});
             LoggingManager.shutdown();
         }
     }

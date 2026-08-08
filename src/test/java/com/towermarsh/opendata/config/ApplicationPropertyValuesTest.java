@@ -29,12 +29,14 @@ class ApplicationPropertyValuesTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsInvalidTypedValues() {
         final var values = new ApplicationPropertyValues(Map.of("count", "twelve"));
         assertThrows(OpenDataConfigurationException.class, () -> values.integer("count", 1));
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void allowsBlankOptionalDefaultsButRequiresNamedValues() {
         final var values = new ApplicationPropertyValues(Map.of());
         assertEquals("", values.text("database.password", ""));

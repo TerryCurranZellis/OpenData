@@ -33,6 +33,7 @@ class DatabasePoolConfigTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsIdleLimitAboveTotalLimit() {
         assertThrows(
                 IllegalArgumentException.class,

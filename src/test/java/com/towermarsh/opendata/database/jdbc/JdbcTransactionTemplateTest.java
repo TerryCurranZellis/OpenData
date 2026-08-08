@@ -47,6 +47,7 @@ class JdbcTransactionTemplateTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void rollsBackCheckedFailureAndWrapsIt() throws SQLException {
         final DatabaseResourceManager database = mock(DatabaseResourceManager.class);
         final Connection connection = mock(Connection.class);

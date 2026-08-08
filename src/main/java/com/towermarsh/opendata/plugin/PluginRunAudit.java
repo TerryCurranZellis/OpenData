@@ -8,10 +8,12 @@ package com.towermarsh.opendata.plugin;
 import java.time.Instant;
 import java.util.UUID;
 
-/** Persists generic plugin-run lifecycle information.  *
-* @author Terry Curran
-* @version 1.0.0
-*/
+/**
+ * Persists generic plugin-run lifecycle information.
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
 public interface PluginRunAudit {
 
     /**

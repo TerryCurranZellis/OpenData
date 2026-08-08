@@ -8,7 +8,6 @@ package com.towermarsh.opendata.plugin;
 import java.util.List;
 import java.util.Objects;
 
-/** Aggregate result of one multi-plugin invocation. */
 /**
  * Aggregate result of one multi-plugin invocation.
  *
@@ -18,7 +17,9 @@ import java.util.Objects;
  * @version 1.0.0
  */
 public record PluginExecutionSummary(List<PluginRunResult> results) {
-    /** Validates and normalises record components. */
+    /** 
+     * Validates and normalises record components. 
+     */
     public PluginExecutionSummary {
         results = List.copyOf(Objects.requireNonNull(results, "results"));
     }

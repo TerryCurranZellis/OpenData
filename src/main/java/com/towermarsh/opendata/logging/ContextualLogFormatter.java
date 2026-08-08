@@ -13,11 +13,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-/** Thread-safe JUL formatter containing thread, plugin, and run context.  *
-* @author Terry Curran
-* @version 1.0.0
-*/
+/**
+ * Thread-safe JUL formatter containing thread, plugin, and run context.
+ *
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
 public final class ContextualLogFormatter extends Formatter {
+
     private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             .withZone(ZoneId.systemDefault());
 
@@ -28,20 +32,29 @@ public final class ContextualLogFormatter extends Formatter {
      */
     @Override
     public String format(final LogRecord record) {
-        final var builder = new StringBuilder(256)
+
+        final var builder = new StringBuilder()
                 .append("[").append(TIMESTAMP.format(Instant.ofEpochMilli(record.getMillis())))
                 .append("]:[").append(record.getLevel().getName())
-                .append("]:[thread:").append(Thread.currentThread().getName()).append(']');
-        PluginLogContext.current().ifPresent(context -> builder
-                .append(" [plugin:").append(context.pluginId()).append(']')
-                .append(":[run:").append(context.runId()).append(']'));
-        builder.append(' ').append(record.getLoggerName()).append(" - ")
+                .append("]:[").append(Thread.currentThread().getName()).append(']');
+
+        PluginLogContext.current().ifPresent((var context) -> builder
+                .append("[").append(context.pluginId()).append(']')
+                .append(":[").append(context.runId()).append(']'));
+
+        final var loggerName = record.getLoggerName();
+        final var lastDot = loggerName.lastIndexOf('.');
+        final var shortLoggerName = lastDot >= 0 ? loggerName.substring(lastDot + 1) : loggerName;
+
+        builder.append(shortLoggerName).append(" - ")
                 .append(formatMessage(record)).append(System.lineSeparator());
+
         if (record.getThrown() != null) {
             final var text = new StringWriter();
             record.getThrown().printStackTrace(new PrintWriter(text));
             builder.append(text);
         }
+
         return builder.toString();
     }
 }

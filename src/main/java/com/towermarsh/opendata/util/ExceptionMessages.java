@@ -8,7 +8,6 @@ package com.towermarsh.opendata.util;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Extracts stable, user-facing messages from exception cause chains.
@@ -31,7 +30,7 @@ public final class ExceptionMessages {
      */
     public static String rootCauseMessage(final Throwable exception) {
         var current = Objects.requireNonNull(exception, "exception");
-        final Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        final var visited = Collections.newSetFromMap(new IdentityHashMap<>());
         visited.add(current);
         while (current.getCause() != null && visited.add(current.getCause())) {
             current = current.getCause();

@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.download;
 
+import com.sun.net.httpserver.HttpExchange;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,6 +55,7 @@ class HttpDataDownloaderTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void enforcesMaximumSize() throws Exception {
         URI uri = serve("too-large".getBytes(StandardCharsets.UTF_8));
         HttpDownloadOptions options = new HttpDownloadOptions(
@@ -68,10 +70,11 @@ class HttpDataDownloaderTest {
 
     private URI serve(byte[] body) throws Exception {
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-        server.createContext("/data", exchange -> {
-            exchange.sendResponseHeaders(200, body.length);
-            exchange.getResponseBody().write(body);
-            exchange.close();
+        server.createContext("/data", (HttpExchange exchange) -> {
+            try (exchange) {
+                exchange.sendResponseHeaders(200, body.length);
+                exchange.getResponseBody().write(body);
+            }
         });
         server.start();
         return URI.create("http://127.0.0.1:" + server.getAddress().getPort() + "/data");

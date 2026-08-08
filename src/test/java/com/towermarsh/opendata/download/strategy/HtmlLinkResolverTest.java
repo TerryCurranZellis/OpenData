@@ -49,6 +49,7 @@ class HtmlLinkResolverTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void failsClearlyWhenNoLinkMatches() {
         final var definition = new LinkDiscoveryDefinition(
                 "a[href]",

@@ -190,7 +190,7 @@ public final class CommandLineArgumentsProcessor {
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
                 .get());
         result.addOption(Option.builder("x")
-                .longOpt("Execute")
+                .longOpt("execute")
                 .desc("Explicitly authorise plugin execution; required for normal and dry-run execution.")
                 .get());
         result.addOption(Option.builder("f")
@@ -283,7 +283,7 @@ public final class CommandLineArgumentsProcessor {
                                 : disable ? PluginCommand.DISABLE
                                         : PluginCommand.RUN;
 
-        final var execute = commandLine.hasOption("Execute");
+        final var execute = commandLine.hasOption("execute");
         final var dryRun = commandLine.hasOption("dry-run");
         final var fileSpecified = commandLine.hasOption("file");
         final var parallelismSpecified = commandLine.hasOption("parallelism");

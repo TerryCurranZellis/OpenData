@@ -45,6 +45,7 @@ class ApplicationRuntimeConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsInvalidTypedApplicationValue() {
         final var source = new ConfigurationPropertiesSource() {
             @Override

@@ -12,27 +12,44 @@ package com.towermarsh.opendata.plugin;
 public enum PluginRunStatus {
 
     /**
-     *
+     * plugin is running
      */
-    RUNNING,
+    RUNNING("running"),
 
     /**
-     *
+     * plugin has succeeded
      */
-    SUCCESS,
+    SUCCESS("success"),
 
     /**
-     *
+     * plugin is doing a dry run
      */
-    DRY_RUN,
+    DRY_RUN("dry run"),
 
     /**
-     *
+     * plugin has failed
      */
-    FAILED,
+    FAILED("failed"),
 
     /**
-     *
+     * plugin was cancelled
      */
-    CANCELLED
+    CANCELLED("cancelled");
+    
+    /**
+     * friendly status name
+     */
+    private final String displayName;
+
+    PluginRunStatus(final String displayName) {
+        this.displayName = displayName;
+    }
+     /**
+     * Returns the human-readable status description.
+     *
+     * @return display name
+     */
+    public String displayName() {
+        return displayName;
+    }
 }

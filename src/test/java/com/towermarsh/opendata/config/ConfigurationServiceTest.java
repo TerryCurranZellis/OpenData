@@ -49,6 +49,7 @@ class ConfigurationServiceTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void externalPluginFileMustMatchRequestedPluginId() throws Exception {
         final Path pluginFile = temporaryDirectory.resolve("example.properties");
         Files.writeString(pluginFile, """
@@ -65,6 +66,7 @@ class ConfigurationServiceTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void missingExternalPluginFileIsRejected() {
         final var source = new PropertiesFileConfigurationPropertiesSource(
                 temporaryDirectory.resolve("missing.properties"));
