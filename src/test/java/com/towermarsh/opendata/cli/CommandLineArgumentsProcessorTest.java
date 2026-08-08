@@ -1,3 +1,4 @@
+\
 /*
  * Copyright © 2026 Terry Curran
  *
@@ -23,7 +24,7 @@ class CommandLineArgumentsProcessorTest {
     void acceptsRepeatedAndCommaSeparatedPluginsInOrder() {
         final var arguments = processor.parse(new String[]{
             "--plugin", "openmeteo,ofgem", "--plugin", "octopus",
-            "--execute", "--parallelism", "3"
+            "--Execute", "--parallelism", "3"
         });
         assertEquals(List.of("openmeteo", "ofgem", "octopus"), arguments.pluginIds());
         assertEquals(3, arguments.parallelism().orElseThrow());
@@ -33,7 +34,7 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void recognisesAllForRun() {
-        final var arguments = processor.parse(new String[]{"--plugin", "all", "--execute"});
+        final var arguments = processor.parse(new String[]{"--plugin", "all", "--Execute"});
         assertTrue(arguments.allPluginsRequested());
         assertTrue(arguments.pluginIds().isEmpty());
         assertTrue(arguments.executeRequested());
@@ -48,7 +49,33 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
+    void acceptsDetailForExactlyOneNamedPlugin() {
+        final var arguments = processor.parse(new String[]{"--plugin", "ofgem", "--detail"});
+        assertEquals(List.of("ofgem"), arguments.pluginIds());
+        assertEquals(PluginCommand.DETAIL, arguments.command());
+        assertTrue(arguments.detailRequested());
+        assertFalse(arguments.executeRequested());
+    }
+
+    @Test
+    void rejectsDetailForAllOrMultiplePlugins() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "all", "--detail"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{
+                    "--plugin", "ofgem", "--plugin", "octopus", "--detail"
+                }));
+    }
+
+    @Test
+    void rejectsExecuteAndRunOptionsWithDetail() {
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--detail", "--Execute"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--detail", "--dry-run"}));
+    }
+
+    @Test
     void requiresExecuteForPluginRunsAndDryRuns() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--plugin", "ofgem"}));
@@ -59,10 +86,9 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsExecuteWithAdministrationOperations() {
         assertThrows(CommandLineProcessingException.class,
-                () -> processor.parse(new String[]{"--plugin", "ofgem", "--register", "--execute"}));
+                () -> processor.parse(new String[]{"--plugin", "ofgem", "--register", "--Execute"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--plugin", "ofgem", "--disable", "-x"}));
     }
@@ -118,7 +144,7 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void acceptsLongDryRun() {
-        final var arguments = processor.parse(new String[]{"--plugin all --execute --dry-run"});
+        final var arguments = processor.parse(new String[]{"--plugin all --Execute --dry-run"});
         assertTrue(arguments.allPluginsRequested());
         assertTrue(arguments.executeRequested());
         assertTrue(arguments.dryRun());
@@ -141,7 +167,6 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsUnterminatedQuotedLauncherArgument() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
@@ -149,7 +174,6 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsMissingPluginForOperationalCommands() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--register"}));
@@ -160,13 +184,14 @@ class CommandLineArgumentsProcessorTest {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--disable"}));
         assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{"--detail"}));
+        assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--Execute"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--dry-run"}));
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsMutuallyExclusiveAdministrationOperations() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
@@ -174,10 +199,12 @@ class CommandLineArgumentsProcessorTest {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
                     "--plugin", "ofgem", "--enable", "--disable"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{
+                    "--plugin", "ofgem", "--detail", "--disable"}));
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsDryRunWithAdministration() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
@@ -185,7 +212,6 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsInvalidFileCombinations() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
@@ -197,25 +223,26 @@ class CommandLineArgumentsProcessorTest {
                 () -> processor.parse(new String[]{
                     "--plugin", "ofgem", "--plugin", "octopus", "--register",
                     "--file", "plugins.properties"}));
+        assertThrows(CommandLineProcessingException.class,
+                () -> processor.parse(new String[]{
+                    "--plugin", "ofgem", "--detail", "--file", "ofgem.properties"}));
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsDuplicateAndAllCombinedPluginSelections() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
-                    "--plugin", "openmeteo", "--plugin", "openmeteo", "--execute"}));
+                    "--plugin", "openmeteo", "--plugin", "openmeteo", "--Execute"}));
         assertThrows(CommandLineProcessingException.class,
-                () -> processor.parse(new String[]{"--plugin", "all,openmeteo", "--execute"}));
+                () -> processor.parse(new String[]{"--plugin", "all,openmeteo", "--Execute"}));
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void validatesParallelismRangeAndType() {
         assertEquals(1, processor.parse(new String[]{
-            "--plugin", "ofgem", "--execute", "--parallelism", "1"}).parallelism().orElseThrow());
+            "--plugin", "ofgem", "--Execute", "--parallelism", "1"}).parallelism().orElseThrow());
         assertEquals(64, processor.parse(new String[]{
-            "--plugin", "ofgem", "--execute", "--parallelism", "64"}).parallelism().orElseThrow());
+            "--plugin", "ofgem", "--Execute", "--parallelism", "64"}).parallelism().orElseThrow());
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{
                     "--plugin", "ofgem", "--Execute", "--parallelism", "0"}));
@@ -228,25 +255,23 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsInformationalAndOperationalMixtures() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--help", "--plugin", "ofgem"}));
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--about", "--list-plugins"}));
         assertThrows(CommandLineProcessingException.class,
-                () -> processor.parse(new String[]{"--help", "--execute"}));
+                () -> processor.parse(new String[]{"--help", "--Execute"}));
     }
 
     @Test
     void reservesShortVForVerboseLogging() {
-        final var arguments = processor.parse(new String[]{"--plugin", "example", "--execute", "-v"});
+        final var arguments = processor.parse(new String[]{"--plugin", "example", "--Execute", "-v"});
         assertTrue(arguments.verbose());
         assertFalse(arguments.aboutRequested());
     }
 
     @Test
-    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsRemovedVersionOption() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--version"}));

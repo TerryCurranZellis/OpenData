@@ -1,3 +1,4 @@
+\
 /*
  * Copyright © 2026 Terry Curran
  *
@@ -37,7 +38,7 @@ import com.towermarsh.opendata.plugin.PluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginSelectionResolver;
 import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
 import com.towermarsh.opendata.plugin.ResolvedPlugin;
-import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
+import com.towermarsh.opendata.util.DurationFormatter;
 import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -99,6 +100,10 @@ public final class OpenDataApplication {
                 printRegisteredPlugins(registeredPlugins);
                 return ExecutionStatus.SUCCESS;
             }
+            if (arguments.detailRequested()) {
+                printPluginConfiguration(arguments, configurationDatabase, registeredPlugins);
+                return ExecutionStatus.SUCCESS;
+            }
             if (arguments.registerRequested()) {
                 registerPlugins(
                         arguments,
@@ -126,6 +131,40 @@ public final class OpenDataApplication {
         } finally {
             closeDatabase(configurationDatabase);
         }
+    }
+
+    /**
+     * Display the stored configuration for one selected registered plugin.
+     *
+     * @param arguments command-line arguments
+     * @param database configuration database
+     * @param registry registered plugin registry
+     */
+    private static void printPluginConfiguration(
+            final CommandLineArguments arguments,
+            final DatabaseResourceManager database,
+            final JdbcPluginRegistry registry) {
+        final var pluginId = arguments.pluginIds().get(0);
+        final var plugin = registry.find(pluginId)
+                .orElseThrow(() -> new PluginRegistryException(
+                "Registered plugin was not found: " + pluginId));
+
+        final var properties = new JdbcConfigurationPropertiesSource(database)
+                .loadPluginProperties(pluginId);
+
+        System.out.println();
+        System.out.println("Plugin Configuration");
+        System.out.println("--------------------");
+        System.out.println("Plugin : " + plugin.id());
+        System.out.println("Name   : " + plugin.displayName());
+        System.out.println("Status : " + (plugin.enabled() ? "enabled" : "disabled"));
+        System.out.println();
+
+        properties.forEach((key, value) ->
+                System.out.printf("%-35s = %s%n", key, value));
+
+        System.out.println();
+        noteIgnoredParallelism(arguments);
     }
 
     /**
@@ -398,9 +437,6 @@ public final class OpenDataApplication {
     }
 
     /**
-     * get the exception message
-     */
-    /**
      * show the execution summary
      */
     private static void logSummary(final PluginExecutionSummary summary) {
@@ -409,9 +445,9 @@ public final class OpenDataApplication {
                     result.successful() ? Level.INFO : Level.SEVERE,
                     "Plugin summary: id={0}, status={1}, duration={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
                     new Object[]{
-                        result.pluginId(), result.status().name(), formatElapsed(result.duration()),
+                        result.pluginId(), result.status().name(), DurationFormatter.formatElapsed(result.duration()),
                         result.metrics().read(), result.metrics().inserted(), result.metrics().updated(),
-                        result.metrics().skipped(), result.errorMessage().orElse("no error")
+                        result.metrics().skipped(), result.errorMessage().orElse("")
                     });
         });
         LOGGER.log(Level.INFO,

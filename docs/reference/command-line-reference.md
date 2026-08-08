@@ -1,9 +1,9 @@
 # Command-Line Reference
 
 **Document ID:** REF-CLI-001  
-**Version:** 2.2  
+**Version:** 2.3  
 **Status:** OpenData 2.0.0 implementation reference  
-**Baseline date:** 7 August 2026  
+**Baseline date:** 8 August 2026  
 **Minimum Java version:** 17
 
 ---
@@ -12,6 +12,7 @@
 
 ```text
 opendata --plugin <id|all> [--plugin <id>] --Execute [run options]
+opendata --plugin <id> --detail
 opendata --plugin <id|all> [--plugin <id>] <administration operation> [options]
 opendata --help | --about | --list-plugins
 ```
@@ -21,7 +22,8 @@ does **not** run it by itself. Every normal or dry-run execution must also inclu
 `--Execute` or its short form `-x`.
 
 Named `--plugin` options may be repeated and comma-separated ids remain supported
-for compatibility.
+for execution and administration. `--detail` is different: it requires exactly
+one named plugin because it displays the stored configuration for one plugin.
 
 ## Options
 
@@ -29,6 +31,7 @@ for compatibility.
 |---|---|---|
 | `-p` | `--plugin <id\|all>` | Select one plugin, repeated plugin ids, comma-separated ids, or `all` |
 | `-x` | `--Execute` | Explicitly authorise plugin execution; required for normal and dry-run execution |
+| — | `--detail` | Display the stored configuration for exactly one named registered plugin |
 | `-r` | `--register` | Register or replace selected plugin definitions and configuration |
 | `-u` | `--unregister` | Remove selected plugins and their stored plugin configuration |
 | — | `--remove` | Alias for `--unregister` |
@@ -44,8 +47,8 @@ for compatibility.
 
 ### Execution gate
 
-`--Execute` is an execution-authorisation switch, not an administration
-operation. It has no value argument.
+`--Execute` is an execution-authorisation switch, not an administration or
+information operation. It has no value argument.
 
 The following command is invalid because selecting a plugin no longer implicitly
 runs it:
@@ -72,8 +75,34 @@ Dry-run execution is also gated:
 opendata --plugin ofgem --Execute --dry-run
 ```
 
-`--Execute` cannot be combined with `--register`, `--unregister`/`--remove`,
-`--enable`, or `--disable`.
+`--Execute` cannot be combined with `--detail`, `--register`,
+`--unregister`/`--remove`, `--enable`, or `--disable`.
+
+### Plugin configuration detail
+
+Use `--detail` to display the configuration currently stored for one registered
+plugin:
+
+```text
+opendata --plugin ofgem --detail
+```
+
+The command displays the plugin id, display name and enabled/disabled status,
+followed by the stored configuration properties read from
+`core.plugin_property`.
+
+`--detail`:
+
+- requires exactly one named plugin;
+- does not use or require `--Execute`;
+- cannot be used with `--plugin all`;
+- cannot be used with repeated or comma-separated plugin selections;
+- cannot be combined with `--dry-run`, `--file`, or a plugin administration
+  operation; and
+- fails if the named plugin is not registered or has no stored configuration.
+
+The output is written to standard output rather than formatted as normal log
+records so that the property names and values are easy to inspect.
 
 ### Short-option collision resolution
 
@@ -83,18 +112,20 @@ A command-line token cannot have two meanings, so OpenData assigns:
 - `-d` to `--disable`; and
 - `-n` to `--dry-run`.
 
-The long option `--dry-run` remains unchanged.
+The long option `--dry-run` remains unchanged. `--detail` intentionally has no
+short form.
 
 ## Selection rules
 
 - Every run and dry-run requires both `--plugin` and `--Execute`.
+- `--detail` requires exactly one named `--plugin` and does not use `--Execute`.
 - Every register, unregister, enable or disable request requires `--plugin`, but
   does not use `--Execute`.
 - `--plugin all` cannot be combined with a named plugin id.
 - Repeating the same plugin id is rejected.
 - `--plugin all` during execution selects all **registered and enabled** plugins.
 - A named run fails when the plugin is not registered or is disabled.
-- `--plugin` may be repeated, for example:
+- `--plugin` may be repeated for execution and administration, for example:
 
 ```text
 opendata --plugin ofgem --plugin openmeteo --plugin octopus --Execute
@@ -102,19 +133,20 @@ opendata --plugin ofgem --plugin openmeteo --plugin octopus --Execute
 
 ## Operation rules
 
-Exactly one administration operation may be present. `--register`,
+Exactly one non-run plugin operation may be present. `--detail`, `--register`,
 `--unregister`/`--remove`, `--enable` and `--disable` are mutually exclusive.
 
 | Operation | Named plugins | `all` | `--Execute` | `--file` | `--dry-run` |
 |---|---:|---:|---:|---:|---:|
 | Run | Yes | Yes | Required | No | Optional |
+| Detail | Exactly one | No | No | No | No |
 | Register | Yes | Yes | No | Optional for exactly one named plugin | No |
 | Unregister/remove | Yes | Yes | No | No | No |
 | Enable | Yes | Yes | No | No | No |
 | Disable | Yes | Yes | No | No | No |
 
-`--parallelism` is accepted with administration commands for a consistent
-parser contract, but it is ignored because those operations are not concurrent
+`--parallelism` is accepted with non-run commands for a consistent parser
+contract, but it has no effect because those operations are not concurrent
 plugin executions.
 
 ## Registration
@@ -147,6 +179,12 @@ plugin's rows in `core.plugin_property`, refreshes application configuration,
 and rewrites the bootstrap file for database-backed configuration. Re-registering
 an existing plugin updates metadata and properties but preserves its current
 enabled/disabled registry status.
+
+After registration, use `--detail` to inspect the stored configuration:
+
+```text
+opendata --plugin example --detail
+```
 
 ## Enable, disable and unregister
 
@@ -187,6 +225,9 @@ require `--plugin` or `--Execute`. They cannot be combined with plugin selection
 or operational options. `--list-plugins` reads `core.plugin_registry`, so SQL
 Server bootstrap credentials and the plugin-registry migration must be available.
 
+`--detail` is plugin-specific information rather than a global informational
+command, so it requires `--plugin <id>`.
+
 ## Unix manual page
 
 A Unix manual-page source is supplied as
@@ -209,3 +250,5 @@ groff -man -Tascii docs/reference/opendata.1
 OpenData accepts both a normal argument array and the common IDE/wrapper case in
 which the entire command line is supplied as one string. Single or double quotes
 preserve spaces in a plugin definition filename.
+
+---

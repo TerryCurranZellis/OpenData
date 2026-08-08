@@ -1,3 +1,4 @@
+\
 /*
  * Copyright © 2026 Terry Curran
  *
@@ -93,6 +94,13 @@ public record CommandLineArguments(
      */
     public boolean disableRequested() {
         return command == PluginCommand.DISABLE;
+    }
+
+    /**
+     * @return whether stored configuration details were requested
+     */
+    public boolean detailRequested() {
+        return command == PluginCommand.DETAIL;
     }
 
     /**

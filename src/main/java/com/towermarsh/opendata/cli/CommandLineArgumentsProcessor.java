@@ -1,3 +1,4 @@
+\
 /*
  * Copyright © 2026 Terry Curran
  *
@@ -141,7 +142,7 @@ public final class CommandLineArgumentsProcessor {
         formatter.printHelp(
                 writer,
                 124,
-                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] (--Execute [run options] | [operation] [options])",
+                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] (--Execute [run options] | --detail | [operation] [options])",
                 System.lineSeparator()
                 + "Runs or administers registered OpenData plugins. Named --plugin options may be repeated."
                 + System.lineSeparator() + System.lineSeparator()
@@ -149,6 +150,9 @@ public final class CommandLineArgumentsProcessor {
                 + "  opendata --plugin openmeteo --Execute" + System.lineSeparator()
                 + "  opendata --plugin openmeteo --plugin ofgem --Execute --parallelism 2" + System.lineSeparator()
                 + "  opendata --plugin all --Execute --dry-run" + System.lineSeparator()
+                + System.lineSeparator()
+                + "Plugin information example:" + System.lineSeparator()
+                + "  opendata --plugin ofgem --detail" + System.lineSeparator()
                 + System.lineSeparator()
                 + "Administration examples:" + System.lineSeparator()
                 + "  opendata --plugin all --register" + System.lineSeparator()
@@ -163,9 +167,11 @@ public final class CommandLineArgumentsProcessor {
                 System.lineSeparator()
                 + "--Execute (-x) is required for normal and dry-run plugin execution."
                 + System.lineSeparator()
-                + "--Execute cannot be combined with plugin administration operations."
+                + "--Execute cannot be combined with plugin information or administration operations."
                 + System.lineSeparator()
-                + "Exactly one of --register, --unregister/--remove, --enable, or --disable may be used."
+                + "--detail displays stored configuration for exactly one named registered plugin."
+                + System.lineSeparator()
+                + "Exactly one of --register, --unregister/--remove, --enable, --disable, or --detail may be used."
                 + System.lineSeparator()
                 + "The -d short option means --disable. Use -n or --dry-run for dry-run execution."
                 + System.lineSeparator()
@@ -190,8 +196,12 @@ public final class CommandLineArgumentsProcessor {
                 .desc("Plugin id. Repeat the option, use comma-separated ids, or specify 'all'.")
                 .get());
         result.addOption(Option.builder("x")
-                .longOpt("execute")
+                .longOpt("Execute")
                 .desc("Explicitly authorise plugin execution; required for normal and dry-run execution.")
+                .get());
+        result.addOption(Option.builder()
+                .longOpt("detail")
+                .desc("Display stored configuration for one named registered plugin.")
                 .get());
         result.addOption(Option.builder("f")
                 .longOpt("file")
@@ -272,18 +282,20 @@ public final class CommandLineArgumentsProcessor {
         }
         final var enable = commandLine.hasOption("enable");
         final var disable = commandLine.hasOption("disable");
-        final var actionCount = booleanCount(register, unregister, enable, disable);
+        final var detail = commandLine.hasOption("detail");
+        final var actionCount = booleanCount(register, unregister, enable, disable, detail);
         if (actionCount > 1) {
             throw new IllegalArgumentException(
-                    "--register, --unregister/--remove, --enable, and --disable are mutually exclusive.");
+                    "--register, --unregister/--remove, --enable, --disable, and --detail are mutually exclusive.");
         }
         final var command = register ? PluginCommand.REGISTER
                 : unregister ? PluginCommand.UNREGISTER
                         : enable ? PluginCommand.ENABLE
                                 : disable ? PluginCommand.DISABLE
-                                        : PluginCommand.RUN;
+                                        : detail ? PluginCommand.DETAIL
+                                                : PluginCommand.RUN;
 
-        final var execute = commandLine.hasOption("execute");
+        final var execute = commandLine.hasOption("Execute");
         final var dryRun = commandLine.hasOption("dry-run");
         final var fileSpecified = commandLine.hasOption("file");
         final var parallelismSpecified = commandLine.hasOption("parallelism");
@@ -298,16 +310,25 @@ public final class CommandLineArgumentsProcessor {
         if (!informational && !pluginSpecified) {
             throw new IllegalArgumentException("Missing required option: --plugin <id|all>.");
         }
+        if (detail && all) {
+            throw new IllegalArgumentException(
+                    "--detail requires exactly one named plugin; it cannot be used with --plugin all.");
+        }
+        if (detail && uniqueIds.size() != 1) {
+            throw new IllegalArgumentException(
+                    "--detail requires exactly one named plugin.");
+        }
         if (execute && command != PluginCommand.RUN) {
             throw new IllegalArgumentException(
-                    "--Execute cannot be combined with a plugin administration operation.");
+                    "--Execute cannot be combined with a plugin information or administration operation.");
         }
         if (!informational && command == PluginCommand.RUN && !execute) {
             throw new IllegalArgumentException(
                     "Missing required option for plugin execution: --Execute (-x).");
         }
         if (dryRun && command != PluginCommand.RUN) {
-            throw new IllegalArgumentException("--dry-run cannot be combined with a plugin administration operation.");
+            throw new IllegalArgumentException(
+                    "--dry-run cannot be combined with a plugin information or administration operation.");
         }
         if (fileSpecified && command != PluginCommand.REGISTER) {
             throw new IllegalArgumentException("--file requires --register.");
@@ -350,7 +371,7 @@ public final class CommandLineArgumentsProcessor {
      * find the plugins on the command line
      *
      * @param commandLine the commandline
-     * @return
+     * @return plugin ids
      */
     private static List<String> parsePluginIds(final CommandLine commandLine) {
         final List<String> rawIds = new ArrayList<>();

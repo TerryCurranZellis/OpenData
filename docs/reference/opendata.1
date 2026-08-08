@@ -1,4 +1,4 @@
-.TH OPENDATA 1 "7 August 2026" "OpenData 2.0.0" "OpenData Manual"
+.TH OPENDATA 1 "8 August 2026" "OpenData 2.0.0" "OpenData Manual"
 .SH NAME
 opendata \- acquire, transform and load external data through registered plugins
 .SH SYNOPSIS
@@ -7,6 +7,10 @@ opendata \- acquire, transform and load external data through registered plugins
 .RB [ --plugin " " \fIid\fR ]
 .B --Execute
 .RI [ run-options ]
+.PP
+.B opendata
+.BR --plugin " " \fIid\fR
+.B --detail
 .PP
 .B opendata
 .BR --plugin " " \fIid\fR|\fBall\fR
@@ -41,7 +45,13 @@ is rejected.  To run the plugin use:
 opendata --plugin ofgem --Execute
 .fi
 .PP
-Administration commands do not require
+To inspect the stored configuration without running the plugin use:
+.PP
+.nf
+opendata --plugin ofgem --detail
+.fi
+.PP
+Administration and detail commands do not require
 .B --Execute
 and must not be combined with it.
 .SH OPTIONS
@@ -50,14 +60,29 @@ and must not be combined with it.
 Select a plugin.  The option may be repeated, comma-separated identifiers are
 accepted, and
 .B all
-selects all eligible plugins for the requested operation.
+selects all eligible plugins for the requested operation.  The
+.B --detail
+operation is restricted to exactly one named plugin.
 .TP
 .BR -x ", " --Execute
 Explicitly authorise plugin execution.  This switch is required for normal
 execution and for
 .BR --dry-run .
-It takes no argument and cannot be combined with plugin administration
-operations.
+It takes no argument and cannot be combined with plugin detail or
+administration operations.
+.TP
+.B --detail
+Display the stored configuration for exactly one named registered plugin.
+The output includes plugin identity and enabled/disabled status followed by
+the stored properties read from
+.BR core.plugin_property .
+This option cannot be used with
+.BR --plugin " " all ,
+multiple plugin selections,
+.BR --Execute ,
+.BR --dry-run ,
+.BR --file ,
+or a plugin administration operation.
 .TP
 .BR -n ", " --dry-run
 Execute the selected plugin or plugins without provider-data writes or generic
@@ -112,6 +137,7 @@ opendata --plugin ofgem --Execute --dry-run
 The
 .B --Execute
 switch is not valid with
+.BR --detail ,
 .BR --register ,
 .BR --unregister ,
 .BR --remove ,
@@ -127,6 +153,16 @@ During execution,
 .B --plugin all
 selects registered and enabled plugins.  A named plugin must be registered and
 enabled.
+.SH DETAIL
+Display one plugin's stored configuration:
+.PP
+.nf
+opendata --plugin ofgem --detail
+.fi
+.PP
+Exactly one named plugin is required.  The plugin must exist in the persistent
+registry and have stored configuration.  The operation reads configuration
+only and does not execute the plugin.
 .SH ADMINISTRATION
 Register all packaged definitions:
 .PP
@@ -138,6 +174,12 @@ Register one external definition:
 .PP
 .nf
 opendata --plugin example --register --file C:\eOpenData\eexample.properties
+.fi
+.PP
+Inspect the resulting stored configuration:
+.PP
+.nf
+opendata --plugin example --detail
 .fi
 .PP
 Disable, enable, and unregister a plugin:
@@ -152,6 +194,12 @@ Run the Ofgem plugin:
 .PP
 .nf
 opendata --plugin ofgem --Execute
+.fi
+.PP
+Inspect the Ofgem configuration:
+.PP
+.nf
+opendata --plugin ofgem --detail
 .fi
 .PP
 Run Ofgem and OpenMeteo with two workers:
@@ -205,6 +253,9 @@ The short option for
 is
 .BR -n .
 .PP
+.B --detail
+has no short option and applies to one named plugin only.
+.PP
 The long execution switch is intentionally spelled
 .B --Execute
 with a capital E.
@@ -214,6 +265,7 @@ The repository documentation:
 .nf
 docs/reference/command-line-reference.md
 docs/guides/quick-start.md
+docs/user-guide/04-configuration.md
 docs/user-guide/05-command-line-use.md
 docs/operations/operations-runbook.md
 .fi

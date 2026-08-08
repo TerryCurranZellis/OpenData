@@ -1,9 +1,9 @@
 # OpenData 2.0.0 Quick Start
 
 **Document ID:** GUIDE-QUICKSTART-001  
-**Version:** 2.1  
+**Version:** 2.2  
 **Status:** Current  
-**Baseline date:** 7 August 2026
+**Baseline date:** 8 August 2026
 
 ---
 
@@ -34,10 +34,15 @@ PFX use `-Dopendata.config.keystore.password=<password>`.
 ```text
 opendata --plugin all --register
 opendata --list-plugins
+opendata --plugin ofgem --detail
 ```
 
 Successful registration persists application configuration, plugin definitions
 and registry metadata, encrypts the password and enables database-backed mode.
+
+Use `--plugin <id> --detail` when you want to inspect the stored configuration
+for one registered plugin. `--detail` accepts one named plugin only; it does not
+use `--Execute` and cannot be used with `all`.
 
 ## 5. Dry-run
 
@@ -57,14 +62,15 @@ no provider writes, generic audit rows or archive movements.
 ## 6. Administration examples
 
 ```text
+opendata --plugin octopus --detail
 opendata --plugin octopus --disable
 opendata --plugin octopus --enable
 opendata --plugin octopus --unregister
 opendata --plugin octopus --register
 ```
 
-Administration commands do not use `--Execute`. Use `-x` for execution,
-`-n` for dry run, and remember that `-d` means disable.
+Administration commands and `--detail` do not use `--Execute`. Use `-x` for
+execution, `-n` for dry run, and remember that `-d` means disable.
 
 ## 7. First write run
 
@@ -78,3 +84,5 @@ opendata --plugin octopus --Execute
 
 Reconcile logs/audit/provider rows, then test repeated and parallel execution
 before routine scheduling.
+
+---

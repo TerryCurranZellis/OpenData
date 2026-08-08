@@ -1,3 +1,4 @@
+\
 /*
  * Copyright © 2026 Terry Curran
  *
@@ -23,7 +24,7 @@ public enum PluginCommand {
     /**
      * Remove the selected plugins from the persistent registry.
      */
-    UNREGISTER("unresister"),
+    UNREGISTER("unregister"),
     /**
      * Mark the selected registered plugins as enabled.
      */
@@ -31,7 +32,11 @@ public enum PluginCommand {
     /**
      * Mark the selected registered plugins as disabled.
      */
-    DISABLE("disable");
+    DISABLE("disable"),
+    /**
+     * Display the stored configuration for one selected registered plugin.
+     */
+    DETAIL("detail");
 
     /**
      * friendly status name

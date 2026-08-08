@@ -1,9 +1,9 @@
 # Plugin Properties Reference
 
-**Document ID:** REF-PLUGIN-PROP-001
-**Version:** 2.1
-**Status:** Version 2.0.0 implementation reference
-**Baseline date:** 4 August 2026
+**Document ID:** REF-PLUGIN-PROP-001  
+**Version:** 2.2  
+**Status:** Version 2.0.0 implementation reference  
+**Baseline date:** 8 August 2026  
 **Minimum Java version:** 17
 
 ---
@@ -19,6 +19,15 @@ the immutable `PluginDefinition`.
 
 Editing a classpath file does not change an existing runtime definition until
 registration is run again.
+
+The stored property set for one registered plugin can be inspected with:
+
+```text
+opendata --plugin <id> --detail
+```
+
+`--detail` reads the plugin's current rows from `core.plugin_property`. It
+requires exactly one named registered plugin and does not execute that plugin.
 
 ## Identity
 
@@ -114,6 +123,21 @@ for lookup.
 For full method details see
 [Shared Validation and JDBC Reference](shared-validation-and-jdbc-reference.md).
 
+## Inspecting stored values
+
+After registration or re-registration, use:
+
+```text
+opendata --plugin example --detail
+```
+
+The command displays registry identity/status information followed by the stored
+property names and values. This gives an operator a direct view of the
+configuration OpenData will use for that plugin without running it.
+
+Because the values are written to standard output, do not redirect or distribute
+the output if a deployment has stored values that should not be disclosed.
+
 ## Configurable SQL identifiers
 
 When a property supplies a schema or table name, validate it with
@@ -137,3 +161,8 @@ are not implemented. Never store an actual key or token in the properties file.
 `plugin.enabled` sets initial status only for a newly registered row.
 Re-registration preserves current persistent status. Use `--enable` and
 `--disable` for lifecycle administration.
+
+The current status and stored `plugin.enabled` property can be inspected with
+`--plugin <id> --detail`.
+
+---
