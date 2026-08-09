@@ -69,6 +69,7 @@ class PluginSelectionResolverTest {
                 false,
                 false,
                 false,
+                false,
                 PluginCommand.RUN);
     }
 

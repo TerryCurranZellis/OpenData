@@ -356,7 +356,7 @@ public final class CommandLineArgumentsProcessor {
             throw new IllegalArgumentException(
                     "--Execute cannot be combined with a plugin information or administration operation.");
         }
-        if (!informational && command == PluginCommand.RUN && !execute) {
+        if (!standalone && command == PluginCommand.RUN && !execute) {
             throw new IllegalArgumentException(
                     "Missing required option for plugin execution: --Execute (-x).");
         }
