@@ -73,7 +73,7 @@ public final class OpenData {
             LoggingManager.setVerbose(arguments.verbose());
             logStartup(ApplicationInfo.current(), arguments);
             if (arguments.guiRequested()) {
-                GuiLauncher.launch();
+                GuiLauncher.launch(new String[0]);
                 status = ExecutionStatus.SUCCESS;
             } else if (arguments.aboutRequested()) {
                 showAndWait(ApplicationInfo.current());
