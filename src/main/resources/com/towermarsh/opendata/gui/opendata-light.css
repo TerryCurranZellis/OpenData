@@ -1,0 +1,97 @@
+/*
+ * OpenData light theme.
+ * JavaFX CSS does not currently support CSS custom properties, so the theme
+ * values are grouped here to make later dark-theme extraction straightforward.
+ *
+ * Base background:       #f4f6f8
+ * Surface background:    #ffffff
+ * Border colour:         #d7dce1
+ * Primary text:          #20252b
+ * Secondary text:        #66707a
+ * Accent:                #2f6fb3
+ * Table hover:           #edf4fb
+ * Table selection:       #d8e9fa
+ */
+
+.app-root {
+    -fx-background-color: #f4f6f8;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 13px;
+}
+
+.menu-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #d7dce1 transparent;
+}
+
+.main-toolbar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 7px 10px;
+    -fx-border-color: transparent transparent #d7dce1 transparent;
+}
+
+.toolbar-button {
+    -fx-background-color: transparent;
+    -fx-padding: 6px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.toolbar-button:hover {
+    -fx-background-color: #edf4fb;
+}
+
+.toolbar-button:pressed {
+    -fx-background-color: #d8e9fa;
+}
+
+.plugin-table {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d7dce1;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #eef1f4;
+    -fx-border-color: transparent transparent #d7dce1 transparent;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 34px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #20252b;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #edf0f2 transparent;
+    -fx-cell-size: 36px;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #edf4fb;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d8e9fa;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #20252b;
+}
+
+.status-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d7dce1 transparent transparent transparent;
+}
+
+.status-bar .label {
+    -fx-text-fill: #66707a;
+}
