@@ -28,7 +28,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.22.1</jackson.version>
-        <javafx.version>26.0.1</javafx.version>
         <commons.csv.version>1.14.1</commons.csv.version>
         <commons.cli.version>1.11.0</commons.cli.version>
         <commons.dbcp.version>2.14.0</commons.dbcp.version>
@@ -49,16 +48,6 @@
         <quality.failOnViolation>false</quality.failOnViolation>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -162,14 +151,6 @@
     </executions>
 </plugin>
             -->
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>com.towermarsh.opendata.OpenDataGuiLauncher</mainClass>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
