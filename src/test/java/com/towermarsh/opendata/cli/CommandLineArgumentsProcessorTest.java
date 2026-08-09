@@ -161,6 +161,19 @@ class CommandLineArgumentsProcessorTest {
     }
 
     @Test
+    void acceptsGuiOptionsWithoutPluginSelection() {
+        assertTrue(processor.parse(new String[]{"--gui"}).guiRequested());
+        assertTrue(processor.parse(new String[]{"-g"}).guiRequested());
+    }
+
+    @Test
+    void defaultsEmptyCommandLinesToGui() {
+        assertTrue(processor.parse(new String[0]).guiRequested());
+        assertTrue(processor.parse(new String[]{""}).guiRequested());
+        assertTrue(processor.parse(new String[]{"   "}).guiRequested());
+    }
+
+    @Test
     void preservesQuotedFilePathWhenLauncherPassesOneArgument() {
         final var arguments = processor.parse(new String[]{
             "--plugin example --register --file \"C:\\OpenData Files\\example.properties\""

@@ -56,6 +56,9 @@ public final class CommandLineArgumentsProcessor {
         Objects.requireNonNull(arguments, "arguments");
         try {
             final var normalisedArguments = normaliseArguments(arguments);
+            if (launchGuiByDefault(normalisedArguments)) {
+                return toArguments(new DefaultParser().parse(options, new String[]{"--gui"}));
+            }
             return toArguments(new DefaultParser().parse(options, normalisedArguments));
         } catch (ParseException | IllegalArgumentException exception) {
             throw new CommandLineProcessingException(exception.getMessage(), exception);
@@ -73,11 +76,17 @@ public final class CommandLineArgumentsProcessor {
      * @return normalised argument array
      */
     static String[] normaliseArguments(final String[] arguments) {
+        if (arguments.length == 0) {
+            return arguments;
+        }
         if (arguments.length != 1) {
             return Arrays.copyOf(arguments, arguments.length);
         }
         final var commandLine = arguments[0];
-        if (commandLine == null || commandLine.isBlank() || !containsWhitespace(commandLine)) {
+        if (commandLine == null || commandLine.isBlank()) {
+            return new String[0];
+        }
+        if (!containsWhitespace(commandLine)) {
             return Arrays.copyOf(arguments, arguments.length);
         }
         final List<String> tokens = new ArrayList<>();
@@ -104,6 +113,16 @@ public final class CommandLineArgumentsProcessor {
         }
         addToken(tokens, token);
         return tokens.toArray(String[]::new);
+    }
+
+    /**
+     * Determines whether the invocation should open the GUI by default.
+     *
+     * @param arguments normalised arguments
+     * @return {@code true} when no effective command-line arguments remain
+     */
+    private static boolean launchGuiByDefault(final String[] arguments) {
+        return arguments.length == 0;
     }
 
     /**
