@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.gui;
 
 import javafx.application.Platform;
@@ -11,9 +16,13 @@ import javafx.scene.control.TableView;
 /**
  * Controller for {@code OpenDataMainView.fxml}.
  *
- * <p>The current handlers are intentionally presentation-only. They update the
+ * <p>
+ * The current handlers are intentionally presentation-only. They update the
  * status bar but do not invoke OpenData processing logic. Real behaviour can be
  * connected later without changing the FXML layout.</p>
+ *
+ * @author Terry Curran
+ * @version 3.0.0
  */
 public final class OpenDataMainController {
 
@@ -43,6 +52,8 @@ public final class OpenDataMainController {
 
     @FXML
     private void initialize() {
+        pluginTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+
         idColumn.setCellValueFactory(data -> data.getValue().idProperty());
         nameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
         categoryColumn.setCellValueFactory(data -> data.getValue().categoryProperty());

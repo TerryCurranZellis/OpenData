@@ -1,17 +1,27 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.gui;
 
 import java.io.IOException;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
  * JavaFX application for the OpenData graphical interface.
  *
- * <p>This class owns JavaFX startup and FXML loading only. It deliberately
+ * <p>
+ * This class owns JavaFX startup and FXML loading only. It deliberately
  * contains no OpenData command-line or processing-framework startup logic.</p>
+ *
+ * @author Terry Curran
+ * @version 3.0.0
  */
 public final class OpenDataGuiApplication extends Application {
 
@@ -28,7 +38,7 @@ public final class OpenDataGuiApplication extends Application {
                 "Unable to locate " + VIEW_RESOURCE);
 
         final var loader = new FXMLLoader(view);
-        final var root = loader.load();
+        final Parent root = loader.load();
         final var scene = new Scene(root, INITIAL_WIDTH, INITIAL_HEIGHT);
 
         stage.setTitle("OpenData Processing Framework");
@@ -42,8 +52,9 @@ public final class OpenDataGuiApplication extends Application {
     /**
      * Starts the JavaFX GUI.
      *
-     * <p>The method is intentionally public so another application entry point
-     * can start the GUI without becoming part of the GUI package.</p>
+     * <p>
+     * The method is intentionally public so another application entry point can
+     * start the GUI without becoming part of the GUI package.</p>
      *
      * @param args command-line arguments passed to JavaFX
      */

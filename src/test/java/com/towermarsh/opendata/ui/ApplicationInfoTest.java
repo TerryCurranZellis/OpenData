@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
-/** Tests packaged application identity metadata. @version 2.1 */
+/** Tests packaged application identity metadata. @version 3.0.0-GUi */
 class ApplicationInfoTest {
 
     @Test
@@ -17,6 +17,6 @@ class ApplicationInfoTest {
         final var information = ApplicationInfo.current();
         assertEquals("OpenData", information.productName());
         assertFalse(information.version().isBlank());
-        assertEquals("2.1.0", information.version());
+        assertEquals("3.0.0-GUI", information.version());
     }
 }

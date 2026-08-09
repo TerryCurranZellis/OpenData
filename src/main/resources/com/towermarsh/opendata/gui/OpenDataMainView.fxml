@@ -147,7 +147,6 @@
 
     <center>
         <TableView fx:id="pluginTable"
-                   columnResizePolicy="CONSTRAINED_RESIZE_POLICY"
                    editable="false"
                    styleClass="plugin-table">
             <columns>
