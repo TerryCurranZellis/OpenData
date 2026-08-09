@@ -145,6 +145,9 @@ public final class CommandLineArgumentsProcessor {
                 System.lineSeparator()
                 + "Runs or administers registered OpenData plugins. Named --plugin options may be repeated."
                 + System.lineSeparator() + System.lineSeparator()
+                + "GUI example:" + System.lineSeparator()
+                + "  opendata --gui" + System.lineSeparator()
+                + "  opendata -g" + System.lineSeparator()
                 + "Run examples:" + System.lineSeparator()
                 + "  opendata --plugin openmeteo --execute" + System.lineSeparator()
                 + "  opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2" + System.lineSeparator()
@@ -177,6 +180,9 @@ public final class CommandLineArgumentsProcessor {
                 + "--file is accepted only with --register and one named plugin; it cannot be used with 'all'."
                 + System.lineSeparator()
                 + "--parallelism accepts 1-64 and affects only run and dry-run execution."
+                + System.lineSeparator()
+                + "--gui (-g) starts the graphical user interface; "
+                + "running OpenData without arguments also starts the GUI."
                 + System.lineSeparator(),
                 true);
         writer.flush();
@@ -252,6 +258,10 @@ public final class CommandLineArgumentsProcessor {
                 .longOpt("list-plugins")
                 .desc("List registered plugins and enabled/disabled status.")
                 .get());
+        result.addOption(Option.builder("g")
+                .longOpt("gui")
+                .desc("Start the OpenData graphical user interface.")
+                .get());
         return result;
     }
 
@@ -259,9 +269,12 @@ public final class CommandLineArgumentsProcessor {
         final var help = commandLine.hasOption("help");
         final var about = commandLine.hasOption("about");
         final var list = commandLine.hasOption("list-plugins");
-        final var informationalCount = booleanCount(help, about, list);
-        if (informationalCount > 1) {
-            throw new IllegalArgumentException("Use only one of --help, --about, or --list-plugins.");
+        final var gui = commandLine.hasOption("gui");
+        final var standaloneCount = booleanCount(help, about, list, gui);
+
+        if (standaloneCount > 1) {
+            throw new IllegalArgumentException(
+                    "Use only one of --help, --about, --list-plugins, or --gui.");
         }
 
         final List<String> rawIds = parsePluginIds(commandLine);
@@ -299,14 +312,17 @@ public final class CommandLineArgumentsProcessor {
         final var fileSpecified = commandLine.hasOption("file");
         final var parallelismSpecified = commandLine.hasOption("parallelism");
         final var pluginSpecified = !rawIds.isEmpty();
-        final var informational = informationalCount == 1;
+        final var informational = help || about || list;
+        final var standalone = informational || gui;
 
-        if (informational
-                && (pluginSpecified || actionCount > 0 || execute || dryRun || fileSpecified || parallelismSpecified)) {
+        if (standalone
+                && (pluginSpecified || actionCount > 0 || execute
+                || dryRun || fileSpecified || parallelismSpecified)) {
             throw new IllegalArgumentException(
-                    "Informational options cannot be combined with plugin selection or operational options.");
+                    "Standalone options cannot be combined with plugin selection "
+                    + "or operational options.");
         }
-        if (!informational && !pluginSpecified) {
+        if (!standalone && !pluginSpecified) {
             throw new IllegalArgumentException("Missing required option: --plugin <id|all>.");
         }
         if (detail && all) {
@@ -363,6 +379,7 @@ public final class CommandLineArgumentsProcessor {
                 help,
                 about,
                 list,
+                gui,
                 command);
     }
 

@@ -17,6 +17,7 @@ import com.towermarsh.opendata.logging.LoggingManager;
 import com.towermarsh.opendata.ui.AboutDialog;
 import static com.towermarsh.opendata.ui.AboutDialog.showAndWait;
 import com.towermarsh.opendata.ui.ApplicationInfo;
+import com.towermarsh.opendata.ui.GuiLauncher;
 import com.towermarsh.opendata.ui.StartupSplashScreen;
 import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
 import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
@@ -64,10 +65,17 @@ public final class OpenData {
             enableUTF8Console();
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
-            final var arguments = processor.parse(args);
+            final String[] effectiveArguments
+                    = args.length == 0
+                            ? new String[]{"--gui"}
+                    : args;
+            final var arguments = processor.parse(effectiveArguments);
             LoggingManager.setVerbose(arguments.verbose());
             logStartup(ApplicationInfo.current(), arguments);
-            if (arguments.aboutRequested()) {
+            if (arguments.guiRequested()) {
+                GuiLauncher.launch(args);
+                status = ExecutionStatus.SUCCESS;
+            } else if (arguments.aboutRequested()) {
                 showAndWait(ApplicationInfo.current());
                 status = ExecutionStatus.SUCCESS;
             } else {
@@ -105,12 +113,13 @@ public final class OpenData {
         }
     }
 
-    /** 
-     * Logs non-sensitive application identity and invocation details. 
+    /**
+     * Logs non-sensitive application identity and invocation details.
+     *
      * @param information product information
      * @param arguments command line arguments
      */
-    private static void logStartup(final ApplicationInfo information,final CommandLineArguments arguments) {
+    private static void logStartup(final ApplicationInfo information, final CommandLineArguments arguments) {
         logger.log(Level.INFO, "{0} {1} starting", new Object[]{information.productName(), information.version()});
         logger.log(Level.INFO,
                 "Runtime: {0}; OS: {1} {2}; workingDirectory={3}",
