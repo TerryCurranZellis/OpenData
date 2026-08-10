@@ -24,6 +24,7 @@ import java.util.OptionalInt;
  * @param helpRequested whether help output was requested
  * @param aboutRequested whether the graphical About window was requested
  * @param listPluginsRequested whether registered plugin listing was requested
+ * @param guiRequested - user wants the gui interface
  * @param command requested plugin operation
  *
  * @author Terry Curran
@@ -40,6 +41,7 @@ public record CommandLineArguments(
         boolean helpRequested,
         boolean aboutRequested,
         boolean listPluginsRequested,
+        boolean guiRequested,
         PluginCommand command) {
 
     /** Validates and normalises record components. */
