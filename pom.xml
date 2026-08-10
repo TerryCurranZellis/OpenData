@@ -27,6 +27,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <javafx.version>26.0.1</javafx.version>
         <jackson.version>2.22.1</jackson.version>
         <commons.csv.version>1.14.1</commons.csv.version>
         <commons.cli.version>1.11.0</commons.cli.version>
@@ -48,6 +49,16 @@
         <quality.failOnViolation>false</quality.failOnViolation>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -132,25 +143,34 @@
             </resource>
         </resources>
         <plugins>
-            <!--
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-enforcer-plugin</artifactId>
-    <version>${maven.enforcer.plugin.version}</version>
-    <executions>
-        <execution>
-            <id>enforce-build-environment</id>
-            <goals><goal>enforce</goal></goals>
-            <configuration>
-                <rules>
-                    <requireMavenVersion><version>[3.9.0,)</version></requireMavenVersion>
-                    <requireJavaVersion><version>[17,18,25)</version></requireJavaVersion>
-                </rules>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-            -->
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven.enforcer.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-build-environment</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.9.0,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                    <message>
+                                        OpenData requires Java 17 or later.
+                                    </message>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+           
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

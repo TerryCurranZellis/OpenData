@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.gui;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
