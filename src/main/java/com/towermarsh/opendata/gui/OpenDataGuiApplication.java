@@ -6,6 +6,7 @@
 package com.towermarsh.opendata.gui;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,12 +26,24 @@ import javafx.stage.Stage;
  */
 public final class OpenDataGuiApplication extends Application {
 
+    /**
+     * JavaFX source file
+     */
     private static final String VIEW_RESOURCE = "OpenDataMainView.fxml";
+    
+    /**
+     * Java FX screen settings
+     */
     private static final double INITIAL_WIDTH = 1280.0;
     private static final double INITIAL_HEIGHT = 800.0;
     private static final double MIN_WIDTH = 960.0;
     private static final double MIN_HEIGHT = 620.0;
 
+    /**
+     * Start JavaFX
+     * @param stage define the stage
+     * @throws IOException throw error is JavaFX source not found
+     */
     @Override
     public void start(final Stage stage) throws IOException {
         final var view = Objects.requireNonNull(

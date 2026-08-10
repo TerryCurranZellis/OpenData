@@ -13,7 +13,9 @@
 
 ### SplashScreen
 
-- current startup display a Splashscreen which has an image. This uses swing, so may need to be converted to work with JavaFX
+- JavaFX has its own SplashScreen that runs at application start and displays until the app starts
+- can the splashscreen be delayed to display for a minimum of 5 seconds - would this need to be controlled
+by how long the app window takes to load.
 
 ## Main Screen
 
@@ -25,60 +27,62 @@
 	- Enable menu
 	- Execute menu
 	- Details menu
-	- Help/About menu
+	- Help menu
+- Toobar below MenuBar
 - Main Window
+
 
 ### Menubar
 
 This is the list of top level items on the menubar
 
-#### File
+#### File Menu
 
-- Preferences
-	- Allows the databse to be changed
-	- Allows the database password to be reset
+1. Menu Items
+- Settings
 - Exit
-	- Closes the application
+
+2. Actiions
 
 #### Register
 
+1. Menu Items
 - Register 
-	- Plugin using default file
 - Register from File
-	- Register Using a Selected File
-	- File is selected usinng a file selection window
-- Unregister All
-- Unregister selected
-	- unregisters selected plugin
+- Unregister
+
+2. Actions
 
 #### Enable
 
-- Enable All
-- Enable Selected
+1. Menu Items
+- Enable
 	- pop up confirm box
 	- OK Enables selected plugin
 	- Cancel does nothing
-- Disable All
-- Disable Selected
+- Disable
 	- pop up confirm box
 	- OK Disables selected plugin
 	- Cancel does nothing
+2. Actions
 	
 #### Execute
 
-- Execute All
-- Execute Selected
+1. Menu Items
+- Execute
 	- pop up confirm box
 	- OK runs plugin, and shows log in dialog window
 	- Cancel does nothing
-- Dryrun All
-- Dryrun Selected
+- Dryrun
 	- pop up confirm box
 	- OK runs dryrun, and shows login in dialog window
 
-#### Details
+2. Actions
 
-- shows details of selected plugin in dialog window
+#### Details
+- Plug Detail
+	- shows details of selected plugin in dialog window
+- Logs
 
 #### Help
 
