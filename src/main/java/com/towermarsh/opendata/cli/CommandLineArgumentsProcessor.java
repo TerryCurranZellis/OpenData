@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.cli;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -17,7 +18,8 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.TextHelpAppendable;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -155,56 +157,69 @@ public final class CommandLineArgumentsProcessor {
      */
     public void printHelp(final PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
-        final var formatter = new HelpFormatter();
-        formatter.setWidth(124);
-        formatter.printHelp(
-                writer,
-                124,
-                APPLICATION_NAME + " --plugin <id|all> [--plugin <id>] (--Execute [run options] | --detail | [operation] [options])",
-                System.lineSeparator()
-                + "Runs or administers registered OpenData plugins. Named --plugin options may be repeated."
-                + System.lineSeparator() + System.lineSeparator()
-                + "GUI example:" + System.lineSeparator()
-                + "  opendata --gui" + System.lineSeparator()
-                + "  opendata -g" + System.lineSeparator()
-                + "Run examples:" + System.lineSeparator()
-                + "  opendata --plugin openmeteo --execute" + System.lineSeparator()
-                + "  opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2" + System.lineSeparator()
-                + "  opendata --plugin all --execute --dry-run" + System.lineSeparator()
-                + System.lineSeparator()
-                + "Plugin information example:" + System.lineSeparator()
-                + "  opendata --plugin ofgem --detail" + System.lineSeparator()
-                + System.lineSeparator()
-                + "Administration examples:" + System.lineSeparator()
-                + "  opendata --plugin all --register" + System.lineSeparator()
-                + "  opendata --plugin example --register --file C:\\OpenData\\example.properties" + System.lineSeparator()
-                + "  opendata --plugin octopus --disable" + System.lineSeparator()
-                + "  opendata --plugin octopus --enable" + System.lineSeparator()
-                + "  opendata --plugin octopus --unregister" + System.lineSeparator()
-                + "  opendata --list-plugins" + System.lineSeparator(),
-                options,
-                2,
-                4,
-                System.lineSeparator()
-                + "--execute (-x) is required for normal and dry-run plugin execution."
-                + System.lineSeparator()
-                + "--Execute cannot be combined with plugin information or administration operations."
-                + System.lineSeparator()
+        final var helpOutput = new TextHelpAppendable(writer);
+        helpOutput.setMaxWidth(124);
+        final var formatter = HelpFormatter.builder()
+                .setHelpAppendable(helpOutput)
+                .setShowSince(false)
+                .get();
+        final var lineSeparator = System.lineSeparator();
+        final var header = "";
+        final var footer
+                = lineSeparator
+                + "Runs or administers registered OpenData plugins. "
+                + "Named --plugin options may be repeated."
+                + lineSeparator
+                + "GUI example:" + lineSeparator
+                + "  opendata --gui" + lineSeparator
+                + "  opendata -g" + lineSeparator
+                + "Run examples:" + lineSeparator
+                + "  opendata --plugin openmeteo --execute" + lineSeparator
+                + "  opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2" + lineSeparator
+                + "  opendata --plugin all --execute --dry-run" + lineSeparator
+                + lineSeparator
+                + "Plugin information example:" + lineSeparator
+                + "  opendata --plugin ofgem --detail" + lineSeparator
+                + lineSeparator
+                + "Administration examples:" + lineSeparator
+                + "  opendata --plugin all --register" + lineSeparator
+                + "  opendata --plugin example --register --file C:\\OpenData\\example.properties" + lineSeparator
+                + "  opendata --plugin octopus --disable" + lineSeparator
+                + "  opendata --plugin octopus --enable" + lineSeparator
+                + "  opendata --plugin octopus --unregister" + lineSeparator
+                + "  opendata --list-plugins" + lineSeparator
+                + "--execute (-x) is required for normal plugin execution; "
+                + "--dry-run (-n) authorises a non-writing run."
+                + lineSeparator
+                + "--execute cannot be combined with plugin information or administration operations."
+                + lineSeparator
                 + "--detail displays stored configuration for exactly one named registered plugin."
-                + System.lineSeparator()
+                + lineSeparator
                 + "Exactly one of --register, --unregister/--remove, --enable, --disable, or --detail may be used."
-                + System.lineSeparator()
+                + lineSeparator
                 + "The -d short option means --disable. Use -n or --dry-run for dry-run execution."
-                + System.lineSeparator()
+                + lineSeparator
                 + "--file is accepted only with --register and one named plugin; it cannot be used with 'all'."
-                + System.lineSeparator()
+                + lineSeparator
                 + "--parallelism accepts 1-64 and affects only run and dry-run execution."
-                + System.lineSeparator()
+                + lineSeparator
                 + "--gui (-g) starts the graphical user interface; "
-                + "running OpenData without arguments also starts the GUI."
-                + System.lineSeparator(),
-                true);
-        writer.flush();
+                + "running OpenData without arguments also starts the GUI.";
+        try {
+            formatter.printHelp(
+                    lineSeparator
+                    + APPLICATION_NAME
+                    + " --plugin <id|all> [--plugin <id>] "
+                    + "(--execute [run options] | --detail | [operation] [options])",
+                    header,
+                    options,
+                    footer,
+                    false);
+
+            writer.flush();
+        } catch (final IOException ex) {
+            throw new CommandLineProcessingException("Unable to write command-line help", ex);
+        }
     }
 
     /**
@@ -221,7 +236,7 @@ public final class CommandLineArgumentsProcessor {
                 .get());
         result.addOption(Option.builder("x")
                 .longOpt("execute")
-                .desc("Explicitly authorise plugin execution; required for normal and dry-run execution.")
+                .desc("Explicitly authorise plugin execution; required for normal execution.")
                 .get());
         result.addOption(Option.builder()
                 .longOpt("detail")
@@ -259,7 +274,7 @@ public final class CommandLineArgumentsProcessor {
                 .get());
         result.addOption(Option.builder("n")
                 .longOpt("dry-run")
-                .desc("Run without plugin data writes or run-audit rows; requires --Execute.")
+                .desc("Run without plugin data writes or run-audit rows; does not require --execute.")
                 .get());
         result.addOption(Option.builder("v")
                 .longOpt("verbose")
@@ -356,9 +371,9 @@ public final class CommandLineArgumentsProcessor {
             throw new IllegalArgumentException(
                     "--Execute cannot be combined with a plugin information or administration operation.");
         }
-        if (!standalone && command == PluginCommand.RUN && !execute) {
+        if (!standalone && command == PluginCommand.RUN && !execute && !dryRun) {
             throw new IllegalArgumentException(
-                    "Missing required option for plugin execution: --Execute (-x).");
+                    "Missing required option for plugin execution: --execute (-x) or --dry-run (-n).");
         }
         if (dryRun && command != PluginCommand.RUN) {
             throw new IllegalArgumentException(
