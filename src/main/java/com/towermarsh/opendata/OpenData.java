@@ -129,9 +129,15 @@ public final class OpenData {
                     System.getProperty("os.version", "unknown"),
                     Path.of("").toAbsolutePath().normalize()
                 });
-        logger.log(Level.INFO,
-                "Invocation: command={0}; dryRun={1}; verbose={2}",
-                new Object[]{arguments.command().displayName(), arguments.dryRun(), arguments.verbose()});
+        if (shouldLogInvocation(arguments)) {
+            logger.log(Level.INFO,
+                    "Invocation: command={0}; dryRun={1}; verbose={2}",
+                    new Object[]{arguments.command().displayName(), arguments.dryRun(), arguments.verbose()});
+        }
+    }
+
+    static boolean shouldLogInvocation(final CommandLineArguments arguments) {
+        return !arguments.guiRequested();
     }
 
     /**

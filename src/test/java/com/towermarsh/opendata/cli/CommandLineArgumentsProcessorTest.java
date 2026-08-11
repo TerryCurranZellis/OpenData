@@ -162,8 +162,13 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void acceptsGuiOptionsWithoutPluginSelection() {
-        assertTrue(processor.parse(new String[]{"--gui"}).guiRequested());
-        assertTrue(processor.parse(new String[]{"-g"}).guiRequested());
+        final var longOption = processor.parse(new String[]{"--gui"});
+        assertTrue(longOption.guiRequested());
+        assertEquals(PluginCommand.GUI, longOption.command());
+
+        final var shortOption = processor.parse(new String[]{"-g"});
+        assertTrue(shortOption.guiRequested());
+        assertEquals(PluginCommand.GUI, shortOption.command());
     }
 
     @Test

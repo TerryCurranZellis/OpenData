@@ -35,8 +35,11 @@ public enum PluginCommand {
     /**
      * Display the stored configuration for one selected registered plugin.
      */
-    DETAIL("detail");
-
+    DETAIL("detail"),
+    /**
+     * Start the graphical user interface.
+     */
+    GUI("gui");
     /**
      * friendly status name
      */

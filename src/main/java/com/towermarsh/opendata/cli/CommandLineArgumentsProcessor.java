@@ -319,13 +319,6 @@ public final class CommandLineArgumentsProcessor {
             throw new IllegalArgumentException(
                     "--register, --unregister/--remove, --enable, --disable, and --detail are mutually exclusive.");
         }
-        final var command = register ? PluginCommand.REGISTER
-                : unregister ? PluginCommand.UNREGISTER
-                        : enable ? PluginCommand.ENABLE
-                                : disable ? PluginCommand.DISABLE
-                                        : detail ? PluginCommand.DETAIL
-                                                : PluginCommand.RUN;
-
         final var execute = commandLine.hasOption("execute");
         final var dryRun = commandLine.hasOption("dry-run");
         final var fileSpecified = commandLine.hasOption("file");
@@ -333,6 +326,13 @@ public final class CommandLineArgumentsProcessor {
         final var pluginSpecified = !rawIds.isEmpty();
         final var informational = help || about || list;
         final var standalone = informational || gui;
+        final var command = gui ? PluginCommand.GUI
+                : register ? PluginCommand.REGISTER
+                        : unregister ? PluginCommand.UNREGISTER
+                                : enable ? PluginCommand.ENABLE
+                                        : disable ? PluginCommand.DISABLE
+                                                : detail ? PluginCommand.DETAIL
+                                                        : PluginCommand.RUN;
 
         if (standalone
                 && (pluginSpecified || actionCount > 0 || execute
