@@ -127,9 +127,11 @@ public final class OpenData {
                     System.getProperty("os.version", "unknown"),
                     Path.of("").toAbsolutePath().normalize()
                 });
+        if (!arguments.guiRequested()) {
         logger.log(Level.INFO,
                 "Invocation: command={0}; dryRun={1}; verbose={2}",
                 new Object[]{arguments.command().displayName(), arguments.dryRun(), arguments.verbose()});
+        }
     }
 
     /**
