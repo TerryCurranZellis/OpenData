@@ -2,22 +2,28 @@
 
 ## Overview
 
-- This is the design for a GUI for running the Opendata Processing Framework. 
-- The GUI will be written using JavaFX rather thand swing, as this is more modern code.
-- SceneBuilder is available for building the GUI
-- Application will be built using Netbeans
+- This is the design for a _GUI_ for running the **Opendata Processing Framework**. 
+- The _GUI_ will be written using _JavaFX_ rather than _Java_ _Swing_, as this is more modern code.
+- `SceneBuilder` is available for building the _GUI_
+- Application will be built using _Netbeans_
 - Minimum Java version is Java 17, although Java 25 JDK is currently installed
-- The current command line interface is required
+- The current command line interface is required to remain as an option
+- If no command line arguments are entered then the _GUI_ will run automatically
+- An additional option `--gui` (short code `-g`) has been added, which will run the _GUI_ if used 
 
 ## Requirements
 
 ### SplashScreen
 
-- JavaFX has its own SplashScreen that runs at application start and displays until the app starts
-- can the splashscreen be delayed to display for a minimum of 5 seconds - would this need to be controlled
-by how long the app window takes to load.
+- JavaFX has its own `SplashScreen` that runs at application start and displays until the app starts
+- the splashscreen be delayed to display for a minimum of 5 seconds, it will start end automatically once the main app starts,
+so it may need a delay to be built into the startup to slow things down a little.
+- Convert the existsing _Swing_ version of the splash screen
 
 ## Main Screen
+
+This is the basic layout of the main screen, see image of the basic layout.
+
 
 - Full Screen
 - Menubar at top of screen displaying main menu items
@@ -29,6 +35,24 @@ by how long the app window takes to load.
 	- Details menu
 	- Help menu
 - Toobar below MenuBar
+- Toolbar Icons
+
+| Label | Icon |
+|---|---|
+| Exit | exit.png |
+| Preferences | preferences.png |
+| Save | Save | save.png |
+| Register | register.png
+| Unregister | unregister.png| 	
+| Enable | enable.png |
+| Disable | disable.png |
+| Execute | execute.png |
+| Dryrun | dryrun.png |
+| Logfile | 
+| About | about.png |
+| Help | help.png |
+
+
 - Main Window
 
 
