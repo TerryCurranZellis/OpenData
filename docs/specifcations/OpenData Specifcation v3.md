@@ -61,25 +61,25 @@ This is the basic layout of the main screen, see image of the basic layout.
 | Help | help.png |
 
 - Main Window
-	- Table containing plugin details
-	- Columns
-		- Selected/Not selected box
-		- plugin id
-		- plugin description
-		- enabled/disabled could be shown as a flag column to indicate
-		- Status 
-			- show the status of the last time the plugin was run only needs to show status or error status
-			- leave blank if plugin has never been run
-		- Date of last run
-			- leave blank if plugin never ran
-		
+    - Table containing plugin details
+    - Columns
+        - Selected/Not selected box
+        - plugin id
+        - plugin description
+        - enabled/disabled could be shown as a flag column to indicate
+        - Status 
+            - show the status of the last time the plugin was run only needs to show status or error status
+            - leave blank if plugin has never been run
+        - Date of last run
+            - leave blank if plugin never ran
+        
 - Lower left
-	- Status 
-	    - loading while plugin details being retrieved
-		- 'ready' once everything has been loaded from the database
+    - Status 
+        - loading while plugin details being retrieved
+        - 'ready' once everything has been loaded from the database
 
 - Lower right
-	- Number of Items selected
+    - Number of Items selected
 ### Menubar
 
 This is the list of top level items on the menubar
@@ -87,83 +87,83 @@ This is the list of top level items on the menubar
 #### File Menu
 
 - Menu Items
- 	- Settings
- 	- Exit
+     - Settings
+     - Exit
 - Actiions
 
 #### Register Menu
 
 - Menu Items
-	- Register 
-	- Register from File
-	- Unregister
+    - Register 
+    - Register from File
+    - Unregister
 - Actions
-	- Register
-	- Register from File
-	- Unregister
+    - Register
+    - Register from File
+    - Unregister
 
 #### Enable Menu
 
 - Menu Items
-	- Enable
-	- Disable
+    - Enable
+    - Disable
 
 - Actions
-	 - Enable
-		- pop up confirm box
-		- OK Enables selected plugin
-		- Cancel does nothing
-	- Disable
-		- pop up confirm box
-		- OK Disables selected plugin
-		- Cancel does nothing	
+     - Enable
+        - pop up confirm box
+        - OK Enables selected plugin
+        - Cancel does nothing
+    - Disable
+        - pop up confirm box
+        - OK Disables selected plugin
+        - Cancel does nothing    
 
 #### Execute Menu
 
 - Menu Items
-	- Execute
-	- Dryrun
+    - Execute
+    - Dryrun
 
 - Actions
-	- Execute
-		- pop up confirm box
-		- OK runs plugin, and shows log in dialog window
-		- Cancel does nothing
-	- Dryrun
-		- pop up confirm box
-		- OK runs dryrun, and shows login in dialog window
+    - Execute
+        - pop up confirm box
+        - OK runs plugin, and shows log in dialog window
+        - Cancel does nothing
+    - Dryrun
+        - pop up confirm box
+        - OK runs dryrun, and shows login in dialog window
 
 #### Details Menu
 
 - Menu Items
-	- Plugin Detail
-	- Logs
+    - Plugin Detail
+    - Logs
 - Actions
-	- Plugin Detail
-		- shows details of selected plugin in dialog window
-			- two column output showing property and value
-		- ok button at bottom of dialog window to close the dialog
-	- Logs
-	    - loads the run log into a dialog window user can scroll around the window and review the current log
-		- may need scroll bars for longer lined
+    - Plugin Detail
+        - shows details of selected plugin in dialog window
+            - two column output showing property and value
+        - ok button at bottom of dialog window to close the dialog
+    - Logs
+        - loads the run log into a dialog window user can scroll around the window and review the current log
+        - may need scroll bars for longer lined
 
 #### Help Menu
 
 - Menu Items
-	- Help
-	- separator bar
-	- About
+    - Help
+    - separator bar
+    - About
 
 - Actions
-	- Help
-		- displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or 
-		can be defined in its own window
-		- I am working on a windows compiled help file, so it may be able to be displayed in its own dialog box
-	- About
-		- display the about box, currently defined using Swing to may need to be rewritten
-		- shows the splashscreen image
-		- shows specified text in a text box
-		- has an OK button, clicking the ok button closes the about box
+    - Help
+        - displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or 
+        can be defined in its own window
+        - I am working on a windows compiled help file, so it may be able to be displayed in its own dialog box
+    - About
+        - display the about box, currently defined using Swing to may need to be rewritten
+        - shows the splashscreen image
+        - shows specified text in a text box
+        - has an OK button, clicking the ok button closes the about box
 
 ### Toolbar Buttons
 
@@ -173,21 +173,21 @@ Actions are the same as for the corresponding menu item
 
 - Description
     - Requires item in the main window to be selected
-	- Box has a message depending on the option selected
-	- Has `OK` button to confirm action
-	- has `Cancel' button to cancel action
+    - Box has a message depending on the option selected
+    - Has `OK` button to confirm action
+    - has `Cancel' button to cancel action
 - Actions
-	- If no items selected then Display Warning message "No plugin selected"
-	- `OK` button 
-	  	- Unregister - unregister plugin
-	  	- Enable - enable plugin
-		- Disable - disable plugin
-		- Execute - execute plugin, and disply log in log Window
-		- Dryrun - dryrun plugin, and display log in log Window
-		- Details - show selected plugin details in log Window
-	- `Cancel` button
-		- cancel select action and retur
-	- once action is confirmed then run the appropriate action as a new task
+    - If no items selected then Display Warning message "No plugin selected"
+    - `OK` button 
+          - Unregister - unregister plugin
+          - Enable - enable plugin
+        - Disable - disable plugin
+        - Execute - execute plugin, and disply log in log Window
+        - Dryrun - dryrun plugin, and display log in log Window
+        - Details - show selected plugin details in log Window
+    - `Cancel` button
+        - cancel select action and retur
+    - once action is confirmed then run the appropriate action as a new task
 
 ## Log Window
 
@@ -204,7 +204,7 @@ This is a popup dialog box that displays log messages
 ### Detail Popup
 
 - dialog box
-	- Pops up when Details is selected
-	- Displays the Plugin details
-	- two column output property and value
-	- ok button is always available
+    - Pops up when Details is selected
+    - Displays the Plugin details
+    - two column output property and value
+    - ok button is always available

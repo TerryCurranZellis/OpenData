@@ -24,7 +24,7 @@
         </developer>
     </developers>
     <properties>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>24</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <javafx.version>26.0.1</javafx.version>
@@ -42,7 +42,7 @@
         <spotbugs.plugin.version>4.10.3.0</spotbugs.plugin.version>
         <pmd.plugin.version>3.28.0</pmd.plugin.version>
         <javadoc.plugin.version>3.12.0</javadoc.plugin.version>
-        <maven.enforcer.plugin.version>3.6.2</maven.enforcer.plugin.version>
+        <maven.enforcer.plugin.version>3.6.3</maven.enforcer.plugin.version>
         <jacoco.plugin.version>0.8.15</jacoco.plugin.version>
         <dependency.plugin.version>3.11.0</dependency.plugin.version>
         <project.build.outputTimestamp>2026-08-06T00:00:00Z</project.build.outputTimestamp>
@@ -160,9 +160,9 @@
                                     <version>[3.9.0,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>[17,)</version>
+                                    <version>[24,)</version>
                                     <message>
-                                        OpenData requires Java 17 or later.
+                                        OpenData requires Java 24 or later.
                                     </message>
                                 </requireJavaVersion>
                             </rules>
