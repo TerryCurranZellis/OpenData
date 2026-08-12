@@ -3,8 +3,8 @@
 ## Overview
 
 - This is the design for a _GUI_ for running the **Opendata Processing Framework**. 
-- The _GUI_ will be written using _JavaFX_ rather than _Java_ _Swing_, as this is more modern code.
-- `SceneBuilder` is available for building the _GUI_
+- The _GUI_ will be written using _JavaFX_ and _Java_ as this is more modern code.
+- `SceneBuilder` is available for designing the _GUI_
 - Application will be built using _Netbeans_
 - Minimum Java version is Java 17, although Java 25 JDK is currently installed
 - The current command line interface is required to remain as an option
@@ -23,7 +23,6 @@ so it may need a delay to be built into the startup to slow things down a little
 ## Main Screen
 
 This is the basic layout of the main screen, see image of the basic layout.
-
 
 - Full Screen
 - Menubar at top of screen displaying main menu items
@@ -60,95 +59,101 @@ This is the list of top level items on the menubar
 
 #### File Menu
 
-1. Menu Items
-- Settings
-- Exit
-
-2. Actiions
+- Menu Items
+ 	- Settings
+ 	- Exit
+- Actiions
 
 #### Register Menu
 
-1. Menu Items
-- Register 
-- Register from File
-- Unregister
-
-2. Actions
-- Register
-- Register from File
-- Unregister
+- Menu Items
+	- Register 
+	- Register from File
+	- Unregister
+- Actions
+	- Register
+	- Register from File
+	- Unregister
 
 #### Enable Menu
 
-1. Menu Items
-- Enable
-- Disable
+- Menu Items
+	- Enable
+	- Disable
 
-2. Actions
- - Enable
-	- pop up confirm box
-	- OK Enables selected plugin
-	- Cancel does nothing
-- Disable
-	- pop up confirm box
-	- OK Disables selected plugin
-	- Cancel does nothing	
+- Actions
+	 - Enable
+		- pop up confirm box
+		- OK Enables selected plugin
+		- Cancel does nothing
+	- Disable
+		- pop up confirm box
+		- OK Disables selected plugin
+		- Cancel does nothing	
+
 #### Execute Menu
 
-1. Menu Items
-- Execute
-- Dryrun
+- Menu Items
+	- Execute
+	- Dryrun
 
-2. Actions
-- Execute
-	- pop up confirm box
-	- OK runs plugin, and shows log in dialog window
-	- Cancel does nothing
-- Dryrun
-	- pop up confirm box
-	- OK runs dryrun, and shows login in dialog window
+- Actions
+	- Execute
+		- pop up confirm box
+		- OK runs plugin, and shows log in dialog window
+		- Cancel does nothing
+	- Dryrun
+		- pop up confirm box
+		- OK runs dryrun, and shows login in dialog window
 
 #### Details Menu
 
-1. Menu Items
-- Plug Detail
-	- shows details of selected plugin in dialog window
-- Logs
-
-2. Actions
-- Plugin Detail
-  - shows details of selected plugin in dialog window
-- Logs
+- Menu Items
+	- Plug Detail
+	- Logs
+- Actions
+	- Plugin Detail
+	  - shows details of selected plugin in dialog window
+	- Logs
 
 #### Help Menu
 
-1. Menu Items
-- Help
-- separator bar
-- About
+- Menu Items
+	- Help
+	- separator bar
+	- About
 
-2. Actions
-- Help
-	- displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or can be defined in its own window
-- About
-	- display the about box, currently defined using Swing to may need to be rewritten
-	- shows the splashscreen image
-	- shows specified text in a text box
-	- has an OK button, clicking the ok button closes the about box
-	
+- Actions
+	- Help
+		- displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or can be defined in its own window
+	- About
+		- display the about box, currently defined using Swing to may need to be rewritten
+		- shows the splashscreen image
+		- shows specified text in a text box
+		- has an OK button, clicking the ok button closes the about box
+
+### Toolbar Buttons
+
+Actions
+
 ### Popup Confirm Box
-- Box has a message depending on the option selected
-- Has ok button to confirm
-- has cancel button to cancel option
-- Action on clicking OK button
-	- Details - show selected plugin details in log Window
-	- Execute - execute plugin, and disply log in log Window
-	- Dryrun - dryrun plugin, and display log in log Window
-	- Enable - enable plugin
-	- Disable - disable plugin
-	- Unregister - unregister plugin
-- Action on clicking Cancel button
-	- cancel select action and retur
+
+- Description
+    - Requires item in the main window to be selected
+	- Box has a message depending on the option selected
+	- Has `OK` button to confirm action
+	- has `Cancel' button to cancel action
+- Actions
+	- If no items selected then Display Warning message "No plugin selected"
+	- `OK` button 
+	  	- Unregister - unregister plugin
+	  	- Enable - enable plugin
+		- Disable - disable plugin
+		- Execute - execute plugin, and disply log in log Window
+		- Dryrun - dryrun plugin, and display log in log Window
+		- Details - show selected plugin details in log Window
+	- `Cancel` button
+		- cancel select action and retur
 
 ## Log Window
 
