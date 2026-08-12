@@ -28,12 +28,12 @@ This is the basic layout of the main screen, see image of the basic layout.
 - Full Screen
 - Menubar at top of screen displaying main menu items
 - Menu items
-	- File menu
-	- Register menu
-	- Enable menu
-	- Execute menu
-	- Details menu
-	- Help menu
+    - File menu
+    - Register menu
+    - Enable menu
+    - Execute menu
+    - Details menu
+    - Help menu
 - Toobar below MenuBar
 - Toolbar Icons
 
@@ -43,7 +43,7 @@ This is the basic layout of the main screen, see image of the basic layout.
 | Preferences | preferences.png |
 | Save | Save | save.png |
 | Register | register.png
-| Unregister | unregister.png| 	
+| Unregister | unregister.png|     
 | Enable | enable.png |
 | Disable | disable.png |
 | Execute | execute.png |
@@ -81,31 +81,31 @@ This is the list of top level items on the menubar
 
 1. Menu Items
 - Enable
-	- pop up confirm box
-	- OK Enables selected plugin
-	- Cancel does nothing
+    - pop up confirm box
+    - OK Enables selected plugin
+    - Cancel does nothing
 - Disable
-	- pop up confirm box
-	- OK Disables selected plugin
-	- Cancel does nothing
+    - pop up confirm box
+    - OK Disables selected plugin
+    - Cancel does nothing
 2. Actions
-	
+    
 #### Execute
 
 1. Menu Items
 - Execute
-	- pop up confirm box
-	- OK runs plugin, and shows log in dialog window
-	- Cancel does nothing
+    - pop up confirm box
+    - OK runs plugin, and shows log in dialog window
+    - Cancel does nothing
 - Dryrun
-	- pop up confirm box
-	- OK runs dryrun, and shows login in dialog window
+    - pop up confirm box
+    - OK runs dryrun, and shows login in dialog window
 
 2. Actions
 
 #### Details
 - Plug Detail
-	- shows details of selected plugin in dialog window
+    - shows details of selected plugin in dialog window
 - Logs
 
 #### Help
@@ -113,39 +113,39 @@ This is the list of top level items on the menubar
 Displays the following items
 
 - Help
-	- displays help just display s a brief description Of OpenData, needs to be displayed in a dialog box, can share the log window (See below) or can be defined
+    - displays help just display s a brief description Of OpenData, needs to be displayed in a dialog box, can share the log window (See below) or can be defined
 in its own window
 - separator bar
 - About
-	- display the about box, currently defined using Swing to may need to be rewritten
-	- shows the splashscreen image
-	- shows specified text in a text box
-	- has an OK button, clicking the ok button closes the about box
+    - display the about box, currently defined using Swing to may need to be rewritten
+    - shows the splashscreen image
+    - shows specified text in a text box
+    - has an OK button, clicking the ok button closes the about box
 
 ## Popup Menu
 
 - this menu will popup when and item is selected in the main window and then the item is right clicked
 - Options on the menu are as follwd
-	- Details - pops up confrim box
-	- Enable - pops up confirm box
-	- Disable - pops up a confirm box
-	- Unregister - pops up confrim box
-	- Execute - pops up confirm box
-	- Dry Run - pops up conform box
-	
+    - Details - pops up confrim box
+    - Enable - pops up confirm box
+    - Disable - pops up a confirm box
+    - Unregister - pops up confrim box
+    - Execute - pops up confirm box
+    - Dry Run - pops up conform box
+    
 ### Popup Confirm Box
 - Box has a message depending on the option selected
 - Has ok button to confirm
 - has cancel button to cancel option
 - Action on clicking OK button
-	- Details - show selected plugin details in log Window
-	- Execute - execute plugin, and disply log in log Window
-	- Dryrun - dryrun plugin, and display log in log Window
-	- Enable - enable plugin
-	- Disable - disable plugin
-	- Unregister - unregister plugin
+    - Details - show selected plugin details in log Window
+    - Execute - execute plugin, and disply log in log Window
+    - Dryrun - dryrun plugin, and display log in log Window
+    - Enable - enable plugin
+    - Disable - disable plugin
+    - Unregister - unregister plugin
 - Action on clicking Cancel button
-	- cancel select action and retur
+    - cancel select action and retur
 
 ## Log Window
 

@@ -12,6 +12,8 @@
 
 - [Repository structure](repository-structure.md)
 - [Local build, test and run](local-build-test-run.md)
+- [JavaFX GUI architecture](javafx-gui-architecture.md)
+- [GUI screenshot plan](gui-screenshot-plan.md)
 - [Java quality guide](Java-Quality-Guide.md)
 - [Dependency management](dependency-management.md)
 - [Build, CI and release guide](Build-CI-and-Release-Guide.md)

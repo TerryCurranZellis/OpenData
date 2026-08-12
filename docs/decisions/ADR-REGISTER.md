@@ -1,9 +1,9 @@
 # Architecture Decision Register
 
 **Document ID:** ADR-REGISTER-001
-**Version:** 2.1
+**Version:** 3.0.0
 **Status:** Baseline
-**Baseline date:** 4 August 2026
+**Baseline date:** 12 August 2026
 **Minimum Java version:** 17
 
 ---
@@ -70,5 +70,7 @@
 | [ADR-0048](ADR-0048-persistent-plugin-registry-and-cli-lifecycle.md) | Persist plugin lifecycle state and administer it through the CLI | Accepted | Implemented; extends ADR-0013/0047 |
 | [ADR-0049](ADR-0049-shared-validation-and-jdbc-execution.md) | Share validation and JDBC execution mechanics | Accepted | Implemented across Ofgem, OpenMeteo and Octopus |
 | [ADR-0050](ADR-0050-application-metadata-validation-and-utilities.md) | Centralise application metadata, validation and focused utilities | Accepted | Implemented in version 2.1 |
+
+| [ADR-0051](ADR-0051-javafx-graphical-interface.md) | Use JavaFX for the OpenData graphical interface | Accepted | Version 3 GUI implementation in progress |
 
 :::

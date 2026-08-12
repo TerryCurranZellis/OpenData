@@ -35,8 +35,7 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" onAction="#onPreferences" text="Preferences" />
-                                <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#onSave" text="Save" />
+                                <MenuItem fx:id="settingsMenuItem" mnemonicParsing="false" onAction="#onSettings" text="Settings" />
                                 <SeparatorMenuItem />
                                 <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#onExit" text="Exit" />
                             </items>
@@ -47,34 +46,35 @@
                                 <MenuItem fx:id="registerMenuItem" mnemonicParsing="false" onAction="#onRegister" text="Register" />
                                 <MenuItem fx:id="registerFromFileMenuItem" mnemonicParsing="false" onAction="#onRegisterFromFile" text="Register from File" />
                                 <SeparatorMenuItem />
-                                <MenuItem fx:id="unregisterAllMenuItem" mnemonicParsing="false" onAction="#onUnregisterAll" text="Unregister All" />
-                                <MenuItem fx:id="unregisterSelectedMenuItem" mnemonicParsing="false" onAction="#onUnregisterSelected" text="Unregister Selected" />
+                                <MenuItem fx:id="unregisterMenuItem" mnemonicParsing="false" onAction="#onUnregister" text="Unregister" />
                             </items>
                         </Menu>
 
                         <Menu mnemonicParsing="false" text="Enable">
                             <items>
-                                <MenuItem fx:id="enableAllMenuItem" mnemonicParsing="false" onAction="#onEnableAll" text="Enable All" />
-                                <MenuItem fx:id="enableSelectedMenuItem" mnemonicParsing="false" onAction="#onEnableSelected" text="Enable Selected" />
-                                <SeparatorMenuItem />
-                                <MenuItem fx:id="disableAllMenuItem" mnemonicParsing="false" onAction="#onDisableAll" text="Disable All" />
-                                <MenuItem fx:id="disableSelectedMenuItem" mnemonicParsing="false" onAction="#onDisableSelected" text="Disable Selected" />
+                                <MenuItem fx:id="enableMenuItem" mnemonicParsing="false" onAction="#onEnable" text="Enable" />
+                                <MenuItem fx:id="disableMenuItem" mnemonicParsing="false" onAction="#onDisable" text="Disable" />
                             </items>
                         </Menu>
 
                         <Menu mnemonicParsing="false" text="Execute">
                             <items>
-                                <MenuItem fx:id="executeAllMenuItem" mnemonicParsing="false" onAction="#onExecuteAll" text="Execute All" />
-                                <MenuItem fx:id="executeSelectedMenuItem" mnemonicParsing="false" onAction="#onExecuteSelected" text="Execute Selected" />
-                                <SeparatorMenuItem />
-                                <MenuItem fx:id="dryRunAllMenuItem" mnemonicParsing="false" onAction="#onDryRunAll" text="Dry-run All" />
-                                <MenuItem fx:id="dryRunSelectedMenuItem" mnemonicParsing="false" onAction="#onDryRunSelected" text="Dry-run Selected" />
+                                <MenuItem fx:id="executeMenuItem" mnemonicParsing="false" onAction="#onExecute" text="Execute" />
+                                <MenuItem fx:id="dryRunMenuItem" mnemonicParsing="false" onAction="#onDryRun" text="Dry-run" />
+                            </items>
+                        </Menu>
+
+                        <Menu mnemonicParsing="false" text="Details">
+                            <items>
+                                <MenuItem fx:id="pluginDetailMenuItem" mnemonicParsing="false" onAction="#onPluginDetail" text="Plugin Detail" />
+                                <MenuItem fx:id="logsMenuItem" mnemonicParsing="false" onAction="#onLogs" text="Logs" />
                             </items>
                         </Menu>
 
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem fx:id="documentationMenuItem" mnemonicParsing="false" onAction="#onDocumentation" text="Documentation" />
+                                <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" onAction="#onHelp" text="Help" />
+                                <SeparatorMenuItem />
                                 <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#onAbout" text="About" />
                             </items>
                         </Menu>
@@ -87,9 +87,9 @@
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/exit.png" /></image></ImageView></graphic>
                             <tooltip><Tooltip text="Exit" /></tooltip>
                         </Button>
-                        <Button fx:id="preferencesButton" accessibleText="Preferences" mnemonicParsing="false" onAction="#onPreferences" styleClass="toolbar-button">
+                        <Button fx:id="preferencesButton" accessibleText="Preferences" mnemonicParsing="false" onAction="#onSettings" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/preferences.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Preferences" /></tooltip>
+                            <tooltip><Tooltip text="Settings / Preferences" /></tooltip>
                         </Button>
                         <Button fx:id="saveButton" accessibleText="Save" mnemonicParsing="false" onAction="#onSave" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/save.png" /></image></ImageView></graphic>
@@ -102,42 +102,46 @@
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/register.png" /></image></ImageView></graphic>
                             <tooltip><Tooltip text="Register" /></tooltip>
                         </Button>
-                        <Button fx:id="unregisterButton" accessibleText="Unregister" mnemonicParsing="false" onAction="#onUnregisterSelected" styleClass="toolbar-button">
+                        <Button fx:id="unregisterButton" accessibleText="Unregister" mnemonicParsing="false" onAction="#onUnregister" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/unregister.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Unregister selected" /></tooltip>
+                            <tooltip><Tooltip text="Unregister selected plugins" /></tooltip>
                         </Button>
 
                         <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="enableButton" accessibleText="Enable" mnemonicParsing="false" onAction="#onEnableSelected" styleClass="toolbar-button">
+                        <Button fx:id="enableButton" accessibleText="Enable" mnemonicParsing="false" onAction="#onEnable" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/enable.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Enable selected" /></tooltip>
+                            <tooltip><Tooltip text="Enable selected plugins" /></tooltip>
                         </Button>
-                        <Button fx:id="disableButton" accessibleText="Disable" mnemonicParsing="false" onAction="#onDisableSelected" styleClass="toolbar-button">
+                        <Button fx:id="disableButton" accessibleText="Disable" mnemonicParsing="false" onAction="#onDisable" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/disable.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Disable selected" /></tooltip>
+                            <tooltip><Tooltip text="Disable selected plugins" /></tooltip>
                         </Button>
 
                         <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="executeButton" accessibleText="Execute" mnemonicParsing="false" onAction="#onExecuteSelected" styleClass="toolbar-button">
+                        <Button fx:id="executeButton" accessibleText="Execute" mnemonicParsing="false" onAction="#onExecute" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/execute.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Execute selected" /></tooltip>
+                            <tooltip><Tooltip text="Execute selected plugins" /></tooltip>
                         </Button>
-                        <Button fx:id="dryRunButton" accessibleText="Dry-run" mnemonicParsing="false" onAction="#onDryRunSelected" styleClass="toolbar-button">
+                        <Button fx:id="dryRunButton" accessibleText="Dry-run" mnemonicParsing="false" onAction="#onDryRun" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/dryrun.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Dry-run selected" /></tooltip>
+                            <tooltip><Tooltip text="Dry-run selected plugins" /></tooltip>
                         </Button>
 
                         <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="helpButton" accessibleText="Help" mnemonicParsing="false" onAction="#onDocumentation" styleClass="toolbar-button">
-                            <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/help.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="Documentation" /></tooltip>
+                        <Button fx:id="logButton" accessibleText="Logfile" mnemonicParsing="false" onAction="#onLogs" styleClass="toolbar-button">
+                            <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/logfile.png" /></image></ImageView></graphic>
+                            <tooltip><Tooltip text="View logfile" /></tooltip>
                         </Button>
                         <Button fx:id="aboutButton" accessibleText="About" mnemonicParsing="false" onAction="#onAbout" styleClass="toolbar-button">
                             <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/about.png" /></image></ImageView></graphic>
-                            <tooltip><Tooltip text="About" /></tooltip>
+                            <tooltip><Tooltip text="About OpenData" /></tooltip>
+                        </Button>
+                        <Button fx:id="helpButton" accessibleText="Help" mnemonicParsing="false" onAction="#onHelp" styleClass="toolbar-button">
+                            <graphic><ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true" smooth="true"><image><Image url="@icons/help.png" /></image></ImageView></graphic>
+                            <tooltip><Tooltip text="Help" /></tooltip>
                         </Button>
                     </items>
                 </ToolBar>
@@ -147,14 +151,15 @@
 
     <center>
         <TableView fx:id="pluginTable"
-                   editable="false"
+                   editable="true"
                    styleClass="plugin-table">
             <columns>
-                <TableColumn fx:id="idColumn" prefWidth="160.0" resizable="true" sortable="true" text="ID" />
-                <TableColumn fx:id="nameColumn" prefWidth="290.0" resizable="true" sortable="true" text="Name" />
-                <TableColumn fx:id="categoryColumn" prefWidth="220.0" resizable="true" sortable="true" text="Category" />
-                <TableColumn fx:id="statusColumn" prefWidth="180.0" resizable="true" sortable="true" text="Status" />
-                <TableColumn fx:id="lastUpdatedColumn" prefWidth="280.0" resizable="true" sortable="true" text="Last Updated" />
+                <TableColumn fx:id="selectedColumn" editable="true" maxWidth="88.0" minWidth="88.0" prefWidth="88.0" resizable="false" sortable="false" text="Selected" />
+                <TableColumn fx:id="pluginIdColumn" prefWidth="180.0" resizable="true" sortable="true" text="Plugin ID" />
+                <TableColumn fx:id="descriptionColumn" prefWidth="390.0" resizable="true" sortable="true" text="Plugin Description" />
+                <TableColumn fx:id="enabledColumn" prefWidth="145.0" resizable="true" sortable="true" text="Enabled" />
+                <TableColumn fx:id="lastRunStatusColumn" prefWidth="180.0" resizable="true" sortable="true" text="Last Run Status" />
+                <TableColumn fx:id="lastRunDateColumn" prefWidth="250.0" resizable="true" sortable="true" text="Date of Last Run" />
             </columns>
             <placeholder><Label text="No plugins registered" /></placeholder>
             <BorderPane.margin><Insets bottom="12.0" left="12.0" right="12.0" top="12.0" /></BorderPane.margin>
@@ -165,7 +170,7 @@
         <HBox fx:id="statusBar" alignment="CENTER_LEFT" spacing="10.0" styleClass="status-bar">
             <padding><Insets bottom="7.0" left="12.0" right="12.0" top="7.0" /></padding>
             <children>
-                <Label fx:id="stateLabel" text="Ready" />
+                <Label fx:id="stateLabel" text="Loading plugin details..." />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label fx:id="selectedLabel" text="0 items selected" />
             </children>

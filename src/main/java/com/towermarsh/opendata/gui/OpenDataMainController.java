@@ -1,19 +1,28 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.towermarsh.opendata.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 
 /**
  * Controller for {@code OpenDataMainView.fxml}.
  *
- * <p>The current handlers are intentionally presentation-only. They update the
- * status bar but do not invoke OpenData processing logic. Real behaviour can be
- * connected later without changing the FXML layout.</p>
+ * <p>Batch 1 is intentionally presentation-only. Menu and toolbar handlers
+ * demonstrate the intended event wiring and update the status bar, but they do
+ * not call the database, plugin registry, configuration services or execution
+ * coordinator. Those integrations are introduced in later GUI batches.</p>
+ *
+ * @author Terry Curran
+ * @version 3.0.0
  */
 public final class OpenDataMainController {
 
@@ -21,19 +30,22 @@ public final class OpenDataMainController {
     private TableView<PluginRow> pluginTable;
 
     @FXML
-    private TableColumn<PluginRow, String> idColumn;
+    private TableColumn<PluginRow, Boolean> selectedColumn;
 
     @FXML
-    private TableColumn<PluginRow, String> nameColumn;
+    private TableColumn<PluginRow, String> pluginIdColumn;
 
     @FXML
-    private TableColumn<PluginRow, String> categoryColumn;
+    private TableColumn<PluginRow, String> descriptionColumn;
 
     @FXML
-    private TableColumn<PluginRow, String> statusColumn;
+    private TableColumn<PluginRow, String> enabledColumn;
 
     @FXML
-    private TableColumn<PluginRow, String> lastUpdatedColumn;
+    private TableColumn<PluginRow, String> lastRunStatusColumn;
+
+    @FXML
+    private TableColumn<PluginRow, String> lastRunDateColumn;
 
     @FXML
     private Label stateLabel;
@@ -41,34 +53,52 @@ public final class OpenDataMainController {
     @FXML
     private Label selectedLabel;
 
+    /**
+     * Configures the main page once the FXML has been loaded.
+     */
     @FXML
     private void initialize() {
+        setState("Loading plugin details...");
+
+        pluginTable.setEditable(true);
         pluginTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        idColumn.setCellValueFactory(data -> data.getValue().idProperty());
-        nameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
-        categoryColumn.setCellValueFactory(data -> data.getValue().categoryProperty());
-        statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());
-        lastUpdatedColumn.setCellValueFactory(data -> data.getValue().lastUpdatedProperty());
+        selectedColumn.setCellValueFactory(data -> data.getValue().selectedProperty());
+        selectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectedColumn));
+        pluginIdColumn.setCellValueFactory(data -> data.getValue().pluginIdProperty());
+        descriptionColumn.setCellValueFactory(data -> data.getValue().descriptionProperty());
+        enabledColumn.setCellValueFactory(data -> data.getValue().enabledStateProperty());
+        lastRunStatusColumn.setCellValueFactory(data -> data.getValue().lastRunStatusProperty());
+        lastRunDateColumn.setCellValueFactory(data -> data.getValue().lastRunDateProperty());
 
-        pluginTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        pluginTable.setItems(FXCollections.observableArrayList(
-                new PluginRow("ofgem", "Ofgem Energy Price Cap", "Energy", "Enabled", "08 Aug 2026 15:56"),
-                new PluginRow("openmeteo", "Open-Meteo Weather History", "Weather", "Enabled", "08 Aug 2026 15:54"),
-                new PluginRow("octopus", "Octopus Energy Statements", "Energy", "Registered", "07 Aug 2026 18:20")));
+        final var rows = FXCollections.observableArrayList(
+                new PluginRow(false, "ofgem", "Ofgem Energy Price Cap", "Enabled", "Success", "08 Aug 2026 15:56"),
+                new PluginRow(false, "openmeteo", "Open-Meteo Weather History", "Enabled", "Success", "08 Aug 2026 15:54"),
+                new PluginRow(false, "octopus", "Octopus Energy Statements", "Disabled", "", ""));
 
-        pluginTable.getSelectionModel().getSelectedItems().addListener(
-                (javafx.collections.ListChangeListener<PluginRow>) change -> updateSelectionCount());
+        rows.forEach(row -> row.selectedProperty().addListener(
+                (observable, oldValue, newValue) -> updateSelectionCount()));
+        pluginTable.setItems(rows);
 
         updateSelectionCount();
-        setState("Ready");
+        Platform.runLater(() -> setState("Ready"));
     }
 
+    /**
+     * Updates the lower-right count from the explicit checkbox state.
+     */
     private void updateSelectionCount() {
-        final int count = pluginTable.getSelectionModel().getSelectedItems().size();
+        final long count = pluginTable.getItems().stream()
+                .filter(row -> row.selectedProperty().get())
+                .count();
         selectedLabel.setText(count + (count == 1 ? " item selected" : " items selected"));
     }
 
+    /**
+     * Updates the lower-left status text.
+     *
+     * @param state display state
+     */
     private void setState(final String state) {
         stateLabel.setText(state);
     }
@@ -79,82 +109,67 @@ public final class OpenDataMainController {
     }
 
     @FXML
-    private void onPreferences() {
-        setState("Preferences selected");
+    private void onSettings() {
+        setState("Settings selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
     private void onSave() {
-        setState("Save selected");
+        setState("Save selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
     private void onRegister() {
-        setState("Register selected");
+        setState("Register selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
     private void onRegisterFromFile() {
-        setState("Register from File selected");
+        setState("Register from File selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onUnregisterAll() {
-        setState("Unregister All selected");
+    private void onUnregister() {
+        setState("Unregister selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onUnregisterSelected() {
-        setState("Unregister Selected selected");
+    private void onEnable() {
+        setState("Enable selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onEnableAll() {
-        setState("Enable All selected");
+    private void onDisable() {
+        setState("Disable selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onEnableSelected() {
-        setState("Enable Selected selected");
+    private void onExecute() {
+        setState("Execute selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onDisableAll() {
-        setState("Disable All selected");
+    private void onDryRun() {
+        setState("Dry-run selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onDisableSelected() {
-        setState("Disable Selected selected");
+    private void onPluginDetail() {
+        setState("Plugin Detail selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onExecuteAll() {
-        setState("Execute All selected");
+    private void onLogs() {
+        setState("Logs selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
-    private void onExecuteSelected() {
-        setState("Execute Selected selected");
-    }
-
-    @FXML
-    private void onDryRunAll() {
-        setState("Dry-run All selected");
-    }
-
-    @FXML
-    private void onDryRunSelected() {
-        setState("Dry-run Selected selected");
-    }
-
-    @FXML
-    private void onDocumentation() {
-        setState("Documentation selected");
+    private void onHelp() {
+        setState("Help selected - implementation scheduled for a later GUI batch");
     }
 
     @FXML
     private void onAbout() {
-        setState("About selected");
+        setState("About selected - implementation scheduled for a later GUI batch");
     }
 }

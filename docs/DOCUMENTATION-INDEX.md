@@ -22,6 +22,13 @@
 | `manifests/DeveloperGuide.json` | Maintainers and plugin developers |
 | `manifests/APIReference.json` | Integrators and support engineers |
 
+## Version 3 GUI implementation
+
+- [JavaFX GUI architecture](development/javafx-gui-architecture.md)
+- [Graphical interface user guide](user-guide/12-graphical-interface.md)
+- [GUI screenshot plan](development/gui-screenshot-plan.md)
+- [ADR-0051: JavaFX graphical interface](decisions/ADR-0051-javafx-graphical-interface.md)
+
 ## Current processing-refactor baseline
 
 - [Shared validation and JDBC architecture](architecture/028-shared-validation-and-jdbc-infrastructure.md)

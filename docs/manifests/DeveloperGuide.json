@@ -6,13 +6,15 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 2.0.0 complete shared and provider processing-refactor documentation"
+    "revisionSummary": "Version 3.0.0 JavaFX GUI implementation in progress; existing developer baseline retained"
   },
   "sections": [
     "shared/introduction.md",
     "development/README.md",
     "development/repository-structure.md",
     "development/local-build-test-run.md",
+    "development/javafx-gui-architecture.md",
+    "development/gui-screenshot-plan.md",
     "development/Java-Quality-Guide.md",
     "development/dependency-management.md",
     "development/Build-CI-and-Release-Guide.md",

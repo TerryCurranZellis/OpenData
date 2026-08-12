@@ -1,16 +1,8 @@
 /*
- * OpenData light theme.
- * JavaFX CSS does not currently support CSS custom properties, so the theme
- * values are grouped here to make later dark-theme extraction straightforward.
+ * OpenData JavaFX light theme.
  *
- * Base background:       #f4f6f8
- * Surface background:    #ffffff
- * Border colour:         #d7dce1
- * Primary text:          #20252b
- * Secondary text:        #66707a
- * Accent:                #2f6fb3
- * Table hover:           #edf4fb
- * Table selection:       #d8e9fa
+ * Version 3.0.0 Batch 1 deliberately keeps styling conservative and close to
+ * the native Windows presentation shown in the GUI specification screenshot.
  */
 
 .app-root {
@@ -85,6 +77,10 @@
 
 .table-row-cell:selected .text {
     -fx-fill: #20252b;
+}
+
+.check-box-table-cell {
+    -fx-alignment: CENTER;
 }
 
 .status-bar {

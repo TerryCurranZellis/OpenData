@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Technical user guide",
     "audience": "Operators and technical users",
-    "revisionSummary": "Version 2.0.0 complete operator guide including Octopus and operational limitations"
+    "revisionSummary": "Version 3.0.0 JavaFX GUI implementation in progress; existing operator guidance retained"
   },
   "sections": [
     "shared/introduction.md",
@@ -16,6 +16,7 @@
     "user-guide/03-sql-server-setup.md",
     "user-guide/04-configuration.md",
     "user-guide/05-command-line-use.md",
+    "user-guide/12-graphical-interface.md",
     "user-guide/06-ofgem-price-cap-plugin.md",
     "user-guide/07-openmeteo-weather-plugin.md",
     "user-guide/08-octopus-energy-statements.md",
