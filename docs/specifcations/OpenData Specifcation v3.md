@@ -52,9 +52,7 @@ This is the basic layout of the main screen, see image of the basic layout.
 | About | about.png |
 | Help | help.png |
 
-
 - Main Window
-
 
 ### Menubar
 
@@ -68,7 +66,7 @@ This is the list of top level items on the menubar
 
 2. Actiions
 
-#### Register
+#### Register Menu
 
 1. Menu Items
 - Register 
@@ -76,23 +74,32 @@ This is the list of top level items on the menubar
 - Unregister
 
 2. Actions
+- Register
+- Register from File
+- Unregister
 
-#### Enable
+#### Enable Menu
 
 1. Menu Items
 - Enable
+- Disable
+
+2. Actions
+ - Enable
 	- pop up confirm box
 	- OK Enables selected plugin
 	- Cancel does nothing
 - Disable
 	- pop up confirm box
 	- OK Disables selected plugin
-	- Cancel does nothing
-2. Actions
-	
-#### Execute
+	- Cancel does nothing	
+#### Execute Menu
 
 1. Menu Items
+- Execute
+- Dryrun
+
+2. Actions
 - Execute
 	- pop up confirm box
 	- OK runs plugin, and shows log in dialog window
@@ -101,37 +108,33 @@ This is the list of top level items on the menubar
 	- pop up confirm box
 	- OK runs dryrun, and shows login in dialog window
 
-2. Actions
+#### Details Menu
 
-#### Details
+1. Menu Items
 - Plug Detail
 	- shows details of selected plugin in dialog window
 - Logs
 
-#### Help
+2. Actions
+- Plugin Detail
+  - shows details of selected plugin in dialog window
+- Logs
 
-Displays the following items
+#### Help Menu
 
+1. Menu Items
 - Help
-	- displays help just display s a brief description Of OpenData, needs to be displayed in a dialog box, can share the log window (See below) or can be defined
-in its own window
 - separator bar
+- About
+
+2. Actions
+- Help
+	- displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or can be defined in its own window
 - About
 	- display the about box, currently defined using Swing to may need to be rewritten
 	- shows the splashscreen image
 	- shows specified text in a text box
 	- has an OK button, clicking the ok button closes the about box
-
-## Popup Menu
-
-- this menu will popup when and item is selected in the main window and then the item is right clicked
-- Options on the menu are as follwd
-	- Details - pops up confrim box
-	- Enable - pops up confirm box
-	- Disable - pops up a confirm box
-	- Unregister - pops up confrim box
-	- Execute - pops up confirm box
-	- Dry Run - pops up conform box
 	
 ### Popup Confirm Box
 - Box has a message depending on the option selected
