@@ -4,7 +4,7 @@
 **Version:** 2.0  
 **Status:** Version 2.0.0 operational baseline  
 **Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 
@@ -23,6 +23,7 @@ routine operation of the Ofgem, OpenMeteo and Octopus plugins.
 10. [Dry runs](09-dry-runs.md)
 11. [Logs, audit and troubleshooting](10-logs-audit-and-troubleshooting.md)
 12. [Maintenance and security](11-maintenance-and-security.md)
+13. [Graphical interface](12-graphical-interface.md)
 
 For the shortest installation path, begin with the
 [Version 2.0.0 quick start](../guides/quick-start.md). Administrators should also

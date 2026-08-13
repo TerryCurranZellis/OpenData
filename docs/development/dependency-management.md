@@ -4,13 +4,13 @@
 **Version:** 2.0  
 **Status:** Version 2.0.0 implementation baseline  
 **Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 
 ## Policy
 
-Prefer Java 17 APIs when they provide the required behaviour. Add a library when
+Prefer standard Java 24 APIs when they provide the required behaviour. Add a library when
 it materially reduces protocol, parser, database, security or test risk. Record
 a durable technology choice in an ADR and update third-party notices when the
 dependency set changes.

@@ -35,7 +35,7 @@ Documentation checks are separate:
 
 The repository contains build, documentation and release workflows.
 
-- The build workflow runs Java 17 and `mvn clean verify`, then uploads available
+- The build workflow runs Java 24 and `mvn clean verify`, then uploads available
   test and quality reports.
 - The documentation workflow validates and generates maintained manuals.
 - The release workflow packages tagged or manually dispatched releases.

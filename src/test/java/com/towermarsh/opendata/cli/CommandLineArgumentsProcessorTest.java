@@ -78,13 +78,24 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     @SuppressWarnings("ThrowableResultIgnored")
-    void requiresExecuteForPluginRunsAndDryRuns() {
+    void requiresExecuteForNormalPluginRuns() {
         assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--plugin", "ofgem"}));
         assertThrows(CommandLineProcessingException.class,
-                () -> processor.parse(new String[]{"--plugin", "ofgem", "--dry-run"}));
-        assertThrows(CommandLineProcessingException.class,
                 () -> processor.parse(new String[]{"--plugin", "ofgem", "--parallelism", "2"}));
+    }
+
+    @Test
+    void acceptsDryRunWithoutExecute() {
+        final var longForm = processor.parse(new String[]{"--plugin", "ofgem", "--dry-run"});
+        assertTrue(longForm.dryRun());
+        assertFalse(longForm.executeRequested());
+        assertTrue(longForm.runRequested());
+
+        final var shortForm = processor.parse(new String[]{"-p", "ofgem", "-n"});
+        assertTrue(shortForm.dryRun());
+        assertFalse(shortForm.executeRequested());
+        assertTrue(shortForm.runRequested());
     }
 
     @Test

@@ -28,9 +28,13 @@ import static javax.swing.SwingUtilities.isEventDispatchThread;
 /**
  * Displays version and product information in a modal About window.
  *
+ * @deprecated retained temporarily for compatibility; new desktop UI code uses JavaFX.
+ * This class is scheduled for removal after the JavaFX dialog migration.
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.1.0
  */
+@Deprecated(since = "3.1.0")
+@SuppressWarnings("deprecation")
 public final class AboutDialog {
 
     /**

@@ -5,8 +5,6 @@
  */
 package com.towermarsh.opendata.ui;
 
-import static com.towermarsh.opendata.ui.OpenDataImageLoader.loadScaled;
-
 import static java.awt.GraphicsEnvironment.isHeadless;
 import static javax.swing.SwingUtilities.invokeLater;
 import static javax.swing.SwingUtilities.isEventDispatchThread;
@@ -20,11 +18,15 @@ import javax.swing.Timer;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Displays the OpenData startup splash for at least four seconds.
+ * Legacy Swing startup splash retained for source compatibility.
  *
+ * @deprecated retained temporarily for compatibility; new desktop UI code uses JavaFX.
+ * This class is scheduled for removal after the JavaFX dialog migration.
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.1.0
  */
+@Deprecated(since = "3.1.0")
+@SuppressWarnings("deprecation")
 public final class StartupSplashScreen {
 
     /**
@@ -57,7 +59,7 @@ public final class StartupSplashScreen {
             splash.getContentPane().setLayout(new BorderLayout());
             splash.getContentPane().setBackground(BACKGROUND);
             final var image = new JLabel(
-                    loadScaled(600), SwingConstants.CENTER);
+                    OpenDataImageLoader.loadScaled(600), SwingConstants.CENTER);
             image.setBorder(BorderFactory.createLineBorder(new Color(35, 188, 238), 1));
             splash.add(image, BorderLayout.CENTER);
             splash.pack();

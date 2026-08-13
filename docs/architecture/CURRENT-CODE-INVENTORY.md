@@ -4,7 +4,7 @@
 **Version:** 2.1
 **Status:** Version 2.0.0 processing-refactor baseline
 **Baseline date:** 4 August 2026
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 This inventory reflects the repository baseline plus accepted local refactor
 Batches 0–3.
@@ -39,7 +39,7 @@ Batches 0–3.
 
 ## Consistency notes
 
-- Java 17 and project version `2.0.0` remain the build baseline;
+- Java 24 is the minimum build/runtime baseline; the version 3 GUI implementation is in progress;
 - dry-run behaviour and public plugin workflow are unchanged by the refactor;
 - the shared JDBC layer owns mechanics, not provider business keys or SQL;
 - temporary-table/session cleanup is explicit for pooled OpenMeteo connections;

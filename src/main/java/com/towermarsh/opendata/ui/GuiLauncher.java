@@ -5,38 +5,29 @@
  */
 package com.towermarsh.opendata.ui;
 
-import java.util.logging.Logger;
-
 /**
- * Launches the OpenData graphical user interface.
- *
- * <p>
- * This implementation is a temporary placeholder. It will be replaced by
- * the JavaFX GUI implementation when the Version 3 GUI branch is merged.
- * </p>
+ * Compatibility launcher retained while callers move to the JavaFX GUI package.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.1.0
+ * @deprecated use {@link com.towermarsh.opendata.gui.GuiLauncher}; the GUI
+ * launcher now belongs to the JavaFX package tree.
  */
+@Deprecated(since = "3.1.0")
 public final class GuiLauncher {
 
-    private static final Logger LOGGER =
-            Logger.getLogger(GuiLauncher.class.getName());
-
-    /**
-     * Prevents instantiation.
-     */
     private GuiLauncher() {
+        // Utility class.
     }
 
     /**
-     * Starts the graphical user interface.
+     * Starts the JavaFX interface.
      *
-     * @param arguments original application arguments
+     * @param args arguments passed to JavaFX
+     * @deprecated use {@link com.towermarsh.opendata.gui.GuiLauncher#launch(String...)}
      */
-    public static void launch(final String[] arguments) {
-        LOGGER.info(
-                "OpenData GUI requested; "
-                + "the graphical interface is not yet implemented.");
+    @Deprecated(since = "3.1.0")
+    public static void launch(final String... args) {
+        com.towermarsh.opendata.gui.GuiLauncher.launch(args);
     }
 }

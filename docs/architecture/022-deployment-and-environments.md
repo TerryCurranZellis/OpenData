@@ -9,7 +9,7 @@
 
 ## Current topology
 
-OpenData is a Java 17 command-line modular monolith. One process loads the persistent SQL Server plugin registry, resolves
+OpenData is a Java 24 modular monolith with command-line and JavaFX desktop entry points. One process loads the persistent SQL Server plugin registry, resolves
 classpath registration sources or database-backed runtime configuration,
 uses outbound HTTPS or local source files, writes work/archive/log files and
 connects to SQL Server through a bounded JDBC pool.

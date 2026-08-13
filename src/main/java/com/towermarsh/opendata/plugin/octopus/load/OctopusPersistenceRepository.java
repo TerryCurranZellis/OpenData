@@ -116,12 +116,12 @@ public final class OctopusPersistenceRepository {
             preparedStatement.setString(parameter++, statement.sha256());
             preparedStatement.setDate(parameter++, Date.valueOf(statement.statementDate()));
             preparedStatement.setLong(parameter++, statement.sizeBytes());
-            preparedStatement.setObject(parameter++, runId, Types.OTHER);
+            preparedStatement.setObject(parameter++, runId, Types.VARCHAR);
             preparedStatement.setString(parameter++, statement.fileName());
             preparedStatement.setDate(parameter++, Date.valueOf(statement.statementDate()));
             preparedStatement.setString(parameter++, statement.sha256());
             preparedStatement.setLong(parameter++, statement.sizeBytes());
-            preparedStatement.setObject(parameter, runId, Types.OTHER);
+            preparedStatement.setObject(parameter, runId, Types.VARCHAR);
             preparedStatement.executeUpdate();
         }
     }

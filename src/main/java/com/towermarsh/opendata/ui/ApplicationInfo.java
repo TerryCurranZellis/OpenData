@@ -26,7 +26,7 @@ import java.util.Properties;
  * @param licence license to the product
  * @param copyright copyright info
  * @author Terry Curran
- * @version 2.1
+ * @version 3.1.0
  */
 public record ApplicationInfo(
         String productName,

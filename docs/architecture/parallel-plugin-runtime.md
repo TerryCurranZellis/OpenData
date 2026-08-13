@@ -4,7 +4,7 @@
 **Version:** 2.0  
 **Status:** Implemented  
 **Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 
@@ -29,5 +29,5 @@ A failure in one task does not cancel unrelated plugins. Results are reported in
 selection order and the invocation succeeds only when every selected task is
 successful or a successful dry run.
 
-Java 17 uses a bounded platform-thread executor. Repositories own transactions
+Java 24 uses a bounded platform-thread executor. Repositories own transactions
 and connections; plugin instances must not share mutable execution state.

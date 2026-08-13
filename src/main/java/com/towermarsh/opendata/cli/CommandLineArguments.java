@@ -105,11 +105,11 @@ public record CommandLineArguments(
     }
 
     /**
-     * @return whether normal plugin execution was explicitly requested
+     * @return whether normal or dry-run plugin execution was requested
      */
     public boolean runRequested() {
         return command == PluginCommand.RUN
-                && executeRequested
+                && (executeRequested || dryRun)
                 && !informationalRequest();
     }
 }

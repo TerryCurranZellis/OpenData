@@ -4,7 +4,7 @@
 **Version:** 2.0  
 **Status:** Roadmap  
 **Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 
@@ -37,4 +37,4 @@ Database-backed application and plugin property storage is no longer future
 work; it is implemented through registration and JDBC property sources. The
 classpath index remains the installed-plugin registry.
 
-Future changes preserve Java 17 unless a new ADR raises the baseline.
+Future changes preserve Java 24 unless a new ADR raises the baseline.

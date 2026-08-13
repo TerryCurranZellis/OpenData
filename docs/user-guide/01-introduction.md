@@ -7,7 +7,7 @@
 
 ---
 
-OpenData is a Java 17 command-line application that extracts data from external
+OpenData is a Java 24 command-line and JavaFX desktop application that extracts data from external
 or local sources, transforms it into validated records and loads it into
 Microsoft SQL Server.
 

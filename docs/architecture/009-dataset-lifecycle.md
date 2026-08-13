@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Status:** Baseline  
 **Baseline date:** 23 July 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 

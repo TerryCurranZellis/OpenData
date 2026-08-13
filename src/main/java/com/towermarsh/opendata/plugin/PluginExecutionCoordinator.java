@@ -118,6 +118,7 @@ public final class PluginExecutionCoordinator {
         final UUID runId = UUID.randomUUID();
         final Instant startedAt = clock.instant();
         PluginMetrics metrics = PluginMetrics.ZERO;
+        @SuppressWarnings("UnusedAssignment")
         PluginRunStatus status = dryRun ? PluginRunStatus.DRY_RUN : PluginRunStatus.SUCCESS;
         Optional<String> error = Optional.empty();
         boolean auditStarted = false;

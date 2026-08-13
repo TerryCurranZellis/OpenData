@@ -122,7 +122,7 @@ final class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecor
         statement.setBigDecimal(parameter++, record.standingChargeRatePDay());
         statement.setBigDecimal(parameter++, record.standingChargeTotalGbp());
         statement.setBigDecimal(parameter++, record.totalCostGbp());
-        statement.setObject(parameter, runId, Types.OTHER);
+        statement.setObject(parameter, runId, Types.VARCHAR);
     }
 
     /** {@inheritDoc} */
@@ -144,7 +144,7 @@ final class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecor
         statement.setBigDecimal(parameter++, record.standingChargeRatePDay());
         statement.setBigDecimal(parameter++, record.standingChargeTotalGbp());
         statement.setBigDecimal(parameter++, record.totalCostGbp());
-        statement.setObject(parameter++, runId, Types.OTHER);
+        statement.setObject(parameter++, runId, Types.VARCHAR);
         bindKey(statement, record, parameter);
     }
 }

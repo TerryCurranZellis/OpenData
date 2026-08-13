@@ -1,6 +1,8 @@
 ﻿<#
     Copyright © 2026 Terry Curran
     SPDX-License-Identifier: Apache-2.0
+	
+	added support for bulding compiled help files
 #>
 
 #Requires -Version 5.1
@@ -23,8 +25,8 @@ function Invoke-Documentation {
       .PARAMETER Document
       Currently all which means build everything
 
-      .PARAMETER Format
-      Docs, PDF, HTML
+.PARAMETER Format
+Output format: All, Html, Docx, Pdf, Chm or None.
 
       .PARAMETER ReferenceDoc
       A word document to use as a formatting template
@@ -47,8 +49,8 @@ function Invoke-Documentation {
 
     [string[]] $Document = @('All'),
 
-    [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
-    [string] $Format = 'All',
+[ValidateSet('All', 'Html', 'Docx', 'Pdf', 'Chm', 'None')]
+[string] $Format = 'All',
 
     [AllowNull()]
     [string] $ReferenceDoc,
@@ -207,6 +209,55 @@ function Invoke-Documentation {
       throw ("Required command '{0}' was not found." -f $Name)
     }
   }
+  #-------------------------------------------------------------------------------
+# Get-HtmlHelpCompiler
+#-------------------------------------------------------------------------------
+function Get-HtmlHelpCompiler {
+<#
+	.SYNOPSIS
+	Locace the microsoft help compiler
+#>
+    [CmdletBinding()]
+    param()
+
+    # First try PATH.
+    $command = Get-Command -Name 'hhc.exe' -ErrorAction SilentlyContinue
+    if ($null -ne $command) {
+        return $command.Source
+    }
+
+    # Standard HTML Help Workshop installation locations.
+    $candidates = New-Object -TypeName 'System.Collections.Generic.List[string]'
+
+    $programFilesX86 = [Environment]::GetFolderPath(
+        [Environment+SpecialFolder]::ProgramFilesX86)
+
+    if (-not [string]::IsNullOrWhiteSpace($programFilesX86)) {
+        $candidates.Add(
+            (Join-Path -Path $programFilesX86 `
+                       -ChildPath 'HTML Help Workshop\hhc.exe'))
+    }
+
+    $programFiles = [Environment]::GetFolderPath(
+        [Environment+SpecialFolder]::ProgramFiles)
+
+    if (-not [string]::IsNullOrWhiteSpace($programFiles)) {
+        $candidates.Add(
+            (Join-Path -Path $programFiles `
+                       -ChildPath 'HTML Help Workshop\hhc.exe'))
+    }
+
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+            return $candidate
+        }
+    }
+
+    throw @'
+Microsoft HTML Help Workshop compiler (hhc.exe) was not found.
+Install HTML Help Workshop or add hhc.exe to PATH.
+'@
+}
   #--------------------------------------------------------------------------------
   # Sync-NoticeFiles
   #--------------------------------------------------------------------------------
@@ -1344,6 +1395,199 @@ function Invoke-Documentation {
     Write-Output -InputObject ('Sized {0} DOCX image(s) to fit their A4 section.' -f $resized)
   }
   #-------------------------------------------------------------------------------
+# Publish-CompiledHtmlHelp
+#-------------------------------------------------------------------------------
+function Publish-CompiledHtmlHelp {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string] $Root,
+
+        [Parameter(Mandatory)]
+        [PSCustomObject] $Manifest,
+
+        [Parameter(Mandatory)]
+        [string] $Manual,
+
+        [Parameter(Mandatory)]
+        [string] $ResourcePath,
+
+        [Parameter(Mandatory)]
+        [string] $Output
+    )
+
+    $config = Read-DocumentationConfig -Root $Root
+    $compiler = Get-HtmlHelpCompiler
+
+    $build = Join-Path -Path $Root -ChildPath $config.buildDirectory
+    $baseName = Get-OutputBaseName -Manifest $Manifest
+
+    # Keep the intermediate HTML Help files separate from the normal build
+    # products.
+    $safeId = $Manifest.Id -replace '[^A-Za-z0-9._-]', '-'
+    $helpDirectory = Join-Path -Path $build -ChildPath (
+        'help\{0}' -f $safeId)
+
+    if (Test-Path -LiteralPath $helpDirectory -PathType Container) {
+        Remove-Item -LiteralPath $helpDirectory -Recurse -Force
+    }
+
+    $null = New-Item `
+        -ItemType Directory `
+        -Path $helpDirectory `
+        -Force
+
+    $topicFile = Join-Path -Path $helpDirectory -ChildPath 'index.htm'
+    $contentsFile = Join-Path -Path $helpDirectory -ChildPath (
+        '{0}.hhc' -f $baseName)
+    $projectFile = Join-Path -Path $helpDirectory -ChildPath (
+        '{0}.hhp' -f $baseName)
+    $compiledFile = Join-Path -Path $helpDirectory -ChildPath (
+        '{0}.chm' -f $baseName)
+
+    # -------------------------------------------------------------------------
+    # Markdown -> HTML
+    # -------------------------------------------------------------------------
+    $arguments = @(
+        $Manual,
+        '--from=markdown+yaml_metadata_block+pipe_tables+fenced_divs+link_attributes+raw_attribute',
+        '--to=html4',
+        '--standalone',
+        '--embed-resources',
+        ('--resource-path={0}' -f $ResourcePath),
+        '--metadata',
+        ('lang={0}' -f $config.language),
+        '--output',
+        $topicFile
+    )
+
+    if ($Manifest.GenerateToc) {
+        $arguments += '--toc'
+        $arguments += ('--toc-depth={0}' -f $Manifest.TocDepth)
+    }
+
+    if ($Manifest.NumberHeadings) {
+        $arguments += '--number-sections'
+    }
+
+    Write-Output -InputObject (
+        'Generating HTML Help topic for {0}' -f $Manifest.Title)
+
+    & pandoc @arguments
+
+    if ($LASTEXITCODE -ne 0) {
+        throw (
+            'Pandoc failed while generating HTML Help for {0}.' -f
+            $Manifest.Id)
+    }
+
+    if (-not (Test-Path -LiteralPath $topicFile -PathType Leaf)) {
+        throw ('HTML Help topic was not created: {0}' -f $topicFile)
+    }
+
+    # -------------------------------------------------------------------------
+    # Contents file (.hhc)
+    #
+    # This initial implementation has one CHM topic.  The HTML page itself
+    # contains the complete Pandoc-generated table of contents.
+    # -------------------------------------------------------------------------
+
+$encodedTitle = [System.Net.WebUtility]::HtmlEncode(
+    [string]$Manifest.Title)
+
+$contents = @"
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+    <param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+    <LI> <OBJECT type="text/sitemap">
+        <param name="Name" value="$encodedTitle">
+        <param name="Local" value="index.htm">
+        </OBJECT>
+</UL>
+</BODY></HTML>
+"@
+
+$contents | Set-Content `
+    -LiteralPath $contentsFile `
+    -Encoding ASCII
+
+# -------------------------------------------------------------------------
+# HTML Help project (.hhp)
+# -------------------------------------------------------------------------
+$project = @(
+    '[OPTIONS]'
+    'Compatibility=1.1 or later'
+    ('Compiled file={0}.chm' -f $baseName)
+    ('Contents file={0}.hhc' -f $baseName)
+    'Default topic=index.htm'
+    'Display compile progress=Yes'
+    'Full-text search=Yes'
+    'Language=0x809 English (United Kingdom)'
+    ('Title={0}' -f $Manifest.Title)
+    '[FILES]'
+    'index.htm'
+)
+
+$project | Set-Content `
+    -LiteralPath $projectFile `
+    -Encoding ASCII
+
+    # -------------------------------------------------------------------------
+    # Compile CHM
+    # -------------------------------------------------------------------------
+    Write-Output -InputObject (
+        'Compiling HTML Help using {0}' -f $compiler)
+
+Write-Output 'HTML Help project files:'
+Write-Output ('  Project : {0}' -f $projectFile)
+Write-Output ('  Contents: {0}' -f $contentsFile)
+Write-Output ('  Topic   : {0}' -f $topicFile)
+
+Write-Verbose '----- HHP -----'
+Get-Content -LiteralPath $projectFile |
+    ForEach-Object { Write-Verbose $_ }
+
+Write-Verbose '----- HHC -----'
+Get-Content -LiteralPath $contentsFile |
+    ForEach-Object { Write-Verbose $_ }
+
+    Push-Location -LiteralPath $helpDirectory
+
+    try {
+        & $compiler ([IO.Path]::GetFileName($projectFile))
+    }
+    finally {
+        Pop-Location
+    }
+
+    # Do not rely solely on hhc.exe's process return value.  Verify that the
+    # requested CHM was actually produced.
+    if (-not (Test-Path -LiteralPath $compiledFile -PathType Leaf)) {
+        throw (
+            'HTML Help compiler did not create the expected CHM file: {0}' -f
+            $compiledFile)
+    }
+
+    $compiledSize = (Get-Item -LiteralPath $compiledFile).Length
+
+    if ($compiledSize -eq 0) {
+        throw ('HTML Help compiler created an empty CHM file: {0}' -f
+            $compiledFile)
+    }
+
+    Copy-Item `
+        -LiteralPath $compiledFile `
+        -Destination $Output `
+        -Force
+}
+  #-------------------------------------------------------------------------------
   # Publish=Document
   #-------------------------------------------------------------------------------
   function Publish-Document {
@@ -1353,8 +1597,8 @@ function Invoke-Documentation {
       [Parameter(Mandatory)] 
       [PSCustomObject] $Manifest,
       [Parameter(Mandatory)]
-      [ValidateSet('All', 'Html', 'Docx', 'Pdf', 'None')]
-      [string] $OutputFormat,
+[ValidateSet('All', 'Html', 'Docx', 'Pdf', 'Chm', 'None')]
+[string] $OutputFormat,
       [AllowNull()]
       [string] $DocxReference
     )
@@ -1398,11 +1642,11 @@ function Invoke-Documentation {
       $baseArgs += '--number-sections'
     }
 
-    $formats = if ($OutputFormat -eq 'All') {
-      @('Html', 'Docx', 'Pdf')
-    } else {
-      @($OutputFormat)
-    }
+$formats = if ($OutputFormat -eq 'All') {
+    @('Html', 'Docx', 'Pdf', 'Chm')
+} else {
+    @($OutputFormat)
+}
 
     foreach ($item in $formats) {
       $extension = $item.ToLowerInvariant()
@@ -1444,11 +1688,23 @@ function Invoke-Documentation {
           ('--pdf-engine={0}' -f $config.pdfEngine) `
           --output $output
         }
+		
+		'Chm' {
+        Publish-CompiledHtmlHelp `
+            -Root $Root `
+            -Manifest $Manifest `
+            -Manual $manual `
+            -ResourcePath $resourcePath `
+            -Output $output
+    }
       }
 
-      if ($LASTEXITCODE -ne 0) {
-        throw ('Pandoc failed while building {0} {1} output.' -f $Manifest.Id, $item)
-      }
+if ($item -ne 'Chm' -and $LASTEXITCODE -ne 0) {
+    throw (
+        'Pandoc failed while building {0} {1} output.' -f
+        $Manifest.Id,
+        $item)
+}
       $Size = (Get-item -path $Output).Length
       Write-Output -InputObject ('Created {0}, {1} bytes' -f $output,$size)
       
@@ -1512,9 +1768,10 @@ function Invoke-Documentation {
 $ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
 $ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath 'docs\templates\Reference Styles.docx'
 $Parameters = @{
-	Action         = 'All' 
-	ProjectRoot    = $ProjectRoot
-	Format         = 'docx' 
+    Action         = 'Build'
+    ProjectRoot    = $ProjectRoot
+    Document       = 'All'
+    Format         = 'docx' 
 	FailOnWarning  = $true
 	verbose        = $true
 	RenderDiagrams = $False
