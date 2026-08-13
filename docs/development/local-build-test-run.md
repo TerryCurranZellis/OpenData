@@ -4,7 +4,7 @@
 **Version:** 2.1  
 **Status:** Current Version 2.0.0 developer procedure  
 **Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 

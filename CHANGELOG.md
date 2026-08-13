@@ -8,6 +8,8 @@ contain release blockers.
 
 ### Added
 
+- JavaFX startup splash with a five-second minimum display before the GUI main window.
+- Supported JavaFX GUI launcher in `com.towermarsh.opendata.gui`.
 - Persistent SQL Server plugin registry in `core.plugin_registry`.
 - Command-line plugin administration: `--register`, `--unregister`/`--remove`,
   `--enable`, `--disable` and `--list-plugins`.
@@ -24,6 +26,8 @@ contain release blockers.
 
 ### Changed
 
+- The minimum supported Java runtime is now Java 24; GitHub build and release workflows verify on Java 24.
+- Legacy Swing UI helpers are deprecated from version 3.1.0 while JavaFX replacements are completed.
 - Selecting `--plugin <id|all>` no longer starts execution by itself. Normal and
   dry-run execution must include `--Execute` or `-x`.
 - `--Execute` is rejected with register, unregister/remove, enable and disable

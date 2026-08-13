@@ -4,7 +4,7 @@
 **Version:** 2.3  
 **Status:** OpenData 2.0.0 implementation reference  
 **Baseline date:** 8 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 

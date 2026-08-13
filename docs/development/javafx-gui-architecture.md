@@ -1,34 +1,73 @@
 # JavaFX GUI Architecture
 
 **Document ID:** DEV-GUI-001  
-**Version:** 3.0.0  
+**Version:** 3.1.0  
 **Status:** Implementation in progress  
-**Baseline date:** 12 August 2026  
-**Minimum Java version:** 17
+**Baseline date:** 13 August 2026  
+**Minimum Java version:** 24
 
 ---
 
 ## Purpose
 
-This document records the version 3.0.0 JavaFX implementation structure and the
-boundaries that keep the graphical interface separate from OpenData processing
-logic.
+This document records the JavaFX implementation structure and the boundaries
+that keep the graphical interface separate from OpenData processing logic.
 
-## Batch 1 main-window baseline
+## Implemented baseline
 
-Batch 1 establishes the main JavaFX page without integrating database or plugin
-operations. The batch contains:
+### Batch 1: main window
+
+Batch 1 established the presentation contract:
 
 - `OpenDataGuiApplication` for JavaFX startup and FXML loading;
-- `OpenDataMainView.fxml` for the main menu, toolbar, plugin table and status
-  bar;
-- `OpenDataMainController` for presentation-only event wiring;
-- `PluginRow` as the main-table presentation model;
-- `opendata-light.css` and toolbar image resources; and
-- explicit checkbox selection independent of ordinary table row highlighting.
+- `OpenDataMainView.fxml` for the menu, toolbar, plugin table and status bar;
+- `OpenDataMainController` for presentation event wiring;
+- `PluginRow` as the table presentation model;
+- explicit checkbox selection independent of ordinary table highlighting; and
+- CSS and toolbar resources.
 
-The sample plugin rows in Batch 1 are display fixtures only. They must be
-replaced by registry data when the GUI application-service layer is introduced.
+The sample plugin rows remain display fixtures until Batch 3 replaces them with
+persistent registry data.
+
+### Batch 2: startup and lifecycle
+
+Batch 2 establishes the supported desktop startup path:
+
+```text
+OpenData.main
+        |
+com.towermarsh.opendata.gui.GuiLauncher
+        |
+Application.launch(OpenDataGuiApplication.class, ...)
+        |
+OpenDataSplashScreen
+        |
+OpenDataMainView.fxml
+```
+
+The splash is an undecorated JavaFX `Stage`. It uses `PauseTransition` to remain
+visible for a minimum of five seconds without sleeping on the JavaFX application
+thread. The main stage is configured while the splash is active and is shown
+only after the splash closes.
+
+`Application.launch(...)` blocks the calling thread until JavaFX exits. This is
+intentional. `OpenData.main` initialises logging before launching JavaFX and its
+existing `finally` block runs only after the GUI has closed, so logging remains
+available throughout the complete GUI session.
+
+The supported launcher now lives in `com.towermarsh.opendata.gui`. A deprecated
+wrapper remains in `com.towermarsh.opendata.ui` so the prototype source location
+can be retired without an abrupt compatibility break.
+
+## Java runtime baseline
+
+Version 3.1.0 requires **Java 24 or later**. Development may use a later JDK;
+the current development environment uses JDK 25. JavaFX 26.x is retained.
+
+GitHub build and release workflows use Java 24 so automated verification tests
+the minimum supported runtime rather than a newer development JDK.
+
+This decision supersedes the old Java 17 runtime minimum. See ADR-0052.
 
 ## Main-window contract
 
@@ -63,8 +102,8 @@ The lower-right label counts checked plugin rows.
 
 ## Presentation boundary
 
-GUI code must not directly reproduce SQL, registry, configuration or ETL logic.
-The intended dependency direction is:
+GUI code must not reproduce SQL, registry, configuration or ETL logic. The
+intended dependency direction remains:
 
 ```text
 JavaFX FXML / controls
@@ -78,85 +117,61 @@ existing OpenData services
 configuration, registry, execution, logging and plugins
 ```
 
-Batch 1 stops at the controller boundary. Later batches introduce the adapter
-and application-service layer only where the existing command-oriented classes
-are not already suitable for direct reuse.
+The controller is still presentation-only after Batch 2. Backend integration
+starts with the read-only registry view in Batch 3.
 
-## Planned implementation batches
+## Swing retirement
+
+New GUI code must use JavaFX. The following legacy Swing helpers are deprecated
+from version 3.1.0 with removal planned after JavaFX replacements exist:
+
+- `com.towermarsh.opendata.ui.StartupSplashScreen`;
+- `com.towermarsh.opendata.ui.AboutDialog`;
+- `com.towermarsh.opendata.ui.OpenDataImageLoader`; and
+- the compatibility `com.towermarsh.opendata.ui.GuiLauncher`.
+
+The JavaFX GUI no longer uses the Swing splash. The deprecated Swing splash is
+retained temporarily for the existing command-line run path, and the Swing About
+dialog remains available for the command-line About route until Batch 5.
+
+## Remaining implementation batches
 
 | Batch | Scope | Main hurdle |
 |---|---|---|
-| 1 | Main page, checkbox table, menus, toolbar, status bar, GUI documentation | Establish a stable visual contract without coupling to backend code |
-| 2 | GUI bootstrap, Java/JavaFX runtime decision, JavaFX splash/preloader and migration of existing Swing UI helpers | Resolve the JavaFX 26/JDK minimum mismatch and make JavaFX lifecycle coexist cleanly with the current `OpenData.main` lifecycle and logging shutdown |
 | 3 | Read-only plugin registry view and refresh | Convert persistent registry/audit data into GUI view models without making the controller a database client |
-| 4 | Register, register-from-file, enable, disable and unregister actions | Reuse CLI administration behaviour as services; add file chooser, selection validation and confirmation dialogs |
-| 5 | Plugin Detail, Settings/Preferences, existing log viewer, Help and About | Present configuration safely, avoid exposing secrets, and replace remaining Swing dialogs |
-| 6 | Execute and Dry-run with live log dialog | Background execution, cancellation/lifecycle rules and a JavaFX `java.util.logging.Handler` must be thread-safe |
+| 4 | Register, register-from-file, enable, disable and unregister actions | Reuse administration behaviour as services; add file chooser, selection validation and confirmations |
+| 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | Present configuration safely and finish Swing UI retirement |
+| 6 | Execute and Dry-run with live log dialog | Background execution and a thread-safe JavaFX JUL handler |
 | 7 | Integration tests, error handling, packaging and final documentation/screenshots | JavaFX test strategy, Windows packaging, help-file launch and release-quality documentation |
 
-## Java and JavaFX version compatibility
-
-The GUI branch currently sets `maven.compiler.release` to 17 and Maven Enforcer
-accepts Java 17 or later, while the POM uses JavaFX 26.0.1. This must be resolved
-before the GUI becomes a supported runtime baseline because JavaFX 26 itself
-requires JDK 24 or later. Batch 1 does not change either setting.
-
-The version 3 implementation therefore needs one explicit decision before Batch
-2: either retain the stated Java 17 minimum and select a JavaFX release that
-supports that runtime, or retain JavaFX 26 and raise the application's effective
-minimum runtime accordingly.
-
-## Integration hurdles
-
-### Application lifecycle
-
-The current top-level application initialises logging and shuts it down when
-`main` returns. A JavaFX application remains active until the primary stage is
-closed, so version 3 must make ownership of logging and shared resources
-explicit rather than allowing them to be closed while GUI work is still
-running.
-
-### Existing Swing UI
-
-`StartupSplashScreen` and the current About implementation are Swing based.
-Mixing Swing and JavaFX is unnecessary for the target design, so they should be
-replaced in one controlled batch after the main page is stable. The JavaFX API
-provides `javafx.application.Preloader` as its application preloader mechanism;
-Batch 2 should use that mechanism, or a dedicated JavaFX splash `Stage`, to meet
-the specification's five-second splash requirement.
-
-The current `GuiLauncher.java` is also stored under the `ui` source directory
-while declaring package `com.towermarsh.opendata`. Batch 2 should move/fix this
-launcher as part of the GUI package cleanup rather than carrying the mismatch
-forward.
+## Integration hurdles still ahead
 
 ### Service reuse
 
-CLI administration is currently coordinated from application/command classes.
-The GUI needs callable operations that return structured results instead of
-printing command-oriented output. The refactor must preserve CLI behaviour while
-making those operations reusable.
+CLI administration is coordinated from command/application classes. The GUI
+needs callable operations that return structured results instead of printing
+command-oriented output. The refactor must preserve CLI behaviour while making
+those operations reusable.
 
 ### Background execution and logging
 
-Execute and Dry-run can perform network and database I/O and must run away from
-the JavaFX application thread. Live log display should be supplied by a focused
-JUL handler that marshals UI updates using `Platform.runLater()`.
+Execute and Dry-run perform network and database I/O and must run away from the
+JavaFX application thread. Live log display should be supplied by a focused JUL
+handler that marshals UI changes using `Platform.runLater()`.
 
 ### Selection semantics
 
-Version 3 uses explicit row checkboxes. GUI operations must snapshot the checked
-plugin IDs before starting a background task so user interaction cannot mutate
-an in-flight command unexpectedly.
+GUI operations must snapshot checked plugin IDs before starting a background
+task so user interaction cannot mutate an in-flight command unexpectedly.
 
-## Batch 1 non-goals
+## Batch 2 non-goals
 
-Batch 1 does not:
+Batch 2 does not:
 
-- query SQL Server;
-- load the persistent plugin registry;
+- query SQL Server for table contents;
+- replace the sample plugin rows;
 - register, enable, disable or unregister plugins;
 - execute or dry-run plugins;
-- display real plugin details or log files;
-- replace the Swing splash/About components; or
-- change CLI behaviour.
+- replace the legacy Swing About dialog;
+- display real plugin details or log files; or
+- change plugin processing behaviour.

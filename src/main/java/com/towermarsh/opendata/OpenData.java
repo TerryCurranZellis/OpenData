@@ -14,6 +14,7 @@ import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.PluginDefinitionException;
 import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.logging.LoggingManager;
+import com.towermarsh.opendata.gui.GuiLauncher;
 import static com.towermarsh.opendata.ui.AboutDialog.showAndWait;
 import com.towermarsh.opendata.ui.ApplicationInfo;
 import com.towermarsh.opendata.ui.StartupSplashScreen;
@@ -33,8 +34,9 @@ import java.util.logging.Logger;
  * OpenData application entry point.
  *
  * @author Terry Curran
- * @version 2.1
+ * @version 3.1.0
  */
+@SuppressWarnings("deprecation")
 public final class OpenData {
 
     /**

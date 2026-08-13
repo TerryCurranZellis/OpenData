@@ -4,7 +4,7 @@
 **Version:** 2.0  
 **Status:** Current implementation and target ownership  
 **Baseline date:** 3 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 

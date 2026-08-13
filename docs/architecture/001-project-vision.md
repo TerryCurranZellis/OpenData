@@ -4,7 +4,7 @@
 **Version:** 2.0  
 **Status:** Version 2.0.0 baseline  
 **Baseline date:** 2 August 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 
@@ -57,7 +57,7 @@ baseline.
 
 ## Principles
 
-Java 17 compatibility; immutable values where practical; configuration before
+Java 24 compatibility; immutable values where practical; configuration before
 custom code; explicit infrastructure boundaries; transactional persistence;
 least privilege; source and run provenance; side-effect-free dry runs; and
 documentation as code.

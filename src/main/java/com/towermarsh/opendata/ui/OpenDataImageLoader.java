@@ -11,9 +11,12 @@ import javax.swing.ImageIcon;
 /**
  * Loads and scales the packaged OpenData splash image.
  *
+ * @deprecated retained temporarily for compatibility; new desktop UI code uses JavaFX.
+ * This class is scheduled for removal after the JavaFX dialog migration.
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.1.0
  */
+@Deprecated(since = "3.1.0")
 final class OpenDataImageLoader {
 
     /**

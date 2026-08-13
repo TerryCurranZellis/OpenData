@@ -1,4 +1,4 @@
-# OpenData GUI Specifcation 3.0
+# OpenData GUI Specifcation 3.1
 
 ## Overview
 
@@ -7,13 +7,13 @@
 - as much of the JavaFX details will be loaded from the `.fxml` file
 - `SceneBuilder` is available for designing the _GUI_
 - Application will be built using _Netbeans_
-- Minimum Java version is Java 17, Java 25 JDK is currently installed
+- Minimum Java version is Java 24; Java 25 JDK is currently used for development
 - The current command line interface is to remain as an option
 - If no command line arguments are entered then the _GUI_ will run automatically
 - An additional option `--gui` (short code `-g`) has been added, which will run the _GUI_ if used
 - Code should be created in its own GUI package(s)
 - Existing and future ui packages can be moved into the gui package(s)
-- All _GUI_ should be created a `@version 3.0.0`
+- GUI code added or materially changed from Batch 2 onwards should use `@version 3.1.0`; Batch 1 source remains the 3.0.0 baseline
 - Update all documentation, this will also require relevent ADR documents as its a new direction
 - Screenshots of the _GUI_ will be required in the documentation, I will generate these as `.png` with 
 the `docs\diagrams\source` as they will be required in the documentation, they will need to be copied into the `doc\diagrams\generated` folder to be included
@@ -24,10 +24,11 @@ in the documentation.
 
 ### SplashScreen
 
-- JavaFX has its own `SplashScreen` that runs at application start and displays until the app starts
-- the splashscreen be delayed to display for a minimum of 5 seconds, it will start end automatically once the main app starts,
-so it may need a delay to be built into the startup to slow things down a little.
-- Convert the existsing _Swing_ version of the splash screen
+- Use a dedicated JavaFX splash `Stage` at graphical application startup.
+- The splash screen must display for a minimum of 5 seconds and close automatically as the main window is shown.
+- The minimum delay must not block the JavaFX application thread.
+- The existing Swing splash implementation is deprecated from version 3.1.0 and replaced by the JavaFX startup path.
+- Other Swing UI remnants are to be marked deprecated until their JavaFX replacements are implemented.
 
 ## Main Screen
 
@@ -36,12 +37,12 @@ This is the basic layout of the main screen, see image of the basic layout.
 - Full Screen
 - Menubar at top of screen displaying main menu items
 - Menu items
-    - File menu
-    - Register menu
-    - Enable menu
-    - Execute menu
-    - Details menu
-    - Help menu
+	- File menu
+	- Register menu
+	- Enable menu
+	- Execute menu
+	- Details menu
+	- Help menu
 - Toobar below MenuBar
 - Toolbar Icons
 
@@ -51,7 +52,7 @@ This is the basic layout of the main screen, see image of the basic layout.
 | Preferences | preferences.png |
 | Save | Save | save.png |
 | Register | register.png
-| Unregister | unregister.png|     
+| Unregister | unregister.png| 	
 | Enable | enable.png |
 | Disable | disable.png |
 | Execute | execute.png |
@@ -61,25 +62,25 @@ This is the basic layout of the main screen, see image of the basic layout.
 | Help | help.png |
 
 - Main Window
-    - Table containing plugin details
-    - Columns
-        - Selected/Not selected box
-        - plugin id
-        - plugin description
-        - enabled/disabled could be shown as a flag column to indicate
-        - Status 
-            - show the status of the last time the plugin was run only needs to show status or error status
-            - leave blank if plugin has never been run
-        - Date of last run
-            - leave blank if plugin never ran
-        
+	- Table containing plugin details
+	- Columns
+		- Selected/Not selected box
+		- plugin id
+		- plugin description
+		- enabled/disabled could be shown as a flag column to indicate
+		- Status 
+			- show the status of the last time the plugin was run only needs to show status or error status
+			- leave blank if plugin has never been run
+		- Date of last run
+			- leave blank if plugin never ran
+		
 - Lower left
-    - Status 
-        - loading while plugin details being retrieved
-        - 'ready' once everything has been loaded from the database
+	- Status 
+	    - loading while plugin details being retrieved
+		- 'ready' once everything has been loaded from the database
 
 - Lower right
-    - Number of Items selected
+	- Number of Items selected
 ### Menubar
 
 This is the list of top level items on the menubar
@@ -87,107 +88,107 @@ This is the list of top level items on the menubar
 #### File Menu
 
 - Menu Items
-     - Settings
-     - Exit
+ 	- Settings
+ 	- Exit
 - Actiions
 
 #### Register Menu
 
 - Menu Items
-    - Register 
-    - Register from File
-    - Unregister
+	- Register 
+	- Register from File
+	- Unregister
 - Actions
-    - Register
-    - Register from File
-    - Unregister
+	- Register
+	- Register from File
+	- Unregister
 
 #### Enable Menu
 
 - Menu Items
-    - Enable
-    - Disable
+	- Enable
+	- Disable
 
 - Actions
-     - Enable
-        - pop up confirm box
-        - OK Enables selected plugin
-        - Cancel does nothing
-    - Disable
-        - pop up confirm box
-        - OK Disables selected plugin
-        - Cancel does nothing    
+	 - Enable
+		- pop up confirm box
+		- OK Enables selected plugin
+		- Cancel does nothing
+	- Disable
+		- pop up confirm box
+		- OK Disables selected plugin
+		- Cancel does nothing	
 
 #### Execute Menu
 
 - Menu Items
-    - Execute
-    - Dryrun
+	- Execute
+	- Dryrun
 
 - Actions
-    - Execute
-        - pop up confirm box
-        - OK runs plugin, and shows log in dialog window
-        - Cancel does nothing
-    - Dryrun
-        - pop up confirm box
-        - OK runs dryrun, and shows login in dialog window
+	- Execute
+		- pop up confirm box
+		- OK runs plugin, and shows log in dialog window
+		- Cancel does nothing
+	- Dryrun
+		- pop up confirm box
+		- OK runs dryrun, and shows login in dialog window
 
 #### Details Menu
 
 - Menu Items
-    - Plugin Detail
-    - Logs
+	- Plugin Detail
+	- Logs
 - Actions
-    - Plugin Detail
-        - shows details of selected plugin in dialog window
-            - two column output showing property and value
-        - ok button at bottom of dialog window to close the dialog
-    - Logs
-        - loads the run log into a dialog window user can scroll around the window and review the current log
-        - may need scroll bars for longer lined
+	- Plugin Detail
+		- shows details of selected plugin in dialog window
+			- two column output showing property and value
+		- ok button at bottom of dialog window to close the dialog
+	- Logs
+	    - loads the run log into a dialog window user can scroll around the window and review the current log
+		- may need scroll bars for longer lined
 
 #### Help Menu
 
 - Menu Items
-    - Help
-    - separator bar
-    - About
+	- Help
+	- separator bar
+	- About
 
 - Actions
-    - Help
-        - displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or 
-        can be defined in its own window
-        - I am working on a windows compiled help file, so it may be able to be displayed in its own dialog box
-    - About
-        - display the about box, currently defined using Swing to may need to be rewritten
-        - shows the splashscreen image
-        - shows specified text in a text box
-        - has an OK button, clicking the ok button closes the about box
+	- Help
+		- displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or 
+		can be defined in its own window
+		- I am working on a windows compiled help file, so it may be able to be displayed in its own dialog box
+	- About
+		- display the about box, currently defined using Swing to may need to be rewritten
+		- shows the splashscreen image
+		- shows specified text in a text box
+		- has an OK button, clicking the ok button closes the about box
 
 ### Toolbar Buttons
 
-Actions are the same as for the corresponding menu item
+Actions
 
 ### Popup Confirm Box
 
 - Description
     - Requires item in the main window to be selected
-    - Box has a message depending on the option selected
-    - Has `OK` button to confirm action
-    - has `Cancel' button to cancel action
+	- Box has a message depending on the option selected
+	- Has `OK` button to confirm action
+	- has `Cancel' button to cancel action
 - Actions
-    - If no items selected then Display Warning message "No plugin selected"
-    - `OK` button 
-          - Unregister - unregister plugin
-          - Enable - enable plugin
-        - Disable - disable plugin
-        - Execute - execute plugin, and disply log in log Window
-        - Dryrun - dryrun plugin, and display log in log Window
-        - Details - show selected plugin details in log Window
-    - `Cancel` button
-        - cancel select action and retur
-    - once action is confirmed then run the appropriate action as a new task
+	- If no items selected then Display Warning message "No plugin selected"
+	- `OK` button 
+	  	- Unregister - unregister plugin
+	  	- Enable - enable plugin
+		- Disable - disable plugin
+		- Execute - execute plugin, and disply log in log Window
+		- Dryrun - dryrun plugin, and display log in log Window
+		- Details - show selected plugin details in log Window
+	- `Cancel` button
+		- cancel select action and retur
+	- once action is confirmed then run the appropriate action as a new task
 
 ## Log Window
 
@@ -204,7 +205,7 @@ This is a popup dialog box that displays log messages
 ### Detail Popup
 
 - dialog box
-    - Pops up when Details is selected
-    - Displays the Plugin details
-    - two column output property and value
-    - ok button is always available
+	- Pops up when Details is selected
+	- Displays the Plugin details
+	- two column output property and value
+	- ok button is always available

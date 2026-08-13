@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Status:** Implemented for OpenMeteo; live acceptance pending  
 **Baseline date:** 26 July 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 

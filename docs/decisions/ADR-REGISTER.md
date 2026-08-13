@@ -1,10 +1,10 @@
 # Architecture Decision Register
 
 **Document ID:** ADR-REGISTER-001
-**Version:** 3.0.0
+**Version:** 3.1.0
 **Status:** Baseline
-**Baseline date:** 12 August 2026
-**Minimum Java version:** 17
+**Baseline date:** 13 August 2026
+**Minimum Java version:** 24
 
 ---
 
@@ -21,7 +21,7 @@
 | [ADR-0005](ADR-0005-sql-server-persistence.md) | Use SQL Server as the first persistence target | Accepted | |
 | [ADR-0006](ADR-0006-package-info-documentation.md) | Document every public package | Accepted | |
 | [ADR-0007](ADR-0007-modular-monolith.md) | Use a modular monolith | Accepted | |
-| [ADR-0008](ADR-0008-java-17-records-immutable-models.md) | Support Java 17 and immutable records | Accepted | |
+| [ADR-0008](ADR-0008-java-17-records-immutable-models.md) | Support Java 17 and immutable records | Accepted | Java 17 minimum superseded by ADR-0052; immutable-model guidance retained |
 | [ADR-0009](ADR-0009-common-staged-etl-pipeline.md) | Use a common staged ETL pipeline | Accepted | |
 | [ADR-0010](ADR-0010-constructor-injection-no-di-framework.md) | Use constructor injection without a DI framework | Accepted | |
 | [ADR-0011](ADR-0011-jdk-http-client-downloads.md) | Use JDK HTTP and streamed downloads | Accepted | |

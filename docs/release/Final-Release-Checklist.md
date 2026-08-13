@@ -20,7 +20,7 @@ only on expectation or documentation review.
 
 ## Build and quality
 
-- [ ] `mvn clean verify` succeeds on Java 17.
+- [ ] `mvn clean verify` succeeds on the minimum supported Java 24 runtime.
 - [ ] Checkstyle, PMD, SpotBugs, JaCoCo and dependency analysis results reviewed
       according to the actual POM configuration.
 - [ ] Direct/transitive dependency and licence inventory retained.

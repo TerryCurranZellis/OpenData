@@ -1,10 +1,10 @@
 # Developer Documentation
 
 **Document ID:** DEV-INDEX-001
-**Version:** 2.1
-**Status:** Version 2.0.0 implementation baseline
-**Baseline date:** 4 August 2026
-**Minimum Java version:** 17
+**Version:** 3.1.0
+**Status:** Version 3.1.0 GUI implementation baseline
+**Baseline date:** 13 August 2026
+**Minimum Java version:** 24
 
 ---
 

@@ -28,6 +28,8 @@
 - [Graphical interface user guide](user-guide/12-graphical-interface.md)
 - [GUI screenshot plan](development/gui-screenshot-plan.md)
 - [ADR-0051: JavaFX graphical interface](decisions/ADR-0051-javafx-graphical-interface.md)
+- [ADR-0052: Java 24, JavaFX lifecycle and Swing retirement](decisions/ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md)
+- [Batch 2 GUI implementation notes](reviews/Batch-2-Version-3.1.0-GUI.md)
 
 ## Current processing-refactor baseline
 

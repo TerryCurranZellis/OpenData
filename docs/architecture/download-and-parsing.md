@@ -4,7 +4,7 @@
 **Version:** 1.1  
 **Status:** Implemented shared components; extension gaps identified  
 **Baseline date:** 26 July 2026  
-**Minimum Java version:** 17
+**Minimum Java version:** 24
 
 ---
 

@@ -17,11 +17,12 @@ import javafx.stage.Stage;
 /**
  * JavaFX application for the OpenData graphical interface.
  *
- * <p>This class owns JavaFX startup and FXML loading only. It deliberately
- * contains no OpenData command-line or processing-framework startup logic.</p>
+ * <p>This class owns JavaFX startup, the JavaFX splash stage and FXML loading.
+ * It deliberately contains no OpenData command-line or processing-framework
+ * startup logic.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.1.0
  */
 public final class OpenDataGuiApplication extends Application {
 
@@ -34,13 +35,34 @@ public final class OpenDataGuiApplication extends Application {
     private static final double MIN_HEIGHT = 620.0;
 
     /**
-     * Starts the JavaFX main window.
+     * Starts the JavaFX application with the required startup splash.
+     *
+     * <p>The splash appears first. The main window is prepared while the splash
+     * is visible and is shown only after the splash has been visible for at
+     * least five seconds.</p>
      *
      * @param stage primary application stage
      * @throws IOException if the FXML cannot be loaded
      */
     @Override
     public void start(final Stage stage) throws IOException {
+        final var splash = OpenDataSplashScreen.show();
+        try {
+            configureMainStage(stage);
+            splash.closeAfterMinimumDisplay(stage::show);
+        } catch (IOException | RuntimeException exception) {
+            splash.closeNow();
+            throw exception;
+        }
+    }
+
+    /**
+     * Loads and configures the main JavaFX stage without displaying it.
+     *
+     * @param stage primary application stage
+     * @throws IOException if the FXML cannot be loaded
+     */
+    private static void configureMainStage(final Stage stage) throws IOException {
         final var view = Objects.requireNonNull(
                 OpenDataGuiApplication.class.getResource(VIEW_RESOURCE),
                 "Unable to locate " + VIEW_RESOURCE);
@@ -61,14 +83,11 @@ public final class OpenDataGuiApplication extends Application {
         stage.setMinHeight(MIN_HEIGHT);
         stage.setScene(scene);
         stage.setMaximized(true);
-        stage.show();
     }
 
     /**
-     * Starts the JavaFX GUI.
-     *
-     * <p>The method is intentionally public so another application entry point
-     * can start the GUI without becoming part of the GUI package.</p>
+     * Starts the JavaFX GUI and returns only after the JavaFX application has
+     * stopped.
      *
      * @param args command-line arguments passed to JavaFX
      */

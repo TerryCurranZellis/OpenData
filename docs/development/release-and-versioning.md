@@ -17,7 +17,7 @@ version.
 
 A Version 2.0.0 release candidate requires:
 
-- clean `mvn clean verify` output on Java 17 compatibility;
+- clean `mvn clean verify` output on Java 24 compatibility;
 - documentation validation and successful diagram rendering;
 - clean/repeat SQL Server installation;
 - successful `--plugin all --register` from a plain bootstrap password;
