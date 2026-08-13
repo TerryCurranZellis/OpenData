@@ -1765,19 +1765,3 @@ if ($item -ne 'Chm' -and $LASTEXITCODE -ne 0) {
     }
   }
 }
-$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
-$ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath 'docs\templates\Reference Styles.docx'
-$Parameters = @{
-    Action         = 'Build'
-    ProjectRoot    = $ProjectRoot
-    Document       = 'All'
-    Format         = 'docx' 
-	FailOnWarning  = $true
-	verbose        = $true
-	RenderDiagrams = $False
-	ReferenceDoc   = $ReferenceDoc
-}
-
-Invoke-Documentation @Parameters
-
-Start-Sleep -Seconds 10
