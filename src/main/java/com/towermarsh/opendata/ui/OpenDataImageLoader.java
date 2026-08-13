@@ -34,7 +34,7 @@ final class OpenDataImageLoader {
     /**
      * Load the image
      *
-     * @param maxwidth maximum width of image
+     * @param maxWidth maximum width of image
      */
     static ImageIcon loadScaled(final int maximumWidth) {
         final var resource = OpenDataImageLoader.class.getResource(IMAGE_RESOURCE);

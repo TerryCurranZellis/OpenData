@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Technical user guide",
     "audience": "Operators and technical users",
-    "revisionSummary": "Version 3.1.0 JavaFX GUI startup/lifecycle implemented; existing operator guidance retained"
+    "revisionSummary": "Version 3.1.0 JavaFX GUI persistent plugin registry and latest-run view implemented; existing operator guidance retained"
   },
   "sections": [
     "shared/introduction.md",

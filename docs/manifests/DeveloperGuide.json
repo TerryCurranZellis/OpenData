@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 3.1.0 JavaFX GUI startup/lifecycle implemented; existing developer baseline retained"
+    "revisionSummary": "Version 3.1.0 JavaFX GUI persistent plugin registry and asynchronous service boundary implemented; existing developer baseline retained"
   },
   "sections": [
     "shared/introduction.md",

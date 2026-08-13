@@ -26,8 +26,8 @@ Batch 1 established the presentation contract:
 - explicit checkbox selection independent of ordinary table highlighting; and
 - CSS and toolbar resources.
 
-The sample plugin rows remain display fixtures until Batch 3 replaces them with
-persistent registry data.
+Batch 1 originally used sample plugin rows to establish the presentation contract.
+Batch 3 replaces those fixtures with persistent registry and run-audit data.
 
 ### Batch 2: startup and lifecycle
 
@@ -58,6 +58,44 @@ available throughout the complete GUI session.
 The supported launcher now lives in `com.towermarsh.opendata.gui`. A deprecated
 wrapper remains in `com.towermarsh.opendata.ui` so the prototype source location
 can be retired without an abrupt compatibility break.
+
+### Batch 3: persistent plugin table
+
+Batch 3 introduces the first backend integration while preserving the GUI/service
+boundary:
+
+```text
+OpenDataMainController
+        |
+        | JavaFX Task
+        v
+PluginTableDataLoader
+        |
+        +--> JdbcPluginRegistry
+        |
+        +--> PluginTableDataService --> core.PluginRun
+        |
+        v
+PluginTableEntry
+        |
+        v
+PluginRow
+```
+
+`PluginTableDataLoader` resolves the existing encrypted bootstrap configuration,
+opens the SQL Server resource for one read operation and closes it afterwards.
+`PluginTableDataService` obtains registered plugin metadata through the existing
+`PluginRegistry` contract and performs one read-only query for the latest run
+audit of each plugin.
+
+The controller starts this work in a JavaFX `Task`; SQL Server and configuration
+I/O do not execute on the JavaFX application thread. The task returns plain
+`PluginTableEntry` records. Only the success handler converts those records to
+JavaFX `PluginRow` properties. See ADR-0053.
+
+The lower-left status is `Loading plugin details...` while the task runs and
+`Ready` after successful population. A failed load is logged, leaves the table
+disabled and reports `Unable to load plugin details`.
 
 ## Java runtime baseline
 
@@ -117,8 +155,9 @@ existing OpenData services
 configuration, registry, execution, logging and plugins
 ```
 
-The controller is still presentation-only after Batch 2. Backend integration
-starts with the read-only registry view in Batch 3.
+The controller remains free of SQL and processing logic. Batch 3 adds a read-only
+backend service boundary; later state-changing batches must follow the same
+dependency direction.
 
 ## Swing retirement
 
@@ -138,7 +177,7 @@ dialog remains available for the command-line About route until Batch 5.
 
 | Batch | Scope | Main hurdle |
 |---|---|---|
-| 3 | Read-only plugin registry view and refresh | Convert persistent registry/audit data into GUI view models without making the controller a database client |
+| 3 | Read-only plugin registry view and refresh | **Implemented:** persistent registry plus latest run audit loaded asynchronously behind a GUI service boundary |
 | 4 | Register, register-from-file, enable, disable and unregister actions | Reuse administration behaviour as services; add file chooser, selection validation and confirmations |
 | 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | Present configuration safely and finish Swing UI retirement |
 | 6 | Execute and Dry-run with live log dialog | Background execution and a thread-safe JavaFX JUL handler |
@@ -164,14 +203,13 @@ handler that marshals UI changes using `Platform.runLater()`.
 GUI operations must snapshot checked plugin IDs before starting a background
 task so user interaction cannot mutate an in-flight command unexpectedly.
 
-## Batch 2 non-goals
+## Batch 3 non-goals
 
-Batch 2 does not:
+Batch 3 does not:
 
-- query SQL Server for table contents;
-- replace the sample plugin rows;
 - register, enable, disable or unregister plugins;
 - execute or dry-run plugins;
 - replace the legacy Swing About dialog;
-- display real plugin details or log files; or
-- change plugin processing behaviour.
+- display plugin configuration details or log files;
+- add common warning/confirmation dialogs; or
+- change CLI plugin processing behaviour.

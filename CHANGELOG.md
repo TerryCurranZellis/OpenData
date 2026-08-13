@@ -9,6 +9,8 @@ contain release blockers.
 ### Added
 
 - JavaFX startup splash with a five-second minimum display before the GUI main window.
+- JavaFX main table backed by the persistent plugin registry and latest plugin-run audit.
+- Asynchronous GUI plugin loading through a controller/service boundary so SQL Server I/O does not block the JavaFX application thread.
 - Supported JavaFX GUI launcher in `com.towermarsh.opendata.gui`.
 - Persistent SQL Server plugin registry in `core.plugin_registry`.
 - Command-line plugin administration: `--register`, `--unregister`/`--remove`,

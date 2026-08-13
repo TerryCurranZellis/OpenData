@@ -8,8 +8,8 @@
  *
  * <p>The package owns JavaFX startup, the startup splash, views, controllers
  * and GUI presentation models. Core OpenData services remain outside this
- * package and are integrated through explicit service boundaries in later
- * version 3 GUI batches.</p>
+ * package and are integrated through explicit service boundaries. Potentially
+ * blocking backend work is performed away from the JavaFX application thread.</p>
  *
  * @since 3.0.0
  * @version 3.1.0

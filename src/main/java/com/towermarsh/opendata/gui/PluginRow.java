@@ -5,6 +5,11 @@
  */
 package com.towermarsh.opendata.gui;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Objects;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,14 +18,17 @@ import javafx.beans.property.StringProperty;
 /**
  * Presentation model for one plugin displayed in the JavaFX main-window table.
  *
- * <p>This type deliberately contains presentation data only. Batch 1 uses
- * sample rows so the main page can be developed without coupling the JavaFX
- * layer to the database-backed plugin registry.</p>
+ * <p>Batch 3 maps persistent registry and run-audit information into this
+ * JavaFX-specific model. Database objects remain outside the presentation
+ * layer.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.1.0
  */
 public final class PluginRow {
+
+    private static final DateTimeFormatter LAST_RUN_FORMATTER =
+            DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm", Locale.UK);
 
     private final BooleanProperty selected;
     private final StringProperty pluginId;
@@ -52,6 +60,42 @@ public final class PluginRow {
         this.enabledState = new SimpleStringProperty(enabledState);
         this.lastRunStatus = new SimpleStringProperty(lastRunStatus);
         this.lastRunDate = new SimpleStringProperty(lastRunDate);
+    }
+
+    /**
+     * Converts one backend table entry into a JavaFX presentation row.
+     *
+     * <p>Plugin run timestamps are stored in SQL Server as UTC. They are shown
+     * using the workstation's local time zone.</p>
+     *
+     * @param entry backend table entry
+     * @return JavaFX row
+     */
+    public static PluginRow from(final PluginTableEntry entry) {
+        Objects.requireNonNull(entry, "entry");
+        final var status = entry.lastRunStatus()
+                .map(value -> titleCase(value.displayName()))
+                .orElse("");
+        final var date = entry.lastRunStartedAtUtc()
+                .map(value -> value
+                        .atOffset(ZoneOffset.UTC)
+                        .atZoneSameInstant(ZoneId.systemDefault())
+                        .format(LAST_RUN_FORMATTER))
+                .orElse("");
+        return new PluginRow(
+                false,
+                entry.pluginId(),
+                entry.description(),
+                entry.enabled() ? "Enabled" : "Disabled",
+                status,
+                date);
+    }
+
+    private static String titleCase(final String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
     /**

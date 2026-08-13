@@ -9,7 +9,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import static java.awt.GraphicsEnvironment.isHeadless;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +20,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import static javax.swing.SwingUtilities.invokeAndWait;
 import static javax.swing.SwingUtilities.isEventDispatchThread;
 
@@ -142,7 +140,7 @@ public final class AboutDialog {
      *
      * @param text text to display
      * @param style text style
-     * @patam size text size
+     * @param size text size
      */
     private static JLabel label(final String text, final int style, final int size) {
         final var label = new JLabel(text, SwingConstants.CENTER);

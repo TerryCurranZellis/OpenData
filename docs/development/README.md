@@ -2,7 +2,7 @@
 
 **Document ID:** DEV-INDEX-001
 **Version:** 3.1.0
-**Status:** Version 3.1.0 GUI implementation baseline
+**Status:** Version 3.1.0 GUI implementation - persistent plugin table complete
 **Baseline date:** 13 August 2026
 **Minimum Java version:** 24
 

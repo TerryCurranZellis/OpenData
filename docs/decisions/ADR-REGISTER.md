@@ -72,5 +72,7 @@
 | [ADR-0050](ADR-0050-application-metadata-validation-and-utilities.md) | Centralise application metadata, validation and focused utilities | Accepted | Implemented in version 2.1 |
 
 | [ADR-0051](ADR-0051-javafx-graphical-interface.md) | Use JavaFX for the OpenData graphical interface | Accepted | Version 3 GUI implementation in progress |
+| [ADR-0052](ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md) | Use Java 24 minimum and let JavaFX own the desktop lifecycle | Accepted | JavaFX 26.x baseline; Swing retirement staged |
+| [ADR-0053](ADR-0053-javafx-controller-service-boundary.md) | Keep JavaFX controllers behind asynchronous application-service boundaries | Accepted | Batch 3 persistent plugin-table integration |
 
 :::
