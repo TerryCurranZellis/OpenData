@@ -1774,7 +1774,7 @@ $Parameters = @{
     Format         = 'docx' 
 	FailOnWarning  = $true
 	verbose        = $true
-	RenderDiagrams = $False
+	RenderDiagrams = $true
 	ReferenceDoc   = $ReferenceDoc
 }
 
