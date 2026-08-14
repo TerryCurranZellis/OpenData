@@ -178,19 +178,28 @@ dialog remains available for the command-line About route until Batch 5.
 | Batch | Scope | Main hurdle |
 |---|---|---|
 | 3 | Read-only plugin registry view and refresh | **Implemented:** persistent registry plus latest run audit loaded asynchronously behind a GUI service boundary |
-| 4 | Register, register-from-file, enable, disable and unregister actions | Reuse administration behaviour as services; add file chooser, selection validation and confirmations |
+| 4 | Register, register-from-file, enable, disable and unregister actions | **Implemented:** configuration-folder discovery, file chooser, selection validation, confirmations and asynchronous registry writes |
 | 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | Present configuration safely and finish Swing UI retirement |
 | 6 | Execute and Dry-run with live log dialog | Background execution and a thread-safe JavaFX JUL handler |
 | 7 | Integration tests, error handling, packaging and final documentation/screenshots | JavaFX test strategy, Windows packaging, help-file launch and release-quality documentation |
 
+
+### Batch 4 administration boundary
+
+`PluginAdministrationGateway` owns short-lived bootstrap/database resources for
+GUI administration. The controller snapshots selections or discovered files and
+starts a JavaFX `Task`; it does not call JDBC directly. `PluginRegistrationResolver`
+shares plugin-definition parsing and implementation-class validation with the
+CLI while leaving the two user-interface workflows distinct.
+
+The GUI Register action uses `PluginConfigurationDirectoryScanner` rather than
+the packaged plugin index. It checks deployment-style `config/plugins` first and
+the source-tree `src/main/resources/config/plugins` folder second. Validated
+definitions already present in `JdbcPluginRegistry` are filtered out before the
+confirmation dialog. Register from File bypasses discovery and validates the
+file chosen by JavaFX `FileChooser`.
+
 ## Integration hurdles still ahead
-
-### Service reuse
-
-CLI administration is coordinated from command/application classes. The GUI
-needs callable operations that return structured results instead of printing
-command-oriented output. The refactor must preserve CLI behaviour while making
-those operations reusable.
 
 ### Background execution and logging
 

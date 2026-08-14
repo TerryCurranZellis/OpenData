@@ -75,4 +75,6 @@
 | [ADR-0052](ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md) | Use Java 24 minimum and let JavaFX own the desktop lifecycle | Accepted | JavaFX 26.x baseline; Swing retirement staged |
 | [ADR-0053](ADR-0053-javafx-controller-service-boundary.md) | Keep JavaFX controllers behind asynchronous application-service boundaries | Accepted | Batch 3 persistent plugin-table integration |
 
+| [ADR-0054](ADR-0054-gui-plugin-registration-discovery.md) | Discover GUI plugin registrations from configuration files | Accepted | Batch 4 JavaFX administration workflow |
+
 :::

@@ -40,6 +40,19 @@ plugin metadata in `core.plugin_registry`, replaces each selected plugin's
 complete `core.plugin_property` set and enables database-backed configuration.
 Re-registering an existing plugin preserves its current enabled/disabled status.
 
+
+## Register plugins from the graphical interface
+
+In Version 3.1.0, **Register** scans the OpenData plugin configuration folder for
+new complete `.properties` definitions. The deployment-style location is
+`config/plugins`; a development checkout also scans
+`src/main/resources/config/plugins`. Existing registered ids are excluded and
+new definitions are shown for confirmation before they are written.
+
+Use **Register from File** when the definition is elsewhere. The JavaFX file
+chooser selects one complete `.properties` file and OpenData reads its
+`plugin.id` from the file before validation and registration.
+
 ## Inspect stored plugin configuration
 
 Use `--detail` to display the configuration currently stored for one registered

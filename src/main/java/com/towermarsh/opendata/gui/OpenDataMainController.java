@@ -9,27 +9,28 @@ import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.stage.Window;
 
 /**
  * Controller for {@code OpenDataMainView.fxml}.
  *
- * <p>Batch 3 connects the plugin table to the persistent plugin registry and
- * run audit through {@link PluginTableDataLoader}. Database I/O is performed by
- * a JavaFX {@link Task}; the JavaFX application thread is used only to update
- * controls after the load succeeds or fails.</p>
- *
- * <p>Administration, execution and dialog actions remain placeholders until
- * their later GUI batches.</p>
+ * <p>Plugin reads and Batch 4 administration operations run behind focused
+ * service adapters on JavaFX {@link Task}s. The controller owns only selection,
+ * dialogs, status feedback and presentation refresh.</p>
  *
  * @author Terry Curran
  * @version 3.1.0
@@ -39,7 +40,9 @@ public final class OpenDataMainController {
     private static final Logger LOGGER = Logger.getLogger(OpenDataMainController.class.getName());
 
     private final PluginTableDataLoader pluginDataLoader;
+    private final PluginAdministrationGateway pluginAdministration;
     private Task<List<PluginTableEntry>> pluginLoadTask;
+    private Task<?> administrationTask;
 
     @FXML
     private TableView<PluginRow> pluginTable;
@@ -71,20 +74,52 @@ public final class OpenDataMainController {
     @FXML
     private Label tablePlaceholderLabel;
 
+    @FXML
+    private MenuItem registerMenuItem;
+
+    @FXML
+    private MenuItem registerFromFileMenuItem;
+
+    @FXML
+    private MenuItem unregisterMenuItem;
+
+    @FXML
+    private MenuItem enableMenuItem;
+
+    @FXML
+    private MenuItem disableMenuItem;
+
+    @FXML
+    private Button registerButton;
+
+    @FXML
+    private Button unregisterButton;
+
+    @FXML
+    private Button enableButton;
+
+    @FXML
+    private Button disableButton;
+
     /**
-     * Creates the FXML controller using the production plugin-data loader.
+     * Creates the FXML controller using production GUI services.
      */
     public OpenDataMainController() {
-        this(new PluginTableDataLoader());
+        this(new PluginTableDataLoader(), new PluginAdministrationGateway());
     }
 
     /**
-     * Creates the controller with an explicit loader for focused tests.
+     * Creates the controller with explicit services for focused tests.
      *
      * @param pluginDataLoader plugin-table data loader
+     * @param pluginAdministration plugin administration adapter
      */
-    OpenDataMainController(final PluginTableDataLoader pluginDataLoader) {
+    OpenDataMainController(
+            final PluginTableDataLoader pluginDataLoader,
+            final PluginAdministrationGateway pluginAdministration) {
         this.pluginDataLoader = Objects.requireNonNull(pluginDataLoader, "pluginDataLoader");
+        this.pluginAdministration = Objects.requireNonNull(
+                pluginAdministration, "pluginAdministration");
     }
 
     /**
@@ -108,10 +143,6 @@ public final class OpenDataMainController {
 
     /**
      * Reloads the main table from the persistent plugin registry.
-     *
-     * <p>The method is package-visible so later GUI administration batches can
-     * reuse the same refresh boundary after a successful state-changing
-     * operation.</p>
      */
     void refreshPluginTable() {
         if (pluginLoadTask != null && pluginLoadTask.isRunning()) {
@@ -120,6 +151,7 @@ public final class OpenDataMainController {
 
         setState("Loading plugin details...");
         tablePlaceholderLabel.setText("Loading plugin details...");
+        setAdministrationActionsDisabled(true);
         pluginTable.setDisable(true);
         pluginTable.getItems().clear();
         updateSelectionCount();
@@ -139,6 +171,7 @@ public final class OpenDataMainController {
             replaceRows(task.getValue());
             tablePlaceholderLabel.setText("No plugins registered");
             pluginTable.setDisable(false);
+            setAdministrationActionsDisabled(false);
             setState("Ready");
         });
 
@@ -154,6 +187,7 @@ public final class OpenDataMainController {
             pluginTable.getItems().clear();
             tablePlaceholderLabel.setText("Plugin details could not be loaded");
             pluginTable.setDisable(true);
+            setAdministrationActionsDisabled(false);
             updateSelectionCount();
             setState("Unable to load plugin details");
         });
@@ -172,9 +206,6 @@ public final class OpenDataMainController {
         updateSelectionCount();
     }
 
-    /**
-     * Updates the lower-right count from the explicit checkbox state.
-     */
     private void updateSelectionCount() {
         final long count = pluginTable.getItems().stream()
                 .filter(row -> row.selectedProperty().get())
@@ -182,11 +213,6 @@ public final class OpenDataMainController {
         selectedLabel.setText(count + (count == 1 ? " item selected" : " items selected"));
     }
 
-    /**
-     * Updates the lower-left status text.
-     *
-     * @param state display state
-     */
     private void setState(final String state) {
         stateLabel.setText(state);
     }
@@ -206,29 +232,95 @@ public final class OpenDataMainController {
         setState("Save selected - implementation scheduled for a later GUI batch");
     }
 
+    /**
+     * Scans the plugin configuration folder for valid definitions that are not
+     * already registered, confirms the discoveries, and registers them.
+     */
     @FXML
     private void onRegister() {
-        setState("Register selected - implementation scheduled for a later GUI batch");
+        runAdministrationTask(
+                "Scanning plugin configuration folder...",
+                pluginAdministration::discoverNewPlugins,
+                candidates -> {
+                    if (candidates.isEmpty()) {
+                        setState("Ready");
+                        OpenDataDialogs.information(
+                                ownerWindow(),
+                                "No new plugins found",
+                                "No unregistered plugin properties files were found in the "
+                                + "OpenData plugin configuration folder.");
+                        return;
+                    }
+                    setState("Ready");
+                    if (OpenDataDialogs.confirm(
+                            ownerWindow(),
+                            "Confirm Registration",
+                            "Register discovered plugin" + pluralSuffix(candidates) + "?",
+                            registrationSummary(candidates))) {
+                        registerDiscoveredPlugins(candidates);
+                    }
+                },
+                "Unable to scan plugin configuration folder");
     }
 
+    /**
+     * Selects a complete plugin properties file with JavaFX FileChooser and
+     * registers that definition.
+     */
     @FXML
     private void onRegisterFromFile() {
-        setState("Register from File selected - implementation scheduled for a later GUI batch");
+        OpenDataDialogs.choosePluginDefinitionFile(
+                ownerWindow(), pluginAdministration.registrationDirectories())
+                .ifPresent(file -> runAdministrationTask(
+                "Registering plugin from " + file.getFileName() + "...",
+                () -> pluginAdministration.registerFromFile(file),
+                pluginId -> {
+                    LOGGER.log(Level.INFO, "Registered plugin from file: {0}", pluginId);
+                    refreshPluginTable();
+                },
+                "Unable to register plugin from file"));
     }
 
+    /**
+     * Unregisters all explicitly checked plugins after confirmation.
+     */
     @FXML
     private void onUnregister() {
-        setState("Unregister selected - implementation scheduled for a later GUI batch");
+        final var pluginIds = selectedPluginIdsOrWarn();
+        if (pluginIds.isEmpty()) {
+            return;
+        }
+        if (!OpenDataDialogs.confirm(
+                ownerWindow(),
+                "Confirm Unregister",
+                "Unregister selected plugin" + pluralSuffix(pluginIds) + "?",
+                selectionSummary(pluginIds))) {
+            return;
+        }
+        runAdministrationTask(
+                "Unregistering selected plugin" + pluralSuffix(pluginIds) + "...",
+                () -> pluginAdministration.unregister(pluginIds),
+                completed -> {
+                    LOGGER.log(Level.INFO, "Unregistered plugin(s): {0}", completed);
+                    refreshPluginTable();
+                },
+                "Unable to unregister selected plugin" + pluralSuffix(pluginIds));
     }
 
+    /**
+     * Enables all explicitly checked plugins after confirmation.
+     */
     @FXML
     private void onEnable() {
-        setState("Enable selected - implementation scheduled for a later GUI batch");
+        changeEnabledState(true);
     }
 
+    /**
+     * Disables all explicitly checked plugins after confirmation.
+     */
     @FXML
     private void onDisable() {
-        setState("Disable selected - implementation scheduled for a later GUI batch");
+        changeEnabledState(false);
     }
 
     @FXML
@@ -259,5 +351,146 @@ public final class OpenDataMainController {
     @FXML
     private void onAbout() {
         setState("About selected - implementation scheduled for a later GUI batch");
+    }
+
+    private void registerDiscoveredPlugins(
+            final List<PluginRegistrationCandidate> candidates) {
+        runAdministrationTask(
+                "Registering discovered plugin" + pluralSuffix(candidates) + "...",
+                () -> pluginAdministration.registerDiscovered(candidates),
+                completed -> {
+                    LOGGER.log(Level.INFO, "Registered discovered plugin(s): {0}", completed);
+                    refreshPluginTable();
+                },
+                "Unable to register discovered plugin" + pluralSuffix(candidates));
+    }
+
+    private void changeEnabledState(final boolean enabled) {
+        final var pluginIds = selectedPluginIdsOrWarn();
+        if (pluginIds.isEmpty()) {
+            return;
+        }
+        final var action = enabled ? "Enable" : "Disable";
+        if (!OpenDataDialogs.confirm(
+                ownerWindow(),
+                "Confirm " + action,
+                action + " selected plugin" + pluralSuffix(pluginIds) + "?",
+                selectionSummary(pluginIds))) {
+            return;
+        }
+        runAdministrationTask(
+                (enabled ? "Enabling" : "Disabling") + " selected plugin" + pluralSuffix(pluginIds) + "...",
+                () -> pluginAdministration.setEnabled(pluginIds, enabled),
+                completed -> {
+                    LOGGER.log(Level.INFO, "{0}d plugin(s): {1}",
+                            new Object[]{action, completed});
+                    refreshPluginTable();
+                },
+                "Unable to " + action.toLowerCase() + " selected plugin"
+                        + pluralSuffix(pluginIds));
+    }
+
+    private List<String> selectedPluginIdsOrWarn() {
+        final var pluginIds = pluginTable.getItems().stream()
+                .filter(row -> row.selectedProperty().get())
+                .map(row -> row.pluginIdProperty().get())
+                .toList();
+        if (pluginIds.isEmpty()) {
+            OpenDataDialogs.warning(
+                    ownerWindow(),
+                    "No plugin selected",
+                    "Select one or more plugins using the Selected checkbox.");
+        }
+        return pluginIds;
+    }
+
+    private <T> void runAdministrationTask(
+            final String workingState,
+            final Callable<T> operation,
+            final Consumer<T> onSucceeded,
+            final String failureState) {
+        Objects.requireNonNull(operation, "operation");
+        Objects.requireNonNull(onSucceeded, "onSucceeded");
+
+        if (administrationTask != null && administrationTask.isRunning()) {
+            setState("An administration operation is already running");
+            return;
+        }
+
+        setState(workingState);
+        setAdministrationActionsDisabled(true);
+        pluginTable.setDisable(true);
+
+        final var task = new Task<T>() {
+            @Override
+            protected T call() throws Exception {
+                return operation.call();
+            }
+        };
+        administrationTask = task;
+
+        task.setOnSucceeded(event -> {
+            if (task != administrationTask) {
+                return;
+            }
+            administrationTask = null;
+            setAdministrationActionsDisabled(false);
+            pluginTable.setDisable(false);
+            onSucceeded.accept(task.getValue());
+        });
+
+        task.setOnFailed(event -> {
+            if (task != administrationTask) {
+                return;
+            }
+            administrationTask = null;
+            final var exception = task.getException();
+            final var message = rootCauseMessage(exception);
+            LOGGER.log(Level.SEVERE, failureState + ": {0}", message);
+            LOGGER.log(Level.FINE, "GUI plugin administration failure details.", exception);
+            setAdministrationActionsDisabled(false);
+            pluginTable.setDisable(false);
+            setState(failureState);
+            OpenDataDialogs.error(ownerWindow(), failureState, message);
+        });
+
+        final var worker = new Thread(task, "OpenData-GUI-PluginAdministration");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
+    private void setAdministrationActionsDisabled(final boolean disabled) {
+        registerMenuItem.setDisable(disabled);
+        registerFromFileMenuItem.setDisable(disabled);
+        unregisterMenuItem.setDisable(disabled);
+        enableMenuItem.setDisable(disabled);
+        disableMenuItem.setDisable(disabled);
+        registerButton.setDisable(disabled);
+        unregisterButton.setDisable(disabled);
+        enableButton.setDisable(disabled);
+        disableButton.setDisable(disabled);
+    }
+
+    private Window ownerWindow() {
+        return pluginTable.getScene() == null ? null : pluginTable.getScene().getWindow();
+    }
+
+    private static String selectionSummary(final List<String> pluginIds) {
+        return "Selected plugin" + pluralSuffix(pluginIds) + ":\n"
+                + String.join(System.lineSeparator(), pluginIds);
+    }
+
+    private static String registrationSummary(
+            final List<PluginRegistrationCandidate> candidates) {
+        return candidates.stream()
+                .map(candidate -> "%s — %s (%s)".formatted(
+                candidate.pluginId(),
+                candidate.displayName(),
+                candidate.file().getFileName()))
+                .collect(java.util.stream.Collectors.joining(System.lineSeparator()));
+    }
+
+    private static String pluralSuffix(final List<?> values) {
+        return values.size() == 1 ? "" : "s";
     }
 }

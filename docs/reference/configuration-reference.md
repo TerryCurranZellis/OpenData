@@ -14,7 +14,9 @@
 | Writable/classpath `config/application.properties` | Minimal database bootstrap and first-registration application defaults |
 | Classpath `config/plugins/index.properties` | Packaged plugin catalogue used by `--plugin all --register` |
 | Classpath `config/plugins/<id>.properties` | Packaged definition used when registering a named plugin without `--file` |
-| External `--file <plugin.properties>` | Complete definition for one named plugin during registration only |
+| External `--file <plugin.properties>` | Complete definition for one named plugin during CLI registration only |
+| GUI `config/plugins/*.properties` | Filesystem definitions discovered by the JavaFX **Register** command |
+| GUI **Register from File** selection | Complete definition selected from any accessible filesystem location |
 | `core.application_property` | Runtime application settings after registration |
 | `core.plugin_registry` | Registered plugin metadata and enabled/disabled status |
 | `core.plugin_property` | Complete registered plugin definitions |
@@ -75,6 +77,18 @@ dataset.id=example-data
 It must also define at least one endpoint or typed plugin property. The id must
 match the command line, and the implementation class must be loadable and
 implement `OpenDataPlugin`.
+
+
+### JavaFX configuration-folder registration
+
+The JavaFX **Register** command scans `<working directory>/config/plugins` and
+then the development fallback `<working directory>/src/main/resources/config/plugins`.
+It validates complete `*.properties` definitions, ignores `index.properties`,
+and offers only plugin ids not already present in `core.plugin_registry`.
+
+The JavaFX **Register from File** command uses a file chooser and reads the id
+from the selected file's `plugin.id`; unlike normal GUI Register, it may be used
+to replace the stored definition of an already registered plugin.
 
 ## Registered status versus definition value
 

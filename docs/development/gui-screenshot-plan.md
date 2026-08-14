@@ -21,7 +21,9 @@ stable filenames as each implementation batch is completed.
 |---|---:|---|---|
 | `gui-main-window.png` | Batch 3 | `user-guide/12-graphical-interface.md`; `development/javafx-gui-architecture.md` | Full main window showing menus, toolbar, checkbox plugin table and status bar |
 | `gui-splash-screen.png` | Batch 2 | `user-guide/12-graphical-interface.md` | JavaFX startup splash screen shown before the main window |
+| `gui-register-confirm.png` | Batch 4 | `user-guide/12-graphical-interface.md` | Confirmation showing new plugin definitions discovered in the configuration folder |
 | `gui-register-from-file.png` | Batch 4 | `user-guide/12-graphical-interface.md` | File chooser used to select a plugin configuration file |
+| `gui-plugin-administration-confirm.png` | Batch 4 | `user-guide/12-graphical-interface.md` | Enable, Disable or Unregister confirmation for checked plugin rows |
 | `gui-confirm-action.png` | Batch 4 | `user-guide/12-graphical-interface.md` | Standard OK/Cancel confirmation flow for a selected action |
 | `gui-plugin-detail.png` | Batch 5 | `user-guide/12-graphical-interface.md` | Two-column plugin property/value dialog |
 | `gui-log-viewer.png` | Batch 5 | `user-guide/12-graphical-interface.md` | Scrollable existing-log viewer |

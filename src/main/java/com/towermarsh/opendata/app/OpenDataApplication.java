@@ -17,19 +17,16 @@ import com.towermarsh.opendata.config.ConfigurationRegistrationService;
 import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.PluginRegistration;
-import com.towermarsh.opendata.config.PropertiesFileConfigurationPropertiesSource;
+import com.towermarsh.opendata.config.PluginRegistrationResolver;
 import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
 import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
-import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.database.SQLServerResource;
 import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.logging.LoggingManager;
-import com.towermarsh.opendata.plugin.ClasspathPluginRegistry;
 import com.towermarsh.opendata.plugin.JdbcPluginRegistry;
 import com.towermarsh.opendata.plugin.JdbcPluginRunAudit;
 import com.towermarsh.opendata.plugin.NoOpPluginRunAudit;
-import com.towermarsh.opendata.plugin.OpenDataPlugin;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionCoordinator;
 import com.towermarsh.opendata.plugin.PluginExecutionSummary;
@@ -43,9 +40,7 @@ import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.time.Clock;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -56,7 +51,7 @@ import java.util.logging.Logger;
  * database access, and plugin execution.
  *
  * @author Terry Curran
- * @version 2.1
+ * @version 3.1.0
  */
 public final class OpenDataApplication {
 
@@ -245,12 +240,15 @@ public final class OpenDataApplication {
             final DatabaseResourceManager database,
             final JdbcPluginRegistry registeredPlugins) {
         final var classpathSource = new ClasspathConfigurationPropertiesSource();
+        final var resolver = new PluginRegistrationResolver();
         final List<PluginRegistration> registrations;
         if (arguments.pluginFile().isPresent()) {
-            registrations = List.of(registrationFromFile(
+            registrations = List.of(resolver.resolveFile(
                     arguments.pluginIds().get(0), arguments.pluginFile().orElseThrow()));
+        } else if (arguments.allPluginsRequested()) {
+            registrations = resolver.resolveAllPackaged();
         } else {
-            registrations = registrationsFromClasspath(arguments, classpathSource);
+            registrations = resolver.resolvePackaged(arguments.pluginIds());
         }
 
         new ConfigurationRegistrationService(
@@ -272,78 +270,6 @@ public final class OpenDataApplication {
                     actual.enabled() ? "enabled" : "disabled"));
         });
         noteIgnoredParallelism(arguments);
-    }
-
-    /**
-     * Read plugin details from a file
-     */
-    private static PluginRegistration registrationFromFile(
-            final String requestedPluginId,
-            final Path file) {
-        final var source = new PropertiesFileConfigurationPropertiesSource(file);
-        final var properties = source.loadPluginProperties(requestedPluginId);
-        final var definition = new PropertiesPluginDefinitionLoader(source)
-                .load(requestedPluginId, Map.of());
-        validateImplementation(definition.implementationClass());
-        return new PluginRegistration(toDescriptor(definition), properties);
-    }
-
-    /**
-     * get list of registered plugins
-     */
-    private static List<PluginRegistration> registrationsFromClasspath(
-            final CommandLineArguments arguments,
-            final ClasspathConfigurationPropertiesSource source) {
-        final var catalog = new ClasspathPluginRegistry();
-        final List<PluginDescriptor> requested;
-        if (arguments.allPluginsRequested()) {
-            requested = catalog.list();
-        } else {
-            requested = arguments.pluginIds().stream()
-                    .map(id -> catalog.find(id).orElseThrow(() -> new PluginRegistryException(
-                    "Packaged plugin definition was not found: " + id)))
-                    .toList();
-        }
-        final var loader = new PropertiesPluginDefinitionLoader(source);
-        final List<PluginRegistration> registrations = new ArrayList<>();
-        for (var descriptor : requested) {
-            final var properties = source.loadPluginProperties(descriptor.id());
-            final var definition = loader.load(descriptor.id(), Map.of());
-            validateImplementation(definition.implementationClass());
-            registrations.add(new PluginRegistration(toDescriptor(definition), properties));
-        }
-        return List.copyOf(registrations);
-    }
-
-    /**
-     * return plugin details
-     */
-    private static PluginDescriptor toDescriptor(final PluginDefinition definition) {
-        return new PluginDescriptor(
-                definition.id(),
-                definition.displayName(),
-                definition.description(),
-                definition.implementationClass(),
-                definition.enabled(),
-                definition.configurationVersion());
-    }
-
-    /**
-     * validate the plugin
-     */
-    private static void validateImplementation(final String className) {
-        try {
-            final var implementation = Class.forName(
-                    className, false, Thread.currentThread().getContextClassLoader());
-            if (!OpenDataPlugin.class.isAssignableFrom(implementation)) {
-                throw new PluginRegistryException(
-                        "Plugin class does not implement OpenDataPlugin: " + className);
-            }
-        } catch (ClassNotFoundException exception) {
-            throw new PluginRegistryException(
-                    "Plugin implementation class was not found: " + className,
-                    exception);
-        }
     }
 
     /**

@@ -98,6 +98,12 @@ The descriptor includes `plugin.*`, `dataset.id`, one or more
 properties are the registration source; `--register` writes them to SQL Server,
 and ordinary runs resolve plugin configuration from the database.
 
+For JavaFX development, the **Register** command scans this source-tree plugin
+folder directly for new `.properties` definitions. A packaged/deployed GUI also
+checks `<working directory>/config/plugins` first. The classpath
+`index.properties` file is still required for CLI packaged registration, but the
+GUI scanner ignores it because it is not a complete plugin definition.
+
 Do not add provider selection code to the application main class.
 
 ## 6. Select the persistence strategy

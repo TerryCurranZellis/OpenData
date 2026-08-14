@@ -21,6 +21,8 @@
  * <li>{@link OpenDataConfigurationException}</li>
  * <li>{@link PluginDefinitionException}</li>
  * <li>{@link PluginDefinitionLoader}</li>
+ * <li>{@link PluginConfigurationDirectoryScanner}</li>
+ * <li>{@link PluginRegistrationResolver}</li>
  * <li>{@link PluginDefinitionValidator}</li>
  * <li>{@link PropertiesPluginDefinitionLoader}</li>
  * <li>{@link ResolvedConfigurationValue}</li>
@@ -29,6 +31,6 @@
  * </ul>
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.1.0
  */
 package com.towermarsh.opendata.config;
