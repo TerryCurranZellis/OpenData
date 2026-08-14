@@ -10,7 +10,9 @@ Using the graphical interface
 • Plugin Detail shows the stored configuration for one checked plugin. Sensitive values are hidden.
 • Logs opens the current OpenData application log in a scrollable window.
 • Settings shows the effective application configuration without exposing passwords.
-• Execute and Dry-run will be connected to the background execution/log window in the next GUI batch.
+• Execute runs the checked enabled plugins in the background and displays the live OpenData log while they run.
+• Dry-run executes the checked enabled plugins without provider database writes or generic run-audit rows and displays the same live log window.
+• The execution window cannot be closed until processing has completed, after which the Close button becomes available.
 
 Select plugins by checking the Selected box in the main table. The lower-right status reports how many plugins are checked.
 

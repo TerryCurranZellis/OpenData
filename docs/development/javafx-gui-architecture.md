@@ -1,9 +1,9 @@
 # JavaFX GUI Architecture
 
-**Document ID:** DEV-GUI-001  
-**Version:** 3.1.0  
-**Status:** Implementation in progress  
-**Baseline date:** 13 August 2026  
+**Document ID:** DEV-GUI-001
+**Version:** 3.1.0
+**Status:** Implementation in progress
+**Baseline date:** 14 August 2026
 **Minimum Java version:** 24
 
 ---
@@ -182,7 +182,7 @@ removal.
 | 3 | Read-only plugin registry view and refresh | **Implemented:** persistent registry plus latest run audit loaded asynchronously behind a GUI service boundary |
 | 4 | Register, register-from-file, enable, disable and unregister actions | **Implemented:** configuration-folder discovery, file chooser, selection validation, confirmations and asynchronous registry writes |
 | 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | **Implemented:** read-only asynchronous information services, sensitive-value masking and JavaFX About |
-| 6 | Execute and Dry-run with live log dialog | Background execution and a thread-safe JavaFX JUL handler |
+| 6 | Execute and Dry-run with live log dialog | **Implemented:** background execution, two-phase database lifecycle and scoped/batched JavaFX JUL streaming |
 | 7 | Integration tests, error handling, packaging and final documentation/screenshots | JavaFX test strategy, Windows packaging, help-file launch and release-quality documentation |
 
 
@@ -217,26 +217,64 @@ decrypted database password to the presentation layer.
 
 `LogViewerService` reads the current JUL file rather than attaching a live UI
 handler. `LoggingManager.flush()` makes buffered messages visible while leaving
-all handlers open. Live handler-to-JavaFX forwarding is deferred to Batch 6,
-where Execute and Dry-run require streaming output.
+all handlers open. Batch 6 keeps that existing-log viewer separate from the
+scoped `JavaFxLogHandler` used only while Execute or Dry-run is active.
 
 `OpenDataInformationDialogs` owns the reusable Property/Value table, text viewer
 and JavaFX About presentation. `OpenDataAboutApplication` supplies the standalone
 `--about` JavaFX lifecycle without requiring the main application window.
 
+## Batch 6 execution boundary
+
+Execute and Dry-run preserve the existing controller/service direction:
+
+```text
+OpenDataMainController
+        |
+        | snapshot checked ids + confirmation
+        | JavaFX Task
+        v
+PluginExecutionGateway
+        |
+        +--> PluginSelectionResolver
+        +--> PropertiesPluginDefinitionLoader
+        +--> PluginExecutionCoordinator
+        +--> runtime database / dry-run resource
+```
+
+The gateway follows the same two-phase SQL Server lifecycle as CLI execution.
+It first opens the bootstrap database to resolve the persistent registry,
+runtime configuration and plugin definitions. That pool is closed before a
+normal run opens the runtime execution pool. Dry-run instead supplies
+`UnavailableDatabaseResourceManager` and `NoOpPluginRunAudit`.
+
+The controller snapshots checked plugin ids before confirmation so later table
+interaction cannot mutate an in-flight request. Administration, information and
+execution background operations are prevented from overlapping where they could
+compete for the singleton SQL Server resource.
+
+### Scoped live JUL handler
+
+`JavaFxLogHandler` is attached temporarily to the
+`com.towermarsh.opendata` application logger. `LoggingManager.configure(...)`
+replaces only root handlers, so runtime log reconfiguration cannot detach the
+live handler. The normal root file and console handlers still receive the same
+records through JUL propagation.
+
+Plugin threads may log concurrently. The live handler formats records with
+`ContextualLogFormatter`, queues them safely and schedules batched drains via
+`Platform.runLater()`. `OpenDataExecutionWindow` owns the modal scrollable text
+area. Its Close button is disabled and close requests are consumed until the
+background task reaches a terminal state.
+
+After completion the controller detaches the handler and refreshes the plugin
+table. Normal execution audit values then become visible; dry-run intentionally
+leaves those persisted last-run columns unchanged.
+
 ## Integration hurdles still ahead
 
-### Background execution and live logging
-
-Execute and Dry-run perform network and database I/O and must run away from the
-JavaFX application thread. Batch 5 only reads the existing log file. Batch 6
-therefore still needs a focused JUL handler that marshals live execution output
-using `Platform.runLater()` and detaches cleanly after the task completes.
-
-### Selection semantics
-
-GUI operations must snapshot checked plugin IDs before starting a background
-task so user interaction cannot mutate an in-flight command unexpectedly.
+Batch 7 remains responsible for final JavaFX/integration test coverage, Windows
+compiled Help launch/packaging and release-quality screenshots/documentation.
 
 ## Batch 3 non-goals
 

@@ -48,6 +48,28 @@ class PluginSelectionResolverTest {
         assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(arguments, registry));
     }
 
+
+    @Test
+    void explicitGuiSelectionResolvesCanonicalIdsInRequestedOrder() {
+        final var ofgem = descriptor("ofgem", true);
+        final var openmeteo = descriptor("openmeteo", true);
+        final PluginRegistry registry = registry(ofgem, openmeteo);
+
+        assertEquals(
+                List.of(openmeteo, ofgem),
+                new PluginSelectionResolver().resolve(
+                        List.of(" OpenMeteo ", "OFGEM"), registry));
+    }
+
+    @Test
+    void explicitGuiSelectionRejectsEmptySelection() {
+        final PluginRegistry registry = registry(descriptor("ofgem", true));
+
+        assertThrows(
+                PluginRegistryException.class,
+                () -> new PluginSelectionResolver().resolve(List.of(), registry));
+    }
+
     @Test
     void selectedDuplicatePluginIdsAreRejected() {
         final PluginRegistry registry = registry(descriptor("ofgem", true));

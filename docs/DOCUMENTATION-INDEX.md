@@ -32,10 +32,12 @@
 - [ADR-0053: JavaFX controller/service boundary](decisions/ADR-0053-javafx-controller-service-boundary.md)
 - [ADR-0054: GUI plugin registration discovery](decisions/ADR-0054-gui-plugin-registration-discovery.md)
 - [ADR-0055: JavaFX information dialogs and sensitive display](decisions/ADR-0055-javafx-information-dialogs-and-sensitive-display.md)
+- [ADR-0056: Scoped JUL live execution logging](decisions/ADR-0056-javafx-live-execution-logging.md)
 - [Batch 2 GUI implementation notes](reviews/Batch-2-Version-3.1.0-GUI.md)
 - [Batch 3 GUI implementation notes](reviews/Batch-3-Version-3.1.0-GUI.md)
 - [Batch 4 GUI implementation notes](reviews/Batch-4-Version-3.1.0-GUI.md)
 - [Batch 5 GUI implementation notes](reviews/Batch-5-Version-3.1.0-GUI.md)
+- [Batch 6 GUI implementation notes](reviews/Batch-6-Version-3.1.0-GUI.md)
 
 ## Current processing-refactor baseline
 

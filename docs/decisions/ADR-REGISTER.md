@@ -3,7 +3,7 @@
 **Document ID:** ADR-REGISTER-001
 **Version:** 3.1.0
 **Status:** Baseline
-**Baseline date:** 13 August 2026
+**Baseline date:** 14 August 2026
 **Minimum Java version:** 24
 
 ---
@@ -78,5 +78,7 @@
 | [ADR-0054](ADR-0054-gui-plugin-registration-discovery.md) | Discover GUI plugin registrations from configuration files | Accepted | Batch 4 JavaFX administration workflow |
 
 | [ADR-0055](ADR-0055-javafx-information-dialogs-and-sensitive-display.md) | Use JavaFX read-only information dialogs and mask sensitive configuration values | Accepted | Batch 5 information/dialog migration |
+
+| [ADR-0056](ADR-0056-javafx-live-execution-logging.md) | Stream scoped JUL execution output into JavaFX without replacing application logging | Accepted | Batch 6 Execute/Dry-run live logging |
 
 :::

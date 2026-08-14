@@ -1,9 +1,9 @@
 # Graphical Interface
 
-**Document ID:** USER-GUI-001  
-**Version:** 3.1.0  
-**Status:** Implementation in progress  
-**Baseline date:** 13 August 2026  
+**Document ID:** USER-GUI-001
+**Version:** 3.1.0
+**Status:** Implementation in progress
+**Baseline date:** 14 August 2026
 **Minimum Java version:** 24
 
 ---
@@ -56,8 +56,9 @@ zone of the workstation running the GUI.
 ## Main-window status
 
 The lower-left status area displays loading feedback while plugin information is
-being prepared and **Ready** after the main page has been populated. Later GUI
-batches also use this area for operation feedback.
+being prepared and **Ready** after the main page has been populated. It also
+reports administration and Execute/Dry-run progress while those operations are
+active.
 
 ## Persistent plugin loading
 
@@ -111,6 +112,48 @@ and refreshes the main table when complete. Pressing **Cancel** makes no change.
 The table and administration controls are temporarily disabled while an
 administration operation is running.
 
+
+## Execute and Dry-run
+
+Check one or more enabled plugins and choose **Execute** or **Dry-run** from the
+Execute menu or toolbar. If nothing is checked, OpenData displays **No plugin
+selected**.
+
+The selected plugin ids are copied before processing starts, so changing the
+main-table selection cannot alter an in-flight command. OpenData shows an
+OK/Cancel confirmation listing the selected plugins. **Cancel** returns without
+running anything.
+
+### Execute
+
+Press **OK** on the Execute confirmation to start a normal plugin run. Normal
+execution may insert or update persistent plugin data and records the usual
+`core.PluginRun` audit information. OpenData uses the configured
+`execution.max-parallel-plugins` value when several plugins are selected.
+
+### Dry-run
+
+Press **OK** on the Dry-run confirmation to execute extraction and transformation
+without provider database writes or generic run-audit rows. Dry-run therefore
+does not replace the Last Run Status or Date of Last Run shown in the main table.
+
+### Live execution log
+
+After confirmation, OpenData opens a modal execution window and starts the work
+on a background task. JUL messages from all selected plugins are appended to the
+scrollable text area as they are produced. Contextual log formatting continues
+to include plugin/run information while the normal rotating file and console
+logs remain active.
+
+The centred **Close** button is disabled while processing is active, and closing
+the window with the window decoration is also blocked. After all selected
+plugins have completed—or execution setup has failed—the window reports the
+outcome and enables **Close** so the complete log can be reviewed before it is
+dismissed.
+
+When processing finishes, the main plugin table is refreshed. Normal execution
+therefore shows the latest persisted run status/date after the refresh.
+
 ## Plugin Detail
 
 Check exactly one plugin and choose **Details > Plugin Detail**. OpenData loads the
@@ -144,9 +187,8 @@ active `java.util.logging` handlers and reads the current rotating application
 log without closing the logger. The file path is shown above a non-editable,
 scrollable text area. Long lines can be reviewed using horizontal scrolling.
 
-This is the existing-log viewer. The live execution log used by Execute and
-Dry-run is implemented separately in Batch 6 because its Close button must stay
-disabled until processing completes.
+This is the existing-log viewer. Execute and Dry-run use a separate live log
+window so processing output can be streamed while the selected plugins run.
 
 ## Help
 
@@ -167,9 +209,10 @@ as deprecated source compatibility code.
 
 ## Current implementation limitations
 
-Execute and Dry-run are not yet connected to plugin execution; those actions are
-Batch 6 work. Settings is intentionally read-only because the current
-specification does not define an editable settings/save contract.
+Settings is intentionally read-only because the current specification does not
+define an editable settings/save contract. Batch 6 does not add an execution
+Cancel command; the live window Close action is intentionally available only
+after processing completes.
 
 The JavaFX GUI and standalone `--about` command no longer use the deprecated
 Swing About implementation. The deprecated Swing execution splash remains only

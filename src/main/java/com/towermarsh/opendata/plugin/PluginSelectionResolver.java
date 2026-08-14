@@ -15,7 +15,7 @@ import java.util.Objects;
  * Resolves named plugins or every enabled plugin from the authoritative registry.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 3.1.0
  */
 public final class PluginSelectionResolver {
 
@@ -39,9 +39,28 @@ public final class PluginSelectionResolver {
             }
             return enabled;
         }
-        final List<String> requested = arguments.pluginIds().stream()
+        return resolve(arguments.pluginIds(), registry);
+    }
+
+    /**
+     * Resolves an explicit plugin-id snapshot against the authoritative
+     * registry. This overload is shared by non-CLI callers such as JavaFX.
+     *
+     * @param pluginIds explicitly selected plugin identifiers
+     * @param registry authoritative registered-plugin source
+     * @return enabled plugin descriptors in requested order
+     */
+    public List<PluginDescriptor> resolve(
+            final List<String> pluginIds,
+            final PluginRegistry registry) {
+        Objects.requireNonNull(pluginIds, "pluginIds");
+        Objects.requireNonNull(registry, "registry");
+        final List<String> requested = pluginIds.stream()
                 .map(PluginSelectionResolver::canonicalId)
                 .toList();
+        if (requested.isEmpty()) {
+            throw new PluginRegistryException("No plugins were selected.");
+        }
         if (new LinkedHashSet<>(requested).size() != requested.size()) {
             throw new PluginRegistryException("A plugin was selected more than once.");
         }

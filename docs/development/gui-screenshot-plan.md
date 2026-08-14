@@ -1,9 +1,9 @@
 # GUI Screenshot Plan
 
-**Document ID:** DEV-GUI-SCREENSHOTS-001  
-**Version:** 3.1.0  
-**Status:** Planned  
-**Baseline date:** 13 August 2026  
+**Document ID:** DEV-GUI-SCREENSHOTS-001
+**Version:** 3.1.0
+**Status:** Planned
+**Baseline date:** 14 August 2026
 **Minimum Java version:** 24
 
 ---
@@ -62,6 +62,16 @@ formatted log lines to demonstrate both vertical and horizontal scrolling.
 Capture `gui-about-dialog.png` with the splash image and version information
 visible. Capture `gui-help-window.png` from the built-in JavaFX fallback help; if
 Batch 7 launches compiled Windows Help instead, replace that screenshot then.
+
+
+## Batch 6 capture guidance
+
+For `gui-execution-log.png`, select at least one enabled plugin and capture the
+window while processing is still active so live formatted log messages are
+visible and the centred **Close** button is visibly disabled. If practical, use
+a multi-plugin run so contextual plugin/run fields demonstrate that concurrent
+output shares the same window. Do not capture sensitive configuration or source
+data in the log area.
 
 ## Caption sequence
 

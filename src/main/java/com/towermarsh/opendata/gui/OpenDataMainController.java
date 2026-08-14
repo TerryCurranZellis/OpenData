@@ -7,6 +7,8 @@ package com.towermarsh.opendata.gui;
 
 import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
 
+import com.towermarsh.opendata.logging.LoggingManager;
+import com.towermarsh.opendata.plugin.PluginExecutionSummary;
 import com.towermarsh.opendata.ui.ApplicationInfo;
 import java.util.List;
 import java.util.Objects;
@@ -29,9 +31,10 @@ import javafx.stage.Window;
 /**
  * Controller for {@code OpenDataMainView.fxml}.
  *
- * <p>Plugin reads, administration and Batch 5 information operations run behind
- * focused service adapters on JavaFX {@link Task}s. The controller owns only
- * selection, dialogs, status feedback and presentation refresh.</p>
+ * <p>Plugin reads, administration, information and execution operations run
+ * behind focused service adapters on JavaFX {@link Task}s. The controller owns
+ * only selection snapshots, dialogs, status feedback, live-log attachment and
+ * presentation refresh.</p>
  *
  * @author Terry Curran
  * @version 3.1.0
@@ -45,9 +48,11 @@ public final class OpenDataMainController {
     private final PluginDetailGateway pluginDetailGateway;
     private final ApplicationSettingsGateway settingsGateway;
     private final LogViewerService logViewerService;
+    private final PluginExecutionGateway pluginExecutionGateway;
     private Task<List<PluginTableEntry>> pluginLoadTask;
     private Task<?> administrationTask;
     private Task<?> informationTask;
+    private Task<PluginExecutionSummary> executionTask;
 
     @FXML
     private TableView<PluginRow> pluginTable;
@@ -95,6 +100,12 @@ public final class OpenDataMainController {
     private MenuItem disableMenuItem;
 
     @FXML
+    private MenuItem executeMenuItem;
+
+    @FXML
+    private MenuItem dryRunMenuItem;
+
+    @FXML
     private Button registerButton;
 
     @FXML
@@ -106,6 +117,12 @@ public final class OpenDataMainController {
     @FXML
     private Button disableButton;
 
+    @FXML
+    private Button executeButton;
+
+    @FXML
+    private Button dryRunButton;
+
     /**
      * Creates the FXML controller using production GUI services.
      */
@@ -115,7 +132,8 @@ public final class OpenDataMainController {
                 new PluginAdministrationGateway(),
                 new PluginDetailGateway(),
                 new ApplicationSettingsGateway(),
-                new LogViewerService());
+                new LogViewerService(),
+                new PluginExecutionGateway());
     }
 
     /**
@@ -132,7 +150,8 @@ public final class OpenDataMainController {
                 pluginAdministration,
                 new PluginDetailGateway(),
                 new ApplicationSettingsGateway(),
-                new LogViewerService());
+                new LogViewerService(),
+                new PluginExecutionGateway());
     }
 
     /**
@@ -143,13 +162,15 @@ public final class OpenDataMainController {
      * @param pluginDetailGateway plugin detail reader
      * @param settingsGateway application settings reader
      * @param logViewerService application log reader
+     * @param pluginExecutionGateway plugin Execute/Dry-run adapter
      */
     OpenDataMainController(
             final PluginTableDataLoader pluginDataLoader,
             final PluginAdministrationGateway pluginAdministration,
             final PluginDetailGateway pluginDetailGateway,
             final ApplicationSettingsGateway settingsGateway,
-            final LogViewerService logViewerService) {
+            final LogViewerService logViewerService,
+            final PluginExecutionGateway pluginExecutionGateway) {
         this.pluginDataLoader = Objects.requireNonNull(pluginDataLoader, "pluginDataLoader");
         this.pluginAdministration = Objects.requireNonNull(
                 pluginAdministration, "pluginAdministration");
@@ -157,6 +178,8 @@ public final class OpenDataMainController {
                 pluginDetailGateway, "pluginDetailGateway");
         this.settingsGateway = Objects.requireNonNull(settingsGateway, "settingsGateway");
         this.logViewerService = Objects.requireNonNull(logViewerService, "logViewerService");
+        this.pluginExecutionGateway = Objects.requireNonNull(
+                pluginExecutionGateway, "pluginExecutionGateway");
     }
 
     /**
@@ -188,7 +211,7 @@ public final class OpenDataMainController {
 
         setState("Loading plugin details...");
         tablePlaceholderLabel.setText("Loading plugin details...");
-        setAdministrationActionsDisabled(true);
+        setMutatingActionsDisabled(true);
         pluginTable.setDisable(true);
         pluginTable.getItems().clear();
         updateSelectionCount();
@@ -208,7 +231,7 @@ public final class OpenDataMainController {
             replaceRows(task.getValue());
             tablePlaceholderLabel.setText("No plugins registered");
             pluginTable.setDisable(false);
-            setAdministrationActionsDisabled(false);
+            setMutatingActionsDisabled(false);
             setState("Ready");
         });
 
@@ -224,7 +247,7 @@ public final class OpenDataMainController {
             pluginTable.getItems().clear();
             tablePlaceholderLabel.setText("Plugin details could not be loaded");
             pluginTable.setDisable(true);
-            setAdministrationActionsDisabled(false);
+            setMutatingActionsDisabled(false);
             updateSelectionCount();
             setState("Unable to load plugin details");
         });
@@ -378,12 +401,113 @@ public final class OpenDataMainController {
 
     @FXML
     private void onExecute() {
-        setState("Execute selected - implementation scheduled for a later GUI batch");
+        startExecution(false);
     }
 
     @FXML
     private void onDryRun() {
-        setState("Dry-run selected - implementation scheduled for a later GUI batch");
+        startExecution(true);
+    }
+
+    private void startExecution(final boolean dryRun) {
+        final var pluginIds = selectedPluginIdsOrWarn();
+        if (pluginIds.isEmpty()) {
+            return;
+        }
+        if (pluginLoadTask != null && pluginLoadTask.isRunning()) {
+            setState("Plugin details are still loading");
+            return;
+        }
+        if (executionTask != null && executionTask.isRunning()) {
+            setState("A plugin execution is already running");
+            return;
+        }
+        if (administrationTask != null && administrationTask.isRunning()) {
+            setState("An administration operation is already running");
+            return;
+        }
+        if (informationTask != null && informationTask.isRunning()) {
+            setState("An information operation is already running");
+            return;
+        }
+
+        final var operationName = dryRun ? "Dry-run" : "Execute";
+        final var confirmation = selectionSummary(pluginIds)
+                + System.lineSeparator() + System.lineSeparator()
+                + (dryRun
+                        ? "Dry-run performs extraction and transformation but does not write "
+                        + "plugin data or generic run-audit rows."
+                        : "Execute may insert or update persistent plugin data.");
+        if (!OpenDataDialogs.confirm(
+                ownerWindow(),
+                "Confirm " + operationName,
+                operationName + " selected plugin" + pluralSuffix(pluginIds) + "?",
+                confirmation)) {
+            return;
+        }
+
+        final var executionWindow = new OpenDataExecutionWindow(
+                ownerWindow(), operationName, pluginIds);
+        final var liveLogHandler = new JavaFxLogHandler(executionWindow::appendLog);
+        final var applicationLogger = LoggingManager.getLogger();
+        applicationLogger.addHandler(liveLogHandler);
+
+        setState((dryRun ? "Dry-running" : "Executing")
+                + " selected plugin" + pluralSuffix(pluginIds) + "...");
+        setMutatingActionsDisabled(true);
+        pluginTable.setDisable(true);
+        executionWindow.show();
+
+        final var task = new Task<PluginExecutionSummary>() {
+            @Override
+            protected PluginExecutionSummary call() throws Exception {
+                return pluginExecutionGateway.execute(pluginIds, dryRun);
+            }
+        };
+        executionTask = task;
+
+        task.setOnSucceeded(event -> {
+            if (task != executionTask) {
+                return;
+            }
+            executionTask = null;
+            liveLogHandler.flush();
+            applicationLogger.removeHandler(liveLogHandler);
+            liveLogHandler.close();
+
+            final var summary = task.getValue();
+            executionWindow.complete(summary);
+            setState(summary.allSuccessful()
+                    ? operationName + " completed successfully"
+                    : operationName + " completed with failures");
+            setMutatingActionsDisabled(false);
+            pluginTable.setDisable(false);
+            refreshPluginTable();
+        });
+
+        task.setOnFailed(event -> {
+            if (task != executionTask) {
+                return;
+            }
+            executionTask = null;
+            final var exception = task.getException();
+            final var message = rootCauseMessage(exception);
+            LOGGER.log(Level.SEVERE, operationName + " failed: {0}", message);
+            LOGGER.log(Level.FINE, "GUI plugin execution failure details.", exception);
+            liveLogHandler.flush();
+            applicationLogger.removeHandler(liveLogHandler);
+            liveLogHandler.close();
+
+            executionWindow.fail(message);
+            setState(operationName + " failed");
+            setMutatingActionsDisabled(false);
+            pluginTable.setDisable(false);
+            refreshPluginTable();
+        });
+
+        final var worker = new Thread(task, "OpenData-GUI-PluginExecution");
+        worker.setDaemon(true);
+        worker.start();
     }
 
     @FXML
@@ -512,13 +636,25 @@ public final class OpenDataMainController {
         Objects.requireNonNull(operation, "operation");
         Objects.requireNonNull(onSucceeded, "onSucceeded");
 
+        if (pluginLoadTask != null && pluginLoadTask.isRunning()) {
+            setState("Plugin details are still loading");
+            return;
+        }
         if (administrationTask != null && administrationTask.isRunning()) {
             setState("An administration operation is already running");
             return;
         }
+        if (executionTask != null && executionTask.isRunning()) {
+            setState("A plugin execution is already running");
+            return;
+        }
+        if (informationTask != null && informationTask.isRunning()) {
+            setState("An information operation is already running");
+            return;
+        }
 
         setState(workingState);
-        setAdministrationActionsDisabled(true);
+        setMutatingActionsDisabled(true);
         pluginTable.setDisable(true);
 
         final var task = new Task<T>() {
@@ -534,7 +670,7 @@ public final class OpenDataMainController {
                 return;
             }
             administrationTask = null;
-            setAdministrationActionsDisabled(false);
+            setMutatingActionsDisabled(false);
             pluginTable.setDisable(false);
             onSucceeded.accept(task.getValue());
         });
@@ -548,7 +684,7 @@ public final class OpenDataMainController {
             final var message = rootCauseMessage(exception);
             LOGGER.log(Level.SEVERE, failureState + ": {0}", message);
             LOGGER.log(Level.FINE, "GUI plugin administration failure details.", exception);
-            setAdministrationActionsDisabled(false);
+            setMutatingActionsDisabled(false);
             pluginTable.setDisable(false);
             setState(failureState);
             OpenDataDialogs.error(ownerWindow(), failureState, message);
@@ -567,12 +703,20 @@ public final class OpenDataMainController {
         Objects.requireNonNull(operation, "operation");
         Objects.requireNonNull(onSucceeded, "onSucceeded");
 
+        if (pluginLoadTask != null && pluginLoadTask.isRunning()) {
+            setState("Plugin details are still loading");
+            return;
+        }
         if (informationTask != null && informationTask.isRunning()) {
             setState("An information operation is already running");
             return;
         }
         if (administrationTask != null && administrationTask.isRunning()) {
             setState("An administration operation is already running");
+            return;
+        }
+        if (executionTask != null && executionTask.isRunning()) {
+            setState("A plugin execution is already running");
             return;
         }
 
@@ -609,6 +753,14 @@ public final class OpenDataMainController {
         final var worker = new Thread(task, "OpenData-GUI-Information");
         worker.setDaemon(true);
         worker.start();
+    }
+
+    private void setMutatingActionsDisabled(final boolean disabled) {
+        setAdministrationActionsDisabled(disabled);
+        executeMenuItem.setDisable(disabled);
+        dryRunMenuItem.setDisable(disabled);
+        executeButton.setDisable(disabled);
+        dryRunButton.setDisable(disabled);
     }
 
     private void setAdministrationActionsDisabled(final boolean disabled) {

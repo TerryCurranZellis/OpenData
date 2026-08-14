@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Technical user guide",
     "audience": "Operators and technical users",
-    "revisionSummary": "Version 3.1.0 JavaFX plugin detail, read-only settings, log viewer, Help and About implemented; existing operator guidance retained"
+    "revisionSummary": "Version 3.1.0 JavaFX Execute/Dry-run, live execution logging and completion-gated Close implemented; existing operator guidance retained"
   },
   "sections": [
     "shared/introduction.md",

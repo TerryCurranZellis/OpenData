@@ -16,6 +16,8 @@ contain release blockers.
 - Read-only JavaFX Settings/Preferences dialog showing effective application configuration without exposing the database password.
 - Scrollable JavaFX viewer for the current rotating OpenData JUL log.
 - Built-in JavaFX fallback Help window and JavaFX About dialog, including the standalone `--about` command.
+- JavaFX Execute and Dry-run actions with selection confirmation, background plugin execution and automatic main-table refresh.
+- Modal live execution-log window with a completion-gated Close button and batched thread-safe JUL-to-JavaFX streaming.
 - Configuration-folder discovery of unregistered plugin `.properties` definitions with validation and confirmation before registration.
 - JavaFX `FileChooser` registration for plugin definitions outside the normal configuration folder.
 - Supported JavaFX GUI launcher in `com.towermarsh.opendata.gui`.
@@ -39,6 +41,7 @@ contain release blockers.
 - Legacy Swing UI helpers are deprecated from version 3.1.0 while JavaFX replacements are completed.
 - The JavaFX GUI and standalone `--about` command no longer use the deprecated Swing About dialog; legacy Swing About/image/launcher helpers are marked for removal.
 - `LoggingManager` exposes the active log directory and a non-destructive handler flush for GUI log viewing.
+- Explicit plugin-id selection is shared between CLI and JavaFX through `PluginSelectionResolver`, preserving enabled-plugin validation.
 - Selecting `--plugin <id|all>` no longer starts execution by itself. Normal and
   dry-run execution must include `--Execute` or `-x`.
 - `--Execute` is rejected with register, unregister/remove, enable and disable

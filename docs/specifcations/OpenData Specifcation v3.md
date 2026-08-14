@@ -145,7 +145,7 @@ This is the list of top level items on the menubar
     - Cancel does nothing
   - Dryrun
     - pop up confirm box
-    - OK runs dryrun, and shows login in dialog window
+    - OK runs dryrun, and shows log in dialog window
 
 #### Details Menu
 
@@ -209,11 +209,15 @@ This is a popup dialog box that displays log messages
 
 ### Execute or Dryrun
 
-- Pops up when Execute or Dryrun, 
-- Displays the log file in the Window as plugin(s) runs
-- has a close button at centred at the bottom labelled "Close"
-- Close button is enabled once the Execute or Dryrun completes
-- Needs scrollbars, to scroll up and down the log display
+- Pops up when Execute or Dryrun.
+- Selected plugin ids are snapshotted before the background task begins.
+- Displays live JUL output in the Window as plugin(s) run; existing file/console logging remains active.
+- Has a Close button centred at the bottom labelled `Close`.
+- Close and window-close actions remain disabled while processing is active.
+- Close becomes enabled once Execute or Dryrun completes or fails.
+- Needs scrollbars to review the complete log display; long lines must remain horizontally scrollable.
+- Normal Execute records the usual run audit and may write provider data.
+- Dryrun uses the existing side-effect-free dry-run contract and must not write provider data or generic run-audit rows.
 
 ### Detail Popup
 
