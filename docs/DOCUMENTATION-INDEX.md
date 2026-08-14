@@ -30,8 +30,12 @@
 - [ADR-0051: JavaFX graphical interface](decisions/ADR-0051-javafx-graphical-interface.md)
 - [ADR-0052: Java 24, JavaFX lifecycle and Swing retirement](decisions/ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md)
 - [ADR-0053: JavaFX controller/service boundary](decisions/ADR-0053-javafx-controller-service-boundary.md)
+- [ADR-0054: GUI plugin registration discovery](decisions/ADR-0054-gui-plugin-registration-discovery.md)
+- [ADR-0055: JavaFX information dialogs and sensitive display](decisions/ADR-0055-javafx-information-dialogs-and-sensitive-display.md)
 - [Batch 2 GUI implementation notes](reviews/Batch-2-Version-3.1.0-GUI.md)
 - [Batch 3 GUI implementation notes](reviews/Batch-3-Version-3.1.0-GUI.md)
+- [Batch 4 GUI implementation notes](reviews/Batch-4-Version-3.1.0-GUI.md)
+- [Batch 5 GUI implementation notes](reviews/Batch-5-Version-3.1.0-GUI.md)
 
 ## Current processing-refactor baseline
 

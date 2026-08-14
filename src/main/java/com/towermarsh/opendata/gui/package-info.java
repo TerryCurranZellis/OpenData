@@ -9,7 +9,9 @@
  * <p>The package owns JavaFX startup, the startup splash, views, controllers
  * and GUI presentation models. Core OpenData services remain outside this
  * package and are integrated through explicit service boundaries. Potentially
- * blocking backend work is performed away from the JavaFX application thread.</p>
+ * blocking backend work is performed away from the JavaFX application thread.
+ * Batch 5 adds read-only configuration, log, Help and About presentation with
+ * sensitive configuration values masked before display.</p>
  *
  * @since 3.0.0
  * @version 3.1.0

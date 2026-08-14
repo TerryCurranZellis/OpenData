@@ -12,11 +12,11 @@ import javax.swing.ImageIcon;
  * Loads and scales the packaged OpenData splash image.
  *
  * @deprecated retained temporarily for compatibility; new desktop UI code uses JavaFX.
- * This class is scheduled for removal after the JavaFX dialog migration.
+ * The active JavaFX About/splash code loads JavaFX images directly; this helper is retained only for legacy Swing compatibility and is scheduled for removal.
  * @author Terry Curran
  * @version 3.1.0
  */
-@Deprecated(since = "3.1.0")
+@Deprecated(since = "3.1.0", forRemoval = true)
 final class OpenDataImageLoader {
 
     /**
@@ -34,7 +34,7 @@ final class OpenDataImageLoader {
     /**
      * Load the image
      *
-     * @param maxWidth maximum width of image
+     * @param maxwidth maximum width of image
      */
     static ImageIcon loadScaled(final int maximumWidth) {
         final var resource = OpenDataImageLoader.class.getResource(IMAGE_RESOURCE);

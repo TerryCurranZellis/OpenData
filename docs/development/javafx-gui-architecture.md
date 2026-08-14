@@ -169,9 +169,11 @@ from version 3.1.0 with removal planned after JavaFX replacements exist:
 - `com.towermarsh.opendata.ui.OpenDataImageLoader`; and
 - the compatibility `com.towermarsh.opendata.ui.GuiLauncher`.
 
-The JavaFX GUI no longer uses the Swing splash. The deprecated Swing splash is
-retained temporarily for the existing command-line run path, and the Swing About
-dialog remains available for the command-line About route until Batch 5.
+The JavaFX GUI no longer uses the Swing splash or Swing About dialog. Batch 5
+also moves the standalone `--about` route to JavaFX. The deprecated Swing
+execution splash remains temporarily on the legacy command-line run path; the
+old Swing About dialog, image helper and compatibility launcher are marked for
+removal.
 
 ## Remaining implementation batches
 
@@ -179,7 +181,7 @@ dialog remains available for the command-line About route until Batch 5.
 |---|---|---|
 | 3 | Read-only plugin registry view and refresh | **Implemented:** persistent registry plus latest run audit loaded asynchronously behind a GUI service boundary |
 | 4 | Register, register-from-file, enable, disable and unregister actions | **Implemented:** configuration-folder discovery, file chooser, selection validation, confirmations and asynchronous registry writes |
-| 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | Present configuration safely and finish Swing UI retirement |
+| 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | **Implemented:** read-only asynchronous information services, sensitive-value masking and JavaFX About |
 | 6 | Execute and Dry-run with live log dialog | Background execution and a thread-safe JavaFX JUL handler |
 | 7 | Integration tests, error handling, packaging and final documentation/screenshots | JavaFX test strategy, Windows packaging, help-file launch and release-quality documentation |
 
@@ -199,13 +201,37 @@ definitions already present in `JdbcPluginRegistry` are filtered out before the
 confirmation dialog. Register from File bypasses discovery and validates the
 file chosen by JavaFX `FileChooser`.
 
+## Batch 5 information boundary
+
+Batch 5 keeps the same controller/service direction established in Batch 3.
+`PluginDetailGateway` and `ApplicationSettingsGateway` own short-lived bootstrap
+and database resources and return immutable `ConfigurationDisplayEntry` values.
+The controller starts those reads on JavaFX `Task`s and opens the dialogs only
+after the values have returned to the JavaFX application thread.
+
+Plugin Detail reads `JdbcConfigurationPropertiesSource`, matching the existing
+CLI detail source. `ConfigurationDisplayMasker` hides explicitly sensitive
+plugin values and conventional credential-bearing names before the data reaches
+the dialog. Application Settings is intentionally read-only and never returns a
+decrypted database password to the presentation layer.
+
+`LogViewerService` reads the current JUL file rather than attaching a live UI
+handler. `LoggingManager.flush()` makes buffered messages visible while leaving
+all handlers open. Live handler-to-JavaFX forwarding is deferred to Batch 6,
+where Execute and Dry-run require streaming output.
+
+`OpenDataInformationDialogs` owns the reusable Property/Value table, text viewer
+and JavaFX About presentation. `OpenDataAboutApplication` supplies the standalone
+`--about` JavaFX lifecycle without requiring the main application window.
+
 ## Integration hurdles still ahead
 
-### Background execution and logging
+### Background execution and live logging
 
 Execute and Dry-run perform network and database I/O and must run away from the
-JavaFX application thread. Live log display should be supplied by a focused JUL
-handler that marshals UI changes using `Platform.runLater()`.
+JavaFX application thread. Batch 5 only reads the existing log file. Batch 6
+therefore still needs a focused JUL handler that marshals live execution output
+using `Platform.runLater()` and detaches cleanly after the task completes.
 
 ### Selection semantics
 

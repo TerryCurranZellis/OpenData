@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import static java.awt.GraphicsEnvironment.isHeadless;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +21,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import static javax.swing.SwingUtilities.invokeAndWait;
 import static javax.swing.SwingUtilities.isEventDispatchThread;
 
@@ -27,11 +29,11 @@ import static javax.swing.SwingUtilities.isEventDispatchThread;
  * Displays version and product information in a modal About window.
  *
  * @deprecated retained temporarily for compatibility; new desktop UI code uses JavaFX.
- * This class is scheduled for removal after the JavaFX dialog migration.
+ * The active About routes now use JavaFX; this class is retained only for source compatibility and is scheduled for removal.
  * @author Terry Curran
  * @version 3.1.0
  */
-@Deprecated(since = "3.1.0")
+@Deprecated(since = "3.1.0", forRemoval = true)
 @SuppressWarnings("deprecation")
 public final class AboutDialog {
 
@@ -140,7 +142,7 @@ public final class AboutDialog {
      *
      * @param text text to display
      * @param style text style
-     * @param size text size
+     * @patam size text size
      */
     private static JLabel label(final String text, final int style, final int size) {
         final var label = new JLabel(text, SwingConstants.CENTER);

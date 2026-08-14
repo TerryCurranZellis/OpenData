@@ -13,6 +13,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  *
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.1.0
  */
 @SuppressWarnings("ClassWithMultipleLoggers")
 public final class LoggingManager {
@@ -29,6 +30,7 @@ public final class LoggingManager {
     private static final Logger ROOT = Logger.getLogger("");
     private static final Logger LOGGER = Logger.getLogger(LOGGER_NAME);
     private static final Object LOCK = new Object();
+    private static volatile Path activeLogDirectory;
 
     /**
      * Prevents instantiation of this utility class.
@@ -59,6 +61,7 @@ public final class LoggingManager {
     public static void configure(final LoggingConfiguration configuration, final boolean verbose) throws IOException {
         synchronized (LOCK) {
             Files.createDirectories(configuration.directory());
+            activeLogDirectory = configuration.directory().toAbsolutePath().normalize();
             for (var handler : ROOT.getHandlers()) {
                 ROOT.removeHandler(handler);
                 handler.close();
@@ -104,6 +107,26 @@ public final class LoggingManager {
 
     /**
      *
+     * Returns the directory currently used by the JUL file handler.
+     *
+     * @return active log directory when logging has been configured
+     */
+    public static Optional<Path> activeLogDirectory() {
+        return Optional.ofNullable(activeLogDirectory);
+    }
+
+    /**
+     * Flushes all currently configured handlers without closing them.
+     */
+    public static void flush() {
+        synchronized (LOCK) {
+            for (Handler handler : ROOT.getHandlers()) {
+                handler.flush();
+            }
+        }
+    }
+
+    /**
      * Returns the shared application logger.
      *
      * @return shared application logger

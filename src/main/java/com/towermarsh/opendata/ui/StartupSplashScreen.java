@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Legacy Swing startup splash retained for source compatibility.
  *
  * @deprecated retained temporarily for compatibility; new desktop UI code uses JavaFX.
- * This class is scheduled for removal after the JavaFX dialog migration.
+ * This class remains only on the legacy command-line execution path and is scheduled for final migration review.
  * @author Terry Curran
  * @version 3.1.0
  */

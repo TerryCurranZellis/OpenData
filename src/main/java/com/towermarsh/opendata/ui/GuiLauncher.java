@@ -13,7 +13,7 @@ package com.towermarsh.opendata.ui;
  * @deprecated use {@link com.towermarsh.opendata.gui.GuiLauncher}; the GUI
  * launcher now belongs to the JavaFX package tree.
  */
-@Deprecated(since = "3.1.0")
+@Deprecated(since = "3.1.0", forRemoval = true)
 public final class GuiLauncher {
 
     private GuiLauncher() {
@@ -26,7 +26,7 @@ public final class GuiLauncher {
      * @param args arguments passed to JavaFX
      * @deprecated use {@link com.towermarsh.opendata.gui.GuiLauncher#launch(String...)}
      */
-    @Deprecated(since = "3.1.0")
+    @Deprecated(since = "3.1.0", forRemoval = true)
     public static void launch(final String... args) {
         com.towermarsh.opendata.gui.GuiLauncher.launch(args);
     }

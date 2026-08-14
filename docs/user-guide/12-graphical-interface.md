@@ -111,15 +111,69 @@ and refreshes the main table when complete. Pressing **Cancel** makes no change.
 The table and administration controls are temporarily disabled while an
 administration operation is running.
 
+## Plugin Detail
+
+Check exactly one plugin and choose **Details > Plugin Detail**. OpenData loads the
+registered descriptor and stored plugin properties in the background, then opens
+a two-column **Property / Value** dialog. The dialog is read-only and the **OK**
+button closes it.
+
+If no plugin is checked, OpenData displays **No plugin selected**. If more than
+one plugin is checked, OpenData asks you to select one plugin because Plugin
+Detail displays one configuration at a time.
+
+Values explicitly declared sensitive by a plugin definition are shown as masked
+text. Conventional password, secret, token and credential property names are
+also masked defensively.
+
+## Settings / Preferences
+
+Choose **File > Settings** or the Preferences toolbar button to inspect the
+effective application configuration. The dialog shows database/pool, execution
+and logging settings read-only. The database password is never displayed.
+
+The current GUI specification does not define editable settings or Save
+semantics, so the Batch 5 Settings dialog is intentionally read-only. Selecting
+the Save toolbar button explains that no editable Settings action is currently
+defined.
+
+## Viewing the application log
+
+Choose **Details > Logs** or the Logfile toolbar button. OpenData flushes the
+active `java.util.logging` handlers and reads the current rotating application
+log without closing the logger. The file path is shown above a non-editable,
+scrollable text area. Long lines can be reviewed using horizontal scrolling.
+
+This is the existing-log viewer. The live execution log used by Execute and
+Dry-run is implemented separately in Batch 6 because its Close button must stay
+disabled until processing completes.
+
+## Help
+
+Choose **Help > Help** or the Help toolbar button to open the built-in JavaFX
+help overview. It describes the principal GUI actions and acts as a fallback
+while Windows compiled Help integration is completed.
+
+## About OpenData
+
+Choose **Help > About** or the About toolbar button to display the JavaFX About
+dialog. It contains the OpenData splash image together with the application
+version, description, Java runtime, licence and copyright information. Press
+**OK** to close the dialog.
+
+The standalone command-line `--about` action now uses the JavaFX About
+presentation as well; the previous Swing About implementation is retained only
+as deprecated source compatibility code.
+
 ## Current implementation limitations
 
-Execute, Dry-run, Details, Logs, Settings, Save, Help and the main-window About
-command are not yet connected to their final GUI production actions. Register,
-Register from File, Enable, Disable and Unregister are implemented in Batch 4.
+Execute and Dry-run are not yet connected to plugin execution; those actions are
+Batch 6 work. Settings is intentionally read-only because the current
+specification does not define an editable settings/save contract.
 
-The older command-line About route and command-line run splash still use
-deprecated Swing helpers for compatibility. The graphical startup path itself is
-JavaFX-only.
+The JavaFX GUI and standalone `--about` command no longer use the deprecated
+Swing About implementation. The deprecated Swing execution splash remains only
+on the legacy command-line run path pending final migration review.
 
 ## Screenshots
 

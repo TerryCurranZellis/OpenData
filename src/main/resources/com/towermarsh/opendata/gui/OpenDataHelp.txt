@@ -1,0 +1,17 @@
+OpenData Processing Framework
+
+OpenData downloads or reads configured source data, transforms it through registered plugins and loads the resulting data into the configured local database.
+
+Using the graphical interface
+
+• Register adds valid new plugin properties files discovered in the OpenData configuration folder.
+• Register from File lets you select a plugin properties file from another location.
+• Enable, Disable and Unregister operate on the plugins checked in the Selected column.
+• Plugin Detail shows the stored configuration for one checked plugin. Sensitive values are hidden.
+• Logs opens the current OpenData application log in a scrollable window.
+• Settings shows the effective application configuration without exposing passwords.
+• Execute and Dry-run will be connected to the background execution/log window in the next GUI batch.
+
+Select plugins by checking the Selected box in the main table. The lower-right status reports how many plugins are checked.
+
+Windows compiled Help is being integrated separately. This built-in page remains available as the JavaFX fallback help view.

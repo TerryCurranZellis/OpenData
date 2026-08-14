@@ -26,6 +26,13 @@ public final class GuiLauncher {
     }
 
     /**
+     * Displays the standalone JavaFX About dialog and blocks until it closes.
+     */
+    public static void showAbout() {
+        OpenDataAboutApplication.launchAbout();
+    }
+
+    /**
      * Starts the JavaFX interface and blocks until the interface is closed.
      *
      * @param args arguments to expose to the JavaFX application

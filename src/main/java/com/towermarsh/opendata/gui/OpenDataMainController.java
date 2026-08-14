@@ -7,6 +7,7 @@ package com.towermarsh.opendata.gui;
 
 import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
 
+import com.towermarsh.opendata.ui.ApplicationInfo;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -28,9 +29,9 @@ import javafx.stage.Window;
 /**
  * Controller for {@code OpenDataMainView.fxml}.
  *
- * <p>Plugin reads and Batch 4 administration operations run behind focused
- * service adapters on JavaFX {@link Task}s. The controller owns only selection,
- * dialogs, status feedback and presentation refresh.</p>
+ * <p>Plugin reads, administration and Batch 5 information operations run behind
+ * focused service adapters on JavaFX {@link Task}s. The controller owns only
+ * selection, dialogs, status feedback and presentation refresh.</p>
  *
  * @author Terry Curran
  * @version 3.1.0
@@ -41,8 +42,12 @@ public final class OpenDataMainController {
 
     private final PluginTableDataLoader pluginDataLoader;
     private final PluginAdministrationGateway pluginAdministration;
+    private final PluginDetailGateway pluginDetailGateway;
+    private final ApplicationSettingsGateway settingsGateway;
+    private final LogViewerService logViewerService;
     private Task<List<PluginTableEntry>> pluginLoadTask;
     private Task<?> administrationTask;
+    private Task<?> informationTask;
 
     @FXML
     private TableView<PluginRow> pluginTable;
@@ -105,7 +110,12 @@ public final class OpenDataMainController {
      * Creates the FXML controller using production GUI services.
      */
     public OpenDataMainController() {
-        this(new PluginTableDataLoader(), new PluginAdministrationGateway());
+        this(
+                new PluginTableDataLoader(),
+                new PluginAdministrationGateway(),
+                new PluginDetailGateway(),
+                new ApplicationSettingsGateway(),
+                new LogViewerService());
     }
 
     /**
@@ -117,9 +127,36 @@ public final class OpenDataMainController {
     OpenDataMainController(
             final PluginTableDataLoader pluginDataLoader,
             final PluginAdministrationGateway pluginAdministration) {
+        this(
+                pluginDataLoader,
+                pluginAdministration,
+                new PluginDetailGateway(),
+                new ApplicationSettingsGateway(),
+                new LogViewerService());
+    }
+
+    /**
+     * Creates the controller with explicit read and administration services.
+     *
+     * @param pluginDataLoader main table loader
+     * @param pluginAdministration plugin administration adapter
+     * @param pluginDetailGateway plugin detail reader
+     * @param settingsGateway application settings reader
+     * @param logViewerService application log reader
+     */
+    OpenDataMainController(
+            final PluginTableDataLoader pluginDataLoader,
+            final PluginAdministrationGateway pluginAdministration,
+            final PluginDetailGateway pluginDetailGateway,
+            final ApplicationSettingsGateway settingsGateway,
+            final LogViewerService logViewerService) {
         this.pluginDataLoader = Objects.requireNonNull(pluginDataLoader, "pluginDataLoader");
         this.pluginAdministration = Objects.requireNonNull(
                 pluginAdministration, "pluginAdministration");
+        this.pluginDetailGateway = Objects.requireNonNull(
+                pluginDetailGateway, "pluginDetailGateway");
+        this.settingsGateway = Objects.requireNonNull(settingsGateway, "settingsGateway");
+        this.logViewerService = Objects.requireNonNull(logViewerService, "logViewerService");
     }
 
     /**
@@ -224,12 +261,28 @@ public final class OpenDataMainController {
 
     @FXML
     private void onSettings() {
-        setState("Settings selected - implementation scheduled for a later GUI batch");
+        runInformationTask(
+                "Loading application settings...",
+                settingsGateway::load,
+                entries -> {
+                    setState("Ready");
+                    OpenDataInformationDialogs.showProperties(
+                            ownerWindow(),
+                            "OpenData Settings",
+                            "Effective application settings (read-only)",
+                            entries);
+                },
+                "Unable to load application settings");
     }
 
     @FXML
     private void onSave() {
-        setState("Save selected - implementation scheduled for a later GUI batch");
+        setState("Ready");
+        OpenDataDialogs.information(
+                ownerWindow(),
+                "Settings are read-only",
+                "Batch 5 displays the effective settings without editing them. "
+                + "No Save action is required for the current specification.");
     }
 
     /**
@@ -335,22 +388,46 @@ public final class OpenDataMainController {
 
     @FXML
     private void onPluginDetail() {
-        setState("Plugin Detail selected - implementation scheduled for a later GUI batch");
+        final var pluginId = singleSelectedPluginIdOrWarn();
+        if (pluginId == null) {
+            return;
+        }
+        runInformationTask(
+                "Loading plugin details for " + pluginId + "...",
+                () -> pluginDetailGateway.load(pluginId),
+                entries -> {
+                    setState("Ready");
+                    OpenDataInformationDialogs.showProperties(
+                            ownerWindow(),
+                            "Plugin Detail — " + pluginId,
+                            "Stored configuration for " + pluginId,
+                            entries);
+                },
+                "Unable to load plugin details");
     }
 
     @FXML
     private void onLogs() {
-        setState("Logs selected - implementation scheduled for a later GUI batch");
+        runInformationTask(
+                "Loading application log...",
+                logViewerService::load,
+                snapshot -> {
+                    setState("Ready");
+                    OpenDataInformationDialogs.showLog(ownerWindow(), snapshot);
+                },
+                "Unable to load application log");
     }
 
     @FXML
     private void onHelp() {
-        setState("Help selected - implementation scheduled for a later GUI batch");
+        setState("Ready");
+        OpenDataInformationDialogs.showHelp(ownerWindow());
     }
 
     @FXML
     private void onAbout() {
-        setState("About selected - implementation scheduled for a later GUI batch");
+        setState("Ready");
+        OpenDataInformationDialogs.showAbout(ownerWindow(), ApplicationInfo.current());
     }
 
     private void registerDiscoveredPlugins(
@@ -390,11 +467,34 @@ public final class OpenDataMainController {
                         + pluralSuffix(pluginIds));
     }
 
-    private List<String> selectedPluginIdsOrWarn() {
-        final var pluginIds = pluginTable.getItems().stream()
+    private String singleSelectedPluginIdOrWarn() {
+        final var pluginIds = selectedPluginIds();
+        if (pluginIds.isEmpty()) {
+            OpenDataDialogs.warning(
+                    ownerWindow(),
+                    "No plugin selected",
+                    "Select one plugin using the Selected checkbox.");
+            return null;
+        }
+        if (pluginIds.size() > 1) {
+            OpenDataDialogs.warning(
+                    ownerWindow(),
+                    "Select one plugin",
+                    "Plugin Detail can display one plugin at a time.");
+            return null;
+        }
+        return pluginIds.get(0);
+    }
+
+    private List<String> selectedPluginIds() {
+        return pluginTable.getItems().stream()
                 .filter(row -> row.selectedProperty().get())
                 .map(row -> row.pluginIdProperty().get())
                 .toList();
+    }
+
+    private List<String> selectedPluginIdsOrWarn() {
+        final var pluginIds = selectedPluginIds();
         if (pluginIds.isEmpty()) {
             OpenDataDialogs.warning(
                     ownerWindow(),
@@ -455,6 +555,58 @@ public final class OpenDataMainController {
         });
 
         final var worker = new Thread(task, "OpenData-GUI-PluginAdministration");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
+    private <T> void runInformationTask(
+            final String workingState,
+            final Callable<T> operation,
+            final Consumer<T> onSucceeded,
+            final String failureState) {
+        Objects.requireNonNull(operation, "operation");
+        Objects.requireNonNull(onSucceeded, "onSucceeded");
+
+        if (informationTask != null && informationTask.isRunning()) {
+            setState("An information operation is already running");
+            return;
+        }
+        if (administrationTask != null && administrationTask.isRunning()) {
+            setState("An administration operation is already running");
+            return;
+        }
+
+        setState(workingState);
+        final var task = new Task<T>() {
+            @Override
+            protected T call() throws Exception {
+                return operation.call();
+            }
+        };
+        informationTask = task;
+
+        task.setOnSucceeded(event -> {
+            if (task != informationTask) {
+                return;
+            }
+            informationTask = null;
+            onSucceeded.accept(task.getValue());
+        });
+
+        task.setOnFailed(event -> {
+            if (task != informationTask) {
+                return;
+            }
+            informationTask = null;
+            final var exception = task.getException();
+            final var message = rootCauseMessage(exception);
+            LOGGER.log(Level.SEVERE, failureState + ": {0}", message);
+            LOGGER.log(Level.FINE, "GUI information operation failure details.", exception);
+            setState(failureState);
+            OpenDataDialogs.error(ownerWindow(), failureState, message);
+        });
+
+        final var worker = new Thread(task, "OpenData-GUI-Information");
         worker.setDaemon(true);
         worker.start();
     }

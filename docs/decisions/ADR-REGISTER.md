@@ -77,4 +77,6 @@
 
 | [ADR-0054](ADR-0054-gui-plugin-registration-discovery.md) | Discover GUI plugin registrations from configuration files | Accepted | Batch 4 JavaFX administration workflow |
 
+| [ADR-0055](ADR-0055-javafx-information-dialogs-and-sensitive-display.md) | Use JavaFX read-only information dialogs and mask sensitive configuration values | Accepted | Batch 5 information/dialog migration |
+
 :::

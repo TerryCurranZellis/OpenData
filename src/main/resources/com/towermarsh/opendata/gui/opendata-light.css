@@ -91,3 +91,32 @@
 .status-bar .label {
     -fx-text-fill: #66707a;
 }
+
+/* Batch 5 read-only information dialogs. */
+.dialog-pane {
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-size: 13px;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #f4f6f8;
+}
+
+.log-viewer {
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 12px;
+}
+
+.about-product-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.about-slogan {
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+.about-details {
+    -fx-font-size: 13px;
+}

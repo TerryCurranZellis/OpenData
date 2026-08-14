@@ -15,7 +15,6 @@ import com.towermarsh.opendata.config.PluginDefinitionException;
 import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.logging.LoggingManager;
 import com.towermarsh.opendata.gui.GuiLauncher;
-import static com.towermarsh.opendata.ui.AboutDialog.showAndWait;
 import com.towermarsh.opendata.ui.ApplicationInfo;
 import com.towermarsh.opendata.ui.StartupSplashScreen;
 import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
@@ -59,7 +58,6 @@ public final class OpenData {
     public static void main(final String[] args) {
         final var startedAt = Instant.now();
         final var processor = new CommandLineArgumentsProcessor();
-        final var splash = new StartupSplashScreen();
         var status = ExecutionStatus.NOT_STARTED;
         try {
             enableUTF8Console();
@@ -76,11 +74,11 @@ public final class OpenData {
                 GuiLauncher.launch(new String[0]);
                 status = ExecutionStatus.SUCCESS;
             } else if (arguments.aboutRequested()) {
-                showAndWait(ApplicationInfo.current());
+                GuiLauncher.showAbout();
                 status = ExecutionStatus.SUCCESS;
             } else {
                 if (arguments.runRequested()) {
-                    splash.show();
+                    new StartupSplashScreen().show();
                 }
                 status = new OpenDataApplication().start(arguments, processor);
             }
