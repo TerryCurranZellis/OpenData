@@ -1,0 +1,52 @@
+@startuml
+!pragma layout smetana
+title Octopus Adjustment Processing — Version 3.1.0
+
+actor Operator
+participant OctopusAdjustmentPlugin
+participant OctopusAdjustmentInitialise
+participant OctopusAdjustmentConfiguration
+participant OctopusAdjustmentExtract
+participant "Octopus PDF extraction\n(reused where compatible)" as PdfExtract
+participant OctopusAdjustmentTransform
+participant "OctopusStatementParser\n(reused)" as Parser
+participant OctopusAdjustmentLoad
+participant OctopusAdjustmentPersistenceRepository
+participant JdbcTransactionTemplate
+participant JdbcUpsertExecutor
+participant AdjustmentElectricityRecordUpsertAdapter
+participant AdjustmentGasRecordUpsertAdapter
+participant OctopusAdjustmentFinalise
+database "SQL Server" as DB
+
+Operator -> OctopusAdjustmentPlugin : --plugin octopus-adjustment
+OctopusAdjustmentPlugin -> OctopusAdjustmentInitialise : execute(context)
+OctopusAdjustmentInitialise -> OctopusAdjustmentConfiguration : resolve/validate
+OctopusAdjustmentInitialise -> OctopusAdjustmentExtract : extract()
+OctopusAdjustmentExtract -> PdfExtract : matching <account>-*.pdf
+PdfExtract --> OctopusAdjustmentExtract : text + hash metadata
+OctopusAdjustmentInitialise -> OctopusAdjustmentTransform : transform(extracted)
+OctopusAdjustmentTransform -> Parser : parse statement text
+Parser --> OctopusAdjustmentTransform : electricity + gas records
+
+alt dry run
+  OctopusAdjustmentInitialise -> OctopusAdjustmentLoad : dry-run counts
+  OctopusAdjustmentLoad --> OctopusAdjustmentInitialise : no persistent writes
+else execute
+  OctopusAdjustmentInitialise -> OctopusAdjustmentLoad : load(records, runId)
+  OctopusAdjustmentLoad -> OctopusAdjustmentPersistenceRepository : save(...)
+  OctopusAdjustmentPersistenceRepository -> JdbcTransactionTemplate : execute(...)
+  JdbcTransactionTemplate -> DB : begin transaction
+  OctopusAdjustmentPersistenceRepository -> JdbcUpsertExecutor : electricity
+  JdbcUpsertExecutor -> AdjustmentElectricityRecordUpsertAdapter : exists/insert/update
+  AdjustmentElectricityRecordUpsertAdapter -> DB : adjustment electricity SQL
+  OctopusAdjustmentPersistenceRepository -> JdbcUpsertExecutor : gas
+  JdbcUpsertExecutor -> AdjustmentGasRecordUpsertAdapter : exists/insert/update
+  AdjustmentGasRecordUpsertAdapter -> DB : adjustment gas SQL
+  OctopusAdjustmentPersistenceRepository -> DB : complete adjustment_file
+  JdbcTransactionTemplate -> DB : commit / rollback
+  OctopusAdjustmentInitialise -> OctopusAdjustmentFinalise : archive committed PDFs
+end
+
+OctopusAdjustmentInitialise --> OctopusAdjustmentPlugin : result
+@enduml

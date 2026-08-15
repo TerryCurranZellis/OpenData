@@ -1,0 +1,89 @@
+@startuml
+!pragma layout smetana
+title Octopus Adjustment Data Model — Version 3.1.0
+
+entity "core.PluginRun" as PluginRun {
+  * RunId : uniqueidentifier
+}
+
+entity "octopus.adjustment_file" as AdjustmentFile {
+  * adjustment_file_id : bigint
+  --
+  file_name : nvarchar(260)
+  sha256 : char(64)
+  size_bytes : bigint
+  status : varchar(20)
+  last_run_id : uniqueidentifier
+  processed_at : datetime2(3)
+  failure_message : nvarchar(2000)
+}
+
+entity "octopus.adjustment_electric_data" as Electric {
+  * bill_date : date
+  * tariff_period_start : date
+  * tariff_period_end : date
+  * tariff_name : nvarchar(200)
+  * mpan : varchar(13)
+  * meter_id : varchar(100)
+  * start_reading_date : date
+  * end_reading_date : date
+  --
+  bill_period_start : date
+  bill_period_end : date
+  start_reading_value : decimal(18,6)
+  start_reading_type : nvarchar(100)
+  end_reading_value : decimal(18,6)
+  end_reading_type : nvarchar(100)
+  energy_used_kwh : decimal(18,6)
+  unit_rate_p_kwh : decimal(12,6)
+  standing_charge_rate_p_day : decimal(12,6)
+  standing_charge_total_gbp : decimal(19,6)
+  total_cost_gbp : decimal(19,6)
+  last_run_id : uniqueidentifier
+  created_at : datetime2(3)
+  updated_at : datetime2(3)
+}
+
+entity "octopus.adjustment_gas_data" as Gas {
+  * bill_date : date
+  * tariff_period_start : date
+  * tariff_period_end : date
+  * tariff_name : nvarchar(200)
+  * mprn : varchar(20)
+  * meter_id : varchar(100)
+  * start_reading_date : date
+  * end_reading_date : date
+  --
+  bill_period_start : date
+  bill_period_end : date
+  start_reading_value : decimal(18,6)
+  start_reading_type : nvarchar(100)
+  end_reading_value : decimal(18,6)
+  end_reading_type : nvarchar(100)
+  consumption_m3 : decimal(18,6)
+  energy_used_kwh : decimal(18,6)
+  unit_rate_p_kwh : decimal(12,6)
+  standing_charge_rate_p_day : decimal(12,6)
+  standing_charge_total_gbp : decimal(19,6)
+  total_cost_gbp : decimal(19,6)
+  last_run_id : uniqueidentifier
+  created_at : datetime2(3)
+  updated_at : datetime2(3)
+}
+
+PluginRun ||--o{ AdjustmentFile : last_run_id
+PluginRun ||--o{ Electric : last_run_id
+PluginRun ||--o{ Gas : last_run_id
+
+note right of Electric
+Same business structure as
+octopus.electric_data,
+but separate adjustment provenance.
+end note
+
+note right of Gas
+Same business structure as
+octopus.gas_data,
+but separate adjustment provenance.
+end note
+@enduml
