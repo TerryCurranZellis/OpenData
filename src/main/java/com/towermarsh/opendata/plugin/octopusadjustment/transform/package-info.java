@@ -1,10 +1,25 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /**
- * Transformation of Octopus Energy adjustment PDF text into typed electricity
- * and gas billing records.
+ * Transformation of adjustment PDFs into ordinary Octopus billing model records.
  *
- * <p>The adjustment format uses the ordinary Octopus billing record structure,
- * so compatible parsing and validation logic is reused rather than duplicated.</p>
+ * <h2>Classes</h2>
+ * <ul>
+ * <li>{@link com.towermarsh.opendata.plugin.octopusadjustment.transform.OctopusAdjustmentTransform}
+ * &mdash; Delegates PDF interpretation to the shared Octopus statement parser.</li>
+ * </ul>
  *
+ * <h2>Records</h2>
+ * <ul>
+ * <li>{@link com.towermarsh.opendata.plugin.octopusadjustment.transform.OctopusAdjustmentParseResult}
+ * &mdash; Combined electricity, gas and adjustment-source batch.</li>
+ * </ul>
+ *
+ * @author Terry Curran
+ * @version 3.1.0
  * @since 3.1.0
  */
 package com.towermarsh.opendata.plugin.octopusadjustment.transform;
