@@ -1,11 +1,12 @@
 /*
- * Copyright Â© 2026 Terry Curran
+ * Copyright © 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.app.ApplicationInfo;
+import com.towermarsh.opendata.ui.ApplicationInfo;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -131,7 +132,7 @@ final class OpenDataInformationDialogs {
         final var details = new TextArea(String.join(System.lineSeparator(),
                 information.description(),
                 "",
-                information.runtime() + "  â€¢  " + information.licence(),
+                information.runtime() + "  •  " + information.licence(),
                 information.copyright()));
         details.setEditable(false);
         details.setWrapText(true);
@@ -212,7 +213,7 @@ final class OpenDataInformationDialogs {
     }
 
     private static Image loadSplashImage() {
-        try (var input = OpenDataInformationDialogs.class
+        try (InputStream input = OpenDataInformationDialogs.class
                 .getResourceAsStream(SPLASH_IMAGE)) {
             return input == null ? null : new Image(input);
         } catch (Exception exception) {

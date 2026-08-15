@@ -39,9 +39,6 @@
 - [Batch 5 GUI implementation notes](reviews/Batch-5-Version-3.1.0-GUI.md)
 - [Batch 6 GUI implementation notes](reviews/Batch-6-Version-3.1.0-GUI.md)
 
-- [ADR-0057: Final JavaFX migration and Windows packaging](decisions/ADR-0057-final-javafx-migration-and-windows-packaging.md)
-- [Batch 7 GUI implementation notes](reviews/Batch-7-Version-3.1.0-GUI.md)
-- [GUI 3.1 final acceptance checklist](development/gui-v3.1-final-acceptance-checklist.md)
 ## Current processing-refactor baseline
 
 - [Shared validation and JDBC architecture](architecture/028-shared-validation-and-jdbc-infrastructure.md)

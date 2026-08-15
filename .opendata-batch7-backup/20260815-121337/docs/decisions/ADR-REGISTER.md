@@ -81,6 +81,4 @@
 
 | [ADR-0056](ADR-0056-javafx-live-execution-logging.md) | Stream scoped JUL execution output into JavaFX without replacing application logging | Accepted | Batch 6 Execute/Dry-run live logging |
 
-| [ADR-0057](ADR-0057-final-javafx-migration-and-windows-packaging.md) | Complete JavaFX migration and define Windows packaging | Accepted | Batch 7 final GUI integration |
-
 :::

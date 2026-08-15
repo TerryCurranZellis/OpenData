@@ -1,5 +1,5 @@
 /*
- * Copyright Ã‚Â© 2026 Terry Curran
+ * Copyright Â© 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -16,6 +16,7 @@ import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.logging.LoggingManager;
 import com.towermarsh.opendata.gui.GuiLauncher;
 import com.towermarsh.opendata.app.ApplicationInfo;
+import com.towermarsh.opendata.ui.StartupSplashScreen;
 import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
 import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
+@SuppressWarnings("deprecation")
 public final class OpenData {
 
     /**
@@ -75,6 +77,9 @@ public final class OpenData {
                 GuiLauncher.showAbout();
                 status = ExecutionStatus.SUCCESS;
             } else {
+                if (arguments.runRequested()) {
+                    new StartupSplashScreen().show();
+                }
                 status = new OpenDataApplication().start(arguments, processor);
             }
         } catch (CommandLineProcessingException exception) {

@@ -1,11 +1,11 @@
 /*
- * Copyright Â© 2026 Terry Curran
+ * Copyright © 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.app.ApplicationInfo;
+import com.towermarsh.opendata.ui.ApplicationInfo;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -21,9 +21,7 @@ import javafx.stage.Stage;
  */
 public final class OpenDataAboutApplication extends Application {
 
-    /** 
-     * Displays the JavaFX About dialog and terminates its JavaFX session.
-     * @param primaryStage */
+    /** Displays the JavaFX About dialog and terminates its JavaFX session. */
     @Override
     public void start(final Stage primaryStage) {
         OpenDataInformationDialogs.showAbout(null, ApplicationInfo.current());

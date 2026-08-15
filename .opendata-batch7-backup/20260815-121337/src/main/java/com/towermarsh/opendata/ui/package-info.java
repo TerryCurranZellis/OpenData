@@ -1,5 +1,5 @@
 /*
- * Copyright © 2026 Terry Curran
+ * Copyright Â© 2026 Terry Curran
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -15,7 +15,7 @@
  * <ul>
  * <li>{@link com.towermarsh.opendata.ui.AboutDialog} - legacy Swing About dialog</li>
  * <li>{@link com.towermarsh.opendata.ui.GuiLauncher} - compatibility launcher</li>
- * <li>{@link com.towermarsh.opendata.ui.ApplicationInfo} - application display metadata</li>
+ * <li>{@link com.towermarsh.opendata.app.ApplicationInfo} - application display metadata</li>
  * <li>{@link com.towermarsh.opendata.ui.StartupSplashScreen} - legacy Swing splash</li>
  * </ul>
  *

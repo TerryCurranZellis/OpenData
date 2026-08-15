@@ -12,7 +12,7 @@ import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
 import com.towermarsh.opendata.database.SQLServerResource;
 import com.towermarsh.opendata.logging.LoggingManager;
-import com.towermarsh.opendata.app.ApplicationInfo;
+import com.towermarsh.opendata.ui.ApplicationInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

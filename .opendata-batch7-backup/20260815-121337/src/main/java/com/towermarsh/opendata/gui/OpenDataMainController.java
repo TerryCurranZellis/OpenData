@@ -1,5 +1,5 @@
 /*
- * Copyright © 2026 Terry Curran
+ * Copyright Â© 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -523,7 +523,7 @@ public final class OpenDataMainController {
                     setState("Ready");
                     OpenDataInformationDialogs.showProperties(
                             ownerWindow(),
-                            "Plugin Detail Ã¢â‚¬â€ " + pluginId,
+                            "Plugin Detail â€” " + pluginId,
                             "Stored configuration for " + pluginId,
                             entries);
                 },
@@ -545,7 +545,7 @@ public final class OpenDataMainController {
     @FXML
     private void onHelp() {
         setState("Ready");
-        OpenDataHelpLauncher.show(ownerWindow());
+        OpenDataInformationDialogs.showHelp(ownerWindow());
     }
 
     @FXML
@@ -787,7 +787,7 @@ public final class OpenDataMainController {
     private static String registrationSummary(
             final List<PluginRegistrationCandidate> candidates) {
         return candidates.stream()
-                .map(candidate -> "%s Ã¢â‚¬â€ %s (%s)".formatted(
+                .map(candidate -> "%s â€” %s (%s)".formatted(
                 candidate.pluginId(),
                 candidate.displayName(),
                 candidate.file().getFileName()))
