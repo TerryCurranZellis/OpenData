@@ -54,3 +54,5 @@ logs/
 #work files
 work/
 archive/
+
+.opendata
