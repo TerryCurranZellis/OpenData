@@ -12,7 +12,8 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * Supplies application identity and runtime metadata shared by CLI and GUI code.
+ * Supplies application identity and run-time metadata shared by CLI and GUI
+ * code.
  *
  * <p>
  * The implementation version is normally written into the JAR manifest by the
@@ -25,6 +26,7 @@ import java.util.Properties;
  * @param runtime run time version of java
  * @param licence license to the product
  * @param copyright copyright info
+ *
  * @author Terry Curran
  * @version 3.1.0
  */
@@ -49,7 +51,7 @@ public record ApplicationInfo(
                 .ofNullable(applicationPackage.getImplementationVersion())
                 .filter(value -> !value.isBlank())
                 .orElseGet(() -> metadata.getProperty("application.version", "development"));
-        final String javaVersion = System.getProperty("java.version", "unknown");
+        final var javaVersion = System.getProperty("java.version", "unknown");
 
         return new ApplicationInfo(
                 metadata.getProperty("application.name", "OpenData"),

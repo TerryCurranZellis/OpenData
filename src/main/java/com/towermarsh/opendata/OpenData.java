@@ -61,7 +61,7 @@ public final class OpenData {
             enableUTF8Console();
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
-            final String[] effectiveArguments
+            final var effectiveArguments
                     = args.length == 0
                             ? new String[]{"--gui"}
                     : args;

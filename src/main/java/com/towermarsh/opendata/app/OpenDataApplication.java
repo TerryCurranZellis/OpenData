@@ -229,9 +229,15 @@ public final class OpenDataApplication {
         }
     }
 
-    /**
-     * register one of more plugins
-     */
+  /**
+   * register one of more plugins
+   * @param arguments command line arguments
+   * @param bootstrap bootstrap application
+   * @param bootstrapLoader bootstrap loader
+   * @param passwordCipher password key 
+   * @param database  database connection manager
+   * @param registeredPlugins list of registered plugins
+   */
     private static void registerPlugins(
             final CommandLineArguments arguments,
             final ApplicationBootstrapProperties bootstrap,
@@ -272,10 +278,13 @@ public final class OpenDataApplication {
         noteIgnoredParallelism(arguments);
     }
 
-    /**
-     * we are deciding what to do with a plugin
-     */
-    private static void administerSelected(
+/**
+ * we are deciding what to do with a plugin
+ * @param arguments command line arguments
+ * @param registry where we are registering plugins
+ * @param action what we are doing, registering, un-registering, enabling, disabling
+ */
+private static void administerSelected(
             final CommandLineArguments arguments,
             final JdbcPluginRegistry registry,
             final AdministrationAction action) {
@@ -304,6 +313,7 @@ public final class OpenDataApplication {
 
     /**
      * show list of plugins
+     * @param registry database connection to registry
      */
     private static void printRegisteredPlugins(final JdbcPluginRegistry registry) {
         final var plugins = registry.list();
@@ -324,6 +334,8 @@ public final class OpenDataApplication {
 
     /**
      * get the database password so we can register plugins
+     * @param bootstrap loader
+     * @param arguments
      */
     private static void requireDatabasePassword(
             final ApplicationBootstrapProperties bootstrap,
@@ -339,6 +351,7 @@ public final class OpenDataApplication {
 
     /**
      * An information message as we don't care about running in parallel
+     * @arguments check if parallel is set
      */
     private static void noteIgnoredParallelism(final CommandLineArguments arguments) {
         if (arguments.parallelism().isPresent()) {
@@ -349,6 +362,7 @@ public final class OpenDataApplication {
 
     /**
      * disconnect from the database and close down
+     * @param database database to disconnect from
      */
     private static void closeDatabase(final DatabaseResourceManager database) {
         if (database == null) {
@@ -364,6 +378,7 @@ public final class OpenDataApplication {
 
     /**
      * show the execution summary
+     * @param results the results of running the plugin
      */
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach((var result) -> {
@@ -382,7 +397,7 @@ public final class OpenDataApplication {
     }
 
     /**
-     * plugin status
+     * Administer plugin status
      */
     private enum AdministrationAction {
         REGISTERED("Registered"),
