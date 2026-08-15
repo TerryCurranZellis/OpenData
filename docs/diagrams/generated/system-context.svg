@@ -1,1 +1,148 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="451px" preserveAspectRatio="none" style="width:932px;height:451px;background:#FFFFFF;" version="1.1" viewBox="0 0 932 451" width="932px" zoomAndPan="magnify"><?plantuml 1.2026.6?><defs/><g><g class="title" data-source-line="2"><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="266.0889" x="329.4556" y="24.5332">OpenData Version 2.0.0 System Context</text></g><!--entity Operator--><g class="entity" data-qualified-name="Operator" data-source-line="4" id="ent0001"><ellipse cx="98.603" cy="201.1094" fill="#F1F1F1" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M98.603,209.1094 L98.603,236.1094 M85.603,217.1094 L111.603,217.1094 M98.603,236.1094 L85.603,251.1094 M98.603,236.1094 L111.603,251.1094" fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="185.2061" x="6" y="267.1426">Operator / External Scheduler</text></g><!--entity App--><g class="entity" data-qualified-name="App" data-source-line="5" id="ent0002"><rect fill="#F1F1F1" height="37.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="189.6611" x="311" y="212.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="169.6611" x="321" y="237.1426">OpenData Java Application</text></g><!--entity Config--><g class="entity" data-qualified-name="Config" data-source-line="6" id="ent0003"><path d="M681,53.1094 L681,85.7188 A2.5,2.5 0 0 0 683.5,88.2188 L910.9404,88.2188 A2.5,2.5 0 0 0 913.4404,85.7188 L913.4404,60.6094 L903.4404,50.6094 L683.5,50.6094 A2.5,2.5 0 0 0 681,53.1094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M903.4404,50.6094 L903.4404,58.1094 A2.5,2.5 0 0 0 905.9404,60.6094 L913.4404,60.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="212.4404" x="691" y="75.1426">Bootstrap and Override Properties</text></g><!--entity Ofgem--><g class="entity" data-qualified-name="Ofgem" data-source-line="7" id="ent0004"><path d="M770.5582,115.5887 C772.9716,107.8576 779.6777,106.5732 784.765,112.8833 C787.9705,106.3183 793.1628,104.1621 798.3635,110.8334 C803.577,106.191 808.0741,106.5685 811.6176,112.8581 C817.8462,106.448 822.5043,107.3347 825.7981,115.6787 C836.162,115.6656 838.5867,121.9352 835.1922,130.5899 C839.4797,139.7586 836.5388,145.011 826.7096,146.7864 C823.3942,154.6843 819.0394,156.718 812.1368,150.486 C809.7603,157.4297 804.7173,160.0517 798.7123,154.3328 C792.5778,161.7705 785.6589,160.1738 783.2944,150.8625 C777.1901,156.0208 773.3321,154.6958 770.363,147.5638 C762.1792,145.7338 758.1825,138.6567 764.8818,131.6881 C760.0545,124.6446 760.7976,117.4888 770.5582,115.5887" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="42.0137" x="776" y="136.1426">Ofgem</text></g><!--entity Meteo--><g class="entity" data-qualified-name="Meteo" data-source-line="8" id="ent0005"><path d="M752.4131,181.5016 C754.8367,176.5562 759.1423,175.1069 762.8747,180.1277 C766.8193,175.1444 770.3116,174.1309 774.325,180.0555 C777.8527,173.3659 781.7614,172.2962 786.9768,178.3844 C790.1741,171.7276 793.9239,172.5076 798.6775,176.7072 C801.8415,172.2689 806.6571,172.0469 808.6908,177.8159 C813.1462,172.7044 818.9034,171.6818 822.051,179.1994 C826.1001,174.727 830.9137,174.9755 833.5045,180.8186 C836.5667,176.5086 841.2511,176.3908 843.4612,181.7005 C851.158,185.3321 852.0615,191.4055 845.5658,196.9906 C850.9087,202.5919 851.0858,209.1556 842.8338,212.3367 C840.4817,218.7671 836.6231,219.0151 831.829,214.8803 C829.022,220.5909 824.8588,221.113 820.2212,217.0556 C817.7322,222.2694 813.5177,222.0567 810.3477,217.7628 C807.3701,223.9593 803.737,224.8046 798.4472,220.345 C793.9073,225.7619 790.0214,225.3351 786.6006,219.1977 C782.6603,224.5511 777.666,222.6757 775.6348,217.2547 C771.4569,222.1478 765.7009,221.9274 763.0396,215.5586 C758.2672,220.4473 755.1361,219.148 752.6377,213.346 C744.1805,211.2995 741.764,204.4692 748.8449,198.4629 C741.16,190.9615 742.476,185.2958 752.4131,181.5016" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="77.8203" x="758" y="202.1426">Open-Meteo</text></g><!--entity Octopus--><g class="entity" data-qualified-name="Octopus" data-source-line="9" id="ent0006"><path d="M705,238.6094 L746,238.6094 A3.75,3.75 0 0 1 748.5,241.1094 L755.5,259.6094 L888.7305,259.6094 A2.5,2.5 0 0 1 891.2305,262.1094 L891.2305,291.7188 A2.5,2.5 0 0 1 888.7305,294.2188 L705,294.2188 A2.5,2.5 0 0 1 702.5,291.7188 L702.5,241.1094 A2.5,2.5 0 0 1 705,238.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><line style="stroke:#181818;stroke-width:0.5;" x1="702.5" x2="755.5" y1="259.6094" y2="259.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="158.7305" x="712.5" y="281.1426">Octopus Statement PDFs</text></g><!--entity Files--><g class="entity" data-qualified-name="Files" data-source-line="10" id="ent0007"><path d="M710,312.6094 L751,312.6094 A3.75,3.75 0 0 1 753.5,315.1094 L760.5,333.6094 L883.6201,333.6094 A2.5,2.5 0 0 1 886.1201,336.1094 L886.1201,365.7188 A2.5,2.5 0 0 1 883.6201,368.2188 L710,368.2188 A2.5,2.5 0 0 1 707.5,365.7188 L707.5,315.1094 A2.5,2.5 0 0 1 710,312.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><line style="stroke:#181818;stroke-width:0.5;" x1="707.5" x2="760.5" y1="333.6094" y2="333.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="148.6201" x="717.5" y="355.1426">Work, Archive and Logs</text></g><!--entity Database--><g class="entity" data-qualified-name="Database" data-source-line="11" id="ent0008"><path d="M678,396.6094 C678,386.6094 796.9717,386.6094 796.9717,386.6094 C796.9717,386.6094 915.9434,386.6094 915.9434,396.6094 L915.9434,440.8281 C915.9434,450.8281 796.9717,450.8281 796.9717,450.8281 C796.9717,450.8281 678,450.8281 678,440.8281 L678,396.6094" fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M678,396.6094 C678,406.6094 796.9717,406.6094 796.9717,406.6094 C796.9717,406.6094 915.9434,406.6094 915.9434,396.6094" fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="140.8477" x="688" y="425.1426">OpenData SQL Server</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="217.9434" x="688" y="442.752">configuration, audit and plugin data</text></g><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" data-link-type="dependency" id="lnk9"><polygon fill="#181818" points="310.7592,231.6094,301.7592,227.6094,305.7592,231.6094,301.7592,235.6094,310.7592,231.6094" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M191.1601,231.6094 C228.9476,231.6094 267.7068,231.6094 305.7592,231.6094" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="80.9199" x="211" y="227.1045">CLI command</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" data-link-type="dependency" id="lnk10"><polygon fill="#181818" points="680.889,80.7857,671.3631,78.2841,675.954,81.5892,672.6488,86.1801,680.889,80.7857" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M422.2757,212.5657 C442.0558,189.2568 478.7933,150.3378 519,129.6094 C568.8584,103.9051 624.3066,89.9991 675.954,81.5892" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="133.6753" x="523" y="81.1045">read / bootstrap rewrite</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0004" data-link-type="dependency" id="lnk11"><polygon fill="#181818" points="760.923,135.3451,751.4438,132.6722,755.9743,136.0596,752.5869,140.5901,760.923,135.3451" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M448.0572,212.5069 C468.9481,203.3661 494.9499,192.8611 519,185.6094 C604.1989,159.9195 702.8762,143.7253 755.9743,136.0596" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="137.2998" x="521" y="149.1045">HTTPS page and XLSX</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0005" data-link-type="dependency" id="lnk12"><polygon fill="#181818" points="742.7713,201.3986,733.4491,198.2212,737.7914,201.8466,734.166,206.189,742.7713,201.3986" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M501.166,223.1369 C576.9421,216.319 675.7175,207.4317 737.7914,201.8466" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="105.46" x="537" y="205.1045">HTTPS JSON API</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0006" data-link-type="dependency" id="lnk13"><polygon fill="#181818" points="702.3019,260.6449,693.5984,256.0352,697.3137,260.3009,693.048,264.0162,702.3019,260.6449" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M501.07,243.7053 C507.1341,244.3808 513.1506,245.0224 519,245.6094 C579.9439,251.7248 643.604,256.5969 697.3137,260.3009" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="92.479" x="543.5" y="241.1045">read local PDFs</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0008" data-link-type="dependency" id="lnk14"><polygon fill="#181818" points="677.6766,398.8716,669.8157,392.9381,672.8064,397.7397,668.0048,400.7304,677.6766,398.8716" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M421.5241,250.7351 C441.0594,275.1435 478.1035,317.0221 519,340.6094 C567.4716,368.5656 621.6799,385.858 672.8064,397.7397" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="76.5972" x="551.5" y="336.1045">pooled JDBC</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0007" data-link-type="dependency" id="lnk15"><polygon fill="#181818" points="707.4267,326.6393,699.275,321.1122,702.5054,325.7559,697.8616,328.9863,707.4267,326.6393" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;"/><path d="M444.3219,250.6447 C465.7395,260.9607 493.3873,273.2672 519,281.6094 C580.7123,301.7094 647.5082,315.8842 702.5054,325.7559" fill="none" style="stroke:#181818;stroke-width:1;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="129.3398" x="525" y="277.1045">work, archive and logs</text></g><?plantuml-src JL71JXin4BtxAwOv4ufwxA5II8fAb3Qf5b4EN0PxTcFLQwzcPmFyFMDlCDnilpTltdl-CZ1sFKB0rpG9Z3q9HZJY9H3i1ueR58Hxuj6d2Dykhowle7aTXNfOfoZq8YPGAo09s7T70UUPh2ZPe9N4i50Hndpw2ZzVX3XYWCOUoKs1U04umZl3v4cCdMvUrDLRF26iXY5uYrcsJEZTj3xphbEIKHW7mEXWVo9cxmWEd5HKF8s5hrPRtnaRqkHKk-sedpVdKttMbSlV99GALawcJS5HJg5XXcc4Hb2pKnGuR6vcyJDKgVyI_x-05TkZFr6njKlTJBrHpwDncki9nyyfcxyxQ8ZL_cEqnUp49Uu5uEIy59aXJ9sFaCUBskQiOqpjUBdyaSk1xx3UtO9DVQ-39hzaPAv1GIPq-XzFjJocP_P2bLcAKUAlkxj30mDsSv27NVDGEQMWojas-p-mEjn-I9mREsyBoUh7vz8guzs_KeQK0ZdORgxN5IvbAVPS-iHFVGRjymq0?></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="1018pt" height="378pt"
+ viewBox="0.00 0.00 1017.89 377.62" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(18 359.62)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-18,18 -18,-359.62 999.89,-359.62 999.89,18 -18,18"/>
+<text text-anchor="middle" x="490.94" y="-321.62" font-family="Times,serif" font-size="20.00">OpenData Version 3.0.0 System Context</text>
+<!-- Operator -->
+<g id="node1" class="node">
+<title>Operator</title>
+<ellipse fill="none" stroke="black" cx="85.94" cy="-158.62" rx="85.89" ry="18"/>
+<text text-anchor="middle" x="85.94" y="-156.12" font-family="Arial" font-size="10.00">Operator / External Scheduler</text>
+</g>
+<!-- GUI -->
+<g id="node2" class="node">
+<title>GUI</title>
+<path fill="none" stroke="black" d="M412.89,-203.62C412.89,-203.62 305.89,-203.62 305.89,-203.62 299.89,-203.62 293.89,-197.62 293.89,-191.62 293.89,-191.62 293.89,-179.62 293.89,-179.62 293.89,-173.62 299.89,-167.62 305.89,-167.62 305.89,-167.62 412.89,-167.62 412.89,-167.62 418.89,-167.62 424.89,-173.62 424.89,-179.62 424.89,-179.62 424.89,-191.62 424.89,-191.62 424.89,-197.62 418.89,-203.62 412.89,-203.62"/>
+<text text-anchor="middle" x="359.39" y="-183.12" font-family="Arial" font-size="10.00">JavaFX Desktop Interface</text>
+</g>
+<!-- Operator&#45;&gt;GUI -->
+<g id="edge1" class="edge">
+<title>Operator&#45;&gt;GUI</title>
+<path fill="none" stroke="black" d="M164,-166.29C201.4,-170.01 246.15,-174.46 283.28,-178.15"/>
+<polygon fill="black" stroke="black" points="283.24,-181.67 293.54,-179.17 283.93,-174.7 283.24,-181.67"/>
+<text text-anchor="middle" x="232.89" y="-179.22" font-family="Arial" font-size="8.00"> interactive desktop use</text>
+</g>
+<!-- CLI -->
+<g id="node3" class="node">
+<title>CLI</title>
+<path fill="none" stroke="black" d="M407.89,-149.62C407.89,-149.62 310.89,-149.62 310.89,-149.62 304.89,-149.62 298.89,-143.62 298.89,-137.62 298.89,-137.62 298.89,-125.62 298.89,-125.62 298.89,-119.62 304.89,-113.62 310.89,-113.62 310.89,-113.62 407.89,-113.62 407.89,-113.62 413.89,-113.62 419.89,-119.62 419.89,-125.62 419.89,-125.62 419.89,-137.62 419.89,-137.62 419.89,-143.62 413.89,-149.62 407.89,-149.62"/>
+<text text-anchor="middle" x="359.39" y="-129.12" font-family="Arial" font-size="10.00">Command&#45;line Interface</text>
+</g>
+<!-- Operator&#45;&gt;CLI -->
+<g id="edge2" class="edge">
+<title>Operator&#45;&gt;CLI</title>
+<path fill="none" stroke="black" d="M164,-150.96C203.28,-147.05 250.68,-142.34 288.84,-138.54"/>
+<polygon fill="black" stroke="black" points="289.23,-142.02 298.84,-137.55 288.54,-135.06 289.23,-142.02"/>
+<text text-anchor="middle" x="232.89" y="-151.22" font-family="Arial" font-size="8.00"> commands / scheduling</text>
+</g>
+<!-- App -->
+<g id="node4" class="node">
+<title>App</title>
+<path fill="none" stroke="black" d="M677.89,-176.62C677.89,-176.62 566.89,-176.62 566.89,-176.62 560.89,-176.62 554.89,-170.62 554.89,-164.62 554.89,-164.62 554.89,-152.62 554.89,-152.62 554.89,-146.62 560.89,-140.62 566.89,-140.62 566.89,-140.62 677.89,-140.62 677.89,-140.62 683.89,-140.62 689.89,-146.62 689.89,-152.62 689.89,-152.62 689.89,-164.62 689.89,-164.62 689.89,-170.62 683.89,-176.62 677.89,-176.62"/>
+<text text-anchor="middle" x="622.39" y="-156.12" font-family="Arial" font-size="10.00">OpenData Java Application</text>
+</g>
+<!-- GUI&#45;&gt;App -->
+<g id="edge3" class="edge">
+<title>GUI&#45;&gt;App</title>
+<path fill="none" stroke="black" d="M424.91,-178.95C461.07,-175.21 506.42,-170.52 544.43,-166.59"/>
+<polygon fill="black" stroke="black" points="544.85,-170.06 554.43,-165.55 544.13,-163.1 544.85,-170.06"/>
+<text text-anchor="middle" x="489.89" y="-179.22" font-family="Arial" font-size="8.00"> shared services/gateways</text>
+</g>
+<!-- CLI&#45;&gt;App -->
+<g id="edge4" class="edge">
+<title>CLI&#45;&gt;App</title>
+<path fill="none" stroke="black" d="M419.94,-137.79C456.9,-141.61 504.75,-146.56 544.55,-150.68"/>
+<polygon fill="black" stroke="black" points="544.44,-154.18 554.75,-151.73 545.16,-147.22 544.44,-154.18"/>
+<text text-anchor="middle" x="489.89" y="-152.22" font-family="Arial" font-size="8.00"> parsed operations</text>
+</g>
+<!-- Config -->
+<g id="node5" class="node">
+<title>Config</title>
+<polygon fill="none" stroke="black" points="973.89,-311.62 815.89,-311.62 815.89,-275.62 979.89,-275.62 979.89,-305.62 973.89,-311.62"/>
+<polyline fill="none" stroke="black" points="973.89,-311.62 973.89,-305.62 "/>
+<polyline fill="none" stroke="black" points="979.89,-305.62 973.89,-305.62 "/>
+<text text-anchor="middle" x="897.89" y="-291.12" font-family="Arial" font-size="10.00">Bootstrap and Override Properties</text>
+</g>
+<!-- App&#45;&gt;Config -->
+<g id="edge5" class="edge">
+<title>App&#45;&gt;Config</title>
+<path fill="none" stroke="black" d="M642.65,-176.69C659.02,-191.35 683.68,-211.77 707.89,-225.62 742.61,-245.49 784.16,-261.21 819.46,-272.5"/>
+<polygon fill="black" stroke="black" points="818.64,-275.92 829.23,-275.57 820.74,-269.24 818.64,-275.92"/>
+<text text-anchor="middle" x="751.89" y="-265.23" font-family="Arial" font-size="8.00"> read / bootstrap rewrite</text>
+</g>
+<!-- Ofgem -->
+<g id="node6" class="node">
+<title>Ofgem</title>
+<path fill="none" stroke="black" d="M912.89,-257.62C912.89,-257.62 882.89,-257.62 882.89,-257.62 876.89,-257.62 870.89,-251.62 870.89,-245.62 870.89,-245.62 870.89,-233.62 870.89,-233.62 870.89,-227.62 876.89,-221.62 882.89,-221.62 882.89,-221.62 912.89,-221.62 912.89,-221.62 918.89,-221.62 924.89,-227.62 924.89,-233.62 924.89,-233.62 924.89,-245.62 924.89,-245.62 924.89,-251.62 918.89,-257.62 912.89,-257.62"/>
+<text text-anchor="middle" x="897.89" y="-237.12" font-family="Arial" font-size="10.00">Ofgem</text>
+</g>
+<!-- App&#45;&gt;Ofgem -->
+<g id="edge6" class="edge">
+<title>App&#45;&gt;Ofgem</title>
+<path fill="none" stroke="black" d="M674.61,-176.77C685.55,-180.49 697.07,-184.28 707.89,-187.62 760.65,-203.92 822.45,-220.45 860.64,-230.37"/>
+<polygon fill="black" stroke="black" points="860.2,-233.87 870.76,-232.98 861.95,-227.09 860.2,-233.87"/>
+<text text-anchor="middle" x="751.89" y="-215.22" font-family="Arial" font-size="8.00"> HTTPS page and XLSX</text>
+</g>
+<!-- Meteo -->
+<g id="node7" class="node">
+<title>Meteo</title>
+<path fill="none" stroke="black" d="M920.89,-203.62C920.89,-203.62 874.89,-203.62 874.89,-203.62 868.89,-203.62 862.89,-197.62 862.89,-191.62 862.89,-191.62 862.89,-179.62 862.89,-179.62 862.89,-173.62 868.89,-167.62 874.89,-167.62 874.89,-167.62 920.89,-167.62 920.89,-167.62 926.89,-167.62 932.89,-173.62 932.89,-179.62 932.89,-179.62 932.89,-191.62 932.89,-191.62 932.89,-197.62 926.89,-203.62 920.89,-203.62"/>
+<text text-anchor="middle" x="897.89" y="-183.12" font-family="Arial" font-size="10.00">Open&#45;Meteo</text>
+</g>
+<!-- App&#45;&gt;Meteo -->
+<g id="edge7" class="edge">
+<title>App&#45;&gt;Meteo</title>
+<path fill="none" stroke="black" d="M689.95,-165.2C740.45,-170.18 808.47,-176.9 852.51,-181.24"/>
+<polygon fill="black" stroke="black" points="852.32,-184.74 862.61,-182.24 853.01,-177.78 852.32,-184.74"/>
+<text text-anchor="middle" x="751.89" y="-177.22" font-family="Arial" font-size="8.00"> HTTPS JSON API</text>
+</g>
+<!-- Octopus -->
+<g id="node8" class="node">
+<title>Octopus</title>
+<polygon fill="none" stroke="black" points="962.89,-149.62 959.89,-153.62 938.89,-153.62 935.89,-149.62 832.89,-149.62 832.89,-113.62 962.89,-113.62 962.89,-149.62"/>
+<text text-anchor="middle" x="897.89" y="-129.12" font-family="Arial" font-size="10.00">Octopus Statement PDFs</text>
+</g>
+<!-- App&#45;&gt;Octopus -->
+<g id="edge8" class="edge">
+<title>App&#45;&gt;Octopus</title>
+<path fill="none" stroke="black" d="M689.95,-152.05C730.12,-148.09 781.37,-143.03 822.82,-138.94"/>
+<polygon fill="black" stroke="black" points="823.26,-142.41 832.87,-137.95 822.57,-135.44 823.26,-142.41"/>
+<text text-anchor="middle" x="751.89" y="-153.22" font-family="Arial" font-size="8.00"> read local PDFs</text>
+</g>
+<!-- Files -->
+<g id="node9" class="node">
+<title>Files</title>
+<polygon fill="none" stroke="black" points="970.89,-95.62 967.89,-99.62 946.89,-99.62 943.89,-95.62 824.89,-95.62 824.89,-59.62 970.89,-59.62 970.89,-95.62"/>
+<text text-anchor="middle" x="897.89" y="-75.12" font-family="Arial" font-size="10.00">Work, Archive, Logs and Help</text>
+</g>
+<!-- App&#45;&gt;Files -->
+<g id="edge10" class="edge">
+<title>App&#45;&gt;Files</title>
+<path fill="none" stroke="black" d="M674.61,-140.48C685.55,-136.76 697.07,-132.97 707.89,-129.62 743.55,-118.61 783.35,-107.49 817.19,-98.38"/>
+<polygon fill="black" stroke="black" points="818.27,-101.71 827.02,-95.74 816.46,-94.95 818.27,-101.71"/>
+<text text-anchor="middle" x="751.89" y="-132.22" font-family="Arial" font-size="8.00"> work/archive/logs/help</text>
+</g>
+<!-- DB -->
+<g id="node10" class="node">
+<title>DB</title>
+<path fill="none" stroke="black" d="M981.89,-37.6C981.89,-39.68 944.24,-41.38 897.89,-41.38 851.54,-41.38 813.89,-39.68 813.89,-37.6 813.89,-37.6 813.89,-3.65 813.89,-3.65 813.89,-1.57 851.54,0.13 897.89,0.13 944.24,0.13 981.89,-1.57 981.89,-3.65 981.89,-3.65 981.89,-37.6 981.89,-37.6"/>
+<path fill="none" stroke="black" d="M981.89,-37.6C981.89,-35.52 944.24,-33.83 897.89,-33.83 851.54,-33.83 813.89,-35.52 813.89,-37.6"/>
+<text text-anchor="middle" x="897.89" y="-23.62" font-family="Arial" font-size="10.00">OpenData SQL Server</text>
+<text text-anchor="middle" x="897.89" y="-12.62" font-family="Arial" font-size="10.00">configuration, audit and plugin data</text>
+</g>
+<!-- App&#45;&gt;DB -->
+<g id="edge9" class="edge">
+<title>App&#45;&gt;DB</title>
+<path fill="none" stroke="black" d="M642.65,-140.56C659.02,-125.9 683.68,-105.48 707.89,-91.62 742.51,-71.81 783.7,-55.59 818.78,-43.67"/>
+<polygon fill="black" stroke="black" points="820.12,-46.91 828.5,-40.42 817.9,-40.27 820.12,-46.91"/>
+<text text-anchor="middle" x="751.89" y="-94.22" font-family="Arial" font-size="8.00"> pooled JDBC</text>
+</g>
+</g>
+</svg>

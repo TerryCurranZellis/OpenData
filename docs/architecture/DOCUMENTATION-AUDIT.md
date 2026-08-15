@@ -1,9 +1,9 @@
 # Documentation Audit
 
 **Document ID:** REVIEW-DOC-AUDIT-001  
-**Version:** 2.0  
-**Status:** Current Version 2.0.0 implementation audit  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Current Version 3.0.0 implementation audit  
+**Baseline date:** 15 August 2026
 
 ## Summary
 
@@ -15,6 +15,7 @@ registration command, per-invocation file layering or the former Octopus dry-run
 
 | Area | Current implementation |
 |---|---|
+| GUI | JavaFX desktop interface integrated with shared gateways/services; obsolete Swing UI package removed |
 | Runtime registry | SQL Server `core.plugin_registry` via `JdbcPluginRegistry` |
 | Packaged index | Registration catalogue only |
 | Registration | Requires `--plugin`; supports named, repeated or `all` selection |

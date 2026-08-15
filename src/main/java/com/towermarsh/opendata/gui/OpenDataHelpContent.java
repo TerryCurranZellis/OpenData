@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * integrated in the final GUI batch.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 final class OpenDataHelpContent {
 

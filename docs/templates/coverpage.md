@@ -6,7 +6,7 @@
 
 **Project:** {{projectTitle}}  
 **Author:** {{author}}  
-**Version:** {{version}}  
+**Version:** 3.0.0  
 **Generated:** {{date}}
 
 \newpage

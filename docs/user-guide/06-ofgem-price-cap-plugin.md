@@ -1,9 +1,9 @@
 # 6. Ofgem Price-Cap Plugin
 
 **Document ID:** USER-006  
-**Version:** 2.1  
+**Version:** 3.0.0  
 **Status:** Runtime implemented; acceptance required  
-**Baseline date:** 7 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -15,11 +15,11 @@ Register and test:
 
 ```text
 opendata --plugin ofgem --register
-opendata --plugin ofgem --Execute --dry-run
-opendata --plugin ofgem --Execute
+opendata --plugin ofgem --dry-run
+opendata --plugin ofgem --execute
 ```
 
-Normal and dry-run execution both require `--Execute` or `-x`.
+Normal execution requires `--execute` or `-x`; dry-run uses `--dry-run` or `-n` as its own execution authorisation.
 
 To change configuration, copy the complete packaged
 `config/plugins/ofgem.properties` definition, amend it and re-register it with

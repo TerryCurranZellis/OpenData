@@ -3,7 +3,7 @@
 **Status:** Accepted
 **Date:** 2026-08-14
 **Decision owners:** OpenData maintainers
-**Version:** 3.1.0
+**Version:** 3.0.0
 
 ---
 

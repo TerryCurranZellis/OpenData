@@ -8,7 +8,7 @@ start
 :Developer pushes commit or opens pull request;
 fork
   :Build and quality workflow;
-  :Set up Java 17 and Maven cache;
+  :Set up Java 24 and Maven cache;
   :Run clean verify;
   :Publish test and quality reports;
 fork again

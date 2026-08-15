@@ -1,9 +1,9 @@
 # Ofgem Plugin Configuration Reference
 
 **Document ID:** REF-CONFIG-OFGEM-001
-**Version:** 2.0
+**Version:** 3.0.0  
 **Status:** Current active configuration
-**Baseline date:** 3 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 

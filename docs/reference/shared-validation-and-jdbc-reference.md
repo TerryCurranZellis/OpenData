@@ -1,9 +1,9 @@
 # Shared Validation and JDBC Reference
 
 **Document ID:** REF-SHARED-VALIDATION-JDBC-001
-**Version:** 2.0
-**Status:** Version 2.0.0 implementation reference
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation reference
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

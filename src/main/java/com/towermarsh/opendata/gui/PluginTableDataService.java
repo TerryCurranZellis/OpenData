@@ -27,7 +27,7 @@ import java.util.Optional;
  * JavaFX controller while preserving the existing CLI registry contract.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class PluginTableDataService {
 

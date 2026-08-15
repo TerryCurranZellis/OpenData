@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * Tests conversion from backend table data to JavaFX display values.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class PluginRowTest {
 

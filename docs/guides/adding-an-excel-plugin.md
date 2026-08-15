@@ -1,9 +1,9 @@
 # Adding an Excel Plugin
 
 **Document ID:** GUIDE-EXCEL-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 developer procedure  
-**Baseline date:** 3 August 2026  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 developer procedure  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

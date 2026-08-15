@@ -1,9 +1,9 @@
 # PlantUML Diagram Index
 
 **Document ID:** DIAG-INDEX-001
-**Version:** 2.3
-**Status:** Version 2.0.0 baseline
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 baseline
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -23,6 +23,8 @@ under `docs/diagrams` or another legacy subdirectory.
 | Package dependencies | `package-dependencies.puml` | [image](generated/package-dependencies.svg) |
 | Plugin registry | `plugin-registry.puml` | [image](generated/plugin-registry.svg) |
 | Command-line flow | `command-line-flow.puml` | [image](generated/command-line-flow.svg) |
+| JavaFX application flow | `gui-application-flow.puml` | [image](generated/gui-application-flow.svg) |
+| JavaFX execution/live logging | `gui-execution-sequence.puml` | [image](generated/gui-execution-sequence.svg) |
 | Configuration loading | `configuration-loading-sequence.puml` | [image](generated/configuration-loading-sequence.svg) |
 | Configuration registration | `configuration-registration-sequence.puml` | [image](generated/configuration-registration-sequence.svg) |
 | Plugin execution | `plugin-execution-sequence.puml` | [image](generated/plugin-execution-sequence.svg) |
@@ -50,5 +52,4 @@ Run the documentation build with `-RenderDiagrams`. Markdown embeds the committe
 SVG files, and documentation validation fails when a referenced rendered image is
 missing.
 
-The Ofgem import, OpenMeteo persistence and Octopus statement-processing diagrams
-were refreshed for the shared processing refactor.
+The Version 3.0.0 architecture, system context, package dependencies, operational lifecycle and version-evolution diagrams were refreshed for the merged JavaFX release. Dedicated JavaFX application-flow and execution/live-logging diagrams were added. GUI screenshots are governed by the separate screenshot plan and are stored as canonical PNG captures in `source/`.

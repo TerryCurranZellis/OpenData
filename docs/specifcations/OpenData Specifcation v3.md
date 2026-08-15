@@ -1,4 +1,4 @@
-# OpenData GUI Specifcation 3.1
+# OpenData GUI Specification 3.0.0
 
 ## Overview
 
@@ -6,14 +6,14 @@
 - The _GUI_ will be written using _JavaFX_ and _Java_ as this is more modern code.
 - as much of the JavaFX details will be loaded from the `.fxml` file
 - `SceneBuilder` is available for designing the _GUI_
-- Application will be built using _Netbeans_
-- Minimum Java version is Java 24; Java 25 JDK is currently used for development
+- Application development currently uses _Apache NetBeans 31_
+- Minimum Java version is Java 24; JDK 26 is currently used for development
 - The current command line interface is to remain as an option
 - If no command line arguments are entered then the _GUI_ will run automatically
 - An additional option `--gui` (short code `-g`) has been added, which will run the _GUI_ if used
 - Code should be created in its own GUI package(s)
 - Existing and future ui packages can be moved into the gui package(s)
-- GUI code added or materially changed from Batch 2 onwards should use `@version 3.1.0`; Batch 1 source remains the 3.0.0 baseline
+- The merged GUI is the Version 3.0.0 release baseline
 - Update all documentation, this will also require relevent ADR documents as its a new direction
 - Screenshots of the _GUI_ will be required in the documentation, I will generate these as `.png` with 
 the `docs\diagrams\source` as they will be required in the documentation, they will need to be copied into the `doc\diagrams\generated` folder to be included
@@ -27,8 +27,8 @@ in the documentation.
 - Use a dedicated JavaFX splash `Stage` at graphical application startup.
 - The splash screen must display for a minimum of 5 seconds and close automatically as the main window is shown.
 - The minimum delay must not block the JavaFX application thread.
-- The existing Swing splash implementation is deprecated from version 3.1.0 and replaced by the JavaFX startup path.
-- Other Swing UI remnants are to be marked deprecated until their JavaFX replacements are implemented.
+- The JavaFX startup path replaces the obsolete Swing splash implementation in Version 3.0.0.
+- The obsolete Swing UI package is no longer part of the merged Version 3.0.0 source tree.
 
 ## Main Screen
 
@@ -172,9 +172,9 @@ This is the list of top level items on the menubar
   - Help
     - displays help just display s a brief description Of **OpenData**, needs to be displayed in a dialog box, can share the log window (See below) or 
     can be defined in its own window
-    - I am working on a windows compiled help file, so it may be able to be displayed in its own dialog box
+    - opens the compiled Windows HTML Help file when available and uses the JavaFX help viewer as fallback
   - About
-    - display the about box, currently defined using Swing to may need to be rewritten
+    - display the about box, implemented using JavaFX
     - shows the splashscreen image
     - shows specified text in a text box
     - has an OK button, clicking the ok button closes the about box

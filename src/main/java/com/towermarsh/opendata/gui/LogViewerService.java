@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * Reads the current OpenData rotating log for the JavaFX log viewer.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class LogViewerService {
 

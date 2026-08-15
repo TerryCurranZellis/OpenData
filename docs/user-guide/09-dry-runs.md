@@ -1,24 +1,22 @@
 # 10. Dry Runs
 
 **Document ID:** USER-009  
-**Version:** 2.1  
+**Version:** 3.0.0  
 **Status:** Current  
-**Baseline date:** 7 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
-Dry run is the recommended first execution for every enabled plugin. Because it
-still executes plugin extraction and transformation logic, it requires the
-explicit `--Execute` execution gate:
+Dry run is the recommended first execution for every enabled plugin. It still executes plugin extraction and transformation logic, but `--dry-run` itself is the explicit non-writing execution authorisation:
 
 ```text
-opendata --plugin ofgem --Execute --dry-run
-opendata --plugin openmeteo --Execute --dry-run
-opendata --plugin octopus --Execute --dry-run
-opendata --plugin all --Execute --dry-run --parallelism 3
+opendata --plugin ofgem --dry-run
+opendata --plugin openmeteo --dry-run
+opendata --plugin octopus --dry-run
+opendata --plugin all --dry-run --parallelism 3
 ```
 
-The short forms are `-x` for `--Execute` and `-n` for `--dry-run`. The `-d`
+The short form is `-n` for `--dry-run`; `-x` authorises a normal write-mode execution. The `-d`
 option means `--disable`.
 
 A dry run:
@@ -39,4 +37,4 @@ all matching PDFs in the input directory and does not move them.
 
 Dry-run success never proves SQL DML, grants, transaction behaviour, audit
 completion or archive movement. Complete a controlled write-mode acceptance run
-with `--Execute` before release.
+with `--execute` before release.

@@ -6,11 +6,12 @@
 /**
  * Ofgem plugin entry points.
  *
+ * <h2>Classes</h2>
  * <ul>
- * <li>{@link OfgemPlugin}</li>
+ * <li>{@link OfgemPlugin} &mdash; Ofgem plugin entry point; delegates all flow control to Initialise.</li>
  * </ul>
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.0.0
  */
 package com.towermarsh.opendata.plugin.ofgem;

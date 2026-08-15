@@ -1,9 +1,9 @@
 # Phase 3 — SQL Server Persistence and Ofgem Import Foundation
 
 **Document ID:** ARCH-PHASE-3-001  
-**Version:** 1.1  
+**Version:** 3.0.0  
 **Status:** Historical phase design; runtime integration subsequently implemented  
-**Baseline date:** 26 July 2026
+**Baseline date:** 15 August 2026  
 
 ## Delivered components
 

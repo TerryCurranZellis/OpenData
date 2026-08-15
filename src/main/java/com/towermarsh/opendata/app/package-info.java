@@ -1,22 +1,27 @@
 /*
- * Copyright Â© 2026 Terry Curran
+ * Copyright © 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
  * Application bootstrap and aggregate execution status.
  *
+ * <h2>Classes</h2>
  * <ul>
- * <li>{@link ApplicationInfo} - application identity and ru-ntime metadata</li>
- * <li>{@link ExecutionStatus} - Final status reported by one OpenData process invocation.
- * <p>
- * StatusCode is not yet used as it will be a return stats for the
- * application to be interpreted by the OS.</p></li>
- * <li>{@link OpenDataApplication} - Coordinates plugin administration, registry selection, 
- * configuration, pooled database access, and plugin execution.</li>
+ * <li>{@link OpenDataApplication} &mdash; Coordinates plugin administration, registry selection, configuration, pooled database access, and plugin execution.</li>
  * </ul>
-  *
+ *
+ * <h2>Records</h2>
+ * <ul>
+ * <li>{@link ApplicationInfo} &mdash; Supplies application identity and run-time metadata shared by CLI and GUI code.</li>
+ * </ul>
+ *
+ * <h2>Enums</h2>
+ * <ul>
+ * <li>{@link ExecutionStatus} &mdash; Final status reported by one OpenData process invocation.</li>
+ * </ul>
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.0.0
  */
 package com.towermarsh.opendata.app;

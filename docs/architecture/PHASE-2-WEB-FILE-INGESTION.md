@@ -1,9 +1,9 @@
 # Phase 2: Web File Ingestion
 
 **Document ID:** ARCH-PHASE-2-001  
-**Version:** 1.1  
+**Version:** 3.0.0  
 **Status:** Historical phase design; discovery and parsing subsequently implemented  
-**Baseline date:** 26 July 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

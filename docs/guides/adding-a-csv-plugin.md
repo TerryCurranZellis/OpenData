@@ -1,9 +1,9 @@
 # Adding a CSV Plugin
 
 **Document ID:** GUIDE-CSV-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 developer procedure  
-**Baseline date:** 3 August 2026  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 developer procedure  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

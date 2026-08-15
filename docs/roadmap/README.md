@@ -36,4 +36,4 @@ are implemented.
 
 Database-backed configuration and Octopus local-file processing are no longer
 future work. Direct Octopus acquisition, internal scheduling and additional
-database engines remain outside the Version 2.0.0 release scope.
+database engines remain outside the Version 3.0.0 release scope.

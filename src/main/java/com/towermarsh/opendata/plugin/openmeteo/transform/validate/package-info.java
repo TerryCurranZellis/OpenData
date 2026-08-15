@@ -6,11 +6,12 @@
 /**
  * Validation for Open-Meteo API responses.
  *
+ * <h2>Classes</h2>
  * <ul>
- * <li>{@link OpenMeteoResponseValidator}</li>
+ * <li>{@link OpenMeteoResponseValidator} &mdash; Validates the parallel daily arrays returned by Open-Meteo.</li>
  * </ul>
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.0.0
  */
 package com.towermarsh.opendata.plugin.openmeteo.transform.validate;

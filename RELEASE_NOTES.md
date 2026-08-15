@@ -1,86 +1,106 @@
-# OpenData 2.0.0 Release Notes
+# OpenData 3.0.0 Release Notes
 
-**Status:** Development and release-candidate baseline  
-**Release date:** Not assigned  
-**Documentation reviewed:** 7 August 2026
+**Status:** Release candidate documentation baseline  
+**Baseline date:** 15 August 2026  
+**Minimum supported Java:** 24
 
 ## Overview
 
-OpenData 2.0.0 moves runtime and plugin configuration into SQL Server, adds a
-persistent plugin lifecycle registry, protects the bootstrap database password
-using an X.509/PKCS#12 key pair, standardises the plugin pipeline, completes
-local-file Octopus statement ingestion, and introduces an explicit execution
-authorisation switch.
+OpenData 3.0.0 completes the migration from the prototype desktop code to the
+supported JavaFX graphical interface while retaining the existing command-line
+interface and Version 2 database-backed plugin framework.
 
-This document describes the candidate capability. It is not a declaration that
-all release checks have passed.
+The GUI is now the default when OpenData starts with no arguments. Operators can
+also request it explicitly with `--gui` or `-g`.
 
-## Highlights
+## Graphical interface
 
-- `--plugin <id|all> --register` imports selected packaged definitions into SQL
-  Server and rewrites the bootstrap configuration for database-backed startup.
-- One external definition can be registered with
-  `--plugin <id> --register --file <filename>`.
-- Registered plugins can be listed, enabled, disabled and unregistered without
-  editing packaged resources.
-- Repeated `--plugin` options select several plugins for registration,
-  administration or execution.
-- Normal and dry-run execution require the explicit `--Execute` switch or its
-  short form `-x`; plugin selection by itself no longer starts a load.
-- Ofgem, OpenMeteo and Octopus support side-effect-free dry runs.
-- Octopus scans authorised local PDFs, ignores completed filename/hash pairs in
-  write mode, transforms all new statements as a batch, loads electricity/gas
-  data and the completion ledger transactionally, then archives successful files.
-- The documentation system builds four manifest-defined manuals and includes an
-  additional Unix-style `opendata(1)` manual-page source.
-- Governance documentation separates project licensing, dependency notices,
-  provider attribution and private customer-document handling.
+Version 3.0.0 provides:
 
-## Command-line compatibility note
+- JavaFX startup splash and maximised main window;
+- persistent plugin table populated from the SQL Server registry and latest run
+  audit;
+- explicit checkbox selection for one or more plugins;
+- Register and Register from File workflows;
+- Enable, Disable and Unregister operations with confirmation;
+- Plugin Detail with sensitive configuration values masked;
+- read-only Settings/Preferences;
+- current application-log viewer;
+- Execute and Dry-run commands running away from the JavaFX application thread;
+- a modal live execution-log window whose Close action is disabled until work
+  completes;
+- JavaFX About presentation;
+- Windows compiled HTML Help (`.chm`) when available, with built-in JavaFX help
+  as fallback.
 
-Version 2.0.0 requires explicit execution authorisation:
+The previous Swing presentation package has been removed from the merged
+Version 3.0.0 baseline.
 
-```text
-opendata --plugin ofgem --Execute
-opendata --plugin all --Execute --dry-run
-```
+## Command-line interface
 
-`--Execute` / `-x` is required for both normal and dry-run execution and cannot
-be combined with `--register`, `--unregister`/`--remove`, `--enable`, or
-`--disable`.
+The CLI remains fully supported. Normal execution requires `--execute` (`-x`);
+`--dry-run` (`-n`) authorises the non-writing path. Plugin administration and
+information commands do not use `--execute`.
 
-The requested short form `-d` was assigned to both disable and dry-run. A command
-line cannot distinguish those meanings, so OpenData 2.0.0 uses:
-
-- `-d` for `--disable`;
-- `-n` for `--dry-run`.
-
-The long option `--dry-run` is unchanged.
-
-## Upgrade impact
-
-Version 1.x operators must install the current SQL schema, including
-`sql/003a-create-plugin-registry.sql`, create deployment keys, register plugins
-and migrate custom plugins to the current lifecycle/packages. Read
-`docs/migration/version-1-to-version-2.md` before replacing a working
-installation.
-
-After migration, verify:
+Examples:
 
 ```text
-opendata --plugin all --register
+opendata --plugin ofgem --execute
+opendata --plugin openmeteo --dry-run
+opendata --plugin all --dry-run --parallelism 3
+opendata --plugin octopus --detail
 opendata --list-plugins
-opendata --plugin all --Execute --dry-run
 ```
 
-## Security and operational warnings
+## Runtime and development baseline
 
-Do not deploy the tracked development credentials/private key. Rotate any
-password exposed in repository history. The environment-variable PFX password
-route, SQL Server trust configuration and preview JDBC dependency must be
-resolved or explicitly waived before a production-ready release.
+- Minimum supported runtime/build JDK: **24**.
+- Current development JDK: **26**.
+- Current development IDE: **Apache NetBeans 31**.
+- JavaFX: **26.0.1** (`javafx-controls` and `javafx-fxml`).
+- Maven Enforcer requires Java 24 or later and Maven 3.9 or later.
 
-## Release decision
+Release verification should continue to exercise the minimum Java 24 baseline,
+even when day-to-day development uses JDK 26.
 
-The source and documentation remain a release candidate until the final release
-checklist and evidence index are completed in the target environment.
+## Included plugins
+
+Version 3.0.0 retains the current provider set:
+
+- `ofgem` — UK energy price-cap data;
+- `openmeteo` — historical weather data; and
+- `octopus` — local Octopus Energy statement PDF processing.
+
+Additional plugins planned after Version 3.0.0 are not part of this release.
+
+## Documentation
+
+The Version 3.0.0 documentation baseline includes the Technical User Guide,
+Administrator Guide, Developer Guide and API/configuration reference. The GUI
+user guide has been promoted from implementation notes to current operating
+guidance.
+
+GUI screenshots are intentionally tracked as release evidence rather than
+embedded as broken image links. Capture the required PNG files listed in
+`docs/development/gui-screenshot-plan.md`, then add the final publication copies
+before release approval.
+
+## Third-party dependency update
+
+The third-party notice inventory has been reconciled with the Version 3.0.0
+`pom.xml`, including JavaFX 26.0.1. The notice also corrects the PDFBox version
+to 3.0.8 and JUnit Jupiter to 6.1.2 and records Apache NetBeans 31/JDK 26 as the
+current development environment.
+
+## Release readiness
+
+Version 3.0.0 should not be tagged until the release checklist is complete. In
+particular, retain evidence for:
+
+- `mvn clean verify` on the Java 24 minimum baseline;
+- GUI functional acceptance and final screenshot capture;
+- compiled Windows Help/fallback behaviour;
+- clean SQL installation and plugin acceptance;
+- dependency/licence inventory;
+- secret/privacy review; and
+- final distribution/checksum verification.

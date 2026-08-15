@@ -1,12 +1,25 @@
 # Component Interactions
 
 **Document ID:** ARCH-010  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation baseline  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
+
+## Graphical interface
+
+The JavaFX main window loads registry/run-audit data through GUI-specific gateway
+and loader classes rather than issuing SQL from the controller. Register,
+Register from File, Enable, Disable, Unregister, Plugin Detail and Settings use
+background JavaFX tasks and existing OpenData registry/configuration services.
+
+GUI Execute and Dry-run snapshot checked plugin ids, obtain confirmation, then
+call `PluginExecutionGateway`, which delegates to the same selection and
+execution coordinator used by the CLI. `JavaFxLogHandler` streams scoped JUL
+output to the modal execution window while normal file/console logging remains
+active. The main table is refreshed after completion.
 
 ## Informational commands
 

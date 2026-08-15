@@ -12,7 +12,7 @@ use that apply to the data they process.
 
 ## Source summary
 
-| Plugin | Source | Acquisition in Version 2.0.0 | Rights/handling summary |
+| Plugin | Source | Acquisition in Version 3.0.0 | Rights/handling summary |
 |---|---|---|---|
 | `ofgem` | Ofgem Energy Price Cap publications | Public web discovery and workbook download | Crown copyright material is generally reusable under the Open Government Licence unless marked otherwise |
 | `openmeteo` | Open-Meteo Historical Weather API | HTTPS API request | API data are offered under CC BY 4.0; service-plan terms and underlying-dataset attribution also apply |
@@ -94,7 +94,7 @@ for safety-critical decisions.
 
 ### Source boundary
 
-Version 2.0.0 scans locally supplied files matching the configured Octopus PDF
+Version 3.0.0 scans locally supplied files matching the configured Octopus PDF
 pattern. It does not sign in to the Octopus website, scrape the customer portal,
 read email, or use the Octopus API to download statements.
 

@@ -1,15 +1,15 @@
 # OpenData Architecture Manual
 
 **Document ID:** ARCH-INDEX-001
-**Version:** 2.1
-**Status:** Version 2.0.0 implementation baseline
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation baseline
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
 
 The numbered documents describe the current OpenData modular monolith as
-implemented in the Version 2.0.0 source baseline. The application has a packaged
+implemented in the Version 3.0.0 merged source baseline. The JavaFX desktop interface and command-line interface share application services. The application has a packaged
 registration catalogue, persistent SQL Server plugin registry, database-backed
 configuration, bounded parallel execution, contextual logging, pooled SQL Server
 access and three executable plugins: Ofgem, OpenMeteo and Octopus Energy.

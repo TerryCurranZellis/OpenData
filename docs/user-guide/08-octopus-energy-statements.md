@@ -1,9 +1,9 @@
 # 8. Octopus Energy Statements
 
 **Document ID:** USER-008-OCTOPUS  
-**Version:** 2.1  
+**Version:** 3.0.0  
 **Status:** Runtime and dry-run implemented; live acceptance required  
-**Baseline date:** 7 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -41,11 +41,11 @@ for a write run because a blank path resolves to the process working directory.
 ## Controlled acceptance
 
 ```text
-opendata --plugin octopus --Execute --dry-run
-opendata --plugin octopus --Execute
+opendata --plugin octopus --dry-run
+opendata --plugin octopus --execute
 ```
 
-Normal and dry-run execution both require `--Execute` or `-x`.
+Normal execution requires `--execute` or `-x`; dry-run uses `--dry-run` or `-n` as its own execution authorisation.
 
 Dry run lists and parses candidate PDFs without reading/writing the completion
 ledger, loading provider rows, writing `core.PluginRun`, or moving source files.

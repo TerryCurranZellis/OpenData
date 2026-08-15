@@ -6,15 +6,15 @@
 /**
  * Shared models for downloaded files, datasets, and import outcomes.
  *
+ * <h2>Classes</h2>
  * <ul>
- * <li>{@link DataFile}</li>
- * <li>{@link DataSourceDefinition}</li>
- * <li>{@link DatasetDefinition}</li>
- * <li>{@link ImportResult}</li>
+ * <li>{@link DataFile} &mdash; Represents a downloaded OpenData file.</li>
+ * <li>{@link DatasetDefinition} &mdash; Defines an OpenData dataset.</li>
+ * <li>{@link DataSourceDefinition} &mdash; Defines an OpenData source.</li>
+ * <li>{@link ImportResult} &mdash; Represents the outcome of an import operation.</li>
  * </ul>
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.0.0
  */
 package com.towermarsh.opendata.model;
-

@@ -1,9 +1,9 @@
 # Security Standard
 
 **Document ID:** STD-SECURITY-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 target standard with known release blockers  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 target standard with known release blockers  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -17,7 +17,7 @@
 - A public certificate MAY be distributed; the private key MUST be provisioned
   separately and protected.
 
-The uploaded Version 2.0.0 baseline contains a plaintext bootstrap credential and
+The Version 3.0.0 baseline contains a plaintext bootstrap credential and
 a private PFX under the source tree. This violates the target standard and is a
 release blocker requiring removal from history, replacement and credential/key
 rotation.

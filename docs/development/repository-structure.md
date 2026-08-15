@@ -1,9 +1,9 @@
 # Repository Structure
 
 **Document ID:** DEV-REPOSITORY-001  
-**Version:** 2.1  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -31,16 +31,21 @@ Framework packages sit below `com.towermarsh.opendata`, including:
 app
 cli
 config
+config.model
 database
+database.audit
+database.jdbc
 discovery
 download
+download.strategy
 etl
 exception
+gui
 logging
 model
 parser
 plugin
-ui
+util
 validation
 ```
 
@@ -50,7 +55,7 @@ Provider-specific code belongs below:
 com.towermarsh.opendata.plugin.<plugin-id>
 ```
 
-The Version 2.0.0 target package structure is:
+The provider plugin package structure used by Version 3.0.0 is:
 
 ```text
 <plugin-id>
@@ -68,7 +73,7 @@ the `initialise` stage. Temporary compatibility packages such as provider-local
 `config` or `download` may still exist in the current source; new code should
 not expand those duplicates.
 
-All production packages currently contain `package-info.java`. The shared
+All 42 production packages currently contain `package-info.java`; each inventory groups and links its classes, records, interfaces and enums with a short description. The shared
 `exception` package owns framework exception types; plugin-specific errors are
 translated at the plugin boundary rather than creating an unrelated exception
 hierarchy.

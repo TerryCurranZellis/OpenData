@@ -1,21 +1,21 @@
 # Release and Versioning
 
 **Document ID:** DEV-RELEASE-001
-**Version:** 2.0
+**Version:** 3.0.0  
 **Status:** Current release process
-**Baseline date:** 2 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
 ## Version source
 
-The Maven project version is the build version. Version 2.0.0 is the current code
+The Maven project version is the build version. Version 3.0.0 is the current code
 and documentation baseline. Release notes and the Git tag must use the same
 version.
 
 ## Release gate
 
-A Version 2.0.0 release candidate requires:
+A Version 3.0.0 release candidate requires:
 
 - clean `mvn clean verify` output on Java 24 compatibility;
 - documentation validation and successful diagram rendering;
@@ -24,6 +24,7 @@ A Version 2.0.0 release candidate requires:
 - successful restart using the encrypted bootstrap password;
 - least-privilege verification for the application principal;
 - successful Ofgem, OpenMeteo, Octopus and `all` dry runs;
+- completed JavaFX GUI acceptance, Help verification and the required 13 release screenshots;
 - register/list/enable/disable/unregister lifecycle acceptance;
 - representative write-mode, rollback and idempotency tests;
 - duplicate and changed-file tests for Octopus statements;
@@ -40,7 +41,7 @@ A Version 2.0.0 release candidate requires:
 2. freeze ADR statuses and documentation baseline dates;
 3. run the release gate from a clean checkout;
 4. create the source and application artefacts and checksums;
-5. tag the exact verified commit as `v2.0.0`;
+5. tag the exact verified commit as `v3.0.0`;
 6. publish artefacts and notices; and
 7. retain test, dependency, database and documentation evidence.
 

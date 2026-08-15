@@ -29,7 +29,7 @@ import javafx.stage.Window;
  * the operator can review the complete scrollable log before closing it.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 final class OpenDataExecutionWindow {
 

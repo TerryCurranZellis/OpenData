@@ -1,9 +1,9 @@
 # Configuring API Credentials
 
 **Document ID:** GUIDE-CREDENTIAL-001  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Credential-reference model implemented; runtime secret provider absent  
-**Baseline date:** 3 August 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

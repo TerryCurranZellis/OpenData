@@ -4,8 +4,7 @@ OpenData documentation is maintained as Markdown and PlantUML and assembled into
 manifest-defined manuals.
 
 Use the [complete documentation index](DOCUMENTATION-INDEX.md) for navigation.
-The active baseline is Version 2.0.0. Version 1.0.0 release material and dated
-reviews are historical evidence only.
+The active baseline is Version 3.0.0. Earlier release records and dated GUI implementation reviews are retained as historical evidence only.
 
 ## Structure
 
@@ -29,17 +28,15 @@ reviews are historical evidence only.
 
 The documentation describes a release-candidate baseline, not a completed
 production release. See
-[OpenData 2.0.0 release readiness](review/RELEASE-READINESS-STATUS-2.0.0.md).
+[OpenData 3.0.0 release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md).
 
 ## Validation and generation
 
-Use the repository's existing documentation scripts; no script changes are part
-of the content update:
+Use the repository's maintained documentation wrappers. Version 3.0.0 restores the missing build wrapper and makes dot-sourcing the underlying function side-effect free:
 
 ```powershell
 .\scripts\Validate-Documentation.ps1 -FailOnWarning
-.\scripts\Convert-PlantUml.ps1
-.\scripts\Build-Documentation.ps1 -Document All -Format All
+.\scripts\Build-Documentation.ps1 -Document All -Format All -RenderDiagrams
 ```
 
 Every generated document is defined by a JSON file under `docs/manifests`.

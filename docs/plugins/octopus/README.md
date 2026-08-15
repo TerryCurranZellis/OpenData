@@ -1,9 +1,9 @@
 # Octopus Energy Statement Plugin
 
 **Document ID:** PLUGIN-OCTOPUS-INDEX-001
-**Version:** 2.1
+**Version:** 3.0.0  
 **Status:** Runtime, dry-run and generic upsert integration implemented; live acceptance pending
-**Baseline date:** 4 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -19,7 +19,7 @@ The plugin imports electricity and gas billing data from local PDFs named:
 octopus-energy-statement-YYYY-MM-DD.pdf
 ```
 
-Version 2.0.0 does not access an Octopus account, API or email mailbox.
+Version 3.0.0 does not access an Octopus account, API or email mailbox.
 
 ## Configuration
 

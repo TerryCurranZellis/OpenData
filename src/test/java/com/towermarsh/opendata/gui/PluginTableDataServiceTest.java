@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
  * Tests the read-only registry/run-audit composition used by the GUI table.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class PluginTableDataServiceTest {
 

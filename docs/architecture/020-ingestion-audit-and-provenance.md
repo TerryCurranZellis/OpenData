@@ -1,7 +1,7 @@
 # Ingestion Audit and Provenance
 
 **Document ID:** ARCH-020  
-**Version:** 1.1  
+**Version:** 3.0.0  
 **Status:** Implemented transitional models  
 **Baseline date:** 26 July 2026
 

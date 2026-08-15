@@ -1,9 +1,9 @@
 # Java Plugin Template
 
 **Document ID:** TEMPLATE-PLUGIN-JAVA-001
-**Version:** 2.1
-**Status:** Version 2.0.0 shared-processing template
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 shared-processing template
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -13,7 +13,7 @@ replace every `Example` symbol.
 
 ## Required framework use
 
-New plugins must begin with the shared Version 2.0.0 infrastructure:
+New plugins must begin with the shared Version 3.0.0 infrastructure:
 
 - `PluginPropertyValues` for typed registered properties;
 - `ValidationRules` for domain-independent rules;
@@ -44,7 +44,7 @@ upsert is correct for the provider.
 
 ## API documentation rule
 
-Every new or amended public Version 2.0.0 API must include Javadoc
+Every new or amended public Version 3.0.0 API must include Javadoc
 `@since 2.0.0`. A retained obsolete public API must also include Java
 `@Deprecated` and Javadoc `@deprecated`. Do not retain unused private methods as
 deprecated wrappers.

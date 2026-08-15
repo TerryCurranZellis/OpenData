@@ -5,13 +5,11 @@
   "author": "OpenData Framework Project",
   "language": "en-GB",
   "dateFormat": "dd MMMM yyyy",
-  "projectVersion": "2.0.0",
-
+  "projectVersion": "3.0.0",
   "sourceDirectory": "docs",
   "buildDirectory": "docs/build",
   "manifestDirectory": "docs/manifests",
   "manifestPattern": "*.json",
-
   "defaultDocument": {
     "template": "docs/_templates/template.docx",
     "coverPage": "shared/coverpage.md",
@@ -22,27 +20,22 @@
     "numberHeadings": true,
     "includeInventory": true
   },
-
   "documentMetadata": {
     "author": "OpenData Framework Project",
     "language": "en-GB",
     "status": "Current"
   },
-
   "diagramSourceDirectory": "docs/diagrams/source",
   "diagramOutputDirectory": "docs/diagrams/generated",
   "plantUmlJar": "tools/plantuml.jar",
-
   "landscapeFilter": "docs/_filters/landscape.lua",
   "tocFilter": "docs/_filters/document-toc.lua",
   "latexLandscapeHeader": "docs/_includes/landscape.tex",
   "pdfEngine": "xelatex",
-
   "portraitImageWidthCm": 16,
   "portraitImageHeightCm": 24,
   "landscapeImageWidthCm": 22.5,
   "landscapeImageHeightCm": 14.5,
-
   "templateDirectory": "docs/templates",
   "sharedDirectory": "docs/shared",
   "generatedDirectory": "docs/generated"

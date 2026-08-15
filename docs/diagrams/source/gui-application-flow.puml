@@ -1,0 +1,29 @@
+@startuml
+!theme plain
+title OpenData 3.0.0 JavaFX Application Flow
+start
+:OpenData.main(args);
+if (No command-line arguments?) then (yes)
+  :Treat as --gui;
+endif
+if (--gui selected?) then (yes)
+  :GuiLauncher;
+  :OpenDataGuiApplication;
+  :Show StartupSplashScreen;
+  :Load main FXML and controller;
+  :Display maximised main window;
+  :Load registered plugin table;
+  :Operator selects menu/toolbar action;
+  if (Execution action?) then (yes)
+    :Confirm Execute or Dry-run;
+    :PluginExecutionGateway;
+    :Show live execution log;
+  else (no)
+    :Administration / Details / Settings / Help;
+  endif
+else (no)
+  :Parse CLI operation;
+  :OpenDataApplication shared services;
+endif
+stop
+@enduml

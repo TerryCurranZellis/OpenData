@@ -1,9 +1,9 @@
 # Download and Discovery Reference
 
 **Document ID:** REF-DOWNLOAD-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation reference  
-**Baseline date:** 3 August 2026  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation reference  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

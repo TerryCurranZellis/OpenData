@@ -1,9 +1,9 @@
 # Deployment and Environments
 
 **Document ID:** ARCH-022  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Local source-tree execution implemented; deployable packaging unresolved  
-**Baseline date:** 3 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 

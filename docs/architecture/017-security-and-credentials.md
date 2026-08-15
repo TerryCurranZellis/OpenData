@@ -1,9 +1,9 @@
 # Security and Credentials
 
 **Document ID:** ARCH-017
-**Version:** 2.0
+**Version:** 3.0.0  
 **Status:** Encryption implemented; source-baseline remediation required
-**Baseline date:** 3 August 2026
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

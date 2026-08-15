@@ -1,11 +1,17 @@
-.TH OPENDATA 1 "8 August 2026" "OpenData 2.0.0" "OpenData Manual"
+.TH OPENDATA 1 "15 August 2026" "OpenData 3.0.0" "OpenData Manual"
 .SH NAME
 opendata \- acquire, transform and load external data through registered plugins
 .SH SYNOPSIS
 .B opendata
 .BR --plugin " " \fIid\fR|\fBall\fR
 .RB [ --plugin " " \fIid\fR ]
-.B --Execute
+.B --execute
+.RI [ run-options ]
+.PP
+.B opendata
+.BR --plugin " " \fIid\fR|\fBall\fR
+.RB [ --plugin " " \fIid\fR ]
+.B --dry-run
 .RI [ run-options ]
 .PP
 .B opendata
@@ -26,12 +32,16 @@ is a Java command-line framework that acquires external data, transforms it
 through registered plugins, validates plugin-specific records, and can load
 the resulting data into Microsoft SQL Server.
 .PP
-Beginning with the OpenData 2.0.0 command-line contract, selecting a plugin does
-not by itself authorise execution.  Normal execution and dry-run execution both
-require the explicit
-.B --Execute
-switch, or its short form
+Selecting a plugin does not by itself authorise execution.  Normal write-mode
+execution requires
+.B --execute
+or its short form
 .BR -x .
+A non-writing execution uses
+.B --dry-run
+or
+.BR -n
+as its own execution authorisation.
 .PP
 For example,
 .PP
@@ -42,7 +52,7 @@ opendata --plugin ofgem
 is rejected.  To run the plugin use:
 .PP
 .nf
-opendata --plugin ofgem --Execute
+opendata --plugin ofgem --execute
 .fi
 .PP
 To inspect the stored configuration without running the plugin use:
@@ -52,7 +62,7 @@ opendata --plugin ofgem --detail
 .fi
 .PP
 Administration and detail commands do not require
-.B --Execute
+.B --execute
 and must not be combined with it.
 .SH OPTIONS
 .TP
@@ -64,12 +74,11 @@ selects all eligible plugins for the requested operation.  The
 .B --detail
 operation is restricted to exactly one named plugin.
 .TP
-.BR -x ", " --Execute
-Explicitly authorise plugin execution.  This switch is required for normal
-execution and for
-.BR --dry-run .
-It takes no argument and cannot be combined with plugin detail or
-administration operations.
+.BR -x ", " --execute
+Explicitly authorise normal write-mode plugin execution.  It takes no argument
+and cannot be combined with
+.BR --dry-run ,
+plugin detail, or administration operations.
 .TP
 .B --detail
 Display the stored configuration for exactly one named registered plugin.
@@ -79,15 +88,16 @@ the stored properties read from
 This option cannot be used with
 .BR --plugin " " all ,
 multiple plugin selections,
-.BR --Execute ,
+.BR --execute ,
 .BR --dry-run ,
 .BR --file ,
 or a plugin administration operation.
 .TP
 .BR -n ", " --dry-run
-Execute the selected plugin or plugins without provider-data writes or generic
-run-audit rows.  This is still an execution operation and therefore requires
-.BR --Execute .
+Explicitly authorise non-writing execution of the selected plugin or plugins.
+Provider-data writes and generic run-audit rows are suppressed.  This option is
+used instead of
+.BR --execute .
 .TP
 .BR -j ", " --parallelism " " \fI1-64\fR
 Set the maximum number of plugins that may execute concurrently.  The option is
@@ -126,16 +136,18 @@ Display command-line help.
 .BR -a ", " --about
 Display the graphical About and version window.
 .SH EXECUTION RULES
-A normal or dry-run invocation requires both a plugin selection and explicit
-execution authorisation:
+Normal execution requires a plugin selection plus
+.BR --execute ;
+dry-run requires a plugin selection plus
+.BR --dry-run :
 .PP
 .nf
-opendata --plugin ofgem --Execute
-opendata --plugin ofgem --Execute --dry-run
+opendata --plugin ofgem --execute
+opendata --plugin ofgem --dry-run
 .fi
 .PP
 The
-.B --Execute
+.B --execute
 switch is not valid with
 .BR --detail ,
 .BR --register ,
@@ -193,7 +205,7 @@ opendata --plugin octopus --unregister
 Run the Ofgem plugin:
 .PP
 .nf
-opendata --plugin ofgem --Execute
+opendata --plugin ofgem --execute
 .fi
 .PP
 Inspect the Ofgem configuration:
@@ -205,13 +217,13 @@ opendata --plugin ofgem --detail
 Run Ofgem and OpenMeteo with two workers:
 .PP
 .nf
-opendata --plugin ofgem --plugin openmeteo --Execute --parallelism 2
+opendata --plugin ofgem --plugin openmeteo --execute --parallelism 2
 .fi
 .PP
 Dry-run every enabled registered plugin:
 .PP
 .nf
-opendata --plugin all --Execute --dry-run
+opendata --plugin all --dry-run
 .fi
 .PP
 Use short options for execution and dry-run:
@@ -257,7 +269,7 @@ is
 has no short option and applies to one named plugin only.
 .PP
 The long execution switch is intentionally spelled
-.B --Execute
+.B --execute
 with a capital E.
 .SH SEE ALSO
 The repository documentation:

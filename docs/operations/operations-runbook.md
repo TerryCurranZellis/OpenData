@@ -1,9 +1,9 @@
 # Operations Runbook
 
 **Document ID:** OPS-RUNBOOK-001  
-**Version:** 2.2  
-**Status:** Version 2.0.0 pre-production baseline  
-**Baseline date:** 8 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 pre-production baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -33,17 +33,17 @@ External definitions are accepted only as
 
 Use `--plugin <id> --detail` to confirm the configuration stored in SQL Server
 for one registered plugin. The command requires exactly one named plugin and
-does not use `--Execute`.
+does not use `--execute`.
 
-Administration operations and `--detail` do not use `--Execute`.
+Administration operations and `--detail` do not use `--execute`.
 
 ## Safe acceptance
 
 1. register the required plugins;
 2. use `--detail` for each plugin to verify its stored configuration;
 3. dry-run each enabled plugin and then
-   `opendata --plugin all --Execute --dry-run`;
-4. perform one controlled write per plugin with `--Execute`;
+   `opendata --plugin all --dry-run`;
+4. perform one controlled write per plugin with `--execute`;
 5. verify audit/provider rows, idempotent replay and archive behaviour;
 6. test repeated plugin selection and bounded parallelism;
 7. test lifecycle operations in a disposable environment.
@@ -52,9 +52,9 @@ Examples:
 
 ```text
 opendata --plugin ofgem --detail
-opendata --plugin ofgem --Execute --dry-run
-opendata --plugin ofgem --Execute
-opendata --plugin openmeteo --plugin ofgem --Execute --parallelism 2
+opendata --plugin ofgem --dry-run
+opendata --plugin ofgem --execute
+opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2
 ```
 
 The explicit execution switch is a safety gate: `--plugin ofgem` by itself is

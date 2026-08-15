@@ -1,17 +1,17 @@
 # Current Code Inventory
 
 **Document ID:** ARCH-INVENTORY-001
-**Version:** 2.1
-**Status:** Version 2.0.0 processing-refactor baseline
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 processing-refactor baseline
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
-This inventory reflects the repository baseline plus accepted local refactor
-Batches 0–3.
+This inventory reflects the merged Version 3.0.0 main branch.
 
 | Area | Current classes/contracts | Status |
 |---|---|---|
-| Bootstrap | `OpenData`, `OpenDataApplication`, `ExecutionStatus` | Implemented |
+| Bootstrap | `OpenData`, `OpenDataApplication`, `ApplicationInfo`, `ExecutionStatus` | Implemented |
+| JavaFX GUI | launcher/application, splash, FXML controller, plugin table, administration/detail/settings/log/help/about/execution services | Implemented; final screenshot evidence outstanding |
 | CLI | command arguments, processor and selection resolver | Implemented |
 | Configuration sources | classpath/JDBC sources and registration service | Implemented |
 | Shared property processing | `PluginPropertyValues`, `ValueParser` | Implemented; used by Ofgem, OpenMeteo and Octopus |
@@ -39,7 +39,8 @@ Batches 0–3.
 
 ## Consistency notes
 
-- Java 24 is the minimum build/runtime baseline; the version 3 GUI implementation is in progress;
+- Java 24 is the minimum build/runtime baseline; JDK 26 and Apache NetBeans 31 are the current development environment;
+- the Version 3 JavaFX GUI is implemented in the merged main source tree;
 - dry-run behaviour and public plugin workflow are unchanged by the refactor;
 - the shared JDBC layer owns mechanics, not provider business keys or SQL;
 - temporary-table/session cleanup is explicit for pooled OpenMeteo connections;

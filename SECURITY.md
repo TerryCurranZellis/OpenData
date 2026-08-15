@@ -4,12 +4,13 @@
 
 | Version | Status |
 |---|---|
-| 2.0.0 development/release-candidate baseline | Security fixes and review are active |
+| 3.0.0 development/release-candidate baseline | Security fixes and release review are active |
+| 2.0.0 historical development baseline | Upgrade to the current candidate is recommended |
 | 1.0.0 historical release record | Upgrade is recommended |
 | Earlier development snapshots | Not supported |
 
-Version 2.0.0 must not be described as production-ready until the mandatory
-release blockers in the final release checklist are resolved or formally waived.
+Version 3.0.0 must not be described as production-ready until the mandatory
+release gates in the final release checklist are resolved or formally waived.
 
 ## Reporting a vulnerability
 
@@ -20,27 +21,25 @@ the subject `OpenData security report`.
 Include the affected version/commit, component, reproduction steps, impact and
 suggested remediation. Use synthetic or redacted evidence.
 
-## Known Version 2.0.0 security blockers
+## Known Version 3.0.0 release security items
 
-The reviewed source baseline contains development credentials and behaviours
-that require remediation before production release:
+The current source uses an encrypted `{enc}` bootstrap database-password value
+and correctly checks `OPENDATA_CONFIG_KEYSTORE_PASSWORD` after the JVM system
+property. The following deployment/release issues still require explicit review:
 
-1. `src/main/resources/config/application.properties` contains a database
-   password value.
-2. A private PKCS#12 key store is tracked beneath
-   `src/main/resources/config/security`.
-3. The bundled PFX uses the development password `nopassword`.
-4. The intended `OPENDATA_CONFIG_KEYSTORE_PASSWORD` environment-variable path is
-   defective; the runtime currently looks for an environment variable literally
-   named `nopassword`.
-5. The development JDBC URL uses `trustServerCertificate=true`, which encrypts
-   traffic without authenticating the SQL Server certificate.
-6. The SQL Server JDBC dependency is a preview build and requires explicit
+1. A private PKCS#12 key store is tracked beneath
+   `src/main/resources/config/security`; deployment-specific private keys must
+   not be published or reused as production key material.
+2. `RsaConfigurationPasswordCipher` retains `nopassword` as its development
+   fallback when no keystore password property/environment variable is supplied.
+3. The development JDBC URL uses `trustServerCertificate=true`, which should be
+   replaced by validated SQL Server certificate trust for production.
+4. The SQL Server JDBC dependency is a preview build and requires explicit
    release approval or replacement with a verified stable version.
 
-Documentation of a blocker does not remove it. Rotate any credential that has
-been committed or used, remove deployment private keys from distributable source,
-correct and test secret input, and validate SQL Server trust before release.
+Documentation of a release item does not remove it. Use deployment-specific
+keys and credentials, test the secret-input path, validate SQL Server trust and
+review the resolved dependency set before final release approval.
 
 ## Credential model
 

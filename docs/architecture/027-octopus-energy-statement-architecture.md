@@ -1,16 +1,16 @@
 # Octopus Energy Statement Architecture
 
 **Document ID:** ARCH-027
-**Version:** 2.1
+**Version:** 3.0.0  
 **Status:** Runtime, generic upsert integration and dry-run implemented; live acceptance pending
-**Baseline date:** 4 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
 The Octopus plugin is the reference for local document ingestion, processed-file
 idempotency and typed record upserts. It reads statements already downloaded to
 a local folder; email, IMAP and direct account/API acquisition remain outside
-Version 2.0.0 scope.
+Version 3.0.0 scope.
 
 ## Configuration
 

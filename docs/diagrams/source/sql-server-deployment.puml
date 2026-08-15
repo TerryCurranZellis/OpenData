@@ -4,7 +4,7 @@ title OpenData Deployment Topology
 
 actor "Operator or External Scheduler" as Operator
 node "Execution Host" {
-  artifact "OpenData Java 17 classes and dependencies" as Application
+  artifact "OpenData Java 24+ classes and dependencies" as Application
   file "External override properties" as Config
   folder "Work and archive" as Files
   folder "JUL logs" as Logs
@@ -14,7 +14,7 @@ node "Execution Host" {
 cloud "Public data providers" as Providers
 database "SQL Server: OpenData\ncore, ofgem, openmeteo" as Database
 
-Operator --> Application : command-line launch
+Operator --> Application : GUI or command-line launch
 Application --> Config : read
 Application --> Files
 Application --> Logs

@@ -11,7 +11,7 @@
 - [API and configuration reference](reference/README.md)
 - [Governance and compliance](governance/README.md)
 - [Release process](release/Release-Process.md)
-- [Current release readiness](review/RELEASE-READINESS-STATUS-2.0.0.md)
+- [Current release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md)
 
 ## Generated manuals
 
@@ -22,7 +22,7 @@
 | `manifests/DeveloperGuide.json` | Maintainers and plugin developers |
 | `manifests/APIReference.json` | Integrators and support engineers |
 
-## Version 3 GUI implementation
+## Version 3.0.0 GUI implementation
 
 - [JavaFX GUI architecture](development/javafx-gui-architecture.md)
 - [Graphical interface user guide](user-guide/12-graphical-interface.md)
@@ -33,15 +33,15 @@
 - [ADR-0054: GUI plugin registration discovery](decisions/ADR-0054-gui-plugin-registration-discovery.md)
 - [ADR-0055: JavaFX information dialogs and sensitive display](decisions/ADR-0055-javafx-information-dialogs-and-sensitive-display.md)
 - [ADR-0056: Scoped JUL live execution logging](decisions/ADR-0056-javafx-live-execution-logging.md)
-- [Batch 2 GUI implementation notes](reviews/Batch-2-Version-3.1.0-GUI.md)
-- [Batch 3 GUI implementation notes](reviews/Batch-3-Version-3.1.0-GUI.md)
-- [Batch 4 GUI implementation notes](reviews/Batch-4-Version-3.1.0-GUI.md)
-- [Batch 5 GUI implementation notes](reviews/Batch-5-Version-3.1.0-GUI.md)
-- [Batch 6 GUI implementation notes](reviews/Batch-6-Version-3.1.0-GUI.md)
+- [Historical Batch 2 GUI branch notes](reviews/Batch-2-Version-3.1.0-GUI.md)
+- [Historical Batch 3 GUI branch notes](reviews/Batch-3-Version-3.1.0-GUI.md)
+- [Historical Batch 4 GUI branch notes](reviews/Batch-4-Version-3.1.0-GUI.md)
+- [Historical Batch 5 GUI branch notes](reviews/Batch-5-Version-3.1.0-GUI.md)
+- [Historical Batch 6 GUI branch notes](reviews/Batch-6-Version-3.1.0-GUI.md)
 
 - [ADR-0057: Final JavaFX migration and Windows packaging](decisions/ADR-0057-final-javafx-migration-and-windows-packaging.md)
-- [Batch 7 GUI implementation notes](reviews/Batch-7-Version-3.1.0-GUI.md)
-- [GUI 3.1 final acceptance checklist](development/gui-v3.1-final-acceptance-checklist.md)
+- [Historical Batch 7 GUI branch notes](reviews/Batch-7-Version-3.1.0-GUI.md)
+- [GUI 3.0 final acceptance checklist](development/gui-v3.0-final-acceptance-checklist.md)
 ## Current processing-refactor baseline
 
 - [Shared validation and JDBC architecture](architecture/028-shared-validation-and-jdbc-infrastructure.md)
@@ -53,6 +53,8 @@
 
 ## Evidence and history
 
+- [Version 3.0.0 release record](release/Release-3.0.0.md)
+- [Version 3.0.0 documentation update record](review/VERSION-3.0.0-DOCUMENTATION-UPDATE-2026-08-15.md)
 - [Final release checklist](release/Final-Release-Checklist.md)
 - [Release evidence index](release/Release-Evidence-Index.md)
 - [ADR register](decisions/ADR-REGISTER.md)

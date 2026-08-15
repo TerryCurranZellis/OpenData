@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 3.1.0 JavaFX execution gateway, scoped JUL streaming and live execution window implemented; existing developer baseline retained"
+    "revisionSummary": "Version 3.0.0 merged JavaFX architecture, Java 24 minimum, JDK 26 development baseline and package documentation"
   },
   "sections": [
     "shared/introduction.md",
@@ -15,6 +15,7 @@
     "development/local-build-test-run.md",
     "development/javafx-gui-architecture.md",
     "development/gui-screenshot-plan.md",
+    "development/gui-v3.0-final-acceptance-checklist.md",
     "development/Java-Quality-Guide.md",
     "development/dependency-management.md",
     "development/Build-CI-and-Release-Guide.md",
@@ -53,7 +54,7 @@
     "release/Release-Process.md",
     "release/Distribution-Contents.md",
     "release/Final-Release-Checklist.md",
-    "review/RELEASE-READINESS-STATUS-2.0.0.md",
+    "review/RELEASE-READINESS-STATUS-3.0.0.md",
     "review/FINAL-DOCUMENTATION-AUDIT-2026-08-04.md",
     "release/Release-Evidence-Index.md",
     "shared/glossary.md",

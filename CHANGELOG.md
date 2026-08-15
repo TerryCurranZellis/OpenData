@@ -4,7 +4,7 @@ All notable OpenData changes are recorded here. The project follows semantic
 versioning for published releases; an unreleased development baseline can still
 contain release blockers.
 
-## [Unreleased]
+## [3.0.0] - Release candidate, not yet tagged
 
 ### Added
 
@@ -30,21 +30,21 @@ contain release blockers.
   `--plugin <id> --register --file <filename>`.
 - `--verbose` and bounded `--parallelism 1-64` validation for the expanded CLI.
 - New `-n` short option for `--dry-run`; `-d` is reserved for `--disable`.
-- Explicit `--Execute` / `-x` execution authorisation required for normal and
-  dry-run plugin execution.
+- Explicit `--execute` / `-x` execution authorisation required for normal plugin
+  execution; `--dry-run` / `-n` independently authorises a non-writing run.
 - Unix-style `opendata(1)` manual page source in `docs/reference/opendata.1`.
 - SQL migration and grants for persistent plugin metadata/status.
 
 ### Changed
 
 - The minimum supported Java runtime is now Java 24; GitHub build and release workflows verify on Java 24.
-- Legacy Swing UI helpers are deprecated from version 3.1.0 while JavaFX replacements are completed.
-- The JavaFX GUI and standalone `--about` command no longer use the deprecated Swing About dialog; legacy Swing About/image/launcher helpers are marked for removal.
+- The supported desktop interface is JavaFX; the obsolete Swing presentation package has been removed from the merged Version 3.0.0 baseline.
+- The JavaFX GUI and standalone `--about` command use the JavaFX About presentation and no longer depend on legacy Swing UI helpers.
 - `LoggingManager` exposes the active log directory and a non-destructive handler flush for GUI log viewing.
 - Explicit plugin-id selection is shared between CLI and JavaFX through `PluginSelectionResolver`, preserving enabled-plugin validation.
-- Selecting `--plugin <id|all>` no longer starts execution by itself. Normal and
-  dry-run execution must include `--Execute` or `-x`.
-- `--Execute` is rejected with register, unregister/remove, enable and disable
+- Selecting `--plugin <id|all>` no longer starts execution by itself. Normal
+  execution requires `--execute`/`-x`; dry-run execution uses `--dry-run`/`-n`.
+- `--execute` is rejected with register, unregister/remove, enable and disable
   administration operations.
 - Normal execution now selects only plugins that are both registered and
   enabled in SQL Server.
@@ -58,7 +58,6 @@ contain release blockers.
 
 ### Planned or under evaluation
 
-- Correct the keystore-password environment-variable implementation.
 - Remove tracked deployment secrets/private keys and establish key rotation.
 - Validate SQL Server certificate trust and least-privilege deployment.
 - Replace or explicitly approve the preview SQL Server JDBC dependency.

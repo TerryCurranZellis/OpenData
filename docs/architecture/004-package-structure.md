@@ -1,9 +1,9 @@
 # Package Structure
 
 **Document ID:** ARCH-004  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Current implementation and target ownership  
-**Baseline date:** 3 August 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
@@ -27,11 +27,12 @@
 | `parser` | CSV, JSON and Excel parsers |
 | `validation` | Validation contracts and results |
 | `etl` | Reusable extract, transform and load contracts |
-| `database`, `database.audit` | Connection resources, pooling and ingestion audit repositories |
+| `database`, `database.audit`, `database.jdbc` | Connection resources, pooling, ingestion audit and shared JDBC execution helpers |
 | `model` | Framework artefact and result values |
 | `logging` | JUL setup and task context |
 | `exception` | Framework exception hierarchy |
-| `ui` | Splash screen, about dialog and application metadata |
+| `gui` | JavaFX application lifecycle, FXML controller, dialogs, GUI gateways and live log presentation |
+| `util` | Small shared formatting and exception-message utilities |
 
 ## Plugin-local structure
 
@@ -39,14 +40,14 @@ Ofgem, OpenMeteo and Octopus use the same active pipeline boundary:
 `initialise -> extract -> transform -> load -> finalise`. The root plugin class
 is a small facade that delegates to the initialise/orchestration class.
 
-The uploaded source also contains older compatibility or duplicate classes in
-some plugin `config`, `download` and `extract` packages. New documentation and
-new development should follow the active classes imported by each
-`<Plugin>Initialise` implementation rather than treating every similarly named
-class as part of the runtime path.
+The merged Version 3.0.0 source uses the staged provider package layout directly;
+the earlier Swing `ui` package and prototype provider compatibility package
+structure are no longer part of the current main source tree.
 
 The canonical command-line model is under `cli`. `ExecutionStatus` is the
-application status model. Every public package should retain `package-info.java`.
+application status model. Every main-source package has `package-info.java`.
+Those package pages group classes, records, interfaces and enums and link each
+entry to its type Javadoc.
 
 ::: {.landscape}
 ![OpenData package dependencies](../diagrams/generated/package-dependencies.svg){width=22.5cm}

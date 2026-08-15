@@ -1,13 +1,13 @@
 # Compact Example Plugin
 
 **Document ID:** EXAMPLE-PLUGIN-001  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Copyable API example; not compiled by Maven  
-**Baseline date:** 3 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 
-This directory is a compact example of the Version 2.0.0 plugin API,
+This directory is a compact example of the Version 3.0.0 plugin API,
 registration properties and safe dry-run behaviour. It deliberately keeps helper
 classes in one package so the reflection/configuration contract is easy to see.
 

@@ -1,9 +1,9 @@
 # Shared Validation and JDBC Infrastructure
 
 **Document ID:** ARCH-028
-**Version:** 2.0
-**Status:** Implemented in Version 2.0.0
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Implemented in Version 3.0.0
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

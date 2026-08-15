@@ -1,0 +1,28 @@
+@startuml
+!pragma layout smetana
+title OpenData 3.0.0 GUI Execution and Live Logging
+actor Operator
+participant OpenDataMainController as Controller
+participant PluginExecutionGateway as Gateway
+participant PluginExecutionCoordinator as Coordinator
+participant JavaFxLogHandler as FxLog
+participant "Execution Log Window" as LogWindow
+participant Plugin as Plugin
+
+Operator -> Controller : Execute / Dry-run selected
+Controller -> Operator : confirmation dialog
+Operator -> Controller : confirm
+Controller -> LogWindow : open; Close disabled
+Controller -> FxLog : attach scoped handler
+Controller -> Gateway : execute(selection, dryRun)
+Gateway -> Coordinator : execute request
+Coordinator -> Plugin : initialise/extract/transform/load/finalise
+Plugin -> FxLog : JUL records
+FxLog -> LogWindow : append on JavaFX thread
+Plugin --> Coordinator : completion/status
+Coordinator --> Gateway : result
+Gateway --> Controller : completion/status
+Controller -> FxLog : detach handler
+Controller -> LogWindow : show result; enable Close
+Operator -> LogWindow : Close
+@enduml

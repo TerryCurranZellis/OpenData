@@ -17,6 +17,6 @@ class ApplicationInfoTest {
         final var information = ApplicationInfo.current();
         assertEquals("OpenData", information.productName());
         assertFalse(information.version().isBlank());
-        assertEquals("3.0.0-GUI", information.version());
+        assertEquals("3.0.0", information.version());
     }
 }

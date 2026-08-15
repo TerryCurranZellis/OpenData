@@ -1,8 +1,8 @@
 # 11. Logs, Audit and Troubleshooting
 
 **Document ID:** USER-010  
-**Version:** 2.0  
-**Status:** Version 2.0.0 operational baseline  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 operational baseline  
 **Baseline date:** 3 August 2026
 
 ---

@@ -1,8 +1,8 @@
 /*
  * Copyright © 2026 Terry Curran
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 /**
  * Octopus Energy personal billing import plugin.
  *
@@ -18,8 +18,12 @@
  *   <li>{@code finalise} – file archiving and statistics (placeholder)</li>
  * </ol>
  *
+ * <h2>Classes</h2>
  * <ul>
- * <li>{@link OctopusPlugin} – main plugin entry point</li>
+ * <li>{@link OctopusPlugin} &mdash; Octopus Energy personal billing import plugin.</li>
  * </ul>
+ *
+ * @author Terry Curran
+ * @version 3.0.0
  */
 package com.towermarsh.opendata.plugin.octopus;

@@ -1,8 +1,8 @@
 # OpenMeteo Plugin Reference
 
 **Document ID:** REF-OPENMETEO-PLUGIN-001
-**Version:** 2.1
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Baseline date:** 15 August 2026  
 
 ## Public processing types
 

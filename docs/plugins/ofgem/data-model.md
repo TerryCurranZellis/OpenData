@@ -1,9 +1,9 @@
 # Ofgem Price-Cap Data Model
 
 **Document ID:** PLUGIN-OFGEM-MODEL-001
-**Version:** 2.0
+**Version:** 3.0.0  
 **Status:** Implemented primary annual-cap model
-**Baseline date:** 3 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 

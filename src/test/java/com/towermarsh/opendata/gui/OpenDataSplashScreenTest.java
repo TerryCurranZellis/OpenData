@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
  * Tests the startup splash policy without starting the JavaFX toolkit.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class OpenDataSplashScreenTest {
 

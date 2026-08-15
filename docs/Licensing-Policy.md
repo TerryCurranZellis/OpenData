@@ -1,6 +1,6 @@
 # Licensing Policy
 
-**Baseline:** OpenData 2.0.0  
+**Baseline:** OpenData 3.0.0  
 **Reviewed:** 3 August 2026
 
 OpenData source and project-authored documentation are distributed under the

@@ -51,7 +51,7 @@ import java.util.logging.Logger;
  * database access, and plugin execution.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class OpenDataApplication {
 

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.io.TempDir;
  * Tests reading the active JUL file without closing the application's handlers.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class LogViewerServiceTest {
 

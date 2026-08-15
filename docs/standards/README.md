@@ -1,9 +1,9 @@
 # Project Standards
 
 **Document ID:** STD-INDEX-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 engineering baseline  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 engineering baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -18,5 +18,5 @@ strength. A deliberate exception must be visible in review and, when durable or
 architectural, recorded in an ADR.
 
 These standards describe the target for new and changed work. Where the current
-Version 2.0.0 implementation differs, documentation must identify the variance
+Version 3.0.0 implementation differs, documentation must identify the variance
 rather than silently treating it as compliant.

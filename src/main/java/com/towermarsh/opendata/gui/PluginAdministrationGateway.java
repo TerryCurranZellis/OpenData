@@ -43,7 +43,7 @@ import java.util.function.Function;
  * remains unchanged.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class PluginAdministrationGateway {
 

@@ -1765,19 +1765,22 @@ if ($item -ne 'Chm' -and $LASTEXITCODE -ne 0) {
     }
   }
 }
-$ProjectRoot = 'C:\Users\terry\Documents\NetBeansProjects\opendata'
-$ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath 'docs\templates\Reference Styles.docx'
-$Parameters = @{
-    Action         = 'Build'
-    ProjectRoot    = $ProjectRoot
-    Document       = 'All'
-    Format         = 'docx' 
-	FailOnWarning  = $true
-	verbose        = $true
-	RenderDiagrams = $true
-	ReferenceDoc   = $ReferenceDoc
+# Preserve the maintainer's convenient direct-execution build, but do not run
+# it when this file is dot-sourced by Build-Documentation.ps1 or
+# Validate-Documentation.ps1.
+if ($MyInvocation.InvocationName -ne '.') {
+    $ProjectRoot = (Resolve-Path (Join-Path -Path $PSScriptRoot -ChildPath '..')).Path
+    $ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath 'docs\templates\Reference Styles.docx'
+    $Parameters = @{
+        Action         = 'Build'
+        ProjectRoot    = $ProjectRoot
+        Document       = 'All'
+        Format         = 'Docx'
+        FailOnWarning  = $true
+        Verbose        = $true
+        RenderDiagrams = $true
+        ReferenceDoc   = $ReferenceDoc
+    }
+
+    Invoke-Documentation @Parameters
 }
-
-Invoke-Documentation @Parameters
-
-Start-Sleep -Seconds 10

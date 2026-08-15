@@ -17,7 +17,7 @@ import java.util.Objects;
  * graphical interface.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class GuiLauncher {
 

@@ -1,13 +1,20 @@
 # Build, CI and Release Guide
 
 **Document ID:** DEV-CI-001  
-**Version:** 2.1  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation baseline  
+**Baseline date:** 15 August 2026  
+**Minimum Java version:** 24
 
 ---
 
 ![Build, documentation and release pipeline](../diagrams/generated/ci-release-pipeline.svg)
+
+## Build environment
+
+The POM enforces Maven 3.9 or later and Java 24 or later. Maven compilation uses
+`release=24`. The current developer workstation baseline is JDK 26 with Apache
+NetBeans 31, but release verification must still include JDK 24.
 
 ## Local build stages
 
@@ -16,60 +23,60 @@ mvn clean test
 mvn clean verify
 ```
 
-`verify` compiles, runs unit tests, executes Checkstyle, SpotBugs and PMD,
-creates a JaCoCo report and performs dependency analysis. Static and dependency
-findings are advisory unless strict mode is enabled:
+`verify` compiles, runs unit tests and executes the configured quality/reporting
+plugins. Review their outputs according to the POM's advisory/strict settings.
+
+## Documentation checks
 
 ```powershell
-mvn clean verify -Dquality.failOnViolation=true
+. .\scripts\Invoke-Documentation.ps1
+Invoke-Documentation -ProjectRoot $PWD -Action Test -FailOnWarning
+Invoke-Documentation -ProjectRoot $PWD -Action All -RenderDiagrams
 ```
 
-Documentation checks are separate:
-
-```powershell
-.\scripts\Validate-Documentation.ps1 -FailOnWarning
-.\scripts\Build-Documentation.ps1 -RenderDiagrams
-```
+The Windows Technical User Guide CHM additionally requires Microsoft HTML Help
+Workshop.
 
 ## GitHub workflows
 
-The repository contains build, documentation and release workflows.
+The repository build workflow verifies the Java 24 minimum baseline. The
+documentation workflow validates/generated maintained manuals and the release
+workflow handles tagged or manually dispatched releases according to repository
+configuration.
 
-- The build workflow runs Java 24 and `mvn clean verify`, then uploads available
-  test and quality reports.
-- The documentation workflow validates and generates maintained manuals.
-- The release workflow packages tagged or manually dispatched releases.
+Hosted CI does not replace SQL Server/live-provider acceptance, GUI interaction
+acceptance, Windows Help verification or final distribution inspection.
 
-Ordinary CI inherits `quality.failOnViolation=false`; a green build does not
-prove that static-analysis reports are empty. SQL Server and live-provider
-acceptance tests are not supplied by the standard hosted workflow.
-
-## Release preparation
+## Version 3.0.0 release preparation
 
 A release candidate must satisfy the
 [final release checklist](../release/Final-Release-Checklist.md), including:
 
-- strict Java quality review;
+- clean `mvn clean verify` on Java 24;
+- GUI acceptance and final screenshot capture;
+- CHM Help plus JavaFX fallback verification;
 - clean documentation validation and diagram rendering;
-- clean and repeat SQL Server installation;
-- registration and encrypted-password restart;
-- plugin dry/write, rollback and idempotency evidence;
-- dependency and licence review; and
+- clean/repeat SQL Server installation;
+- plugin dry-run/write, rollback and idempotency evidence;
+- dependency and licence review, including JavaFX;
 - proof that credentials, private keys, statements and database backups are not
-  present in release artefacts.
+  present in release artifacts; and
+- packaging/checksum verification.
 
-Prepare a local package with:
+If using the repository packaging script, create/test the intended package from
+the release candidate:
 
 ```powershell
-.\scripts\New-ReleasePackage.ps1 -Version 2.0.0
+.\scripts\Build-Windows-Package.ps1 -Type app-image
 ```
 
-The current Maven JAR has no executable `Main-Class` manifest and does not bundle
-runtime dependencies. It must not be described as a self-contained executable.
+Record the actual package layout and launch commands in release evidence. Do not
+describe an artifact as self-contained until it has been tested on a clean
+machine.
 
 ## Evidence retention
 
 Retain the verified commit, Java and Maven versions, dependency report, test and
-quality reports, SQL Server version and scripts, documentation outputs,
-checksums and release approval. Redact or exclude secrets and customer source
-data.
+quality reports, SQL Server version/scripts, GUI acceptance results, screenshot
+set, documentation outputs, checksums and release approval. Redact or exclude
+secrets and customer source data.

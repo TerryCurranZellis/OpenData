@@ -1,9 +1,9 @@
 # Layered Architecture
 
 **Document ID:** ARCH-006  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Baseline  
-**Baseline date:** 3 August 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

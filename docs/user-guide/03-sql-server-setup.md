@@ -1,9 +1,9 @@
 # 3. SQL Server Setup
 
 **Document ID:** USER-003  
-**Version:** 2.0  
-**Status:** Version 2.0.0 procedure  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 procedure  
+**Baseline date:** 15 August 2026  
 
 ---
 

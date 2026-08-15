@@ -1,9 +1,9 @@
 # System Overview
 
 **Document ID:** ARCH-002  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation baseline  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

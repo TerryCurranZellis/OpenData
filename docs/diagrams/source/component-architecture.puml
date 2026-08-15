@@ -1,16 +1,27 @@
 @startuml
 !pragma layout smetana
-title OpenData Version 2.0.0 Component Architecture
+title OpenData Version 3.0.0 Component Architecture
 skinparam componentStyle rectangle
 package "Application" {
   [OpenData] as Entry
   [CommandLineArgumentsProcessor] as CLI
   [OpenDataApplication] as App
 }
+package "JavaFX GUI" {
+  [GuiLauncher] as GuiLauncher
+  [OpenDataGuiApplication] as GuiApp
+  [OpenDataMainController] as MainController
+  [PluginExecutionGateway] as ExecGateway
+  [PluginAdministrationGateway] as AdminGateway
+  [PluginInformationGateway] as InfoGateway
+  [JavaFxLogHandler] as FxLog
+  [OpenDataHelpLauncher] as Help
+}
 package "Configuration and Registry" {
   [ApplicationBootstrapPropertiesLoader] as Bootstrap
   [RsaConfigurationPasswordCipher] as Cipher
-  [ClasspathPluginRegistry\nRegistration Catalogue] as Catalogue
+  [ClasspathPluginRegistry
+Registration Catalogue] as Catalogue
   [PropertiesFileConfigurationPropertiesSource] as External
   [ConfigurationRegistrationService] as Register
   [JdbcPluginRegistry] as Registry
@@ -36,6 +47,17 @@ package "Infrastructure" {
 }
 Entry --> CLI
 Entry --> App
+Entry --> GuiLauncher
+GuiLauncher --> GuiApp
+GuiApp --> MainController
+MainController --> ExecGateway
+MainController --> AdminGateway
+MainController --> InfoGateway
+MainController --> Help
+ExecGateway --> App
+AdminGateway --> App
+InfoGateway --> App
+FxLog --> Logging
 App --> Bootstrap
 Bootstrap --> Cipher
 App --> Catalogue : packaged registration

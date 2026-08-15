@@ -1,7 +1,7 @@
 # Architecture Decision Register
 
 **Document ID:** ADR-REGISTER-001
-**Version:** 3.1.0
+**Version:** 3.0.0
 **Status:** Baseline
 **Baseline date:** 14 August 2026
 **Minimum Java version:** 24

@@ -1,9 +1,9 @@
 # Java Quality Guide
 
 **Document ID:** DEV-QUALITY-001  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Implemented advisory quality baseline  
-**Baseline date:** 3 August 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
@@ -20,7 +20,7 @@ quality baseline.
 
 | Control | Implementation | Default enforcement |
 |---|---|---|
-| Compilation | Maven Compiler Plugin, `release=17` | Fails build |
+| Compilation | Maven Compiler Plugin, `release=24` | Fails build |
 | Unit tests | Maven Surefire | Fails build |
 | Checkstyle | `config/quality/checkstyle.xml` | Reports unless strict |
 | SpotBugs | Maximum effort, medium threshold | Reports unless strict |
@@ -41,19 +41,7 @@ Standard verification:
 mvn clean verify
 ```
 
-Repository wrapper:
-
-```powershell
-.\scripts\Invoke-Code-Quality.ps1
-```
-
 Strict static-analysis enforcement:
-
-```powershell
-.\scripts\Invoke-Code-Quality.ps1 -Strict
-```
-
-Equivalent Maven command:
 
 ```powershell
 mvn clean verify -Dquality.failOnViolation=true
@@ -93,8 +81,9 @@ substitute for reviewing the reports.
 
 ## Current limitations
 
-The POM contains a commented-out Maven Enforcer configuration; Java and Maven
-minimum versions are documented but are not currently enforced by that plugin.
-JaCoCo creates a report but no minimum coverage rule is configured. Javadoc
-warnings do not fail the build. These are explicit baseline limitations, not
-claims of strict quality gating.
+The Maven Enforcer plugin is active and requires Maven 3.9 or later and Java 24
+or later. JaCoCo creates a report but no minimum coverage rule is configured.
+Static-analysis failures remain advisory unless `quality.failOnViolation=true`
+is supplied. Javadoc is configured but is not bound as a mandatory `verify`
+gate. These are explicit baseline limitations, not claims of strict quality
+gating.

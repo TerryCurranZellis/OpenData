@@ -4,10 +4,34 @@ title OpenData Version Evolution
 left to right direction
 skinparam shadowing false
 
-rectangle "Version 1.0.0\n\nFile-backed configuration\nInitial plugin framework\nOfgem and OpenMeteo\nSQL Server persistence\nDocumentation as code" as V1
-rectangle "Version 2.0.0\n\nDatabase-backed configuration\nPlugin registration\nCertificate-protected bootstrap\nFive-phase plugin lifecycle\nOctopus local PDF ingestion" as V2
-rectangle "Future 2.x\n\nAdditional plugins\nConfiguration administration\nPossible official API extractors\nExecutable packaging" as Future
+rectangle "Version 1.0.0
 
-V1 --> V2 : major architecture change
-V2 --> Future : incremental development
+File-backed configuration
+Initial plugin framework
+Ofgem and OpenMeteo
+SQL Server persistence
+Documentation as code" as V1
+rectangle "Version 2.0.0
+
+Database-backed configuration
+Plugin registration
+Certificate-protected bootstrap
+Five-phase plugin lifecycle
+Octopus local PDF ingestion" as V2
+rectangle "Version 3.0.0
+
+Integrated JavaFX desktop GUI
+Shared GUI/service gateways
+Live scoped execution logging
+Windows Help integration
+Java 24 minimum" as V3
+rectangle "Future development
+
+Additional reusable plugins
+Packaging refinements
+Further administration and provider integrations" as Future
+
+V1 --> V2 : configuration/runtime refactor
+V2 --> V3 : desktop interface integration
+V3 --> Future : incremental development
 @enduml

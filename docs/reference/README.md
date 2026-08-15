@@ -1,9 +1,9 @@
 # Reference Documentation
 
 **Document ID:** REF-INDEX-001
-**Version:** 2.2
-**Status:** Version 2.0.0 documentation index
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 documentation index
+**Baseline date:** 15 August 2026  
 
 ---
 

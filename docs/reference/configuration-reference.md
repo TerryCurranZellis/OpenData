@@ -1,9 +1,9 @@
 # Configuration Reference
 
 **Document ID:** REF-CONFIG-001  
-**Version:** 2.1  
-**Status:** OpenData 2.0.0 implementation reference  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** OpenData 3.0.0 implementation reference  
+**Baseline date:** 15 August 2026  
 
 ---
 

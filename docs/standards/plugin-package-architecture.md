@@ -1,9 +1,9 @@
 # Plugin Package Architecture
 
 **Document ID:** STD-PLUGIN-PACKAGE-001
-**Version:** 2.1
-**Status:** Version 2.0.0 implementation standard
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation standard
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
@@ -80,7 +80,7 @@ mappings from reflection. Configured SQL identifiers must pass
 
 ## Public API lifecycle
 
-Public types and methods introduced or materially adjusted for Version 2.0.0
+Public types and methods introduced or materially adjusted for Version 3.0.0
 include Javadoc `@since 2.0.0`.
 
 A retained obsolete public procedure uses both Java `@Deprecated` and Javadoc

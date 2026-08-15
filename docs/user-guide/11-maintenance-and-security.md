@@ -1,9 +1,9 @@
 # 12. Maintenance and Security
 
 **Document ID:** USER-011  
-**Version:** 2.0  
-**Status:** Version 2.0.0 pre-production baseline  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 pre-production baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 

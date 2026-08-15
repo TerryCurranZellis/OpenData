@@ -1,9 +1,9 @@
 # Project Vision
 
 **Document ID:** ARCH-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 baseline  
-**Baseline date:** 2 August 2026  
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 baseline  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
@@ -17,9 +17,9 @@ transformation, not changes throughout the application.
 
 ![OpenData project overview](../diagrams/generated/project-overview.svg)
 
-## Version 2.0.0 direction
+## Version 2.0.0 foundation
 
-Version 2.0.0 establishes the long-term configuration and plugin foundation:
+Version 2.0.0 established the long-term configuration and plugin foundation:
 
 - the local application property file contains only database bootstrap details;
 - application and plugin configuration is registered and maintained in SQL
@@ -30,6 +30,14 @@ Version 2.0.0 establishes the long-term configuration and plugin foundation:
   database access, auditing and exception boundaries; and
 - plugin packages own source-specific acquisition, transformation, persistence
   and cleanup.
+
+## Version 3.0.0 direction
+
+Version 3.0.0 makes that framework available through both the existing CLI and
+a fully integrated JavaFX desktop interface. The GUI uses the same registry,
+configuration, plugin execution and logging services rather than defining a
+second application architecture. Windows Help integration and live scoped
+execution logging complete the desktop-operator workflow.
 
 ## Goals
 
@@ -51,7 +59,7 @@ Version 2.0.0 establishes the long-term configuration and plugin foundation:
 | OpenMeteo | Acquire and persist historical daily weather data |
 | Octopus | Process local customer statement PDFs into electricity and gas records |
 
-Octopus is deliberately local-file based in Version 2.0.0. Direct account or API
+Octopus remains deliberately local-file based in Version 3.0.0. Direct account or API
 integration remains a future option and is not part of the current release
 baseline.
 
@@ -64,7 +72,8 @@ documentation as code.
 
 ## Success criteria
 
-Version 2.0.0 succeeds when a clean installation can create the database,
-register configuration, restart using the encrypted bootstrap password, list and
-run all installed plugins, avoid duplicate Octopus statement processing, and
-produce documentation that accurately describes the implemented system.
+Version 3.0.0 succeeds when a clean installation can create the database,
+register configuration, restart using the encrypted bootstrap password, operate
+the installed plugins from the CLI and JavaFX GUI, avoid duplicate Octopus
+statement processing, and produce documentation that accurately describes the
+implemented system.

@@ -1,9 +1,9 @@
 # OpenData Guides
 
 **Document ID:** GUIDE-INDEX-001  
-**Version:** 2.1  
-**Status:** Version 2.0.0 documentation index  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 documentation index  
+**Baseline date:** 15 August 2026  
 
 ---
 

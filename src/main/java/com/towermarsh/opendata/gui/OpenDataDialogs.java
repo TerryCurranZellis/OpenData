@@ -19,7 +19,7 @@ import javafx.stage.Window;
  * Common JavaFX dialogs used by the OpenData main window.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 final class OpenDataDialogs {
 

@@ -14,7 +14,7 @@ import java.util.Objects;
  * @param value display value, already masked when sensitive
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public record ConfigurationDisplayEntry(String property, String value) {
 

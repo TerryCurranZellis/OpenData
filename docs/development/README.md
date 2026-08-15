@@ -1,18 +1,27 @@
 # Developer Documentation
 
-**Document ID:** DEV-INDEX-001
-**Version:** 3.1.0
-**Status:** Version 3.1.0 GUI implementation - persistent plugin table complete
-**Baseline date:** 13 August 2026
+**Document ID:** DEV-INDEX-001  
+**Version:** 3.0.0  
+**Status:** Current Version 3.0.0 merged baseline  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
+
+## Development baseline
+
+- Minimum supported JDK: 24.
+- Current development JDK: 26.
+- Current development IDE: Apache NetBeans 31.
+- JavaFX dependency version: 26.0.1.
+- Maven: 3.9 or later.
 
 ## Start here
 
 - [Repository structure](repository-structure.md)
 - [Local build, test and run](local-build-test-run.md)
 - [JavaFX GUI architecture](javafx-gui-architecture.md)
+- [GUI 3.0 final acceptance checklist](gui-v3.0-final-acceptance-checklist.md)
 - [GUI screenshot plan](gui-screenshot-plan.md)
 - [Java quality guide](Java-Quality-Guide.md)
 - [Dependency management](dependency-management.md)
@@ -39,18 +48,14 @@
 - [Architecture decisions](../decisions/README.md)
 - [Architecture manual](../architecture/ARCHITECTURE.md)
 
-OpenData is a single Maven modular monolith. A plugin change normally spans
-Java, classpath registration properties, SQL, tests, operator documentation,
-data-source notices and an ADR when the change creates a durable architectural
-decision.
+OpenData is a single Maven modular monolith. A plugin change normally spans Java,
+registration properties, SQL, tests, operator documentation, data-source notices
+and an ADR when it creates a durable architectural decision.
 
-The executable plugin contract is
-`OpenDataPlugin.execute(PluginExecutionContext)`. Version 2.0.0 provider code is
-organised around `initialise`, `extract`, `transform`, `load` and `finalise`.
-The root plugin class is a thin framework entry point and
-`ReflectionPluginFactory` constructs it from the resolved `PluginDefinition`.
+The executable plugin contract is `OpenDataPlugin.execute(PluginExecutionContext)`.
+Provider implementations follow `initialise -> extract -> transform -> load ->
+finalise`, with the root plugin class acting as a thin framework entry point.
 
-New typed configuration uses `PluginPropertyValues`, `ValidationRules` and
-`SqlIdentifiers`. New repositories keep provider SQL explicit while using the
-shared `database.jdbc` transaction, batch or typed upsert components where the
-pattern applies.
+Every maintained Java package has `package-info.java`. Version 3.0.0 package
+pages group top-level classes, records, interfaces and enums and link each entry
+to its Javadoc description.

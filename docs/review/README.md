@@ -3,7 +3,7 @@
 ## Current assessments
 
 - [Command-line and persistent plugin-registry update — 3 August 2026](CLI-AND-PLUGIN-REGISTRY-UPDATE-2026-08-03.md)
-- [OpenData 2.0.0 release readiness](RELEASE-READINESS-STATUS-2.0.0.md)
+- [OpenData 3.0.0 release readiness](RELEASE-READINESS-STATUS-3.0.0.md)
 - [Final documentation audit — 3 August 2026](FINAL-DOCUMENTATION-AUDIT-2026-08-03.md)
 
 ## Historical assessments

@@ -16,8 +16,9 @@ and shared resources are shut down only after the GUI closes.
 
 ## Decision
 
-OpenData version 3.1.0 and later requires **Java 24 or later**. Development may
-use a later supported JDK; the current development JDK is Java 25.
+OpenData version 3.0.0 and later requires **Java 24 or later**. Development may
+use a later supported JDK; the current development JDK is Java 26 and the current
+development IDE is Apache NetBeans 31.
 
 Retain JavaFX 26.x for the GUI. GitHub build and release workflows use Java 24
 so CI verifies the actual minimum supported runtime rather than the developer's
@@ -46,9 +47,9 @@ Use a dedicated undecorated JavaFX `Stage` for the startup splash. It displays
 the OpenData splash image for at least five seconds without sleeping or blocking
 the JavaFX application thread, then closes as the main stage is shown.
 
-Existing Swing UI helpers are deprecated from version 3.1.0 with removal
-planned after equivalent JavaFX dialogs exist. New GUI code must not add Swing
-dependencies.
+The merged Version 3.0.0 source removes the obsolete Swing UI package after the
+equivalent JavaFX splash, About and information/help workflows were implemented.
+New GUI code must not add Swing dependencies.
 
 ## Consequences
 
@@ -59,10 +60,9 @@ dependencies.
 - The GUI startup path contains no Swing code.
 - `OpenData.main` retains ownership of logging shutdown and does not need a
   second GUI-specific shutdown manager.
-- The legacy Swing About dialog can remain temporarily callable while its
-  JavaFX replacement is implemented in a later GUI batch.
-- The old Swing splash helper remains temporarily for command-line execution
-  compatibility and is no longer used by the JavaFX startup path.
+- The JavaFX replacements for the former Swing About and splash helpers are part
+  of the Version 3.0.0 baseline.
+- The obsolete Swing UI package is no longer part of the current source tree.
 
 ## Related documents
 

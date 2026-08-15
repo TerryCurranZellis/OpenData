@@ -27,7 +27,7 @@ import javafx.application.Platform;
  * JavaFX queue entry per log record during busy multi-plugin runs.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class JavaFxLogHandler extends Handler {
 

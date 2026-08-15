@@ -1,9 +1,9 @@
 # Plugin Documentation
 
 **Document ID:** PLUGIN-INDEX-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 implementation baseline  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 implementation baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 

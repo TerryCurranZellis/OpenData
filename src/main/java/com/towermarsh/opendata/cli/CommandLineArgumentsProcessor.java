@@ -176,7 +176,7 @@ public final class CommandLineArgumentsProcessor {
                 + "Run examples:" + lineSeparator
                 + "  opendata --plugin openmeteo --execute" + lineSeparator
                 + "  opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2" + lineSeparator
-                + "  opendata --plugin all --execute --dry-run" + lineSeparator
+                + "  opendata --plugin all --dry-run" + lineSeparator
                 + lineSeparator
                 + "Plugin information example:" + lineSeparator
                 + "  opendata --plugin ofgem --detail" + lineSeparator
@@ -375,7 +375,7 @@ public final class CommandLineArgumentsProcessor {
         }
         if (execute && command != PluginCommand.RUN) {
             throw new IllegalArgumentException(
-                    "--Execute cannot be combined with a plugin information or administration operation.");
+                    "--execute cannot be combined with a plugin information or administration operation.");
         }
         if (!standalone && command == PluginCommand.RUN && !execute && !dryRun) {
             throw new IllegalArgumentException(

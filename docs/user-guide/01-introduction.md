@@ -1,9 +1,9 @@
 # 1. Introduction
 
 **Document ID:** USER-001  
-**Version:** 2.0  
-**Status:** Version 2.0.0 operational baseline  
-**Baseline date:** 3 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 operational baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -17,7 +17,7 @@ Microsoft SQL Server.
 | `openmeteo` | Open-Meteo archive API | JSON over HTTPS |
 | `octopus` | Octopus Energy customer statements | User-supplied local PDF files |
 
-Version 2.0.0 uses a persistent SQL Server plugin registry. Packaged plugin files
+Version 3.0.0 uses a persistent SQL Server plugin registry. Packaged plugin files
 are registration sources; only plugins present and enabled in
 `core.plugin_registry` can run.
 

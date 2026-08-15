@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * Tests masking of sensitive values before they reach JavaFX dialogs.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class ConfigurationDisplayMaskerTest {
 

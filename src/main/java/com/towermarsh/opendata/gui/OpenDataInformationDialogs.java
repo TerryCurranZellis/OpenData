@@ -35,7 +35,7 @@ import javafx.stage.Window;
  * tasks.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 final class OpenDataInformationDialogs {
 

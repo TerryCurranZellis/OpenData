@@ -24,7 +24,7 @@ import javafx.util.Duration;
  * immediately before the main application stage is shown.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 final class OpenDataSplashScreen {
 

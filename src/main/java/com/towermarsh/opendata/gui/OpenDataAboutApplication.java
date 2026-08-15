@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  * while keeping {@code --about} as a standalone command.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class OpenDataAboutApplication extends Application {
 

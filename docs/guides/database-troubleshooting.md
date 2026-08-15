@@ -1,9 +1,9 @@
 # Database Troubleshooting
 
 **Document ID:** GUIDE-DB-TROUBLE-001  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Current  
-**Baseline date:** 3 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 

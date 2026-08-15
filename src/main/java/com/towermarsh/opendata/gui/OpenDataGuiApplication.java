@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  * startup logic.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class OpenDataGuiApplication extends Application {
 

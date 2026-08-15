@@ -1,9 +1,9 @@
 # Command-Line Reference
 
 **Document ID:** REF-CLI-001  
-**Version:** 2.3  
-**Status:** OpenData 2.0.0 implementation reference  
-**Baseline date:** 8 August 2026  
+**Version:** 3.0.0  
+**Status:** OpenData 3.0.0 implementation reference  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
@@ -11,15 +11,14 @@
 ## Syntax
 
 ```text
-opendata --plugin <id|all> [--plugin <id>] --Execute [run options]
+opendata --plugin <id|all> [--plugin <id>] --execute [run options]
+opendata --plugin <id|all> [--plugin <id>] --dry-run [run options]
 opendata --plugin <id> --detail
 opendata --plugin <id|all> [--plugin <id>] <administration operation> [options]
 opendata --help | --about | --list-plugins
 ```
 
-Plugin execution is deliberately explicit in version 2.0.0. Selecting a plugin
-does **not** run it by itself. Every normal or dry-run execution must also include
-`--Execute` or its short form `-x`.
+Plugin execution is deliberately explicit. Selecting a plugin does **not** run it by itself. Normal write-mode execution requires `--execute` or `-x`; non-writing execution uses `--dry-run` or `-n` as the execution authorisation.
 
 Named `--plugin` options may be repeated and comma-separated ids remain supported
 for execution and administration. `--detail` is different: it requires exactly
@@ -30,7 +29,7 @@ one named plugin because it displays the stored configuration for one plugin.
 | Short | Long | Purpose |
 |---|---|---|
 | `-p` | `--plugin <id\|all>` | Select one plugin, repeated plugin ids, comma-separated ids, or `all` |
-| `-x` | `--Execute` | Explicitly authorise plugin execution; required for normal and dry-run execution |
+| `-x` | `--execute` | Explicitly authorise normal write-mode plugin execution |
 | — | `--detail` | Display the stored configuration for exactly one named registered plugin |
 | `-r` | `--register` | Register or replace selected plugin definitions and configuration |
 | `-u` | `--unregister` | Remove selected plugins and their stored plugin configuration |
@@ -39,7 +38,7 @@ one named plugin because it displays the stored configuration for one plugin.
 | `-d` | `--disable` | Disable selected registered plugins |
 | `-f` | `--file <plugin.properties>` | External plugin definition used only with registration of one named plugin |
 | `-j` | `--parallelism <1-64>` | Maximum concurrent plugin tasks; effective only for runs and dry-runs |
-| `-n` | `--dry-run` | Execute without plugin data writes or generic run-audit rows; requires `--Execute` |
+| `-n` | `--dry-run` | Explicitly authorise non-writing execution without plugin data writes or generic run-audit rows |
 | `-v` | `--verbose` | Enable `FINE` `java.util.logging` output |
 | `-h` | `--help` | Display command help |
 | `-a` | `--about` | Display the graphical About/version window |
@@ -47,7 +46,7 @@ one named plugin because it displays the stored configuration for one plugin.
 
 ### Execution gate
 
-`--Execute` is an execution-authorisation switch, not an administration or
+`--execute` is an execution-authorisation switch, not an administration or
 information operation. It has no value argument.
 
 The following command is invalid because selecting a plugin no longer implicitly
@@ -60,7 +59,7 @@ opendata --plugin ofgem
 Use:
 
 ```text
-opendata --plugin ofgem --Execute
+opendata --plugin ofgem --execute
 ```
 
 or:
@@ -69,13 +68,13 @@ or:
 opendata --plugin ofgem -x
 ```
 
-Dry-run execution is also gated:
+Dry-run uses its own execution gate:
 
 ```text
-opendata --plugin ofgem --Execute --dry-run
+opendata --plugin ofgem --dry-run
 ```
 
-`--Execute` cannot be combined with `--detail`, `--register`,
+`--execute` cannot be combined with `--detail`, `--register`,
 `--unregister`/`--remove`, `--enable`, or `--disable`.
 
 ### Plugin configuration detail
@@ -94,7 +93,7 @@ followed by the stored configuration properties read from
 `--detail`:
 
 - requires exactly one named plugin;
-- does not use or require `--Execute`;
+- does not use or require `--execute`;
 - cannot be used with `--plugin all`;
 - cannot be used with repeated or comma-separated plugin selections;
 - cannot be combined with `--dry-run`, `--file`, or a plugin administration
@@ -117,10 +116,10 @@ short form.
 
 ## Selection rules
 
-- Every run and dry-run requires both `--plugin` and `--Execute`.
-- `--detail` requires exactly one named `--plugin` and does not use `--Execute`.
+- Every normal run requires `--plugin` plus `--execute`; every dry-run requires `--plugin` plus `--dry-run`.
+- `--detail` requires exactly one named `--plugin` and does not use `--execute`.
 - Every register, unregister, enable or disable request requires `--plugin`, but
-  does not use `--Execute`.
+  does not use `--execute`.
 - `--plugin all` cannot be combined with a named plugin id.
 - Repeating the same plugin id is rejected.
 - `--plugin all` during execution selects all **registered and enabled** plugins.
@@ -128,7 +127,7 @@ short form.
 - `--plugin` may be repeated for execution and administration, for example:
 
 ```text
-opendata --plugin ofgem --plugin openmeteo --plugin octopus --Execute
+opendata --plugin ofgem --plugin openmeteo --plugin octopus --execute
 ```
 
 ## Operation rules
@@ -136,18 +135,17 @@ opendata --plugin ofgem --plugin openmeteo --plugin octopus --Execute
 Exactly one non-run plugin operation may be present. `--detail`, `--register`,
 `--unregister`/`--remove`, `--enable` and `--disable` are mutually exclusive.
 
-| Operation | Named plugins | `all` | `--Execute` | `--file` | `--dry-run` |
+| Operation | Named plugins | `all` | `--execute` | `--file` | `--dry-run` |
 |---|---:|---:|---:|---:|---:|
-| Run | Yes | Yes | Required | No | Optional |
+| Normal run | Yes | Yes | Required | No | No |
+| Dry-run | Yes | Yes | No | No | Required |
 | Detail | Exactly one | No | No | No | No |
 | Register | Yes | Yes | No | Optional for exactly one named plugin | No |
 | Unregister/remove | Yes | Yes | No | No | No |
 | Enable | Yes | Yes | No | No | No |
 | Disable | Yes | Yes | No | No | No |
 
-`--parallelism` is accepted with non-run commands for a consistent parser
-contract, but it has no effect because those operations are not concurrent
-plugin executions.
+`--parallelism` affects normal and dry-run execution. It has no effect on detail or administration operations.
 
 ## Registration
 
@@ -206,10 +204,10 @@ rows.
 ## Execution and dry-run
 
 ```text
-opendata --plugin ofgem --Execute
-opendata --plugin openmeteo --plugin octopus --Execute --parallelism 2
-opendata --plugin all --Execute --dry-run
-opendata --plugin ofgem,openmeteo --Execute --dry-run --parallelism 2
+opendata --plugin ofgem --execute
+opendata --plugin openmeteo --plugin octopus --execute --parallelism 2
+opendata --plugin all --dry-run
+opendata --plugin ofgem,openmeteo --dry-run --parallelism 2
 ```
 
 Dry-run still opens SQL Server long enough to read the persistent plugin
@@ -221,7 +219,7 @@ file ledger and validates every matching input statement without archiving it.
 ## Informational commands
 
 `--help`, `--about` and `--list-plugins` are mutually exclusive and do not
-require `--plugin` or `--Execute`. They cannot be combined with plugin selection
+require `--plugin` or `--execute`. They cannot be combined with plugin selection
 or operational options. `--list-plugins` reads `core.plugin_registry`, so SQL
 Server bootstrap credentials and the plugin-registry migration must be available.
 

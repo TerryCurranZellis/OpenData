@@ -1,68 +1,105 @@
 # JavaFX GUI Architecture
 
-**Document ID:** DEV-GUI-001
-**Version:** 3.1.0
-**Status:** Implementation in progress
-**Baseline date:** 14 August 2026
+**Document ID:** DEV-GUI-001  
+**Version:** 3.0.0  
+**Status:** Implemented Version 3.0.0 baseline  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---
 
 ## Purpose
 
-This document records the JavaFX implementation structure and the boundaries
-that keep the graphical interface separate from OpenData processing logic.
+The OpenData graphical interface is a JavaFX presentation layer over the existing
+configuration, registry, execution, logging and plugin services. It must not
+reimplement SQL, plugin selection or ETL business logic in controllers.
 
-## Implemented baseline
+## Runtime baseline
 
-### Batch 1: main window
+Version 3.0.0 requires Java 24 or later. The current development environment is:
 
-Batch 1 established the presentation contract:
+- JDK 26;
+- Apache NetBeans 31; and
+- JavaFX 26.0.1.
 
-- `OpenDataGuiApplication` for JavaFX startup and FXML loading;
-- `OpenDataMainView.fxml` for the menu, toolbar, plugin table and status bar;
-- `OpenDataMainController` for presentation event wiring;
-- `PluginRow` as the table presentation model;
-- explicit checkbox selection independent of ordinary table highlighting; and
-- CSS and toolbar resources.
+Maven compiles with `release=24` and the Enforcer rule accepts Java 24 or later.
+Development on JDK 26 must therefore avoid relying on APIs unavailable to the
+Java 24 release target.
 
-Batch 1 originally used sample plugin rows to establish the presentation contract.
-Batch 3 replaces those fixtures with persistent registry and run-audit data.
+## Startup and lifecycle
 
-### Batch 2: startup and lifecycle
-
-Batch 2 establishes the supported desktop startup path:
+The supported GUI startup path is:
 
 ```text
 OpenData.main
         |
+        v
 com.towermarsh.opendata.gui.GuiLauncher
         |
+        v
 Application.launch(OpenDataGuiApplication.class, ...)
         |
+        v
 OpenDataSplashScreen
         |
-OpenDataMainView.fxml
+        v
+OpenDataMainView.fxml / OpenDataMainController
 ```
 
-The splash is an undecorated JavaFX `Stage`. It uses `PauseTransition` to remain
-visible for a minimum of five seconds without sleeping on the JavaFX application
-thread. The main stage is configured while the splash is active and is shown
-only after the splash closes.
+`OpenData.main` starts the GUI when no command-line arguments are supplied or
+when `--gui`/`-g` is requested. Logging is initialised before JavaFX starts.
+`Application.launch(...)` returns only after the JavaFX application exits, so the
+main application `finally` block retains ownership of final status logging and
+logging shutdown.
 
-`Application.launch(...)` blocks the calling thread until JavaFX exits. This is
-intentional. `OpenData.main` initialises logging before launching JavaFX and its
-existing `finally` block runs only after the GUI has closed, so logging remains
-available throughout the complete GUI session.
+`OpenDataSplashScreen` is JavaFX-only and keeps the splash visible for a minimum
+of five seconds without sleeping on the JavaFX application thread. The main
+stage is configured while the splash is visible and then shown maximised.
 
-The supported launcher now lives in `com.towermarsh.opendata.gui`. A deprecated
-wrapper remains in `com.towermarsh.opendata.ui` so the prototype source location
-can be retired without an abrupt compatibility break.
+The obsolete Swing presentation package is not part of the merged Version 3.0.0
+source tree.
 
-### Batch 3: persistent plugin table
+![JavaFX application flow](../diagrams/generated/gui-application-flow.svg)
 
-Batch 3 introduces the first backend integration while preserving the GUI/service
-boundary:
+## Main presentation components
+
+| Component | Responsibility |
+|---|---|
+| `OpenDataGuiApplication` | JavaFX lifecycle, FXML loading, main stage and application icon |
+| `OpenDataMainView.fxml` | Declarative main-window menus, toolbar, plugin table and status bar |
+| `OpenDataMainController` | Presentation event wiring, selection snapshots, task lifecycle and view updates |
+| `PluginRow` | JavaFX table presentation model |
+| `OpenDataDialogs` | Reusable confirmations/warnings used by main-window actions |
+| `OpenDataInformationDialogs` | Read-only property/value, text, About and fallback Help presentation |
+| `OpenDataExecutionWindow` | Modal live Execute/Dry-run log window |
+| `JavaFxLogHandler` | Batches scoped JUL output onto the JavaFX application thread |
+| `OpenDataHelpLauncher` | Starts compiled Windows CHM Help when available and falls back to JavaFX Help |
+
+The FXML and CSS resources remain Scene Builder-editable and are kept under
+`src/main/resources/com/towermarsh/opendata/gui`.
+
+## Controller/service boundary
+
+The dependency direction is:
+
+```text
+JavaFX FXML / controls
+        |
+OpenDataMainController
+        |
+GUI gateways / loaders / presentation services
+        |
+existing OpenData application services
+        |
+configuration, registry, execution, logging, database and plugins
+```
+
+Blocking configuration and SQL Server work runs through JavaFX `Task` workers.
+Only view/model changes execute on the JavaFX application thread.
+
+## Plugin table loading
+
+The main table is loaded through:
 
 ```text
 OpenDataMainController
@@ -73,7 +110,7 @@ PluginTableDataLoader
         |
         +--> JdbcPluginRegistry
         |
-        +--> PluginTableDataService --> core.PluginRun
+        +--> PluginTableDataService --> latest core.PluginRun state
         |
         v
 PluginTableEntry
@@ -82,156 +119,48 @@ PluginTableEntry
 PluginRow
 ```
 
-`PluginTableDataLoader` resolves the existing encrypted bootstrap configuration,
-opens the SQL Server resource for one read operation and closes it afterwards.
-`PluginTableDataService` obtains registered plugin metadata through the existing
-`PluginRegistry` contract and performs one read-only query for the latest run
-audit of each plugin.
+`PluginTableDataLoader` owns the short-lived bootstrap/database resources needed
+for the read. The controller receives plain `PluginTableEntry` records and maps
+them to JavaFX properties only after the worker completes.
 
-The controller starts this work in a JavaFX `Task`; SQL Server and configuration
-I/O do not execute on the JavaFX application thread. The task returns plain
-`PluginTableEntry` records. Only the success handler converts those records to
-JavaFX `PluginRow` properties. See ADR-0053.
+## Plugin administration
 
-The lower-left status is `Loading plugin details...` while the task runs and
-`Ready` after successful population. A failed load is logged, leaves the table
-disabled and reports `Unable to load plugin details`.
+`PluginAdministrationGateway` owns the database resources used by Register,
+Register from File, Enable, Disable and Unregister.
 
-## Java runtime baseline
+The normal Register action uses `PluginConfigurationDirectoryScanner` to inspect
+`config/plugins` and the source-tree fallback
+`src/main/resources/config/plugins`. Candidate definitions are validated before
+being shown to the user. Already registered ids are filtered from the discovery
+result.
 
-Version 3.1.0 requires **Java 24 or later**. Development may use a later JDK;
-the current development environment uses JDK 25. JavaFX 26.x is retained.
+Register from File uses JavaFX `FileChooser`, validates the selected definition
+and passes the registration through the same framework registration contracts.
+State-changing operations use a selection snapshot and confirmation before the
+worker starts.
 
-GitHub build and release workflows use Java 24 so automated verification tests
-the minimum supported runtime rather than a newer development JDK.
+## Information dialogs
 
-This decision supersedes the old Java 17 runtime minimum. See ADR-0052.
+`PluginDetailGateway` reads one registered plugin's stored configuration.
+`ApplicationSettingsGateway` resolves effective read-only application settings.
+Both return `ConfigurationDisplayEntry` values rather than exposing JDBC or raw
+configuration structures to the controller.
 
-## Main-window contract
+`ConfigurationDisplayMasker` masks explicitly sensitive properties and common
+credential-bearing names before presentation. The Settings dialog does not
+return a decrypted database password to the UI layer.
 
-The main window is maximised on startup and contains these top-level menus:
+`LogViewerService` flushes the active JUL handlers and reads the current rotating
+log without closing the logging subsystem.
 
-| Menu | Commands |
-|---|---|
-| File | Settings, Exit |
-| Register | Register, Register from File, Unregister |
-| Enable | Enable, Disable |
-| Execute | Execute, Dry-run |
-| Details | Plugin Detail, Logs |
-| Help | Help, About |
+## Execute and Dry-run boundary
 
-The toolbar exposes the specification commands using 24-pixel image resources.
-Menu items and toolbar buttons that represent the same operation call the same
-controller handler.
-
-The plugin table contains:
-
-| Column | Purpose |
-|---|---|
-| Selected | Explicit checkbox indicating inclusion in a later action |
-| Plugin ID | Registered plugin identifier |
-| Plugin Description | Human-readable plugin description |
-| Enabled | Enabled/disabled state |
-| Last Run Status | Status of the most recent execution; blank if never run |
-| Date of Last Run | Most recent execution date/time; blank if never run |
-
-The lower-left status label is reserved for loading/ready/operation feedback.
-The lower-right label counts checked plugin rows.
-
-## Presentation boundary
-
-GUI code must not reproduce SQL, registry, configuration or ETL logic. The
-intended dependency direction remains:
-
-```text
-JavaFX FXML / controls
-        |
-OpenDataMainController
-        |
-GUI application services / adapters
-        |
-existing OpenData services
-        |
-configuration, registry, execution, logging and plugins
-```
-
-The controller remains free of SQL and processing logic. Batch 3 adds a read-only
-backend service boundary; later state-changing batches must follow the same
-dependency direction.
-
-## Swing retirement
-
-New GUI code must use JavaFX. The following legacy Swing helpers are deprecated
-from version 3.1.0 with removal planned after JavaFX replacements exist:
-
-- `com.towermarsh.opendata.ui.StartupSplashScreen`;
-- `com.towermarsh.opendata.ui.AboutDialog`;
-- `com.towermarsh.opendata.ui.OpenDataImageLoader`; and
-- the compatibility `com.towermarsh.opendata.ui.GuiLauncher`.
-
-The JavaFX GUI no longer uses the Swing splash or Swing About dialog. Batch 5
-also moves the standalone `--about` route to JavaFX. The deprecated Swing
-execution splash remains temporarily on the legacy command-line run path; the
-old Swing About dialog, image helper and compatibility launcher are marked for
-removal.
-
-## Remaining implementation batches
-
-| Batch | Scope | Main hurdle |
-|---|---|---|
-| 3 | Read-only plugin registry view and refresh | **Implemented:** persistent registry plus latest run audit loaded asynchronously behind a GUI service boundary |
-| 4 | Register, register-from-file, enable, disable and unregister actions | **Implemented:** configuration-folder discovery, file chooser, selection validation, confirmations and asynchronous registry writes |
-| 5 | Plugin Detail, Settings/Preferences, log viewer, Help and JavaFX About | **Implemented:** read-only asynchronous information services, sensitive-value masking and JavaFX About |
-| 6 | Execute and Dry-run with live log dialog | **Implemented:** background execution, two-phase database lifecycle and scoped/batched JavaFX JUL streaming |
-| 7 | Integration tests, error handling, packaging and final documentation/screenshots | JavaFX test strategy, Windows packaging, help-file launch and release-quality documentation |
-
-
-### Batch 4 administration boundary
-
-`PluginAdministrationGateway` owns short-lived bootstrap/database resources for
-GUI administration. The controller snapshots selections or discovered files and
-starts a JavaFX `Task`; it does not call JDBC directly. `PluginRegistrationResolver`
-shares plugin-definition parsing and implementation-class validation with the
-CLI while leaving the two user-interface workflows distinct.
-
-The GUI Register action uses `PluginConfigurationDirectoryScanner` rather than
-the packaged plugin index. It checks deployment-style `config/plugins` first and
-the source-tree `src/main/resources/config/plugins` folder second. Validated
-definitions already present in `JdbcPluginRegistry` are filtered out before the
-confirmation dialog. Register from File bypasses discovery and validates the
-file chosen by JavaFX `FileChooser`.
-
-## Batch 5 information boundary
-
-Batch 5 keeps the same controller/service direction established in Batch 3.
-`PluginDetailGateway` and `ApplicationSettingsGateway` own short-lived bootstrap
-and database resources and return immutable `ConfigurationDisplayEntry` values.
-The controller starts those reads on JavaFX `Task`s and opens the dialogs only
-after the values have returned to the JavaFX application thread.
-
-Plugin Detail reads `JdbcConfigurationPropertiesSource`, matching the existing
-CLI detail source. `ConfigurationDisplayMasker` hides explicitly sensitive
-plugin values and conventional credential-bearing names before the data reaches
-the dialog. Application Settings is intentionally read-only and never returns a
-decrypted database password to the presentation layer.
-
-`LogViewerService` reads the current JUL file rather than attaching a live UI
-handler. `LoggingManager.flush()` makes buffered messages visible while leaving
-all handlers open. Batch 6 keeps that existing-log viewer separate from the
-scoped `JavaFxLogHandler` used only while Execute or Dry-run is active.
-
-`OpenDataInformationDialogs` owns the reusable Property/Value table, text viewer
-and JavaFX About presentation. `OpenDataAboutApplication` supplies the standalone
-`--about` JavaFX lifecycle without requiring the main application window.
-
-## Batch 6 execution boundary
-
-Execute and Dry-run preserve the existing controller/service direction:
+The GUI execution path is:
 
 ```text
 OpenDataMainController
         |
-        | snapshot checked ids + confirmation
+        | checked plugin-id snapshot + confirmation
         | JavaFX Task
         v
 PluginExecutionGateway
@@ -239,50 +168,66 @@ PluginExecutionGateway
         +--> PluginSelectionResolver
         +--> PropertiesPluginDefinitionLoader
         +--> PluginExecutionCoordinator
-        +--> runtime database / dry-run resource
+        +--> normal database resource OR dry-run unavailable resource
 ```
 
-The gateway follows the same two-phase SQL Server lifecycle as CLI execution.
-It first opens the bootstrap database to resolve the persistent registry,
-runtime configuration and plugin definitions. That pool is closed before a
-normal run opens the runtime execution pool. Dry-run instead supplies
-`UnavailableDatabaseResourceManager` and `NoOpPluginRunAudit`.
+Normal Execute and Dry-run are separate GUI actions. `PluginExecutionGateway`
+uses the same registry/configuration and coordinator contracts as the CLI rather
+than constructing a second execution engine.
 
-The controller snapshots checked plugin ids before confirmation so later table
-interaction cannot mutate an in-flight request. Administration, information and
-execution background operations are prevented from overlapping where they could
-compete for the singleton SQL Server resource.
+During a run, `JavaFxLogHandler` is attached for the scoped execution window. It
+formats and batches JUL text, then uses `Platform.runLater()` for safe UI
+updates. Normal console/file handlers remain active. The handler is detached
+when the scoped execution completes.
 
-### Scoped live JUL handler
+`OpenDataExecutionWindow` is modal. Its Close action and window-close request are
+blocked while processing is active. Completion/failure updates the window and
+enables Close. The main table is refreshed after the run so persisted status and
+last-run date are visible.
 
-`JavaFxLogHandler` is attached temporarily to the
-`com.towermarsh.opendata` application logger. `LoggingManager.configure(...)`
-replaces only root handlers, so runtime log reconfiguration cannot detach the
-live handler. The normal root file and console handlers still receive the same
-records through JUL propagation.
+![GUI execution and live logging](../diagrams/generated/gui-execution-sequence.svg)
 
-Plugin threads may log concurrently. The live handler formats records with
-`ContextualLogFormatter`, queues them safely and schedules batched drains via
-`Platform.runLater()`. `OpenDataExecutionWindow` owns the modal scrollable text
-area. Its Close button is disabled and close requests are consumed until the
-background task reaches a terminal state.
+## Help integration
 
-After completion the controller detaches the handler and refreshes the plugin
-table. Normal execution audit values then become visible; dry-run intentionally
-leaves those persisted last-run columns unchanged.
+`OpenDataHelpLauncher` checks supported locations for
+`OpenData-Technical-User-Guide.chm`. On Windows it starts the file using
+`hh.exe`. If the file is absent or cannot be started, the built-in JavaFX help
+viewer is used instead. Help-launch failure is therefore non-fatal to the main
+GUI.
 
-## Integration hurdles still ahead
+A packaged image is expected to place the CHM below an `app/help` location near
+the application JAR; source-tree execution also checks the generated Technical
+User Guide Help output.
 
-Batch 7 remains responsible for final JavaFX/integration test coverage, Windows
-compiled Help launch/packaging and release-quality screenshots/documentation.
+## Principal diagrams
 
-## Batch 3 non-goals
+The Version 3.0.0 diagram set includes:
 
-Batch 3 does not:
+- `component-architecture.puml` — application, GUI, registry/runtime and provider
+  components;
+- `package-dependencies.puml` — principal package dependency direction;
+- `system-context.puml` — operator interaction through GUI or CLI;
+- `gui-application-flow.puml` — GUI startup and action/service boundary; and
+- `gui-execution-sequence.puml` — Execute/Dry-run confirmation, background
+  execution, live logging and table refresh.
 
-- register, enable, disable or unregister plugins;
-- execute or dry-run plugins;
-- replace the legacy Swing About dialog;
-- display plugin configuration details or log files;
-- add common warning/confirmation dialogs; or
-- change CLI plugin processing behaviour.
+Render the PlantUML sources to `docs/diagrams/generated` before the final manual
+build.
+
+## Testing and release acceptance
+
+The release candidate should be tested on JDK 24 (minimum contract) and may also
+be exercised on the JDK 26 development environment. GUI acceptance covers:
+
+- startup/no-argument routing;
+- plugin-table loading and selection;
+- registration and state changes;
+- Plugin Detail and Settings masking;
+- existing-log viewing;
+- Execute and Dry-run background execution;
+- live-log Close gating;
+- CHM Help and JavaFX fallback; and
+- clean JavaFX shutdown.
+
+Use [GUI 3.0 final acceptance checklist](gui-v3.0-final-acceptance-checklist.md)
+and the [GUI screenshot plan](gui-screenshot-plan.md) for release evidence.

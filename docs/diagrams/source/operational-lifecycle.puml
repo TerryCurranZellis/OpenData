@@ -1,25 +1,26 @@
 @startuml
 !theme plain
-title OpenData Version 2.0.0 Operational Lifecycle
+title OpenData Version 3.0.0 Operational Lifecycle
 start
 :Deploy compatible source/package, SQL schema and documentation;
+:Use Java 24 or later;
 :Replace bootstrap credential and certificate/private key;
 :Verify registry migration, grants, directories and backup;
 if (Required plugins registered?) then (no)
-  :Run --plugin id|all --register;
-  :Optionally register one complete external definition;
+  :Register from GUI discovery/file
+or CLI --plugin id|all --register;
 endif
-:Run --list-plugins;
+:Review registered plugins;
 :Enable/disable intended operational set;
-:Run --plugin all --dry-run;
+:Run GUI Dry-run or CLI --plugin all --dry-run;
 if (Acceptance successful?) then (yes)
   :Run one controlled write per enabled plugin;
-  :Verify logs, audit, registry, business data and archives;
+  :Verify live/application logs, audit, registry, business data and archives;
   if (Warnings or mismatches?) then (yes)
     :Stop writes and retain evidence;
     :Reconcile transactions, ledgers and archives;
   else (no)
-    :Permit routine operation and monitor;
+    :Permit routine GUI/CLI operation and monitor;
   endif
 else (no)
   :Diagnose registry, configuration, source and parser failures;

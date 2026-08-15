@@ -1,9 +1,9 @@
 # 9. Multiple Plugins and Parallelism
 
 **Document ID:** USER-008  
-**Version:** 2.1  
-**Status:** Version 2.0.0 operational baseline  
-**Baseline date:** 7 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 operational baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -11,9 +11,9 @@ Select several plugins by repeating the option, using comma-separated ids, or
 selecting all. Execution must also be explicitly authorised:
 
 ```text
-opendata --plugin openmeteo --plugin ofgem --Execute --parallelism 2
-opendata --plugin openmeteo,ofgem --Execute --parallelism 2
-opendata --plugin all --Execute
+opendata --plugin openmeteo --plugin ofgem --execute --parallelism 2
+opendata --plugin openmeteo,ofgem --execute --parallelism 2
+opendata --plugin all --execute
 ```
 
 The runtime creates one independent task per plugin on a fixed-size executor.
@@ -33,6 +33,6 @@ The default database pool maximum is eight connections, but a plugin may borrow
 more than one connection during its lifecycle, so do not equate pool size with a
 safe plugin count.
 
-`opendata --plugin all --Execute --dry-run` is the preferred combined pre-write
+`opendata --plugin all --dry-run` is the preferred combined pre-write
 acceptance command. It selects every enabled registered plugin; disabled plugins
 are omitted.

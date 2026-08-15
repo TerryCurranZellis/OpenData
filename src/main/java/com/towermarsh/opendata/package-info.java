@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Main entry point to the OpenData application.
+ * Top-level OpenData application entry points and shared application metadata.
  *
+ * <h2>Classes</h2>
  * <ul>
- * <li>{@link OpenData}</li>
+ * <li>{@link OpenData} &mdash; OpenData application entry point.</li>
  * </ul>
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.0.0
  */
 package com.towermarsh.opendata;

@@ -1,9 +1,9 @@
 # Migrating a Plugin to the Version 2.0.0 Contract
 
 **Document ID:** GUIDE-PLUGIN-MIGRATION-001  
-**Version:** 2.0  
+**Version:** 3.0.0  
 **Status:** Current migration guide  
-**Baseline date:** 3 August 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

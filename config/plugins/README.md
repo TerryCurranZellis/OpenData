@@ -1,6 +1,6 @@
 # OpenData Plugin Configuration Folder
 
-Version 3.1.0 of the JavaFX interface checks this directory when **Register** is
+Version 3.0.0 of the JavaFX interface checks this directory when **Register** is
 selected.
 
 Place complete OpenData plugin definition files here using the `.properties`

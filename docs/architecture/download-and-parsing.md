@@ -1,9 +1,9 @@
 # Download and Parsing Architecture
 
 **Document ID:** ARCH-DOWNLOAD-001  
-**Version:** 1.1  
+**Version:** 3.0.0  
 **Status:** Implemented shared components; extension gaps identified  
-**Baseline date:** 26 July 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

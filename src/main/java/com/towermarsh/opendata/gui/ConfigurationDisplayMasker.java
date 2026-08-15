@@ -18,7 +18,7 @@ import java.util.Objects;
  * property names are also masked defensively.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 final class ConfigurationDisplayMasker {
 

@@ -1,10 +1,11 @@
 @startuml
 !pragma layout smetana
-title Principal Package Dependencies
+title Principal Package Dependencies - Version 3.0.0
 top to bottom direction
 
 package app
 package cli
+package gui
 package config
 package "plugin (shared runtime)" as Plugin
 
@@ -26,12 +27,18 @@ package validation
 package database
 package logging
 package exception
+package util
 
 app --> cli
+app --> gui
 app --> config
 app --> Plugin
 app --> database
 app --> logging
+gui --> app : gateways/services
+gui --> config
+gui --> Plugin
+gui --> logging
 Plugin --> config
 Plugin --> database
 Plugin --> logging
@@ -53,4 +60,6 @@ discovery --> exception
 download --> exception
 parser --> exception
 validation --> exception
+app --> util
+gui --> util
 @enduml

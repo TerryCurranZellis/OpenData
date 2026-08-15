@@ -1,9 +1,9 @@
 # Dataset Lifecycle
 
 **Document ID:** ARCH-009  
-**Version:** 1.0  
+**Version:** 3.0.0  
 **Status:** Baseline  
-**Baseline date:** 23 July 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

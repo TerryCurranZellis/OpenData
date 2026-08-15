@@ -1,9 +1,9 @@
 # 4. Configuration
 
 **Document ID:** USER-004  
-**Version:** 2.1  
-**Status:** Version 2.0.0 operational baseline  
-**Baseline date:** 8 August 2026
+**Version:** 3.0.0  
+**Status:** Version 3.0.0 operational baseline  
+**Baseline date:** 15 August 2026  
 
 ---
 
@@ -43,7 +43,7 @@ Re-registering an existing plugin preserves its current enabled/disabled status.
 
 ## Register plugins from the graphical interface
 
-In Version 3.1.0, **Register** scans the OpenData plugin configuration folder for
+In Version 3.0.0, **Register** scans the OpenData plugin configuration folder for
 new complete `.properties` definitions. The deployment-style location is
 `config/plugins`; a development checkout also scans
 `src/main/resources/config/plugins`. Existing registered ids are excluded and
@@ -67,7 +67,7 @@ status, followed by the stored property names and values read from
 `core.plugin_property`.
 
 `--detail` requires exactly one named plugin. It cannot be used with `all`,
-multiple plugin selections, `--Execute`, `--dry-run`, `--file`, or another
+multiple plugin selections, `--execute`, `--dry-run`, `--file`, or another
 plugin administration operation.
 
 This is useful after registration or re-registration to confirm which

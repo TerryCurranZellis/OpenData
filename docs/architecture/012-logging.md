@@ -1,9 +1,9 @@
 # Logging Architecture
 
 **Document ID:** ARCH-012  
-**Version:** 1.1  
+**Version:** 3.0.0  
 **Status:** Baseline  
-**Baseline date:** 26 July 2026  
+**Baseline date:** 15 August 2026  
 **Minimum Java version:** 24
 
 ---

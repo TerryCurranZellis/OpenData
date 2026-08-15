@@ -1,7 +1,7 @@
 # Architecture Decisions
 
 **Document ID:** ADR-INDEX-001  
-**Version:** 1.3
+**Version:** 3.0.0  
 **Status:** Baseline  
 **Baseline date:** 31 July 2026
 ---

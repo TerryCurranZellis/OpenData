@@ -1,9 +1,9 @@
 # Ofgem Price-Cap Architecture
 
 **Document ID:** ARCH-021
-**Version:** 2.1
+**Version:** 3.0.0  
 **Status:** Runtime and shared persistence integration implemented; live write acceptance pending
-**Baseline date:** 4 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 

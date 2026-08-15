@@ -1,29 +1,39 @@
 @startuml
 !pragma layout smetana
-title OpenData Architecture Overview
+title OpenData 3.0.0 Architecture Overview
 left to right direction
 skinparam componentStyle rectangle
 
 actor Operator
-component "CLI and Application" as App
+component "JavaFX GUI" as GUI
+component "Command-line Interface" as CLI
+component "Application Services" as App
 component "Plugin Registry and Factory" as Registry
 component "Bounded Execution Coordinator" as Coordinator
 component "Ofgem Plugin" as Ofgem
 component "OpenMeteo Plugin" as Meteo
+component "Octopus Plugin" as Octopus
 component "JUL Logging and Audit" as Audit
 cloud "Public Data Providers" as Providers
+folder "Octopus Statement PDFs" as Statements
 database "SQL Server" as Database
 
-Operator --> App
+Operator --> GUI
+Operator --> CLI
+GUI --> App
+CLI --> App
 App --> Registry
 App --> Coordinator
 Registry --> Coordinator
 Coordinator --> Ofgem
 Coordinator --> Meteo
+Coordinator --> Octopus
 Ofgem --> Providers
 Meteo --> Providers
+Octopus --> Statements
 Ofgem --> Database
 Meteo --> Database
+Octopus --> Database
 Coordinator --> Audit
 Audit --> Database
 @enduml

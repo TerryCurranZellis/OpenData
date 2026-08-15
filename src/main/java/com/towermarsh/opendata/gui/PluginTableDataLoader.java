@@ -20,7 +20,7 @@ import java.util.Map;
  * application service if several operations benefit from sharing one session.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public final class PluginTableDataLoader {
 

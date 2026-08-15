@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
  * Tests availability of the built-in JavaFX fallback help text.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class OpenDataHelpContentTest {
 

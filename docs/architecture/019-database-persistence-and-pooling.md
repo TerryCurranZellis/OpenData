@@ -1,9 +1,9 @@
 # Database Persistence and Connection Pooling
 
 **Document ID:** ARCH-019
-**Version:** 2.0
-**Status:** Implemented in Version 2.0.0
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Implemented in Version 3.0.0
+**Baseline date:** 15 August 2026  
 
 ---
 

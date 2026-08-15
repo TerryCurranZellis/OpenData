@@ -21,7 +21,7 @@ import org.junit.jupiter.api.io.TempDir;
  * Tests shared packaged/external plugin registration resolution.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 class PluginRegistrationResolverTest {
 

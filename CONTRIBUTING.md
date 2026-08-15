@@ -11,13 +11,13 @@ you confirm that you have the right to contribute it under Apache 2.0.
 
 ## Development baseline
 
-- Java 17 compatibility.
+- Java 24 or later; JDK 26 is the current development JDK.
 - Maven 3.9 or later.
 - SQL Server for registration and persistence integration testing.
 - PowerShell 5.1 or later for repository scripts.
 - Pandoc and PlantUML only when rebuilding generated manuals/diagrams.
 
-Apache NetBeans is the maintainer's primary IDE but is not required.
+Apache NetBeans 31 is the current maintainer IDE but is not required.
 
 ## Change workflow
 

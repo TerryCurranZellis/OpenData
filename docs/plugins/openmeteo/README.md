@@ -1,9 +1,9 @@
 # OpenMeteo Historical Weather Plugin
 
 **Document ID:** PLUGIN-OPENMETEO-INDEX-001
-**Version:** 2.1
+**Version:** 3.0.0  
 **Status:** Runtime and shared processing integration implemented; live acceptance pending
-**Baseline date:** 4 August 2026
+**Baseline date:** 15 August 2026  
 
 ---
 

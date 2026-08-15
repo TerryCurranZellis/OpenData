@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Builds a Windows jpackage image or installer for OpenData 3.1.0.
+Builds a Windows jpackage image or installer for OpenData 3.0.0.
 
 .DESCRIPTION
 Creates a normal GUI launcher named OpenData and an additional console launcher
@@ -18,7 +18,7 @@ param(
     [string] $Type = 'app-image',
 
     [Parameter()]
-    [string] $Version = '3.1.0',
+    [string] $Version = '3.0.0',
 
     [Parameter()]
     [string] $RepositoryPath = (Get-Location).Path,

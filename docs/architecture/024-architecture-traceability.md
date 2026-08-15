@@ -1,9 +1,9 @@
 # Architecture Traceability
 
 **Document ID:** ARCH-024
-**Version:** 2.1
-**Status:** Current Version 2.0.0 traceability
-**Baseline date:** 4 August 2026
+**Version:** 3.0.0  
+**Status:** Current Version 3.0.0 traceability
+**Baseline date:** 15 August 2026  
 
 ---
 

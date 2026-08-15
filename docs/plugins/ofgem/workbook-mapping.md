@@ -1,8 +1,8 @@
 # Ofgem Annex 9 Workbook Mapping
 
 **Document ID:** PLUGIN-OFGEM-MAP-001  
-**Version:** 1.0  
-**Baseline date:** 24 July 2026
+**Version:** 3.0.0  
+**Baseline date:** 15 August 2026  
 
 ## Source worksheet
 

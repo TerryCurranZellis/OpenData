@@ -39,7 +39,7 @@ Invoke-Documentation -ProjectRoot $PWD -Action Clean
 | `-RenderDiagrams` | false | Render PlantUML SVG files before building |
 | `-FailOnWarning` | false | Treat validation warnings as errors |
 
-`Build-Documentation.ps1` and `Validate-Documentation.ps1` remain convenient wrappers around the same function.
+`Build-Documentation.ps1` and `Validate-Documentation.ps1` are maintained wrappers around the manifest-driven `Invoke-Documentation` function.
 
 ## Document discovery and composition
 
@@ -75,7 +75,7 @@ Maintained scripts target Windows PowerShell 5.1. Pandoc must be on `PATH`; diag
 ## Configuration encryption certificate
 
 `New-ConfigurationCertificate.ps1` creates the certificate files used by the
-version 2 bootstrap password encryption flow:
+current bootstrap password encryption flow:
 
 ```powershell
 . .\scripts\New-ConfigurationCertificate.ps1

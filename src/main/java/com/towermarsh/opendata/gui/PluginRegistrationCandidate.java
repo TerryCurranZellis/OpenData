@@ -16,7 +16,7 @@ import java.util.Objects;
  * @param file source properties file
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.0.0
  */
 public record PluginRegistrationCandidate(
         String pluginId,
