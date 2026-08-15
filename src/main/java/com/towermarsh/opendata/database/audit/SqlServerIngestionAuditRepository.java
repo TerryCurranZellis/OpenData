@@ -12,7 +12,6 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -102,9 +101,8 @@ public final class SqlServerIngestionAuditRepository
             URI sourcePageUri,
             String applicationVersion) throws DatabaseException {
         Objects.requireNonNull(datasetCode, "datasetCode");
-        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(
-                START_RUN_SQL,
-                Statement.RETURN_GENERATED_KEYS)) {
+        try (var connection = connectionManager.getConnection(); var statement
+                = connection.prepareStatement(START_RUN_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, sourcePageUri == null ? null : sourcePageUri.toString());
             statement.setString(2, hostName());
             statement.setString(3, applicationVersion);
@@ -131,9 +129,8 @@ public final class SqlServerIngestionAuditRepository
             long ingestionRunId,
             SourceFileMetadata metadata) throws DatabaseException {
         Objects.requireNonNull(metadata, "metadata");
-        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(
-                SOURCE_FILE_SQL,
-                Statement.RETURN_GENERATED_KEYS)) {
+        try (var connection = connectionManager.getConnection(); var statement
+                = connection.prepareStatement(SOURCE_FILE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, ingestionRunId);
             statement.setString(2, metadata.sourceUri().toString());
             statement.setString(3, metadata.fileName());
@@ -160,8 +157,8 @@ public final class SqlServerIngestionAuditRepository
             long ingestionRunId,
             IngestionRunCompletion completion) throws DatabaseException {
         Objects.requireNonNull(completion, "completion");
-        try (var connection = connectionManager.getConnection(); var statement = connection.prepareStatement(
-                COMPLETE_RUN_SQL)) {
+        try (var connection = connectionManager.getConnection(); var statement
+                = connection.prepareStatement(COMPLETE_RUN_SQL)) {
             statement.setString(1, completion.status().name());
             statement.setTimestamp(2, Timestamp.from(completion.finishedAt()));
             statement.setLong(3, completion.rowsExtracted());
@@ -200,7 +197,8 @@ public final class SqlServerIngestionAuditRepository
             String errorCode,
             String message,
             String rawPayload) throws DatabaseException {
-        try (Connection connection = connectionManager.getConnection(); var statement = connection.prepareStatement(ERROR_SQL)) {
+        try (Connection connection = connectionManager.getConnection(); var statement
+                = connection.prepareStatement(ERROR_SQL)) {
             statement.setLong(1, ingestionRunId);
             setNullableLong(statement, 2, sourceFileId);
             setNullableLong(statement, 3, sourceRowNumber);

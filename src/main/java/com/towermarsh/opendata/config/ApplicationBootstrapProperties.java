@@ -11,14 +11,15 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Minimal bootstrap properties required before database-backed configuration can
- * be loaded.
+ * Minimal bootstrap properties required before database-backed configuration
+ * can be loaded.
  *
  * @param applicationVersion configured application version string
  * @param databaseUrl SQL Server JDBC URL
  * @param databaseUser SQL Server login name
  * @param databasePassword SQL Server password in plain text after decryption
- * @param useDatabaseProperties whether runtime properties are loaded from the database
+ * @param useDatabaseProperties whether runtime properties are loaded from the
+ * database
  *
  * @author Terry Curran
  * @version 2.1
@@ -30,16 +31,33 @@ public record ApplicationBootstrapProperties(
         String databasePassword,
         boolean useDatabaseProperties) {
 
+    /**
+     * settings for SQL Server JDBC
+     */
     private static final String DRIVER_CLASS = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    /**
+     * Settings for database pool
+     */
     private static final String POOL_NAME = "OpenData";
     private static final int MAX_TOTAL = 8;
     private static final int MAX_IDLE = 8;
     private static final int MIN_IDLE = 1;
     private static final int MAX_WAIT_SECONDS = 30;
+    /**
+     * test query to validate database access
+     */
     private static final String VALIDATION_QUERY = "SELECT 1";
 
     /**
      * Validates and normalises record components.
+     *
+     * @param applicationVersion configured application version string
+     * @param databaseUrl SQL Server JDBC URL
+     * @param databaseUser SQL Server login name
+     * @param databasePassword SQL Server password in plain text after
+     * decryption
+     * @param useDatabaseProperties whether runtime properties are loaded from
+     * the database
      */
     public ApplicationBootstrapProperties {
         applicationVersion = requireText(applicationVersion, "applicationVersion");

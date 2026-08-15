@@ -39,8 +39,19 @@ public record PluginDefinition(
         Map<String, PluginPropertyDefinition> properties,
         Map<String, CredentialReference> credentials) {
 
-    /** 
-     * Validates and normalises record components. 
+    /**
+     * Validates and normalises record components.
+     *
+     * @param id stable command-line plugin identifier
+     * @param displayName human-readable name
+     * @param description plugin description
+     * @param implementationClass fully qualified implementation class
+     * @param enabled whether the plugin may execute
+     * @param configurationVersion configuration version
+     * @param datasetId logical dataset identifier
+     * @param endpoints configured source endpoints
+     * @param properties plugin-specific typed properties
+     * @param credentials secret references
      */
     public PluginDefinition {
         Objects.requireNonNull(id, "id");

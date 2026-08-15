@@ -190,20 +190,6 @@ public record OpenMeteoConfiguration(
         return new DateRange(effectiveStart, effectiveEnd);
     }
 
-    /**
-     * Validates one SQL identifier.
-     *
-     * @param value identifier value
-     * @param name property name used in error reporting
-     * @return validated SQL identifier
-     * @deprecated Use {@link SqlIdentifiers#requireSafe(String, String)}.
-     * @since 2.0.0
-     */
-    @Deprecated(since = "2.0.0", forRemoval = false)
-    public static String sqlIdentifier(final String value, final String name) {
-        return SqlIdentifiers.requireSafe(value, name);
-    }
-
     private static String slug(final String value) {
         final String result = ValidationRules.requireText(value, "location-name")
                 .toLowerCase(Locale.ROOT)

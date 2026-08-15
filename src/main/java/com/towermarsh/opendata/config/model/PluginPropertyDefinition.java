@@ -26,8 +26,15 @@ public record PluginPropertyDefinition(
         boolean sensitive,
         String description) {
 
-    /** Validates and normalises record components. */
-
+    /**
+     * Validates and normalises record components.
+     *
+     * @param name property name
+     * @param value textual property value
+     * @param type declared value type
+     * @param sensitive whether the value must be omitted from logs
+     * @param description optional description
+     */
     public PluginPropertyDefinition {
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(value, "value");

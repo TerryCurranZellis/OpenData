@@ -30,8 +30,16 @@ public record BootstrapConfig(
         Path failedDirectory,
         Map<String, String> values) {
 
-    /** Validates and normalises record components. */
-
+    /**
+     * Validates and normalises record components.
+     *
+     * @param applicationName application name
+     * @param environment runtime environment name
+     * @param workingDirectory working directory
+     * @param archiveDirectory archive directory
+     * @param failedDirectory failed-download directory
+     * @param values additional bootstrap values
+     */
     public BootstrapConfig {
         Objects.requireNonNull(applicationName, "applicationName");
         Objects.requireNonNull(environment, "environment");

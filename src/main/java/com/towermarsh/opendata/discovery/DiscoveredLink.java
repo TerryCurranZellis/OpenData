@@ -18,7 +18,7 @@ import java.util.Objects;
  * @param title anchor title attribute
  * @param fileName final path segment, when available
  * @param extension lower-case filename extension without a leading dot
-  *
+ *
  * @author Terry Curran
  * @version 1.0.0
  */
@@ -30,8 +30,15 @@ public record DiscoveredLink(
         String fileName,
         String extension) {
 
-    /** 
-     * Validates and normalises record components. 
+    /**
+     * Validates and normalises record components.
+     *
+     * @param pageUri page on which the link was found
+     * @param targetUri absolute target URI
+     * @param linkText visible anchor text
+     * @param title anchor title attribute
+     * @param fileName final path segment, when available
+     * @param extension lower-case filename extension without a leading dot
      */
     public DiscoveredLink {
         Objects.requireNonNull(pageUri, "pageUri");

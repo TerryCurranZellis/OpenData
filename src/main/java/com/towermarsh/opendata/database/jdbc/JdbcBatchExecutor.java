@@ -51,10 +51,10 @@ public final class JdbcBatchExecutor {
             throw new IllegalArgumentException("batchSize must be positive");
         }
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int pending = 0;
-            int affected = 0;
-            for (T record : records) {
+        try (var statement = connection.prepareStatement(sql)) {
+            var pending = 0;
+            var affected = 0;
+            for (var record : records) {
                 binder.bind(statement, Objects.requireNonNull(record, "record"));
                 statement.addBatch();
                 pending++;
@@ -71,8 +71,8 @@ public final class JdbcBatchExecutor {
     }
 
     private static int count(final int[] results) throws SQLException {
-        int affected = 0;
-        for (int result : results) {
+        var affected = 0;
+        for (var result : results) {
             if (result == Statement.EXECUTE_FAILED) {
                 throw new SQLException("A JDBC batch entry failed");
             }

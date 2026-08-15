@@ -17,11 +17,13 @@ import java.util.Objects;
 /**
  * Locates plugin definition property files in OpenData configuration folders.
  *
- * <p>The deployment-style folder {@code config/plugins} is checked first. The
+ * <p>
+ * The deployment-style folder {@code config/plugins} is checked first. The
  * source-tree folder {@code src/main/resources/config/plugins} is also checked
  * so the same GUI operation works while OpenData is being run directly from a
  * development checkout. The classpath index file is deliberately ignored: GUI
- * registration discovers complete {@code *.properties} definitions directly.</p>
+ * registration discovers complete {@code *.properties} definitions
+ * directly.</p>
  *
  * @author Terry Curran
  * @version 3.1.0
@@ -48,7 +50,7 @@ public final class PluginConfigurationDirectoryScanner {
         Objects.requireNonNull(directories, "directories");
         this.directories = directories.stream()
                 .map(path -> Objects.requireNonNull(path, "directory")
-                .toAbsolutePath().normalize())
+                        .toAbsolutePath().normalize())
                 .distinct()
                 .toList();
     }
@@ -59,13 +61,14 @@ public final class PluginConfigurationDirectoryScanner {
      * @return immutable directory list
      */
     public List<Path> directories() {
-        return directories;
+        return List.copyOf(new ArrayList<>(directories));
     }
 
     /**
      * Finds property files in the configured directories.
      *
-     * <p>Files are returned deterministically by directory search order and
+     * <p>
+     * Files are returned deterministically by directory search order and
      * filename. A physical path encountered more than once is returned only
      * once.</p>
      *
@@ -93,8 +96,13 @@ public final class PluginConfigurationDirectoryScanner {
     }
 
     private static boolean isPluginPropertiesFile(final Path path) {
-        final var filename = path.getFileName().toString().toLowerCase(Locale.ROOT);
-        return filename.endsWith(".properties") && !INDEX_FILE.equals(filename);
+        final var fileName = path.getFileName();
+        if (fileName == null) {
+            return false;
+        }
+        final var filename = fileName.toString().toLowerCase(Locale.ROOT);
+        return filename.endsWith(".properties")
+                && !INDEX_FILE.equals(filename);
     }
 
     private static List<Path> defaultDirectories() {

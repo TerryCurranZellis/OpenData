@@ -11,6 +11,7 @@ import java.util.Properties;
 
 /**
  * Immutable Apache DBCP connection-pool settings.
+ *
  * @param initialSize initial number of pooled connections
  * @param minIdle minimum number of idle pooled connections
  * @param maxIdle maximum number of idle pooled connections
@@ -19,8 +20,9 @@ import java.util.Properties;
  * @param minEvictableIdleTime minimum idle time before eviction is permitted
  * @param testOnBorrow whether connections are validated when borrowed
  * @param validationQuery SQL validation query
- * @param validationQueryTimeoutSeconds timeout for the validation query in seconds
-  *
+ * @param validationQueryTimeoutSeconds timeout for the validation query in
+ * seconds
+ *
  * @author Terry Curran
  * @version 1.0.0
  */
@@ -37,7 +39,21 @@ public record DatabasePoolConfig(
 
     private static final String PREFIX = "database.pool.";
 
-    /** Validates and normalises record components. */
+    /**
+     * Validates and normalises record components.
+     *
+     * @param initialSize initial number of pooled connections
+     * @param minIdle minimum number of idle pooled connections
+     * @param maxIdle maximum number of idle pooled connections
+     * @param maxTotal maximum number of pooled connections
+     * @param maxWait maximum time to wait for a connection
+     * @param minEvictableIdleTime minimum idle time before eviction is
+     * permitted
+     * @param testOnBorrow whether connections are validated when borrowed
+     * @param validationQuery SQL validation query
+     * @param validationQueryTimeoutSeconds timeout for the validation query in
+     * seconds
+     */
     public DatabasePoolConfig {
         Objects.requireNonNull(maxWait, "maxWait");
         Objects.requireNonNull(minEvictableIdleTime, "minEvictableIdleTime");

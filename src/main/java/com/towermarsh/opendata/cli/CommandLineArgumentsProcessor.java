@@ -299,6 +299,12 @@ public final class CommandLineArgumentsProcessor {
         return result;
     }
 
+    /**
+     * Parse the command line
+     *
+     * @param commandLine
+     * @return the parsed command line
+     */
     private static CommandLineArguments toArguments(final CommandLine commandLine) {
         final var help = commandLine.hasOption("help");
         final var about = commandLine.hasOption("about");
@@ -420,7 +426,7 @@ public final class CommandLineArgumentsProcessor {
     /**
      * find the plugins on the command line
      *
-     * @param commandLine the commandline
+     * @param commandLine the command line
      * @return plugin ids
      */
     private static List<String> parsePluginIds(final CommandLine commandLine) {

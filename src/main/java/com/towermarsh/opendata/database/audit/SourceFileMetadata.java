@@ -11,14 +11,15 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Auditable metadata for a downloaded source file.
+ * Audit table metadata for a downloaded source file.
+ *
  * @param sourceUri source URI from which the file was downloaded
  * @param fileName downloaded file name
  * @param contentType reported content type, if available
  * @param sizeBytes downloaded file size in bytes
  * @param sha256 SHA-256 digest of the downloaded file
  * @param downloadedAt time when the file was downloaded
-  *
+ *
  * @author Terry Curran
  * @version 1.0.0
  */
@@ -30,8 +31,15 @@ public record SourceFileMetadata(
         String sha256,
         Instant downloadedAt) {
 
-    /** 
-     * Validates and normalises record components. 
+    /**
+     * Validates and normalises record components.
+     *
+     * @param sourceUri source URI from which the file was downloaded
+     * @param fileName downloaded file name
+     * @param contentType reported content type, if available
+     * @param sizeBytes downloaded file size in bytes
+     * @param sha256 SHA-256 digest of the downloaded file
+     * @param downloadedAt time when the file was downloaded
      */
     public SourceFileMetadata {
         Objects.requireNonNull(sourceUri, "sourceUri");

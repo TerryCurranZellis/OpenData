@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +19,8 @@ import javafx.beans.property.StringProperty;
 /**
  * Presentation model for one plugin displayed in the JavaFX main-window table.
  *
- * <p>Batch 3 maps persistent registry and run-audit information into this
+ * <p>
+ * Batch 3 maps persistent registry and run-audit information into this
  * JavaFX-specific model. Database objects remain outside the presentation
  * layer.</p>
  *
@@ -27,8 +29,8 @@ import javafx.beans.property.StringProperty;
  */
 public final class PluginRow {
 
-    private static final DateTimeFormatter LAST_RUN_FORMATTER =
-            DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm", Locale.UK);
+    private static final DateTimeFormatter LAST_RUN_FORMATTER
+            = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm", Locale.UK);
 
     private final BooleanProperty selected;
     private final StringProperty pluginId;
@@ -45,7 +47,8 @@ public final class PluginRow {
      * @param description plugin description
      * @param enabledState enabled or disabled state for display
      * @param lastRunStatus status of the most recent run, or blank if never run
-     * @param lastRunDate date/time of the most recent run, or blank if never run
+     * @param lastRunDate date/time of the most recent run, or blank if never
+     * run
      */
     public PluginRow(
             final boolean selected,
@@ -65,7 +68,8 @@ public final class PluginRow {
     /**
      * Converts one backend table entry into a JavaFX presentation row.
      *
-     * <p>Plugin run timestamps are stored in SQL Server as UTC. They are shown
+     * <p>
+     * Plugin run timestamps are stored in SQL Server as UTC. They are shown
      * using the workstation's local time zone.</p>
      *
      * @param entry backend table entry
@@ -103,6 +107,10 @@ public final class PluginRow {
      *
      * @return selection property
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "JavaFX property accessor intentionally exposes the live property for binding."
+    )
     public BooleanProperty selectedProperty() {
         return selected;
     }
@@ -112,6 +120,10 @@ public final class PluginRow {
      *
      * @return plugin identifier property
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "JavaFX property accessor intentionally exposes the live property for binding."
+    )
     public StringProperty pluginIdProperty() {
         return pluginId;
     }
@@ -121,6 +133,10 @@ public final class PluginRow {
      *
      * @return description property
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "JavaFX property accessor intentionally exposes the live property for binding."
+    )
     public StringProperty descriptionProperty() {
         return description;
     }
@@ -130,6 +146,10 @@ public final class PluginRow {
      *
      * @return enabled-state property
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "JavaFX property accessor intentionally exposes the live property for binding."
+    )
     public StringProperty enabledStateProperty() {
         return enabledState;
     }
@@ -139,6 +159,10 @@ public final class PluginRow {
      *
      * @return run status property
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "JavaFX property accessor intentionally exposes the live property for binding."
+    )
     public StringProperty lastRunStatusProperty() {
         return lastRunStatus;
     }
@@ -148,6 +172,10 @@ public final class PluginRow {
      *
      * @return run date property
      */
+    @SuppressFBWarnings(
+            value = "EI_EXPOSE_REP",
+            justification = "JavaFX property accessor intentionally exposes the live property for binding."
+    )
     public StringProperty lastRunDateProperty() {
         return lastRunDate;
     }

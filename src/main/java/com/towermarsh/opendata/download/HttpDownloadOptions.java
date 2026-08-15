@@ -16,7 +16,7 @@ import java.util.Objects;
  * @param userAgent HTTP user agent
  * @param overwrite whether an existing destination may be replaced
  * @param maximumBytes maximum accepted response size, or zero for unlimited
-  *
+ *
  * @author Terry Curran
  * @version 1.0.0
  */
@@ -27,8 +27,14 @@ public record HttpDownloadOptions(
         boolean overwrite,
         long maximumBytes) {
 
-    /** 
-     * Validates and normalises record components. 
+    /**
+     * Validates and normalises record components.
+     *
+     * @param connectTimeout connection timeout
+     * @param requestTimeout complete request timeout
+     * @param userAgent HTTP user agent
+     * @param overwrite whether an existing destination may be replaced
+     * @param maximumBytes maximum accepted response size, or zero for unlimited
      */
     public HttpDownloadOptions {
         Objects.requireNonNull(connectTimeout, "connectTimeout");
@@ -50,6 +56,7 @@ public record HttpDownloadOptions(
 
     /**
      * Download options
+     *
      * @return results
      */
     public static HttpDownloadOptions defaults() {

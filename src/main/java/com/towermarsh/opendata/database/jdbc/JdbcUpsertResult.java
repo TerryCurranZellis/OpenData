@@ -18,6 +18,10 @@ public record JdbcUpsertResult(long inserted, long updated) {
 
     /**
      * Validates result counts.
+     *
+     * @param inserted inserted record count
+     * @param updated updated record count
+     *
      */
     public JdbcUpsertResult {
         if (inserted < 0 || updated < 0) {

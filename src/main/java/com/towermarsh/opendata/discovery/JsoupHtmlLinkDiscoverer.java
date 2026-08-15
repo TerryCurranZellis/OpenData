@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 /**
  * Jsoup implementation of HTML link discovery.
@@ -31,7 +30,7 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
     private static final Logger LOGGER = Logger.getLogger(
             JsoupHtmlLinkDiscoverer.class.getName());
     private static final String DEFAULT_USER_AGENT =
-            "OpenData/1.0 (+https://github.com/TerryCurranZellis/OpenData)";
+            "OpenData/3.0 (+https://github.com/TerryCurranZellis/OpenData)";
 
     private final Duration timeout;
     private final String userAgent;

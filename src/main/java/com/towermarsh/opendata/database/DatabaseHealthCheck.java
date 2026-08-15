@@ -17,10 +17,16 @@ import java.util.Objects;
  */
 public final class DatabaseHealthCheck {
 
+    /**
+     * SQL to check is database is availale
+     */
     private static final String SQL = """
             SELECT DB_NAME(), ORIGINAL_LOGIN(), USER_NAME()
             """;
 
+    /**
+     * database connection manager
+     */
     private final DatabaseConnectionManager connectionManager;
 
     /**

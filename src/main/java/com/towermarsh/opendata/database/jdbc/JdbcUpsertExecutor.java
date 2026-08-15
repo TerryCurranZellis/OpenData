@@ -43,10 +43,10 @@ public final class JdbcUpsertExecutor {
         Objects.requireNonNull(context, "context");
         Objects.requireNonNull(adapter, "adapter");
 
-        long inserted = 0;
-        long updated = 0;
-        for (T record : records) {
-            final T requiredRecord = Objects.requireNonNull(record, "record");
+        var inserted = 0L;
+        var updated = 0L;
+        for (var record : records) {
+            final var requiredRecord = Objects.requireNonNull(record, "record");
             if (adapter.exists(connection, requiredRecord, context)) {
                 adapter.update(connection, requiredRecord, context);
                 updated++;

@@ -43,8 +43,22 @@ public record PluginEndpointDefinition(
         Map<String, String> queryParameters,
         Optional<LinkDiscoveryDefinition> linkDiscovery) {
 
-    /** Validates and normalises record components. */
-
+    /**
+     * Validates and normalises record components.
+     *
+     * @param name endpoint name unique within the plugin
+     * @param type endpoint type
+     * @param uri endpoint URI
+     * @param httpMethod request method
+     * @param contentFormat expected content format
+     * @param strategy download strategy
+     * @param enabled whether the endpoint is active
+     * @param order execution order
+     * @param credentialName optional credential reference name
+     * @param headers non-secret request headers
+     * @param queryParameters non-secret query parameters
+     * @param linkDiscovery optional HTML link-discovery rules
+     */
     public PluginEndpointDefinition {
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(type, "type");

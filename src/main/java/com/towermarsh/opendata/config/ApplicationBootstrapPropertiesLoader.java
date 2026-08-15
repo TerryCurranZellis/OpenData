@@ -60,7 +60,8 @@ public final class ApplicationBootstrapPropertiesLoader {
     /**
      * Loads bootstrap properties and applies optional overrides.
      *
-     * @param overrides application override values without the {@code application.} prefix
+     * @param overrides application override values without the
+     * {@code application.} prefix
      * @return resolved bootstrap properties with a plain-text password
      */
     public ApplicationBootstrapProperties load(final Map<String, String> overrides) {
@@ -107,14 +108,14 @@ public final class ApplicationBootstrapPropertiesLoader {
     }
 
     /**
-     * Reads application properties from the writable file first, then the classpath.
+     * Reads application properties from the writable file first, then the
+     * classpath.
      *
      * @return normalised property values
      */
     private Map<String, String> readProperties() {
         if (Files.isRegularFile(filePath)) {
-            try (var input = Files.newInputStream(filePath);
-                    var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+            try (var input = Files.newInputStream(filePath); var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
                 return load(reader);
             } catch (IOException exception) {
                 throw new OpenDataConfigurationException(
@@ -143,7 +144,8 @@ public final class ApplicationBootstrapPropertiesLoader {
         final var properties = new Properties();
         properties.load(reader);
         final Map<String, String> values = new LinkedHashMap<>();
-        properties.stringPropertyNames().forEach(name -> values.put(name.trim().toLowerCase(java.util.Locale.ROOT), properties.getProperty(name).trim()));
+        properties.stringPropertyNames().forEach(name
+                -> values.put(name.trim().toLowerCase(java.util.Locale.ROOT), properties.getProperty(name).trim()));
         return values;
     }
 }

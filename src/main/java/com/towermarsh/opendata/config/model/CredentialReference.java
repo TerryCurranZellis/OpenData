@@ -28,8 +28,16 @@ public record CredentialReference(
         CredentialLocation location,
         String parameterName) {
 
-    /** Validates and normalises record components. */
-
+    /**
+     * Validates and normalises record components.
+     *
+     * @param name credential name
+     * @param authenticationType authentication mechanism
+     * @param provider credential provider identifier
+     * @param secretReference provider-specific secret reference
+     * @param location request location
+     * @param parameterName header, query parameter or cookie name
+     */
     public CredentialReference {
         Objects.requireNonNull(name, "name");
         Objects.requireNonNull(authenticationType, "authenticationType");

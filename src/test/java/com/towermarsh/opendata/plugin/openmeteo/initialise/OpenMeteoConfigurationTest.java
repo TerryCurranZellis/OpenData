@@ -135,6 +135,7 @@ class OpenMeteoConfigurationTest {
     }
 
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void rejectsUnsafeSqlIdentifierThroughSharedValidation() {
         assertThrows(
                 IllegalArgumentException.class,
@@ -143,17 +144,6 @@ class OpenMeteoConfigurationTest {
                         "home",
                         Optional.empty(),
                         Optional.empty()));
-    }
-
-    @Test
-    @SuppressWarnings("deprecation")
-    void retainedSqlIdentifierProcedureIsDeprecatedAndDelegates() throws Exception {
-        assertTrue(OpenMeteoConfiguration.class
-                .getDeclaredMethod("sqlIdentifier", String.class, String.class)
-                .isAnnotationPresent(Deprecated.class));
-        assertEquals(
-                "DailyWeather",
-                OpenMeteoConfiguration.sqlIdentifier("DailyWeather", "table"));
     }
 
     private static OpenMeteoConfiguration configuration(

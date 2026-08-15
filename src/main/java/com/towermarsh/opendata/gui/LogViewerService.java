@@ -54,9 +54,15 @@ public final class LogViewerService {
         try (Stream<Path> files = Files.list(directory)) {
             return files
                     .filter(Files::isRegularFile)
-                    .filter(path -> path.getFileName().toString().matches("opendata-\\d+\\.log"))
+                    .filter(LogViewerService::isOpenDataLogFile)
                     .max(Comparator.comparingLong(LogViewerService::lastModified));
         }
+    }
+
+    private static boolean isOpenDataLogFile(final Path path) {
+        final var fileName = path.getFileName();
+        return fileName != null
+                && fileName.toString().matches("opendata-\\d+\\.log");
     }
 
     private static long lastModified(final Path file) {

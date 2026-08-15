@@ -49,6 +49,7 @@
         <quality.failOnViolation>false</quality.failOnViolation>
     </properties>
     <dependencies>
+        <!-- Java fx -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -59,31 +60,37 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <!-- Jackson JSON parser -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <!-- Apache Commons CSV -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons.csv.version}</version>
         </dependency>
+        <!-- Apache Commons Cli -->
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
             <version>${commons.cli.version}</version>
         </dependency>
+        <!-- Apache Commons dbcp2 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
             <version>${commons.dbcp.version}</version>
         </dependency>
+        <!-- Org Jsoup HTML webpage scanner -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
         </dependency>
+        <!-- Apache PPOI -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -95,6 +102,7 @@
             <artifactId>log4j-to-jul</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+        <!-- SQL Server -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
@@ -106,12 +114,14 @@
             <artifactId>pdfbox</artifactId>
             <version>3.0.8</version>
         </dependency>
+        <!-- Junit tester -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- more testers -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -124,6 +134,7 @@
             <version>5.23.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- spotbugs annotations -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
@@ -149,7 +160,7 @@
             </resource>
         </resources>
         <plugins>
-            
+            <!-- enforce maven and java versions -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
@@ -176,7 +187,7 @@
                     </execution>
                 </executions>
             </plugin>
-           
+           <!-- enforce resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -193,7 +204,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.5.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -212,6 +223,7 @@
                 <configuration>
                     <release>${maven.compiler.release}</release>
                     <parameters>true</parameters>
+                    <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>
@@ -269,6 +281,7 @@
                     </execution>
                 </executions>
             </plugin>
+<!-- PMD is not compantible with current java version
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -291,6 +304,7 @@
                     </execution>
                 </executions>
             </plugin>
+-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

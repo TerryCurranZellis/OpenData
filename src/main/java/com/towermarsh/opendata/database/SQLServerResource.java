@@ -38,6 +38,10 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 public final class SQLServerResource implements DatabaseResourceManager {
 
     private static final Logger LOGGER = Logger.getLogger(SQLServerResource.class.getName());
+    
+    /**
+     * pool settings
+     */
     private static final String POOL_URL_PREFIX = "jdbc:apache:commons:dbcp:";
     private static final Object LOCK = new Object();
     private static SQLServerResource instance;

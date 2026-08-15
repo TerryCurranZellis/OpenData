@@ -351,7 +351,7 @@ private static void administerSelected(
 
     /**
      * An information message as we don't care about running in parallel
-     * @arguments check if parallel is set
+     * @param arguments check if parallel is set
      */
     private static void noteIgnoredParallelism(final CommandLineArguments arguments) {
         if (arguments.parallelism().isPresent()) {
@@ -378,7 +378,7 @@ private static void administerSelected(
 
     /**
      * show the execution summary
-     * @param results the results of running the plugin
+     * @param summary the results of running the plugin
      */
     private static void logSummary(final PluginExecutionSummary summary) {
         summary.results().forEach((var result) -> {

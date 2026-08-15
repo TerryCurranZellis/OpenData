@@ -24,8 +24,14 @@ public record LinkDiscoveryDefinition(
         String textPattern,
         boolean selectLastMatchingLink) {
 
-    /** Validates and normalises record components. */
-
+    /**
+     * Validates and normalises record components.
+     *
+     * @param cssSelector CSS selector used to select candidate anchors
+     * @param hrefPattern regular expression applied to the href
+     * @param textPattern optional regular expression applied to link text
+     * @param selectLastMatchingLink whether the final matching link is selected
+     */
     public LinkDiscoveryDefinition {
         Objects.requireNonNull(cssSelector, "cssSelector");
         Objects.requireNonNull(hrefPattern, "hrefPattern");

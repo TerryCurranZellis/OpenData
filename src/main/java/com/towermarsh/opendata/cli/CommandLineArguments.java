@@ -44,7 +44,25 @@ public record CommandLineArguments(
         boolean guiRequested,
         PluginCommand command) {
 
-    /** Validates and normalises record components. */
+    /**
+     * Validates and normalises record components.
+     *
+     * @param pluginIds selected plugin identifiers
+     * @param allPluginsRequested whether all plugins were requested
+     * @param pluginFile optional plugin definition file used only for
+     * registration
+     * @param parallelism optional plugin parallelism override
+     * @param dryRun whether plugin data writes and run-audit rows are disabled
+     * @param executeRequested whether plugin execution was explicitly
+     * authorised
+     * @param verbose whether verbose logging is requested
+     * @param helpRequested whether help output was requested
+     * @param aboutRequested whether the graphical About window was requested
+     * @param listPluginsRequested whether registered plugin listing was
+     * requested
+     * @param guiRequested - user wants the gui interface
+     * @param command requested plugin operation
+     */
     public CommandLineArguments {
         pluginIds = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
         pluginFile = pluginFile == null ? Optional.empty() : pluginFile;
@@ -70,6 +88,8 @@ public record CommandLineArguments(
     }
 
     /**
+     * Has the plugin been registered
+     *
      * @return whether plugin registration was requested
      */
     public boolean registerRequested() {
@@ -77,6 +97,8 @@ public record CommandLineArguments(
     }
 
     /**
+     * Has the plugin been un-registered
+     *
      * @return whether plugin removal was requested
      */
     public boolean unregisterRequested() {
@@ -84,6 +106,8 @@ public record CommandLineArguments(
     }
 
     /**
+     * is the plugin enabled
+     *
      * @return whether plugin enable was requested
      */
     public boolean enableRequested() {
@@ -91,6 +115,8 @@ public record CommandLineArguments(
     }
 
     /**
+     * is the plugin disabled
+     *
      * @return whether plugin disable was requested
      */
     public boolean disableRequested() {
@@ -98,6 +124,8 @@ public record CommandLineArguments(
     }
 
     /**
+     * have the plugin details been requested
+     *
      * @return whether stored configuration details were requested
      */
     public boolean detailRequested() {
@@ -105,6 +133,8 @@ public record CommandLineArguments(
     }
 
     /**
+     * Is this a run request
+     *
      * @return whether normal or dry-run plugin execution was requested
      */
     public boolean runRequested() {

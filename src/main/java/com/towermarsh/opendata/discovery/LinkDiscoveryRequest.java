@@ -36,6 +36,16 @@ public record LinkDiscoveryRequest(
 
     /**
      * Validates and normalises record components.
+     *
+     * @param pageUri HTML page to inspect
+     * @param allowedExtensions accepted filename extensions
+     * @param requiredTerms terms of which every entry must occur in link
+     * metadata
+     * @param excludedTerms terms of which none may occur in link metadata
+     * @param hrefPattern optional regular expression applied to the absolute
+     * URI
+     * @param textPattern optional regular expression applied to link text and
+     * title
      */
     public LinkDiscoveryRequest {
         Objects.requireNonNull(pageUri, "pageUri");

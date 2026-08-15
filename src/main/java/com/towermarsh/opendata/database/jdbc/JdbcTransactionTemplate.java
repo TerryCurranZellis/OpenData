@@ -63,7 +63,7 @@ public final class JdbcTransactionTemplate {
             final JdbcTransaction<T> transaction,
             final JdbcConnectionCleanup cleanup) {
         Validation.requireArguments(failureMessage, transaction, cleanup);
-        try (Connection connection = database.getConnection()) {
+        try (var connection = database.getConnection()) {
             return execute(connection, transaction, cleanup);
         } catch (RuntimeException exception) {
             throw exception;
@@ -72,6 +72,7 @@ public final class JdbcTransactionTemplate {
         }
     }
 
+    @SuppressWarnings("ThrowFromFinallyBlock")
     private static <T> T execute(
             final Connection connection,
             final JdbcTransaction<T> transaction,
