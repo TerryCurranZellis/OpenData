@@ -18,15 +18,17 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
  * Discovers and fingerprints local Octopus Energy adjustment PDFs.
  *
- * <p>Filenames must start with the configured account number followed by a
- * hyphen and must end with {@code .pdf}, case-insensitively. The suffix is
- * treated as opaque source identity and no date is parsed from it.</p>
+ * <p>
+ * Filenames must start with the configured account number followed by a hyphen
+ * and must end with {@code .pdf}, case-insensitively. The suffix is treated as
+ * opaque source identity and no date is parsed from it.</p>
  *
  * @author Terry Curran
  * @version 3.1.0
@@ -93,8 +95,10 @@ public final class OctopusAdjustmentExtract {
         }
 
         final int skippedCount = skipped;
-        LOGGER.info(() -> "Octopus adjustment extract: discovered %d matching PDF(s), selected %d new/changed file(s), skipped %d completed file(s)"
-                .formatted(candidates.size(), extracted.size(), skippedCount));
+        LOGGER.log(Level.INFO,
+                "Octopus adjustment extract: discovered {0} matching PDF(s), selected {1} "
+                + "new/changed file(s), skipped {2} completed file(s)",
+                new Object[]{candidates.size() + extracted.size() + skippedCount});
         return List.copyOf(extracted);
     }
 
