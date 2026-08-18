@@ -62,7 +62,7 @@ public final class LogViewerService {
     private static boolean isOpenDataLogFile(final Path path) {
         final var fileName = path.getFileName();
         return fileName != null
-                && fileName.toString().matches("opendata-\\d+\\.log");
+                && fileName.toString().matches("opendata-(?:\\d{14}-)?\\d+\\.log");
     }
 
     private static long lastModified(final Path file) {

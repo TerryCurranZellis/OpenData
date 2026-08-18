@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.towermarsh.opendata.config.LoggingConfiguration;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,5 +78,20 @@ class LoggingManagerScopedHandlerTest {
         final Logger child = Logger.getLogger("com.towermarsh.opendata.plugin.batch6-test");
         child.info("scoped handler survives root reconfiguration");
         assertEquals(1, records.get());
+    }
+
+    @Test
+    void configureCreatesTimestampedStartupLogFile() throws Exception {
+        LoggingManager.configure(
+                new LoggingConfiguration(temporaryDirectory, 1024 * 1024, 3, true),
+                false);
+        LoggingManager.getLogger().info("timestamped startup log file");
+        LoggingManager.flush();
+
+        try (var files = Files.list(temporaryDirectory)) {
+            assertTrue(files
+                    .map(path -> path.getFileName().toString())
+                    .anyMatch(fileName -> fileName.matches("opendata-\\d{14}-\\d+\\.log")));
+        }
     }
 }
