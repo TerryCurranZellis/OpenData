@@ -19,8 +19,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
- * Central java.util.logging configuration.
- *
+ * Central java util logging configuration.
  *
  * @author Terry Curran
  * @version 3.0.0
@@ -29,10 +28,13 @@ import java.util.logging.Logger;
 public final class LoggingManager {
 
     private static final String LOGGER_NAME = "com.towermarsh.opendata";
-    private static final DateTimeFormatter STARTUP_TIMESTAMP_FORMAT =
-            DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-    private static final String STARTUP_TIMESTAMP =
-            LocalDateTime.now().format(STARTUP_TIMESTAMP_FORMAT);
+    /**
+     * use to include in log file name
+     */
+    private static final DateTimeFormatter STARTUP_TIMESTAMP_FORMAT
+            = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private static final String STARTUP_TIMESTAMP
+            = LocalDateTime.now().format(STARTUP_TIMESTAMP_FORMAT);
     private static final Logger ROOT = Logger.getLogger("");
     private static final Logger LOGGER = Logger.getLogger(LOGGER_NAME);
     private static final Object LOCK = new Object();
@@ -45,12 +47,10 @@ public final class LoggingManager {
     }
 
     /**
-     *
      * Initialises logging with the default rotating-file configuration.
      *
      * @param logDirectory log output directory
      * @throws IOException if logging cannot be initialised
-     *
      */
     public static void initialise(final Path logDirectory) throws IOException {
         configure(new LoggingConfiguration(logDirectory, 10_485_760, 10, true), false);
@@ -114,7 +114,6 @@ public final class LoggingManager {
     }
 
     /**
-     *
      * Returns the directory currently used by the JUL file handler.
      *
      * @return active log directory when logging has been configured
@@ -138,20 +137,17 @@ public final class LoggingManager {
      * Returns the shared application logger.
      *
      * @return shared application logger
-     *
      */
     public static Logger getLogger() {
         return Logger.getLogger(LOGGER_NAME);
     }
 
     /**
-     *
      * Flushes and closes configured logging handlers.
-     *
      */
     public static void shutdown() {
         synchronized (LOCK) {
-            for (Handler handler : ROOT.getHandlers()) {
+            for (var handler : ROOT.getHandlers()) {
                 handler.flush();
                 handler.close();
                 ROOT.removeHandler(handler);
