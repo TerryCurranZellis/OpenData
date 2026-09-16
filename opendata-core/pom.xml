@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	<parent>
-    <groupId>com.towermarsh</groupId>
-    <artifactId>opendata-parent</artifactId>
-    <version>3.1.0</version>
-    <relativePath>../pom.xml</relativePath>
+
+
+    <parent>
+        <groupId>com.towermarsh</groupId>
+        <artifactId>opendata-parent</artifactId>
+        <version>3.1.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <name>OpenData Processing Framework</name>
+
+    <!-- This is the missing element -->
+    <artifactId>opendata-core</artifactId>
+
+    <packaging>jar</packaging>
+
+    <name>OpenData Core</name>
+
     <description>Java framework for downloading, validating and importing OpenData sources.
         New GUI Interface</description>
     <licenses>
