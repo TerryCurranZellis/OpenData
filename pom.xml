@@ -11,7 +11,7 @@
     <version>3.1.0</version>
     <packaging>pom</packaging>
 
-    <name>OpenData Parent</name>
+    <name>OpenData Main</name>
     <description>Parent and build aggregator for the OpenData modules.</description>
 
     <properties>
