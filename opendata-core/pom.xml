@@ -40,18 +40,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <javafx.version>26.0.2</javafx.version>
-        <jackson.version>2.22.1</jackson.version>
+        <jackson.version>2.22.2</jackson.version>
         <commons.csv.version>1.14.1</commons.csv.version>
         <commons.cli.version>1.11.0</commons.cli.version>
         <commons.dbcp.version>2.14.0</commons.dbcp.version>
-        <jsoup.version>1.23.1</jsoup.version>
+        <jsoup.version>1.23.2</jsoup.version>
         <poi.version>5.5.1</poi.version>
         <log4j.version>2.26.1</log4j.version>
         <junit.version>6.1.3</junit.version>
         <commons.dbcp2.version>2.14.0</commons.dbcp2.version>
         <checkstyle.version>10.26.1</checkstyle.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
-        <spotbugs.plugin.version>4.10.3.0</spotbugs.plugin.version>
+        <spotbugs.plugin.version>4.10.4.0</spotbugs.plugin.version>
         <pmd.plugin.version>3.28.0</pmd.plugin.version>
         <javadoc.plugin.version>3.12.0</javadoc.plugin.version>
         <maven.enforcer.plugin.version>3.6.3</maven.enforcer.plugin.version>
@@ -61,6 +61,11 @@
         <quality.failOnViolation>false</quality.failOnViolation>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Java fx -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -199,7 +204,7 @@
                     </execution>
                 </executions>
             </plugin>
-           <!-- enforce resources -->
+            <!-- enforce resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -293,30 +298,30 @@
                     </execution>
                 </executions>
             </plugin>
-<!-- PMD is not compantible with current java version
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${pmd.plugin.version}</version>
-                <configuration>
-                    <rulesets>
-                        <ruleset>config/quality/pmd-ruleset.xml</ruleset>
-                    </rulesets>
-                    <includeTests>true</includeTests>
-                    <printFailingErrors>true</printFailingErrors>
-                    <failOnViolation>${quality.failOnViolation}</failOnViolation>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pmd-verify</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
--->
+            <!-- PMD is not compantible with current java version
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <version>${pmd.plugin.version}</version>
+                            <configuration>
+                                <rulesets>
+                                    <ruleset>config/quality/pmd-ruleset.xml</ruleset>
+                                </rulesets>
+                                <includeTests>true</includeTests>
+                                <printFailingErrors>true</printFailingErrors>
+                                <failOnViolation>${quality.failOnViolation}</failOnViolation>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>pmd-verify</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>check</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+            -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
