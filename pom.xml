@@ -23,6 +23,7 @@
     <modules>
         <module>opendata-core</module>
         <module>OpenData-api</module>
+        <module>opendata-plugin-support/OpenDataPluginSupport</module>
     </modules>
 
 </project>
