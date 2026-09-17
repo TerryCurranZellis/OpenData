@@ -5,13 +5,10 @@
         <groupId>com.towermarsh</groupId>
         <artifactId>opendata-parent</artifactId>
         <version>3.1.0</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>OpenDataPluginSupport</artifactId>
+    <artifactId>opendata-common</artifactId>
     <packaging>jar</packaging>
-    <properties>
-        <exec.mainClass>com.towermarsh.opendata.OpenDataPluginSupport</exec.mainClass>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.towermarsh</groupId>
@@ -24,4 +21,5 @@
             <version>1.23.2</version>
         </dependency>
     </dependencies>
+    <name>OpenData Common</name>
 </project>
