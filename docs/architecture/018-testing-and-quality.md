@@ -10,10 +10,10 @@
 
 ## Automated baseline
 
-The Maven reactor compiles with Java release 24 and runs JUnit through Surefire
-in every module. `opendata-common` owns the shared JDBC, validation, and
-strategy tests; `opendata-core` owns application, GUI, parser, registry, and
-provider tests.
+The Maven reactor compiles with Java release 24 and configures Surefire in every
+module. Active JUnit suites currently live in the modules that own tests:
+`opendata-common` for shared JDBC, validation, and strategy tests, and
+`opendata-core` for application, GUI, parser, registry, and provider tests.
 
 ## Quality tooling
 
