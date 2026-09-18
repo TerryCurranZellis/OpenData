@@ -30,7 +30,7 @@ import org.apache.commons.cli.ParseException;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class CommandLineArgumentsProcessor {
+public class CommandLineArgumentsProcessor {
 
     /**
      * the application
@@ -54,10 +54,10 @@ public final class CommandLineArgumentsProcessor {
      * @return parsed arguments
      * @throws CommandLineProcessingException if the command line is invalid
      */
-    public CommandLineArguments parse(final String[] arguments) {
+    public CommandLineArguments parse(String[] arguments) {
         Objects.requireNonNull(arguments, "arguments");
         try {
-            final var normalisedArguments = normaliseArguments(arguments);
+            var normalisedArguments = normaliseArguments(arguments);
             if (launchGuiByDefault(normalisedArguments)) {
                 return toArguments(new DefaultParser().parse(options, new String[]{"--gui"}));
             }
@@ -77,7 +77,7 @@ public final class CommandLineArgumentsProcessor {
      * @param arguments array of command line arguments
      * @return normalised argument array
      */
-    static String[] normaliseArguments(final String[] arguments) {
+    static String[] normaliseArguments(String[] arguments) {
         if (arguments.length == 0) {
             return arguments;
         }
@@ -91,11 +91,11 @@ public final class CommandLineArgumentsProcessor {
         if (!containsWhitespace(commandLine)) {
             return Arrays.copyOf(arguments, arguments.length);
         }
-        final List<String> tokens = new ArrayList<>();
-        final var token = new StringBuilder();
+        List<String> tokens = new ArrayList<>();
+        var token = new StringBuilder();
         char quote = 0;
         for (var index = 0; index < commandLine.length(); index++) {
-            final var current = commandLine.charAt(index);
+            var current = commandLine.charAt(index);
             if (current == '\'' || current == '"') {
                 if (quote == 0) {
                     quote = current;
@@ -123,7 +123,7 @@ public final class CommandLineArgumentsProcessor {
      * @param arguments normalised arguments
      * @return {@code true} when no effective command-line arguments remain
      */
-    private static boolean launchGuiByDefault(final String[] arguments) {
+    private static boolean launchGuiByDefault(String[] arguments) {
         return arguments.length == 0;
     }
 
@@ -133,7 +133,7 @@ public final class CommandLineArgumentsProcessor {
      * @param value string to check
      * @return true or false
      */
-    private static boolean containsWhitespace(final String value) {
+    private static boolean containsWhitespace(String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
@@ -143,7 +143,7 @@ public final class CommandLineArgumentsProcessor {
      * @param tokens token list
      * @param token token to add
      */
-    private static void addToken(final List<String> tokens, final StringBuilder token) {
+    private static void addToken(List<String> tokens, StringBuilder token) {
         if (!token.isEmpty()) {
             tokens.add(token.toString());
             token.setLength(0);
@@ -155,17 +155,17 @@ public final class CommandLineArgumentsProcessor {
      *
      * @param writer output destination
      */
-    public void printHelp(final PrintWriter writer) {
+    public void printHelp(PrintWriter writer) {
         Objects.requireNonNull(writer, "writer");
-        final var helpOutput = new TextHelpAppendable(writer);
+        var helpOutput = new TextHelpAppendable(writer);
         helpOutput.setMaxWidth(124);
-        final var formatter = HelpFormatter.builder()
+        var formatter = HelpFormatter.builder()
                 .setHelpAppendable(helpOutput)
                 .setShowSince(false)
                 .get();
-        final var lineSeparator = System.lineSeparator();
-        final var header = "";
-        final var footer
+        var lineSeparator = System.lineSeparator();
+        var header = "";
+        var footer
                 = lineSeparator
                 + "Runs or administers registered OpenData plugins. "
                 + "Named --plugin options may be repeated."
@@ -305,55 +305,55 @@ public final class CommandLineArgumentsProcessor {
      * @param commandLine
      * @return the parsed command line
      */
-    private static CommandLineArguments toArguments(final CommandLine commandLine) {
-        final var help = commandLine.hasOption("help");
-        final var about = commandLine.hasOption("about");
-        final var list = commandLine.hasOption("list-plugins");
-        final var gui = commandLine.hasOption("gui");
-        final var standaloneCount = booleanCount(help, about, list, gui);
+    private static CommandLineArguments toArguments(CommandLine commandLine) {
+        var help = commandLine.hasOption("help");
+        var about = commandLine.hasOption("about");
+        var list = commandLine.hasOption("list-plugins");
+        var gui = commandLine.hasOption("gui");
+        var standaloneCount = booleanCount(help, about, list, gui);
 
         if (standaloneCount > 1) {
             throw new IllegalArgumentException(
                     "Use only one of --help, --about, --list-plugins, or --gui.");
         }
 
-        final List<String> rawIds = parsePluginIds(commandLine);
-        final var all = rawIds.stream().anyMatch("all"::equals);
+        List<String> rawIds = parsePluginIds(commandLine);
+        var all = rawIds.stream().anyMatch("all"::equals);
         if (all && rawIds.size() > 1) {
             throw new IllegalArgumentException("--plugin all cannot be combined with another plugin id.");
         }
-        final var uniqueIds = new LinkedHashSet<String>(rawIds);
+        var uniqueIds = new LinkedHashSet<String>(rawIds);
         if (uniqueIds.size() != rawIds.size()) {
             throw new IllegalArgumentException("A plugin was selected more than once.");
         }
 
-        final var register = commandLine.hasOption("register");
-        final var unregister = commandLine.hasOption("unregister") || commandLine.hasOption("remove");
+        var register = commandLine.hasOption("register");
+        var unregister = commandLine.hasOption("unregister") || commandLine.hasOption("remove");
         if (commandLine.hasOption("unregister") && commandLine.hasOption("remove")) {
             throw new IllegalArgumentException("--unregister and --remove are aliases; specify only one.");
         }
-        final var enable = commandLine.hasOption("enable");
-        final var disable = commandLine.hasOption("disable");
-        final var detail = commandLine.hasOption("detail");
-        final var actionCount = booleanCount(register, unregister, enable, disable, detail);
+        var enable = commandLine.hasOption("enable");
+        var disable = commandLine.hasOption("disable");
+        var detail = commandLine.hasOption("detail");
+        var actionCount = booleanCount(register, unregister, enable, disable, detail);
         if (actionCount > 1) {
             throw new IllegalArgumentException(
                     "--register, --unregister/--remove, --enable, --disable, and --detail are mutually exclusive.");
         }
-        final var command = register ? PluginCommand.REGISTER
+        var command = register ? PluginCommand.REGISTER
                 : unregister ? PluginCommand.UNREGISTER
                         : enable ? PluginCommand.ENABLE
                                 : disable ? PluginCommand.DISABLE
                                         : detail ? PluginCommand.DETAIL
                                                 : PluginCommand.RUN;
 
-        final var execute = commandLine.hasOption("execute");
-        final var dryRun = commandLine.hasOption("dry-run");
-        final var fileSpecified = commandLine.hasOption("file");
-        final var parallelismSpecified = commandLine.hasOption("parallelism");
-        final var pluginSpecified = !rawIds.isEmpty();
-        final var informational = help || about || list;
-        final var standalone = informational || gui;
+        var execute = commandLine.hasOption("execute");
+        var dryRun = commandLine.hasOption("dry-run");
+        var fileSpecified = commandLine.hasOption("file");
+        var parallelismSpecified = commandLine.hasOption("parallelism");
+        var pluginSpecified = !rawIds.isEmpty();
+        var informational = help || about || list;
+        var standalone = informational || gui;
 
         if (standalone
                 && (pluginSpecified || actionCount > 0 || execute
@@ -398,7 +398,7 @@ public final class CommandLineArgumentsProcessor {
         var parallelism = OptionalInt.empty();
         if (parallelismSpecified) {
             try {
-                final var value = Integer.parseInt(commandLine.getOptionValue("parallelism"));
+                var value = Integer.parseInt(commandLine.getOptionValue("parallelism"));
                 if (value < 1 || value > 64) {
                     throw new IllegalArgumentException("--parallelism must be between 1 and 64.");
                 }
@@ -429,9 +429,9 @@ public final class CommandLineArgumentsProcessor {
      * @param commandLine the command line
      * @return plugin ids
      */
-    private static List<String> parsePluginIds(final CommandLine commandLine) {
-        final List<String> rawIds = new ArrayList<>();
-        final var optionValues = commandLine.getOptionValues("plugin");
+    private static List<String> parsePluginIds(CommandLine commandLine) {
+        List<String> rawIds = new ArrayList<>();
+        var optionValues = commandLine.getOptionValues("plugin");
         if (optionValues == null) {
             return rawIds;
         }
@@ -449,15 +449,12 @@ public final class CommandLineArgumentsProcessor {
      * count the number of information arguments
      *
      * @param values information arguments
-     * @return number of information arguments
+     * @return number of true arguments
      */
-    private static int booleanCount(final boolean... values) {
-        var count = 0;
-        for (var value : values) {
-            if (value) {
-                count++;
-            }
-        }
-        return count;
+    private static int booleanCount(boolean... values) {
+    return (int) java.util.stream.IntStream.range(0, values.length)
+            .mapToObj(i -> values[i])
+            .filter(Boolean::booleanValue)
+            .count();
     }
 }

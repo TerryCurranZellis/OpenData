@@ -70,8 +70,8 @@ public final class OpenDataApplication {
      * @throws InterruptedException when concurrent execution is interrupted
      */
     public ExecutionStatus start(
-            final CommandLineArguments arguments,
-            final CommandLineArgumentsProcessor processor)
+            CommandLineArguments arguments,
+            CommandLineArgumentsProcessor processor)
             throws IOException, InterruptedException {
         if (arguments.helpRequested()) {
             processor.printHelp(new PrintWriter(System.out, true, StandardCharsets.UTF_8));
@@ -79,16 +79,16 @@ public final class OpenDataApplication {
         }
 
         // read the password for the database
-        final ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
-        final var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
-        final var bootstrap = bootstrapLoader.load(Map.of());
+        ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
+        var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
+        var bootstrap = bootstrapLoader.load(Map.of());
         requireDatabasePassword(bootstrap, arguments);
 
         DatabaseResourceManager configurationDatabase = null;
         try {
             configurationDatabase = SQLServerResource.initialise(
                     bootstrap.toDatabasePoolConfiguration());
-            final var registeredPlugins = new JdbcPluginRegistry(configurationDatabase);
+            var registeredPlugins = new JdbcPluginRegistry(configurationDatabase);
 
             // decide what to do
             if (arguments.listPluginsRequested()) {
@@ -136,15 +136,15 @@ public final class OpenDataApplication {
      * @param registry registered plugin registry
      */
     private static void printPluginConfiguration(
-            final CommandLineArguments arguments,
-            final DatabaseResourceManager database,
-            final JdbcPluginRegistry registry) {
-        final var pluginId = arguments.pluginIds().get(0);
-        final var plugin = registry.find(pluginId)
+            CommandLineArguments arguments,
+            DatabaseResourceManager database,
+            JdbcPluginRegistry registry) {
+        var pluginId = arguments.pluginIds().get(0);
+        var plugin = registry.find(pluginId)
                 .orElseThrow(() -> new PluginRegistryException(
                 "Registered plugin was not found: " + pluginId));
 
-        final var properties = new JdbcConfigurationPropertiesSource(database)
+        var properties = new JdbcConfigurationPropertiesSource(database)
                 .loadPluginProperties(pluginId);
 
         System.out.println();
@@ -174,29 +174,29 @@ public final class OpenDataApplication {
      * @throws InterruptedException when concurrent execution is interrupted
      */
     private static ExecutionStatus runPlugins(
-            final CommandLineArguments arguments,
-            final ApplicationBootstrapProperties bootstrap,
-            final DatabaseResourceManager configurationDatabase,
-            final JdbcPluginRegistry registry) throws IOException, InterruptedException {
-        final var propertiesSource = bootstrap.useDatabaseProperties()
+            CommandLineArguments arguments,
+            ApplicationBootstrapProperties bootstrap,
+            DatabaseResourceManager configurationDatabase,
+            JdbcPluginRegistry registry) throws IOException, InterruptedException {
+        var propertiesSource = bootstrap.useDatabaseProperties()
                 ? new JdbcConfigurationPropertiesSource(configurationDatabase)
                 : new ClasspathConfigurationPropertiesSource();
-        final var runtime = ApplicationRuntimeConfiguration.load(propertiesSource, Map.of());
+        var runtime = ApplicationRuntimeConfiguration.load(propertiesSource, Map.of());
         if (!arguments.dryRun() && runtime.database().password().isBlank()) {
             throw new OpenDataConfigurationException(
                     "application.database.password must be supplied for a database-writing run.");
         }
         LoggingManager.configure(runtime.logging(), arguments.verbose());
 
-        final var selected = new PluginSelectionResolver().resolve(arguments, registry);
-        final var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
-        final var plugins = selected.stream()
+        var selected = new PluginSelectionResolver().resolve(arguments, registry);
+        var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
+        var plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(
                 descriptor,
                 definitionLoader.load(descriptor.id(), Map.of())))
                 .toList();
 
-        final var parallelism = arguments.parallelism().orElse(
+        var parallelism = arguments.parallelism().orElse(
                 runtime.execution().maxParallelPlugins());
         LOGGER.log(Level.INFO,
                 "Selected {0} registered plugin(s); parallelism={1}; dryRun={2}",
@@ -205,7 +205,7 @@ public final class OpenDataApplication {
         DatabaseResourceManager executionDatabase = null;
         closeDatabase(configurationDatabase);
         try {
-            final PluginRunAudit audit;
+            PluginRunAudit audit;
             if (arguments.dryRun()) {
                 executionDatabase = new UnavailableDatabaseResourceManager();
                 audit = new NoOpPluginRunAudit();
@@ -213,13 +213,13 @@ public final class OpenDataApplication {
                 executionDatabase = SQLServerResource.initialise(runtime.database());
                 audit = new JdbcPluginRunAudit(executionDatabase);
             }
-            final var coordinator = new PluginExecutionCoordinator(
+            var coordinator = new PluginExecutionCoordinator(
                     new ReflectionPluginFactory(),
                     audit,
                     executionDatabase,
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
-            final var summary = coordinator.execute(plugins, parallelism, arguments.dryRun());
+            var summary = coordinator.execute(plugins, parallelism, arguments.dryRun());
             logSummary(summary);
             return summary.allSuccessful()
                     ? ExecutionStatus.SUCCESS
@@ -239,15 +239,15 @@ public final class OpenDataApplication {
    * @param registeredPlugins list of registered plugins
    */
     private static void registerPlugins(
-            final CommandLineArguments arguments,
-            final ApplicationBootstrapProperties bootstrap,
-            final ApplicationBootstrapPropertiesLoader bootstrapLoader,
-            final ConfigurationPasswordCipher passwordCipher,
-            final DatabaseResourceManager database,
-            final JdbcPluginRegistry registeredPlugins) {
-        final var classpathSource = new ClasspathConfigurationPropertiesSource();
-        final var resolver = new PluginRegistrationResolver();
-        final List<PluginRegistration> registrations;
+            CommandLineArguments arguments,
+            ApplicationBootstrapProperties bootstrap,
+            ApplicationBootstrapPropertiesLoader bootstrapLoader,
+            ConfigurationPasswordCipher passwordCipher,
+            DatabaseResourceManager database,
+            JdbcPluginRegistry registeredPlugins) {
+        var classpathSource = new ClasspathConfigurationPropertiesSource();
+        var resolver = new PluginRegistrationResolver();
+        List<PluginRegistration> registrations;
         if (arguments.pluginFile().isPresent()) {
             registrations = List.of(resolver.resolveFile(
                     arguments.pluginIds().get(0), arguments.pluginFile().orElseThrow()));
@@ -266,7 +266,7 @@ public final class OpenDataApplication {
                 .register(bootstrap, registrations);
 
         registrations.forEach((var registration) -> {
-            final var actual = registeredPlugins.find(registration.descriptor().id())
+            var actual = registeredPlugins.find(registration.descriptor().id())
                     .orElseThrow(() -> new PluginRegistryException(
                     "Registered plugin could not be read back: "
                     + registration.descriptor().id()));
@@ -285,10 +285,10 @@ public final class OpenDataApplication {
  * @param action what we are doing, registering, un-registering, enabling, disabling
  */
 private static void administerSelected(
-            final CommandLineArguments arguments,
-            final JdbcPluginRegistry registry,
-            final AdministrationAction action) {
-        final List<String> pluginIds = arguments.allPluginsRequested()
+            CommandLineArguments arguments,
+            JdbcPluginRegistry registry,
+            AdministrationAction action) {
+        List<String> pluginIds = arguments.allPluginsRequested()
                 ? registry.list().stream().map(PluginDescriptor::id).toList()
                 : arguments.pluginIds();
         if (pluginIds.isEmpty()) {
@@ -315,8 +315,8 @@ private static void administerSelected(
      * show list of plugins
      * @param registry database connection to registry
      */
-    private static void printRegisteredPlugins(final JdbcPluginRegistry registry) {
-        final var plugins = registry.list();
+    private static void printRegisteredPlugins(JdbcPluginRegistry registry) {
+        var plugins = registry.list();
         if (plugins.isEmpty()) {
             LOGGER.info("No plugins are registered.");
             return;
@@ -338,10 +338,10 @@ private static void administerSelected(
      * @param arguments
      */
     private static void requireDatabasePassword(
-            final ApplicationBootstrapProperties bootstrap,
-            final CommandLineArguments arguments) {
+            ApplicationBootstrapProperties bootstrap,
+            CommandLineArguments arguments) {
         if (bootstrap.databasePassword().isBlank()) {
-            final var purpose = arguments.registerRequested()
+            var purpose = arguments.registerRequested()
                     ? "--register"
                     : "plugin registry access";
             throw new OpenDataConfigurationException(
@@ -353,7 +353,7 @@ private static void administerSelected(
      * An information message as we don't care about running in parallel
      * @param arguments check if parallel is set
      */
-    private static void noteIgnoredParallelism(final CommandLineArguments arguments) {
+    private static void noteIgnoredParallelism(CommandLineArguments arguments) {
         if (arguments.parallelism().isPresent()) {
             LOGGER.log(Level.INFO,
                     "--parallelism is ignored for plugin administration operations.");
@@ -364,7 +364,7 @@ private static void administerSelected(
      * disconnect from the database and close down
      * @param database database to disconnect from
      */
-    private static void closeDatabase(final DatabaseResourceManager database) {
+    private static void closeDatabase(DatabaseResourceManager database) {
         if (database == null) {
             return;
         }
@@ -380,7 +380,7 @@ private static void administerSelected(
      * show the execution summary
      * @param summary the results of running the plugin
      */
-    private static void logSummary(final PluginExecutionSummary summary) {
+    private static void logSummary(PluginExecutionSummary summary) {
         summary.results().forEach((var result) -> {
             LOGGER.log(
                     result.successful() ? Level.INFO : Level.SEVERE,

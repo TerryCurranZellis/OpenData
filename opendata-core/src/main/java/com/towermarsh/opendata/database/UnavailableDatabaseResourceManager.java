@@ -14,7 +14,7 @@ import java.sql.Connection;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
+public class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 
     /**
      * Always rejects connection requests during a dry run.

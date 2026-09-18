@@ -45,13 +45,13 @@ public record ApplicationInfo(
      * @return the current application details
      */
     public static ApplicationInfo current() {
-        final var applicationPackage = ApplicationInfo.class.getPackage();
-        final var metadata = loadMetadata(ApplicationInfo.class.getClassLoader());
-        final var implementationVersion = Optional
+        var applicationPackage = ApplicationInfo.class.getPackage();
+        var metadata = loadMetadata(ApplicationInfo.class.getClassLoader());
+        var implementationVersion = Optional
                 .ofNullable(applicationPackage.getImplementationVersion())
                 .filter(value -> !value.isBlank())
                 .orElseGet(() -> metadata.getProperty("application.version", "development"));
-        final var javaVersion = System.getProperty("java.version", "unknown");
+        var javaVersion = System.getProperty("java.version", "unknown");
 
         return new ApplicationInfo(
                 metadata.getProperty("application.name", "OpenData"),
@@ -70,8 +70,8 @@ public record ApplicationInfo(
      * @param classLoader load Java class
      * @return Java properties
      */
-    private static Properties loadMetadata(final ClassLoader classLoader) {
-        final var properties = new Properties();
+    private static Properties loadMetadata(ClassLoader classLoader) {
+        var properties = new Properties();
         try (var input = classLoader.getResourceAsStream("application-metadata.properties")) {
             if (input != null) {
                 try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {

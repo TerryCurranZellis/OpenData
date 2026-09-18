@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class SqlServerRepository
+public class SqlServerRepository
         implements DatabaseRepository {
 
     private final DatabaseConnectionManager connectionManager;
