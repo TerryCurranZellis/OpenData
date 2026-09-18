@@ -130,9 +130,9 @@ Register from File, Enable, Disable and Unregister.
 
 The normal Register action uses `PluginConfigurationDirectoryScanner` to inspect
 `config/plugins` and the source-tree fallback
-`src/main/resources/config/plugins`. Candidate definitions are validated before
-being shown to the user. Already registered ids are filtered from the discovery
-result.
+`opendata-plugins/src/main/resources/config/plugins`. Candidate definitions are
+validated before being shown to the user. Already registered ids are filtered
+from the discovery result.
 
 Register from File uses JavaFX `FileChooser`, validates the selected definition
 and passes the registration through the same framework registration contracts.

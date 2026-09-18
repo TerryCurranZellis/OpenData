@@ -11,11 +11,12 @@ command-line entry point.
 | Module | Responsibility |
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable plugin/configuration records, and database resource interfaces |
-| `opendata-common` | Shared validation, JDBC helpers, base exceptions, and reusable download-support strategies |
-| `opendata-core` | Application entry points, runtime orchestration, SQL Server resources, GUI/CLI, and bundled plugins |
+| `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable download-support strategies |
+| `opendata-plugins` | Bundled plugin registry infrastructure, packaged plugin definitions, and provider implementations |
+| `opendata-core` | Application entry points, runtime orchestration, SQL Server resources, and GUI/CLI |
 
-The current bundled plugins remain in `opendata-core`. They will be split into
-separate projects later, but that extraction is not part of the current build.
+The current bundled plugins now build in `opendata-plugins` and remain part of
+the same reactor and executable release train.
 
 ## Build
 

@@ -16,8 +16,9 @@ and explicit module and package ownership.
 | Module | Responsibility |
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
-| `opendata-common` | Shared validation, JDBC helpers, base exceptions, and reusable support strategies |
-| `opendata-core` | Application entry points, runtime orchestration, SQL Server resources, bundled plugins, CLI, and JavaFX GUI |
+| `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable support strategies |
+| `opendata-plugins` | Bundled plugin registry infrastructure, packaged plugin definitions, and provider implementations |
+| `opendata-core` | Application entry points, runtime orchestration, SQL Server resources, CLI, and JavaFX GUI |
 
 ## Principal components
 
@@ -37,6 +38,5 @@ and explicit module and package ownership.
 
 The Maven split does not create separate runtime processes or release trains.
 `opendata-core` assembles the executable application and depends on the shared
-contracts and helpers supplied by `opendata-api` and `opendata-common`.
-Bundled provider plugins still ship in the same executable until a later
-project split is explicitly approved.
+contracts and helpers supplied by `opendata-api`, `opendata-common`, and the
+bundled provider implementations supplied by `opendata-plugins`.

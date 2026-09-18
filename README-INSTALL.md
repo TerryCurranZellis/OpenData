@@ -5,7 +5,7 @@ This pack implements the new `octopus-adjustment` plugin without replacing or ed
 ## Contents
 
 - new Java package `com.towermarsh.opendata.plugin.octopusadjustment`;
-- new plugin definition `src/main/resources/config/plugins/octopus-adjustment.properties`;
+- new plugin definition `opendata-plugins/src/main/resources/config/plugins/octopus-adjustment.properties`;
 - new SQL script `sql/011-create-octopus-adjustment-tables.sql`;
 - new JUnit tests under `src/test/java/.../octopusadjustment`.
 

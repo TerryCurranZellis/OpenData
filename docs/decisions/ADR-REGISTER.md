@@ -78,7 +78,7 @@
 | [ADR-0056](ADR-0056-javafx-live-execution-logging.md) | Stream scoped JUL execution output into JavaFX without replacing application logging | Accepted | Batch 6 Execute/Dry-run live logging |
 | [ADR-0057](ADR-0057-final-javafx-migration-and-windows-packaging.md) | Complete JavaFX migration and define Windows packaging | Accepted | Batch 7 final GUI integration |
 | [ADR-0058](ADR-0058-octopus-adjustment-bills.md) | Store Octopus adjustment bills separately from ordinary statements | Accepted | Version 3.1.0 adjustment plugin |
-| [ADR-0059](ADR-0059-three-module-reactor-split.md) | Split the modular monolith into API, common, and core Maven modules | Accepted | Current 3.1.0 build layout |
+| [ADR-0059](ADR-0059-three-module-reactor-split.md) | Split the modular monolith into API, common, plugins, and core Maven modules | Accepted | Current 3.1.0 build layout |
 | [ADR-0060](ADR-0060-module-local-build-verification.md) | Apply build-environment and quality verification in every module POM | Accepted | Keeps module checks aligned after the split |
 | [ADR-0061](ADR-0061-module-owned-tests.md) | Keep tests with the module that owns the production code | Accepted | Shared tests moved out of `opendata-core` |
 

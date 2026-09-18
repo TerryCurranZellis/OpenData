@@ -1,4 +1,4 @@
-# ADR-0059: Split the modular monolith into API, common, and core Maven modules
+# ADR-0059: Split the modular monolith into API, common, plugins, and core Maven modules
 
 **Version:** 3.1.0  
 **Status:** Accepted for Version 3.1.0 implementation  
@@ -19,17 +19,20 @@ ready to leave the current repository or release train yet.
 ## Decision
 
 Keep one modular-monolith release and one Maven reactor, but split the source
-into three modules:
+into four modules:
 
 - `opendata-api` for shared plugin contracts, immutable plugin/configuration
   records, and database resource interfaces;
 - `opendata-common` for reusable validation, JDBC helpers, base exceptions, and
-  support strategies; and
+  support strategies;
+- `opendata-plugins` for the bundled plugin registry infrastructure, packaged
+  plugin definitions, and provider implementations; and
 - `opendata-core` for the executable application, SQL Server resources, GUI,
-  CLI, runtime orchestration, and bundled plugins.
+  CLI, and runtime orchestration.
 
-Bundled provider plugins remain in `opendata-core` until they are ready for a
-separate project boundary.
+Bundled provider plugins remain in the shared reactor and executable release
+train, but now build in `opendata-plugins` until they are ready for a separate
+project boundary.
 
 ## Consequences
 
@@ -45,7 +48,7 @@ separate project boundary.
 - one logical Java package namespace is now distributed across multiple Maven
   modules and requires disciplined documentation updates;
 - module dependency direction must be reviewed carefully; and
-- bundled plugins are still compiled in the core executable until a later split.
+- bundled plugins are now a dedicated module but still ship in the same executable.
 
 ## Rejected alternatives
 

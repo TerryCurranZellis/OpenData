@@ -5,7 +5,8 @@ manifest-defined manuals.
 
 Use the [complete documentation index](DOCUMENTATION-INDEX.md) for navigation.
 The active implementation baseline is Version 3.1.0, including the split
-`opendata-api`, `opendata-common`, and `opendata-core` Maven modules.
+`opendata-api`, `opendata-common`, `opendata-plugins`, and `opendata-core`
+Maven modules.
 
 ## Structure
 

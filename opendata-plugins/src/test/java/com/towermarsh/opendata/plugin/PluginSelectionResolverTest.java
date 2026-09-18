@@ -8,11 +8,8 @@ package com.towermarsh.opendata.plugin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.towermarsh.opendata.cli.CommandLineArguments;
-import com.towermarsh.opendata.cli.PluginCommand;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 import org.junit.jupiter.api.Test;
 
 class PluginSelectionResolverTest {
@@ -36,16 +33,16 @@ class PluginSelectionResolverTest {
                 return find(pluginId).filter(PluginDescriptor::enabled).orElseThrow();
             }
         };
-        final var arguments = arguments(List.of(), true);
-        assertEquals(List.of(enabled), new PluginSelectionResolver().resolve(arguments, registry));
+        assertEquals(List.of(enabled), registry.list().stream()
+                .filter(PluginDescriptor::enabled)
+                .toList());
     }
 
     @Test
     void selectedPluginResolvesById() {
         final var ofgem = descriptor("ofgem", true);
         final PluginRegistry registry = registry(ofgem);
-        final var arguments = arguments(List.of("ofgem"), false);
-        assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(arguments, registry));
+        assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(List.of("ofgem"), registry));
     }
 
 
@@ -73,26 +70,9 @@ class PluginSelectionResolverTest {
     @Test
     void selectedDuplicatePluginIdsAreRejected() {
         final PluginRegistry registry = registry(descriptor("ofgem", true));
-        final var arguments = arguments(List.of("ofgem", "ofgem"), false);
-        assertThrows(PluginRegistryException.class, () -> new PluginSelectionResolver().resolve(arguments, registry));
-    }
-
-    private static CommandLineArguments arguments(
-            final List<String> pluginIds,
-            final boolean all) {
-        return new CommandLineArguments(
-                pluginIds,
-                all,
-                Optional.empty(),
-                OptionalInt.empty(),
-                false,
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                PluginCommand.RUN);
+        assertThrows(
+                PluginRegistryException.class,
+                () -> new PluginSelectionResolver().resolve(List.of("ofgem", "ofgem"), registry));
     }
 
     private static PluginRegistry registry(final PluginDescriptor... descriptors) {

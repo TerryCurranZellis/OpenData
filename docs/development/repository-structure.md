@@ -14,8 +14,9 @@
 | Path | Purpose |
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
-| `opendata-common` | Shared validation, JDBC helpers, base exceptions, and reusable support code |
-| `opendata-core` | Application entry points, runtime orchestration, GUI/CLI, SQL Server resources, and bundled plugins |
+| `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable support code |
+| `opendata-plugins` | Bundled plugin registry infrastructure, packaged plugin definitions, and provider implementations |
+| `opendata-core` | Application entry points, runtime orchestration, GUI/CLI, and SQL Server resources |
 | `sql` | Ordered SQL Server installation, schemas, permissions and verification |
 | `docs` | Authoritative Markdown, PlantUML, manifests, examples and templates |
 | `config` | Documentation and code-quality configuration |
@@ -34,9 +35,10 @@ src/test/java
 ```
 
 Tests must live with the module that owns the production code they verify.
-`opendata-common` therefore owns the shared JDBC, validation, and reusable
-strategy tests, while `opendata-core` keeps application, plugin, parser, GUI,
-and provider tests.
+`opendata-common` therefore owns the shared JDBC, validation, exception, and
+reusable support tests, `opendata-plugins` owns plugin registry/provider tests,
+and `opendata-core` keeps application, parser, GUI, and provider-integration
+tests.
 
 ## Java ownership
 
@@ -44,8 +46,9 @@ The split source tree keeps one logical package namespace below
 `com.towermarsh.opendata`, but package ownership is now module-specific:
 
 - `opendata-api`: `config.model`, `database`, `plugin`
-- `opendata-common`: `database`, `database.jdbc`, `download.strategy`, `exception`, `validation`
-- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, core `exception`, `gui`, `logging`, `model`, `parser`, and plugin implementations
+- `opendata-common`: `database`, `database.jdbc`, `download.strategy`, `exception`, `logging`, `util`, `validation`
+- `opendata-plugins`: `plugin` and provider packages below `plugin.<plugin-id>`
+- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, `gui`, `logging`, `model`, and `parser`
 
 Provider-specific code remains below:
 

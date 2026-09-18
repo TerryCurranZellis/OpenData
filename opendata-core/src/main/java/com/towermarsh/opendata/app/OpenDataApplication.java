@@ -188,7 +188,17 @@ public final class OpenDataApplication {
         }
         LoggingManager.configure(runtime.logging(), arguments.verbose());
 
-        var selected = new PluginSelectionResolver().resolve(arguments, registry);
+        final List<PluginDescriptor> selected;
+        if (arguments.allPluginsRequested()) {
+            selected = registry.list().stream()
+                    .filter(PluginDescriptor::enabled)
+                    .toList();
+            if (selected.isEmpty()) {
+                throw new PluginRegistryException("No enabled plugins are installed.");
+            }
+        } else {
+            selected = new PluginSelectionResolver().resolve(arguments.pluginIds(), registry);
+        }
         var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
         var plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(

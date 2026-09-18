@@ -14,7 +14,7 @@
 - Current development JDK: 26.
 - Current development IDE: Apache NetBeans 31.
 - Maven: 3.9 or later.
-- OpenData is one Maven reactor with three modules: `opendata-api`, `opendata-common`, and `opendata-core`.
+- OpenData is one Maven reactor with four modules: `opendata-api`, `opendata-common`, `opendata-plugins`, and `opendata-core`.
 
 ## Start here
 

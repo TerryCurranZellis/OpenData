@@ -51,7 +51,7 @@ DataParserFactory
 ## Subsequent implementation
 
 The implemented Ofgem definition is
-`src/main/resources/config/plugins/ofgem.properties`. It uses the stable Ofgem
+`opendata-plugins/src/main/resources/config/plugins/ofgem.properties`. It uses the stable Ofgem
 publication page, `html-link-discovery`, an XLSX href pattern and the link text
 for the final levelised cap rates model. Download timeouts, working/archive
 directories and formula evaluation are typed plugin properties.

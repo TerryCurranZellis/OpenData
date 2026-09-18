@@ -14,7 +14,7 @@
 | [Octopus](octopus/README.md) | Local PDF statements | Transactional electricity/gas upsert plus processed-file ledger | Implemented; live SQL acceptance pending |
 
 Packaged plugin definitions are listed in
-`src/main/resources/config/plugins/index.properties`. They are available for
+`opendata-plugins/src/main/resources/config/plugins/index.properties`. They are available for
 registration but are not automatically installed. The SQL Server table
 `core.plugin_registry` is authoritative for list, status and execution.
 

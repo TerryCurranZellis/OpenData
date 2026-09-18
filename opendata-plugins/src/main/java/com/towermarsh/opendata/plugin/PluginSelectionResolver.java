@@ -5,7 +5,6 @@
  */
 package com.towermarsh.opendata.plugin;
 
-import com.towermarsh.opendata.cli.CommandLineArguments;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -20,31 +19,8 @@ import java.util.Objects;
 public final class PluginSelectionResolver {
 
     /**
-     *
-     * @param arguments
-     * @param registry
-     * @return
-     */
-    public List<PluginDescriptor> resolve(
-            final CommandLineArguments arguments,
-            final PluginRegistry registry) {
-        Objects.requireNonNull(arguments, "arguments");
-        Objects.requireNonNull(registry, "registry");
-        if (arguments.allPluginsRequested()) {
-            final List<PluginDescriptor> enabled = registry.list().stream()
-                    .filter(PluginDescriptor::enabled)
-                    .toList();
-            if (enabled.isEmpty()) {
-                throw new PluginRegistryException("No enabled plugins are installed.");
-            }
-            return enabled;
-        }
-        return resolve(arguments.pluginIds(), registry);
-    }
-
-    /**
      * Resolves an explicit plugin-id snapshot against the authoritative
-     * registry. This overload is shared by non-CLI callers such as JavaFX.
+     * registry.
      *
      * @param pluginIds explicitly selected plugin identifiers
      * @param registry authoritative registered-plugin source

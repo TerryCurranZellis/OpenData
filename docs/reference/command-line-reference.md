@@ -168,9 +168,10 @@ opendata --plugin example --register --file C:\OpenData\example.properties
 ```
 
 The external file uses the same unprefixed format as
-`src/main/resources/config/plugins/<id>.properties`. Its `plugin.id` must match
-the command-line id, the implementation class must be present on the runtime
-classpath, and the class must implement `OpenDataPlugin`.
+`opendata-plugins/src/main/resources/config/plugins/<id>.properties`. Its
+`plugin.id` must match the command-line id, the implementation class must be
+present on the runtime classpath, and the class must implement
+`OpenDataPlugin`.
 
 Registration writes metadata to `core.plugin_registry`, replaces the selected
 plugin's rows in `core.plugin_property`, refreshes application configuration,

@@ -19,11 +19,13 @@ import java.util.Objects;
  *
  * <p>
  * The deployment-style folder {@code config/plugins} is checked first. The
- * source-tree folder {@code src/main/resources/config/plugins} is also checked
- * so the same GUI operation works while OpenData is being run directly from a
- * development checkout. The classpath index file is deliberately ignored: GUI
- * registration discovers complete {@code *.properties} definitions
- * directly.</p>
+ * development source-tree fallbacks
+ * {@code opendata-plugins/src/main/resources/config/plugins},
+ * {@code src/main/resources/config/plugins}, and the sibling-module equivalent
+ * are also checked so the same GUI operation works while OpenData is being run
+ * directly from a development checkout. The classpath index file is
+ * deliberately ignored: GUI registration discovers complete
+ * {@code *.properties} definitions directly.</p>
  *
  * @author Terry Curran
  * @version 3.0.0
@@ -110,8 +112,17 @@ public final class PluginConfigurationDirectoryScanner {
                 .toAbsolutePath().normalize();
         final List<Path> result = new ArrayList<>();
         result.add(workingDirectory.resolve("config").resolve("plugins"));
+        result.add(workingDirectory.resolve("opendata-plugins").resolve("src")
+                .resolve("main").resolve("resources").resolve("config")
+                .resolve("plugins"));
         result.add(workingDirectory.resolve("src").resolve("main").resolve("resources")
                 .resolve("config").resolve("plugins"));
+        final var parent = workingDirectory.getParent();
+        if (parent != null) {
+            result.add(parent.resolve("opendata-plugins").resolve("src")
+                    .resolve("main").resolve("resources").resolve("config")
+                    .resolve("plugins"));
+        }
         return List.copyOf(result);
     }
 }

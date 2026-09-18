@@ -82,9 +82,11 @@ implement `OpenDataPlugin`.
 ### JavaFX configuration-folder registration
 
 The JavaFX **Register** command scans `<working directory>/config/plugins` and
-then the development fallback `<working directory>/src/main/resources/config/plugins`.
-It validates complete `*.properties` definitions, ignores `index.properties`,
-and offers only plugin ids not already present in `core.plugin_registry`.
+then the development fallback
+`<working directory>/opendata-plugins/src/main/resources/config/plugins`
+(plus the sibling-module equivalent when running from `opendata-core`). It
+validates complete `*.properties` definitions, ignores `index.properties`, and
+offers only plugin ids not already present in `core.plugin_registry`.
 
 The JavaFX **Register from File** command uses a file chooser and reads the id
 from the selected file's `plugin.id`; unlike normal GUI Register, it may be used

@@ -17,17 +17,18 @@
 | `opendata-api` | `plugin` | Shared plugin contracts and immutable run metadata |
 | `opendata-common` | `database`, `database.jdbc` | Shared database exception types and reusable JDBC execution helpers |
 | `opendata-common` | `download.strategy` | Shared download-resolution strategies |
-| `opendata-common` | `exception` | Shared base exception types |
+| `opendata-common` | `exception` | Shared exception types |
+| `opendata-common` | `logging`, `util` | Shared plugin log context and reusable utility helpers |
 | `opendata-common` | `validation` | Typed property parsing and reusable validation rules |
+| `opendata-plugins` | `plugin` | Provider-neutral registries, execution coordinator, audit, and factories |
+| `opendata-plugins` | `plugin.<id>` | Provider workflow facade and staged pipeline implementation |
 | `opendata-core` | root / `app` | Entry point, orchestration and run status |
 | `opendata-core` | `cli` | Commons CLI and immutable arguments |
 | `opendata-core` | `config`, `config.model` | Bootstrap, registration, property sources, and runtime configuration |
-| `opendata-core` | `plugin` | Provider-neutral registries, execution coordinator, audit, and factories |
-| `opendata-core` | `plugin.<id>` | Provider workflow facade and staged pipeline implementation |
 | `opendata-core` | `download`, `discovery`, `parser`, `etl` | Shared acquisition, selection, parsing, and staged pipeline contracts |
 | `opendata-core` | `database.audit` | Ingestion audit persistence |
 | `opendata-core` | `gui` | JavaFX lifecycle, controllers, dialogs, and live log presentation |
-| `opendata-core` | `logging`, `model`, `util`, core `exception` | Shared runtime support owned by the executable application |
+| `opendata-core` | `logging`, `model` | Shared runtime support owned by the executable application |
 
 ## Package documentation rule
 

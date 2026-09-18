@@ -37,6 +37,7 @@
     <modules>
         <module>opendata-api</module>
         <module>opendata-common</module>
+        <module>opendata-plugins</module>
         <module>opendata-core</module>
     </modules>
 
@@ -50,6 +51,11 @@
             <dependency>
                 <groupId>com.towermarsh</groupId>
                 <artifactId>opendata-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugins</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

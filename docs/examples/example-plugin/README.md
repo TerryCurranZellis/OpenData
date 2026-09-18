@@ -19,7 +19,7 @@ the required five-stage package architecture.
 
 1. Copy the Java package below `src/main/java`.
 2. Copy `example.properties` below
-   `src/main/resources/config/plugins`.
+   `opendata-plugins/src/main/resources/config/plugins`.
 3. add `example` to `config/plugins/index.properties`;
 4. replace the placeholder endpoint and transformation;
 5. implement a real transactional repository before write mode;

@@ -24,6 +24,9 @@ catalogue only for registration. `JdbcPluginRegistry` reads
 `core.plugin_registry` and is authoritative for installed metadata, enabled
 status and execution selection.
 
+In the source tree, the packaged definitions and bundled provider
+implementations are owned by the `opendata-plugins` module.
+
 Plugin property values are loaded by `PropertiesPluginDefinitionLoader` through
 a `ConfigurationPropertiesSource`:
 

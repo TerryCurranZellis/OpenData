@@ -9,7 +9,8 @@
 ---
 
 The plugin API is compiled from the `opendata-api` module. Runtime registries,
-selection, factories, and execution orchestration remain in `opendata-core`.
+selection, factories, and execution orchestration are compiled from
+`opendata-plugins` and consumed by `opendata-core`.
 
 ## `OpenDataPlugin`
 
@@ -44,7 +45,7 @@ SQL operations.
 
 ## Construction
 
-`ReflectionPluginFactory` in `opendata-core` loads the class named by
+`ReflectionPluginFactory` in `opendata-plugins` loads the class named by
 `plugin.implementation-class`. It first tries:
 
 ```java

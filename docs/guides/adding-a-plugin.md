@@ -84,13 +84,13 @@ validation after conversion.
 Create:
 
 ```text
-src/main/resources/config/plugins/<id>.properties
+opendata-plugins/src/main/resources/config/plugins/<id>.properties
 ```
 
 Add the ID to:
 
 ```text
-src/main/resources/config/plugins/index.properties
+opendata-plugins/src/main/resources/config/plugins/index.properties
 ```
 
 The descriptor includes `plugin.*`, `dataset.id`, one or more
@@ -101,8 +101,8 @@ and ordinary runs resolve plugin configuration from the database.
 For JavaFX development, the **Register** command scans this source-tree plugin
 folder directly for new `.properties` definitions. A packaged/deployed GUI also
 checks `<working directory>/config/plugins` first. The classpath
-`index.properties` file is still required for CLI packaged registration, but the
-GUI scanner ignores it because it is not a complete plugin definition.
+`index.properties` file is still required for CLI packaged registration, but
+the GUI scanner ignores it because it is not a complete plugin definition.
 
 Do not add provider selection code to the application main class.
 

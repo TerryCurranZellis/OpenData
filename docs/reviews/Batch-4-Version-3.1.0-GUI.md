@@ -36,7 +36,7 @@ services. Execute, Dry-run and information dialogs remain later-batch work.
 ## Configuration-folder search order
 
 1. `<working directory>/config/plugins`
-2. `<working directory>/src/main/resources/config/plugins` (development
+2. `<working directory>/opendata-plugins/src/main/resources/config/plugins` (development
    checkout fallback)
 
 Only regular `*.properties` files are candidates. The second location preserves

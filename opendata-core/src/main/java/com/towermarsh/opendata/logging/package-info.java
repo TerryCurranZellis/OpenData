@@ -10,7 +10,6 @@
  * <ul>
  * <li>{@link ContextualLogFormatter} &mdash; Thread-safe JUL formatter containing thread, plugin, and run context.</li>
  * <li>{@link LoggingManager} &mdash; Central java.util.logging configuration.</li>
- * <li>{@link PluginLogContext} &mdash; Per-thread plugin and run identifiers added to every log line.</li>
  * </ul>
  *
  * @author Terry Curran
