@@ -1,15 +1,23 @@
 # High-Level Architecture
 
 **Document ID:** ARCH-003  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 implementation baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 3.1.0  
+**Status:** Version 3.1.0 modular build baseline  
+**Baseline date:** 18 September 2026  
 **Minimum Java version:** 24
 
 ---
 
-OpenData is a modular monolith: one Maven build and one JVM process with explicit
-package ownership and constructor-based composition.
+OpenData remains a modular monolith: one Maven reactor build, one JVM process,
+and explicit module and package ownership.
+
+## Reactor modules
+
+| Module | Responsibility |
+|---|---|
+| `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
+| `opendata-common` | Shared validation, JDBC helpers, base exceptions, and reusable support strategies |
+| `opendata-core` | Application entry points, runtime orchestration, SQL Server resources, bundled plugins, CLI, and JavaFX GUI |
 
 ## Principal components
 
@@ -25,27 +33,10 @@ package ownership and constructor-based composition.
 | Plugin pipelines | Provider-specific five-stage workflows |
 | Database infrastructure | DBCP pooling, registry/configuration/audit/provider repositories |
 
-## Administration flow
+## Deployment boundary
 
-```text
-GUI or CLI -> bootstrap -> SQLServerResource -> JdbcPluginRegistry
-    -> register / list / enable / disable / unregister
-```
-
-Registration without `--file` resolves definitions from the packaged catalogue.
-Registration with `--file` resolves exactly one complete external definition.
-Both forms persist metadata in `core.plugin_registry` and definition properties
-in `core.plugin_property`.
-
-## Execution flow
-
-```text
-GUI or CLI -> bootstrap -> SQL registry/configuration reads
-    -> enabled plugin selection -> typed definitions
-    -> PluginExecutionCoordinator -> fresh plugin instances
-    -> extract/transform/load/finalise -> SQL Server and/or archive
-```
-
-::: {.landscape}
-![OpenData component architecture](../diagrams/generated/component-architecture.svg){width=22.5cm}
-:::
+The Maven split does not create separate runtime processes or release trains.
+`opendata-core` assembles the executable application and depends on the shared
+contracts and helpers supplied by `opendata-api` and `opendata-common`.
+Bundled provider plugins still ship in the same executable until a later
+project split is explicitly approved.

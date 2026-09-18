@@ -1,9 +1,9 @@
 # Developer Documentation
 
 **Document ID:** DEV-INDEX-001  
-**Version:** 3.0.0  
-**Status:** Current Version 3.0.0 merged baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 3.1.0  
+**Status:** Current Version 3.1.0 modular build baseline  
+**Baseline date:** 18 September 2026  
 **Minimum Java version:** 24
 
 ---
@@ -13,8 +13,8 @@
 - Minimum supported JDK: 24.
 - Current development JDK: 26.
 - Current development IDE: Apache NetBeans 31.
-- JavaFX dependency version: 26.0.1.
 - Maven: 3.9 or later.
+- OpenData is one Maven reactor with three modules: `opendata-api`, `opendata-common`, and `opendata-core`.
 
 ## Start here
 
@@ -48,14 +48,11 @@
 - [Architecture decisions](../decisions/README.md)
 - [Architecture manual](../architecture/ARCHITECTURE.md)
 
-OpenData is a single Maven modular monolith. A plugin change normally spans Java,
-registration properties, SQL, tests, operator documentation, data-source notices
-and an ADR when it creates a durable architectural decision.
+OpenData remains a modular monolith and a single release train, but the source
+is now distributed across module-specific Maven projects. A framework or plugin
+change can span multiple modules, registration properties, SQL, tests,
+documentation, and ADRs when it creates a durable architectural decision.
 
-The executable plugin contract is `OpenDataPlugin.execute(PluginExecutionContext)`.
-Provider implementations follow `initialise -> extract -> transform -> load ->
-finalise`, with the root plugin class acting as a thin framework entry point.
-
-Every maintained Java package has `package-info.java`. Version 3.0.0 package
-pages group top-level classes, records, interfaces and enums and link each entry
-to its Javadoc description.
+Every production package containing Java types must have `package-info.java` in
+its owning module. Package pages must describe only the types actually compiled
+from that module.

@@ -1,9 +1,9 @@
 # Local Build, Test and Run
 
 **Document ID:** DEV-BUILD-001  
-**Version:** 3.0.0  
-**Status:** Current Version 3.0.0 developer procedure  
-**Baseline date:** 15 August 2026  
+**Version:** 3.1.0  
+**Status:** Current Version 3.1.0 developer procedure  
+**Baseline date:** 18 September 2026  
 **Minimum Java version:** 24
 
 ---
@@ -21,23 +21,26 @@
 - XeLaTeX plus `rsvg-convert` or Inkscape for PDF generation; and
 - Microsoft HTML Help Workshop when CHM output is required.
 
-The Maven Enforcer plugin actively requires Maven 3.9+ and Java 24+. A later
-JDK can be used for development, but code must remain compatible with the Java 24
-release target.
+The Maven Enforcer plugin actively requires Maven 3.9+ and Java 24+ in every
+module. A later JDK can be used for development, but code must remain
+compatible with the Java 24 release target.
 
 ## Build and quality
+
+Run from the repository root so the full reactor validates all modules:
 
 ```powershell
 mvn clean test
 mvn clean verify
 ```
 
-Review the configured Checkstyle, SpotBugs, PMD, JaCoCo and dependency-analysis
-outputs even when advisory quality settings allow Maven to complete.
+Each module executes the same build-environment, Surefire, Checkstyle,
+SpotBugs, JaCoCo, Javadoc, and dependency-analysis configuration. Review the
+configured outputs even when advisory quality settings allow Maven to complete.
 
 ## Run from an IDE
 
-Configure the IDE with:
+Run the `opendata-core` module entry point with:
 
 ```text
 Main class: com.towermarsh.opendata.OpenData
@@ -54,9 +57,9 @@ No arguments starts the JavaFX GUI. Example explicit arguments are:
 
 ## Minimum developer verification
 
-1. run the complete unit suite on the changed branch;
+1. run the complete reactor unit suite on the changed branch;
 2. verify compilation/tests on the Java 24 minimum baseline before release;
-3. smoke-test the merged GUI on the current JDK 26 development environment;
+3. smoke-test the merged GUI from `opendata-core` on the current JDK 26 development environment;
 4. list registered plugins and inspect at least one plugin detail;
 5. run Ofgem, OpenMeteo and Octopus dry-runs separately;
 6. run a controlled multi-plugin execution with bounded parallelism;
@@ -65,9 +68,6 @@ No arguments starts the JavaFX GUI. Example explicit arguments are:
 9. validate documentation and render diagrams; and
 10. run the SQL Server acceptance matrix for persistence/configuration changes.
 
-Octopus dry-run skips completion-ledger access and parses matching input PDFs
-without provider writes or archive movement.
-
 ## Documentation build
 
 ```powershell
@@ -75,12 +75,3 @@ without provider writes or archive movement.
 Invoke-Documentation -ProjectRoot $PWD -Action Test -FailOnWarning
 Invoke-Documentation -ProjectRoot $PWD -Action All -RenderDiagrams
 ```
-
-Use `scripts/Convert-PlantUml.ps1` directly when only diagrams need to be
-regenerated.
-
-## Local and generated files
-
-Do not commit passwords, external plugin registration files, logs, downloads,
-database backups, customer PDFs, private PFX files or generated manuals unless
-repository policy explicitly identifies an output as maintained.

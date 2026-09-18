@@ -1,9 +1,9 @@
 # Architecture Decision Register
 
 **Document ID:** ADR-REGISTER-001
-**Version:** 3.0.0
+**Version:** 3.1.0
 **Status:** Baseline
-**Baseline date:** 14 August 2026
+**Baseline date:** 18 September 2026
 **Minimum Java version:** 24
 
 ---
@@ -70,17 +70,16 @@
 | [ADR-0048](ADR-0048-persistent-plugin-registry-and-cli-lifecycle.md) | Persist plugin lifecycle state and administer it through the CLI | Accepted | Implemented; extends ADR-0013/0047 |
 | [ADR-0049](ADR-0049-shared-validation-and-jdbc-execution.md) | Share validation and JDBC execution mechanics | Accepted | Implemented across Ofgem, OpenMeteo and Octopus |
 | [ADR-0050](ADR-0050-application-metadata-validation-and-utilities.md) | Centralise application metadata, validation and focused utilities | Accepted | Implemented in version 2.1 |
-
 | [ADR-0051](ADR-0051-javafx-graphical-interface.md) | Use JavaFX for the OpenData graphical interface | Accepted | Version 3 GUI implementation in progress |
 | [ADR-0052](ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md) | Use Java 24 minimum and let JavaFX own the desktop lifecycle | Accepted | JavaFX 26.x baseline; Swing retirement staged |
 | [ADR-0053](ADR-0053-javafx-controller-service-boundary.md) | Keep JavaFX controllers behind asynchronous application-service boundaries | Accepted | Batch 3 persistent plugin-table integration |
-
 | [ADR-0054](ADR-0054-gui-plugin-registration-discovery.md) | Discover GUI plugin registrations from configuration files | Accepted | Batch 4 JavaFX administration workflow |
-
 | [ADR-0055](ADR-0055-javafx-information-dialogs-and-sensitive-display.md) | Use JavaFX read-only information dialogs and mask sensitive configuration values | Accepted | Batch 5 information/dialog migration |
-
 | [ADR-0056](ADR-0056-javafx-live-execution-logging.md) | Stream scoped JUL execution output into JavaFX without replacing application logging | Accepted | Batch 6 Execute/Dry-run live logging |
-
 | [ADR-0057](ADR-0057-final-javafx-migration-and-windows-packaging.md) | Complete JavaFX migration and define Windows packaging | Accepted | Batch 7 final GUI integration |
+| [ADR-0058](ADR-0058-octopus-adjustment-bills.md) | Store Octopus adjustment bills separately from ordinary statements | Accepted | Version 3.1.0 adjustment plugin |
+| [ADR-0059](ADR-0059-three-module-reactor-split.md) | Split the modular monolith into API, common, and core Maven modules | Accepted | Current 3.1.0 build layout |
+| [ADR-0060](ADR-0060-module-local-build-verification.md) | Apply build-environment and quality verification in every module POM | Accepted | Keeps module checks aligned after the split |
+| [ADR-0061](ADR-0061-module-owned-tests.md) | Keep tests with the module that owns the production code | Accepted | Shared tests moved out of `opendata-core` |
 
 :::

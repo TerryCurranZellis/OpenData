@@ -1,19 +1,41 @@
-# OpenData Octopus Adjustment Documentation Pack
+# OpenData
 
 Version: **3.1.0**
 
-This archive contains only new documentation and package-documentation templates
-for the `octopus-adjustment` plugin.
+OpenData is a Java 24 modular monolith for acquiring, validating, and loading
+OpenData sources through a shared framework, a JavaFX desktop interface, and a
+command-line entry point.
 
-It deliberately does **not** contain replacements for existing OpenData 3.0.0
-documentation, manifests, ADR register, documentation index, release notes, or
-ordinary Octopus documents.
+## Maven modules
 
-Copy the new files into matching repository paths when implementing the 3.1.0
-plugin. Integrating these pages into the generated manuals should be done when
-the project documentation baseline itself is advanced to 3.1.0.
+| Module | Responsibility |
+|---|---|
+| `opendata-api` | Shared plugin contracts, immutable plugin/configuration records, and database resource interfaces |
+| `opendata-common` | Shared validation, JDBC helpers, base exceptions, and reusable download-support strategies |
+| `opendata-core` | Application entry points, runtime orchestration, SQL Server resources, GUI/CLI, and bundled plugins |
 
-## Registration constraint
+The current bundled plugins remain in `opendata-core`. They will be split into
+separate projects later, but that extraction is not part of the current build.
 
-The new `octopus-adjustment` plugin must be registered through the OpenData GUI.
-New-plugin registration is not performed through the CLI.
+## Build
+
+Prerequisites:
+
+- Java 24 or later
+- Maven 3.9 or later
+
+Run the full reactor build from the repository root:
+
+```powershell
+mvn clean verify
+```
+
+Each module now carries the same build-environment, test, coverage, static
+analysis, and dependency-analysis verification so the split modules are checked
+independently inside the shared reactor build.
+
+## Documentation
+
+Use the [documentation index](docs/DOCUMENTATION-INDEX.md) for the maintained
+manual set and the [developer guide](docs/development/README.md) for build,
+module, and contribution guidance.

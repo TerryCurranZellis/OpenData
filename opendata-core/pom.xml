@@ -160,7 +160,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OpenDataPluginSupport</artifactId>
+            <artifactId>opendata-common</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

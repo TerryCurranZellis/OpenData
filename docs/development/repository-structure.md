@@ -1,9 +1,9 @@
 # Repository Structure
 
 **Document ID:** DEV-REPOSITORY-001  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 implementation baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 3.1.0  
+**Status:** Version 3.1.0 modular build baseline  
+**Baseline date:** 18 September 2026
 
 ---
 
@@ -13,9 +13,9 @@
 
 | Path | Purpose |
 |---|---|
-| `src/main/java` | Application, framework infrastructure and provider plugins |
-| `src/main/resources/config` | Bootstrap defaults, registry definitions and current certificate resources |
-| `src/test/java` | Unit and mock-based component tests |
+| `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
+| `opendata-common` | Shared validation, JDBC helpers, base exceptions, and reusable support code |
+| `opendata-core` | Application entry points, runtime orchestration, GUI/CLI, SQL Server resources, and bundled plugins |
 | `sql` | Ordered SQL Server installation, schemas, permissions and verification |
 | `docs` | Authoritative Markdown, PlantUML, manifests, examples and templates |
 | `config` | Documentation and code-quality configuration |
@@ -23,39 +23,37 @@
 | `.github/workflows` | Build, documentation and release workflows |
 | `tools` | Local third-party tool placement guidance |
 
-## Java package layout
+## Module layout
 
-Framework packages sit below `com.towermarsh.opendata`, including:
+Each Maven module uses the standard layout:
 
 ```text
-app
-cli
-config
-config.model
-database
-database.audit
-database.jdbc
-discovery
-download
-download.strategy
-etl
-exception
-gui
-logging
-model
-parser
-plugin
-util
-validation
+src/main/java
+src/main/resources
+src/test/java
 ```
 
-Provider-specific code belongs below:
+Tests must live with the module that owns the production code they verify.
+`opendata-common` therefore owns the shared JDBC, validation, and reusable
+strategy tests, while `opendata-core` keeps application, plugin, parser, GUI,
+and provider tests.
+
+## Java ownership
+
+The split source tree keeps one logical package namespace below
+`com.towermarsh.opendata`, but package ownership is now module-specific:
+
+- `opendata-api`: `config.model`, `database`, `plugin`
+- `opendata-common`: `database`, `database.jdbc`, `download.strategy`, `exception`, `validation`
+- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, core `exception`, `gui`, `logging`, `model`, `parser`, and plugin implementations
+
+Provider-specific code remains below:
 
 ```text
 com.towermarsh.opendata.plugin.<plugin-id>
 ```
 
-The provider plugin package structure used by Version 3.0.0 is:
+The provider plugin package structure remains:
 
 ```text
 <plugin-id>
@@ -68,25 +66,7 @@ The provider plugin package structure used by Version 3.0.0 is:
 └── finalise
 ```
 
-The root plugin class implements `OpenDataPlugin` and delegates orchestration to
-the `initialise` stage. Temporary compatibility packages such as provider-local
-`config` or `download` may still exist in the current source; new code should
-not expand those duplicates.
-
-All 42 production packages currently contain `package-info.java`; each inventory groups and links its classes, records, interfaces and enums with a short description. The shared
-`exception` package owns framework exception types; plugin-specific errors are
-translated at the plugin boundary rather than creating an unrelated exception
-hierarchy.
-
-## Documentation examples
-
 `docs/templates/plugin-java` is the structural template for new provider code.
-`docs/examples/example-plugin` is a compact copyable API example including registry
-and properties snippets. Neither tree is compiled by Maven, so example changes
-require an explicit temporary compile check.
-
-## Generated content
-
-PlantUML source lives under `docs/diagrams/source`; maintained SVG output lives
-under `docs/diagrams/generated`. Generated manuals belong under the configured
-build directory and are not authoritative Markdown source.
+`docs/examples/example-plugin` is a compact copyable API example including
+registry and properties snippets. Neither tree is compiled by Maven, so example
+changes require an explicit temporary compile check.
