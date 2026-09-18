@@ -44,9 +44,11 @@ JUnit Jupiter and Mockito are test-scoped module dependencies where needed.
 
 ## Version ownership
 
-The root `pom.xml` owns the reactor module list and shared build-version
-properties. Each module `pom.xml` owns its module-specific runtime dependencies
-and declares the common verification plugins needed to validate that module.
+The root `pom.xml` owns the reactor module list, shared dependency versions, and
+shared plugin versions/configuration through `dependencyManagement` and
+`pluginManagement`. Each module `pom.xml` owns only its module-specific
+dependency list and the plugin declarations that activate the inherited
+verification baseline for that module.
 
 ## Update procedure
 

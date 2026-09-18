@@ -64,7 +64,6 @@
         <dependency>
             <groupId>com.towermarsh</groupId>
             <artifactId>opendata-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <!-- Java fx -->
         <dependency>
@@ -161,7 +160,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opendata-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
