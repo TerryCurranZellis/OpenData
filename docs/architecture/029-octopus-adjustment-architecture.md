@@ -215,8 +215,7 @@ It must not:
 
 ## Diagram
 
-::: {.landscape}
-![Octopus adjustment processing](../diagrams/generated/octopus-adjustment-processing.svg){width=22.5cm}
+The maintained PlantUML sources for this plugin are:
 
-![Octopus adjustment data model](../diagrams/generated/octopus-adjustment-data-model.svg){width=22.5cm}
-:::
+- [Octopus adjustment processing](../diagrams/source/octopus-adjustment-processing.puml)
+- [Octopus adjustment data model](../diagrams/source/octopus-adjustment-data-model.puml)
