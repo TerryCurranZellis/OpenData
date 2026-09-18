@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class HighestScoringLinkSelector implements DiscoveredLinkSelector {
+public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
 
     private final boolean failOnTie;
 

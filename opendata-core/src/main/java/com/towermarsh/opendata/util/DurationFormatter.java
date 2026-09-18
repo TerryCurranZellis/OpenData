@@ -27,8 +27,8 @@ public final class DurationFormatter {
      * @return formatted duration
      * @throws IllegalArgumentException when the duration is negative
      */
-    public static String formatElapsed(final Duration duration) {
-        final var value = Objects.requireNonNull(duration, "duration");
+    public static String formatElapsed(Duration duration) {
+        var value = Objects.requireNonNull(duration, "duration");
         if (value.isNegative()) {
             throw new IllegalArgumentException("duration must not be negative");
         }

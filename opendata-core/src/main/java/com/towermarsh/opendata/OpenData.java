@@ -53,19 +53,19 @@ public final class OpenData {
      *
      * @param args command-line arguments
      */
-    public static void main(final String[] args) {
-        final var startedAt = Instant.now();
-        final var processor = new CommandLineArgumentsProcessor();
-        var status = ExecutionStatus.NOT_STARTED;
+    public static void main(String[] args) {
+        var startedAt = Instant.now();
+        var processor = new CommandLineArgumentsProcessor();
+        status = ExecutionStatus.NOT_STARTED;
         try {
             enableUTF8Console();
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
-            final var effectiveArguments
+            var effectiveArguments
                     = args.length == 0
                             ? new String[]{"--gui"}
                     : args;
-            final var arguments = processor.parse(effectiveArguments);
+            var arguments = processor.parse(effectiveArguments);
             LoggingManager.setVerbose(arguments.verbose());
             logStartup(ApplicationInfo.current(), arguments);
             if (arguments.guiRequested()) {
@@ -112,7 +112,7 @@ public final class OpenData {
      * @param information product information
      * @param arguments command line arguments
      */
-    private static void logStartup(final ApplicationInfo information, final CommandLineArguments arguments) {
+    private static void logStartup(ApplicationInfo information, CommandLineArguments arguments) {
         logger.log(Level.INFO, "{0} {1} starting", new Object[]{information.productName(), information.version()});
         logger.log(Level.INFO,
                 "Runtime: {0}; OS: {1} {2}; workingDirectory={3}",

@@ -35,7 +35,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class SQLServerResource implements DatabaseResourceManager {
+public class SQLServerResource implements DatabaseResourceManager {
 
     private static final Logger LOGGER = Logger.getLogger(SQLServerResource.class.getName());
     
@@ -56,7 +56,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
      *
      * @param configuration database pool configuration
      */
-    private SQLServerResource(final DatabasePoolConfiguration configuration) {
+    private SQLServerResource(DatabasePoolConfiguration configuration) {
         Objects.requireNonNull(configuration, "configuration");
         poolName = configuration.poolName();
         poolUrl = POOL_URL_PREFIX + poolName;
@@ -64,13 +64,13 @@ public final class SQLServerResource implements DatabaseResourceManager {
             Class.forName(configuration.driverClass());
             Class.forName("org.apache.commons.dbcp2.PoolingDriver");
 
-            final ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+            ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
                     configuration.jdbcUrl(), configuration.user(), configuration.password());
-            final var poolableFactory = new PoolableConnectionFactory(connectionFactory, null);
+            var poolableFactory = new PoolableConnectionFactory(connectionFactory, null);
             poolableFactory.setValidationQuery(configuration.validationQuery());
             poolableFactory.setValidationQueryTimeout(configuration.maxWait());
 
-            final var poolConfig = new GenericObjectPoolConfig<PoolableConnection>();
+            var poolConfig = new GenericObjectPoolConfig<PoolableConnection>();
             poolConfig.setMaxTotal(configuration.maxTotal());
             poolConfig.setMaxIdle(configuration.maxIdle());
             poolConfig.setMinIdle(configuration.minIdle());
@@ -81,7 +81,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
 
             connectionPool = new GenericObjectPool<>(poolableFactory, poolConfig);
             poolableFactory.setPool(connectionPool);
-            final var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
+            var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
             poolingDriver.registerPool(poolName, connectionPool);
             connectionPool.preparePool();
             LOGGER.log(Level.INFO,
@@ -100,7 +100,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param configuration database pool configuration
      * @return initialised singleton resource
      */
-    public static SQLServerResource initialise(final DatabasePoolConfiguration configuration) {
+    public static SQLServerResource initialise(DatabasePoolConfiguration configuration) {
         synchronized (LOCK) {
             if (instance != null && !instance.closed.get()) {
                 return instance;
@@ -149,7 +149,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param connection connection to close
      */
     @Override
-    public void close(final Connection connection) {
+    public void close(Connection connection) {
         closeAndLog(connection, "connection");
     }
 
@@ -159,7 +159,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param statement statement to close
      */
     @Override
-    public void close(final PreparedStatement statement) {
+    public void close(PreparedStatement statement) {
         closeAndLog(statement, "prepared statement");
     }
 
@@ -169,7 +169,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param resultSet result set to close
      */
     @Override
-    public void close(final ResultSet resultSet) {
+    public void close(ResultSet resultSet) {
         closeAndLog(resultSet, "result set");
     }
 
@@ -182,7 +182,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
             return;
         }
         try {
-            final var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
+            var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
             poolingDriver.closePool(poolName);
             LOGGER.log(Level.INFO, "SQL Server pool {0} closed.", poolName);
         } catch (SQLException exception) {
@@ -240,7 +240,7 @@ public final class SQLServerResource implements DatabaseResourceManager {
      * @param resource resource to close
      * @param description resource description for error reporting
      */
-    private static void closeAndLog(final AutoCloseable resource, final String description) {
+    private static void closeAndLog(AutoCloseable resource, String description) {
         if (resource == null) {
             return;
         }

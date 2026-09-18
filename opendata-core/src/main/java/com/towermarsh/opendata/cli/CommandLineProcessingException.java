@@ -11,7 +11,7 @@ package com.towermarsh.opendata.cli;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class CommandLineProcessingException extends RuntimeException {
+public class CommandLineProcessingException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,7 +20,7 @@ public final class CommandLineProcessingException extends RuntimeException {
      *
      * @param message the detail message
      */
-    public CommandLineProcessingException(final String message) {
+    public CommandLineProcessingException(String message) {
         super(message);
     }
 
@@ -30,7 +30,7 @@ public final class CommandLineProcessingException extends RuntimeException {
      * @param message the detail message
      * @param cause the cause of this exception
      */
-    public CommandLineProcessingException(final String message, final Throwable cause) {
+    public CommandLineProcessingException(String message, Throwable cause) {
         super(message, cause);
     }
 }

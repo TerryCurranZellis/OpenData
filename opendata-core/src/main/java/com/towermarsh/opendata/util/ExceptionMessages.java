@@ -28,14 +28,14 @@ public final class ExceptionMessages {
      * @param exception exception to inspect
      * @return user-facing root-cause message
      */
-    public static String rootCauseMessage(final Throwable exception) {
+    public static String rootCauseMessage(Throwable exception) {
         var current = Objects.requireNonNull(exception, "exception");
-        final var visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        var visited = Collections.newSetFromMap(new IdentityHashMap<>());
         visited.add(current);
         while (current.getCause() != null && visited.add(current.getCause())) {
             current = current.getCause();
         }
-        final var message = current.getMessage();
+        var message = current.getMessage();
         return message == null || message.isBlank()
                 ? current.getClass().getSimpleName()
                 : message;
