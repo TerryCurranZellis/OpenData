@@ -10,7 +10,7 @@
 
 ## Prerequisites
 
-- JDK 24 or later; the Maven compiler uses `release=24`;
+- JDK 24 or later for the full reactor build; the Maven compiler uses `release=24`;
 - current development environment: JDK 26;
 - Maven 3.9 or later;
 - Git;
@@ -21,9 +21,11 @@
 - XeLaTeX plus `rsvg-convert` or Inkscape for PDF generation; and
 - Microsoft HTML Help Workshop when CHM output is required.
 
-The Maven Enforcer plugin actively requires Maven 3.9+ and Java 24+ in every
-module. A later JDK can be used for development, but code must remain
-compatible with the Java 24 release target.
+The Maven Enforcer plugin actively requires Maven 3.9+ and Java 24+ for the
+full reactor because `opendata-core` depends on JavaFX. A later JDK can be used
+for development, and an older JDK may still be used for limited compilation
+checks of non-JavaFX modules, but supported builds must remain compatible with
+the Java 24 release target.
 
 ## Build and quality
 

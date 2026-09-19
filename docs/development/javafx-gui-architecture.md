@@ -16,15 +16,17 @@ reimplement SQL, plugin selection or ETL business logic in controllers.
 
 ## Runtime baseline
 
-Version 3.0.0 requires Java 24 or later. The current development environment is:
+Version 3.0.0 requires Java 24 or later for the full application because the
+GUI runtime depends on JavaFX. The current development environment is:
 
 - JDK 26;
 - Apache NetBeans 31; and
 - JavaFX 26.0.1.
 
-Maven compiles with `release=24` and the Enforcer rule accepts Java 24 or later.
-Development on JDK 26 must therefore avoid relying on APIs unavailable to the
-Java 24 release target.
+Maven compiles with `release=24` and the Enforcer rule accepts Java 24 or later
+for the full reactor. Development on JDK 26 must therefore avoid relying on
+APIs unavailable to the Java 24 release target. Older JDKs may still be used
+for limited compilation checks of non-JavaFX modules.
 
 ## Startup and lifecycle
 

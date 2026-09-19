@@ -22,7 +22,7 @@ the same reactor and executable release train.
 
 Prerequisites:
 
-- Java 24 or later
+- Java 24 or later for the full reactor build (`opendata-core` uses JavaFX)
 - Maven 3.9 or later
 
 Run the full reactor build from the repository root:
@@ -34,6 +34,9 @@ mvn clean verify
 Each module now carries the same build-environment, test, coverage, static
 analysis, and dependency-analysis verification so the split modules are checked
 independently inside the shared reactor build.
+
+Older JDKs may still be used for limited compilation checks of the non-JavaFX
+modules, but the supported full build remains Java 24 or later.
 
 ## Documentation
 

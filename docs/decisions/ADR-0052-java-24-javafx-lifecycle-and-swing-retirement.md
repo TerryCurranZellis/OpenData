@@ -16,9 +16,11 @@ and shared resources are shut down only after the GUI closes.
 
 ## Decision
 
-OpenData version 3.0.0 and later requires **Java 24 or later**. Development may
-use a later supported JDK; the current development JDK is Java 26 and the current
-development IDE is Apache NetBeans 31.
+OpenData version 3.0.0 and later requires **Java 24 or later** for the full
+application build because `opendata-core` uses JavaFX. Development may use a
+later supported JDK; the current development JDK is Java 26 and the current
+development IDE is Apache NetBeans 31. Older JDKs may still be used for limited
+compilation checks of non-JavaFX modules.
 
 Retain JavaFX 26.x for the GUI. GitHub build and release workflows use Java 24
 so CI verifies the actual minimum supported runtime rather than the developer's

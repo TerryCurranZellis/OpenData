@@ -116,7 +116,7 @@
                                     </requireMavenVersion>
                                     <requireJavaVersion>
                                         <version>[24,)</version>
-                                        <message>OpenData requires Java 24 or later.</message>
+                                        <message>Full OpenData builds require Java 24 or later because opendata-core uses JavaFX.</message>
                                     </requireJavaVersion>
                                 </rules>
                             </configuration>

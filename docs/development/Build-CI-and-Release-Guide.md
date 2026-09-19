@@ -12,9 +12,11 @@
 
 ## Build environment
 
-The POM enforces Maven 3.9 or later and Java 24 or later. Maven compilation uses
+The full reactor build enforces Maven 3.9 or later and Java 24 or later because
+`opendata-core` packages the JavaFX application. Maven compilation uses
 `release=24`. The current developer workstation baseline is JDK 26 with Apache
-NetBeans 31, but release verification must still include JDK 24.
+NetBeans 31, but release verification must still include JDK 24. Older JDKs may
+still be used for limited compilation checks of non-JavaFX modules.
 
 ## Local build stages
 
