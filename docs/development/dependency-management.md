@@ -21,12 +21,12 @@ notices when the dependency set changes.
 - `opendata-common` may depend on `opendata-api` but not on `opendata-core`.
 - `opendata-plugins` may depend on `opendata-api` and `opendata-common` only,
   plus required Java/external libraries.
-- `opendata-core` may depend on `opendata-api`, `opendata-common`, and
-  `opendata-plugins`.
+- `opendata-core` may depend on `opendata-api` and `opendata-common` only.
 
 Keep shared contracts in `opendata-api`, reusable implementation helpers in
 `opendata-common`, bundled provider code in `opendata-plugins`, and
-application/runtime orchestration in `opendata-core`.
+application/runtime orchestration, registry, and execution infrastructure in
+`opendata-core`.
 
 ## Current runtime dependencies
 
