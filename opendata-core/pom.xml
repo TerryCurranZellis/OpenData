@@ -69,22 +69,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.5.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.towermarsh</groupId>
-            <artifactId>opendata-plugin-ofgem</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.towermarsh</groupId>
-            <artifactId>opendata-plugin-openmeteo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.towermarsh</groupId>
-            <artifactId>opendata-plugin-octopus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.towermarsh</groupId>
-            <artifactId>opendata-plugin-octopus-adjustment</artifactId>
-        </dependency>
         <!-- Java fx -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -166,6 +150,21 @@
                     <artifactId>opendata-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opendata-plugin-ofgem</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opendata-plugin-openmeteo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opendata-plugin-octopus</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
