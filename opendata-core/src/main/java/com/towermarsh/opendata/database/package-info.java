@@ -12,7 +12,6 @@
  * <li>{@link DatabaseHealthCheck} &mdash; Performs a lightweight SQL Server identity and database check.</li>
  * <li>{@link SqlServerRepository} &mdash; SQL Server implementation of the application database repository.</li>
  * <li>{@link SQLServerResource} &mdash; Singleton SQL Server resource backed by Apache Commons DBCP.</li>
- * <li>{@link UnavailableDatabaseResourceManager} &mdash; Dry-run marker resource that rejects persistent writes.</li>
  * </ul>
  *
  * <h2>Records</h2>

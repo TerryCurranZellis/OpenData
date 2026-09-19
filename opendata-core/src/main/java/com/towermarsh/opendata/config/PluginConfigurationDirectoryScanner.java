@@ -19,12 +19,12 @@ import java.util.Objects;
  *
  * <p>
  * The deployment-style folder {@code config/plugins} is checked first. The
- * development source-tree fallbacks
- * {@code opendata-plugins/src/main/resources/config/plugins},
- * {@code src/main/resources/config/plugins}, and the sibling-module equivalent
- * are also checked so the same GUI operation works while OpenData is being run
- * directly from a development checkout. The classpath index file is
- * deliberately ignored: GUI registration discovers complete
+ * development source-tree fallbacks include the local
+ * {@code src/main/resources/config/plugins} directory plus
+ * {@code opendata-plugins/<module>/src/main/resources/config/plugins} beneath the
+ * working directory and its parent so the same GUI operation works while
+ * OpenData is being run directly from a development checkout. The classpath
+ * index file is deliberately ignored: GUI registration discovers complete
  * {@code *.properties} definitions directly.</p>
  *
  * @author Terry Curran
@@ -112,17 +112,33 @@ public final class PluginConfigurationDirectoryScanner {
                 .toAbsolutePath().normalize();
         final List<Path> result = new ArrayList<>();
         result.add(workingDirectory.resolve("config").resolve("plugins"));
-        result.add(workingDirectory.resolve("opendata-plugins").resolve("src")
-                .resolve("main").resolve("resources").resolve("config")
-                .resolve("plugins"));
         result.add(workingDirectory.resolve("src").resolve("main").resolve("resources")
                 .resolve("config").resolve("plugins"));
+        addPluginSourceDirectories(result, workingDirectory.resolve("opendata-plugins"));
         final var parent = workingDirectory.getParent();
         if (parent != null) {
-            result.add(parent.resolve("opendata-plugins").resolve("src")
-                    .resolve("main").resolve("resources").resolve("config")
-                    .resolve("plugins"));
+            addPluginSourceDirectories(result, parent.resolve("opendata-plugins"));
         }
         return List.copyOf(result);
+    }
+
+    private static void addPluginSourceDirectories(
+            final List<Path> result,
+            final Path pluginsRoot) {
+        result.add(pluginsRoot.resolve("src").resolve("main").resolve("resources")
+                .resolve("config").resolve("plugins"));
+        if (!Files.isDirectory(pluginsRoot)) {
+            return;
+        }
+        try (var modules = Files.list(pluginsRoot)) {
+            modules.filter(Files::isDirectory)
+                    .map(path -> path.resolve("src").resolve("main")
+                    .resolve("resources").resolve("config").resolve("plugins"))
+                    .forEach(result::add);
+        } catch (IOException exception) {
+            throw new OpenDataConfigurationException(
+                    "Unable to inspect plugin source directories beneath: " + pluginsRoot,
+                    exception);
+        }
     }
 }
