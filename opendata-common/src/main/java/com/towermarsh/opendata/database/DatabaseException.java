@@ -18,7 +18,7 @@ public class DatabaseException extends RuntimeException {
      *
      * @param message the detail message
      */
-    public DatabaseException(final String message) {
+    public DatabaseException(String message) {
         super(message);
     }
 
@@ -30,8 +30,8 @@ public class DatabaseException extends RuntimeException {
      * @param cause the cause of this exception
      */
     public DatabaseException(
-            final String message,
-            final Throwable cause) {
+            String message,
+            Throwable cause) {
         super(message, cause);
     }
 }

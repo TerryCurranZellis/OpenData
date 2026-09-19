@@ -31,7 +31,7 @@ import com.towermarsh.opendata.exception.DownloadException;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class DirectHttpDownloadStrategy {
+public class DirectHttpDownloadStrategy {
 
     private final HttpClient httpClient;
 
@@ -41,7 +41,7 @@ public final class DirectHttpDownloadStrategy {
      * @param connectTimeout connection timeout
      */
     public DirectHttpDownloadStrategy(
-            final Duration connectTimeout) {
+            Duration connectTimeout) {
 
         Objects.requireNonNull(connectTimeout, "connectTimeout");
         this.httpClient = HttpClient.newBuilder()
@@ -61,20 +61,20 @@ public final class DirectHttpDownloadStrategy {
      * @throws com.towermarsh.opendata.exception.DownloadException
      */
     public ResolvedDownload download(
-            final URI requestedUri,
-            final Path destination,
-            final Map<String, String> headers,
-            final Duration requestTimeout) throws DownloadException {
+            URI requestedUri,
+            Path destination,
+            Map<String, String> headers,
+            Duration requestTimeout) throws DownloadException {
 
         Objects.requireNonNull(requestedUri, "requestedUri");
         Objects.requireNonNull(destination, "destination");
         Objects.requireNonNull(headers, "headers");
         Objects.requireNonNull(requestTimeout, "requestTimeout");
 
-        final var absoluteDestination =
+        var absoluteDestination =
                 destination.toAbsolutePath().normalize();
-        final var parent = absoluteDestination.getParent();
-        final var partFile =
+        var parent = absoluteDestination.getParent();
+        var partFile =
                 absoluteDestination.resolveSibling(
                         absoluteDestination.getFileName() + ".part");
 
@@ -84,14 +84,14 @@ public final class DirectHttpDownloadStrategy {
             }
             Files.deleteIfExists(partFile);
 
-            final var requestBuilder =
+            var requestBuilder =
                     HttpRequest.newBuilder(requestedUri)
                             .GET()
                             .timeout(requestTimeout);
 
             headers.forEach(requestBuilder::header);
 
-            final var response = httpClient.send(
+            var response = httpClient.send(
                     requestBuilder.build(),
                     HttpResponse.BodyHandlers.ofFile(partFile));
 
@@ -130,8 +130,8 @@ public final class DirectHttpDownloadStrategy {
     }
 
     private static void moveCompletedFile(
-            final Path partFile,
-            final Path destination) throws IOException {
+            Path partFile,
+            Path destination) throws IOException {
 
         try {
             Files.move(
@@ -147,7 +147,7 @@ public final class DirectHttpDownloadStrategy {
         }
     }
 
-    private static void deleteQuietly(final Path file) {
+    private static void deleteQuietly(Path file) {
         try {
             Files.deleteIfExists(file);
         } catch (IOException ignored) {

@@ -12,11 +12,9 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 
 import com.towermarsh.opendata.config.model.LinkDiscoveryDefinition;
 import com.towermarsh.opendata.exception.DownloadException;
-import java.util.function.Consumer;
 
 /**
  * Resolves a downloadable link from an already-downloaded HTML document.
@@ -28,7 +26,7 @@ import java.util.function.Consumer;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class HtmlLinkResolver {
+public class HtmlLinkResolver {
 
     /**
      * Resolves one matching link.
@@ -40,41 +38,38 @@ public final class HtmlLinkResolver {
      * @throws com.towermarsh.opendata.exception.DownloadException
      */
     public URI resolve(
-            final URI landingPageUri,
-            final String html,
-            final LinkDiscoveryDefinition definition) throws DownloadException {
+            URI landingPageUri,
+            String html,
+            LinkDiscoveryDefinition definition) throws DownloadException {
 
         Objects.requireNonNull(landingPageUri, "landingPageUri");
         Objects.requireNonNull(html, "html");
         Objects.requireNonNull(definition, "definition");
 
-        final var hrefPattern
+        var hrefPattern
                 = Pattern.compile(definition.hrefPattern());
-        final var textPattern
+        var textPattern
                 = definition.textPattern().isBlank()
                 ? null
                 : Pattern.compile(definition.textPattern());
 
-        final List<URI> matches = new ArrayList<>();
-        final var document
+        List<URI> matches = new ArrayList<>();
+        var document
                 = Jsoup.parse(html, landingPageUri.toString());
 
-        document.select(definition.cssSelector()).forEach(new Consumer<Element>() {
-            @Override
-            public void accept(Element element) {
-                final var href = element.attr("href").trim();
-                if (!(href.isEmpty()
-                        || !hrefPattern.matcher(href).matches())) {
-                    final String linkText = element.text().trim();
-                    if (!(textPattern != null
-                            && !textPattern.matcher(linkText).matches())) {
-                        final var absolute = element.absUrl("href");
-                        final URI resolved = absolute.isBlank()
-                                ? landingPageUri.resolve(href)
-                                : URI.create(absolute);
+        document.select(definition.cssSelector()).forEach((var element) -> {
+            var href = element.attr("href").trim();
+            if (!(href.isEmpty()
+                    || !hrefPattern.matcher(href).matches())) {
+                var linkText = element.text().trim();
+                if (!(textPattern != null
+                        && !textPattern.matcher(linkText).matches())) {
+                    var absolute = element.absUrl("href");
+                    var resolved = absolute.isBlank()
+                            ? landingPageUri.resolve(href)
+                            : URI.create(absolute);
 
-                        matches.add(resolved);
-                    }
+                    matches.add(resolved);
                 }
             }
         });

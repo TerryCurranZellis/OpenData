@@ -11,7 +11,7 @@ package com.towermarsh.opendata.database;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class DatabaseAccessException extends DatabaseException {
+public class DatabaseAccessException extends DatabaseException {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,7 @@ public final class DatabaseAccessException extends DatabaseException {
      * @param message the detail message
      *
      */
-    public DatabaseAccessException(final String message) {
+    public DatabaseAccessException(String message) {
         super(message);
     }
 
@@ -32,7 +32,7 @@ public final class DatabaseAccessException extends DatabaseException {
      * @param cause the cause of this exception
      *
      */
-    public DatabaseAccessException(final String message, final Throwable cause) {
+    public DatabaseAccessException(String message, Throwable cause) {
         super(message, cause);
     }
 }

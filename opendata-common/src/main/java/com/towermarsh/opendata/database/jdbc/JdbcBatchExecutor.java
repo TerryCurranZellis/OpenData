@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.database.jdbc;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
@@ -17,7 +16,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class JdbcBatchExecutor {
+public class JdbcBatchExecutor {
 
     private JdbcBatchExecutor() {
         // Utility class.
@@ -36,11 +35,11 @@ public final class JdbcBatchExecutor {
      * @throws SQLException when statement execution fails
      */
     public static <T> int execute(
-            final Connection connection,
-            final String sql,
-            final Iterable<T> records,
-            final int batchSize,
-            final JdbcStatementBinder<T> binder) throws SQLException {
+            Connection connection,
+            String sql,
+            Iterable<T> records,
+            int batchSize,
+            JdbcStatementBinder<T> binder) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         if (sql == null || sql.isBlank()) {
             throw new IllegalArgumentException("sql must not be blank");
@@ -70,7 +69,7 @@ public final class JdbcBatchExecutor {
         }
     }
 
-    private static int count(final int[] results) throws SQLException {
+    private static int count(int[] results) throws SQLException {
         var affected = 0;
         for (var result : results) {
             if (result == Statement.EXECUTE_FAILED) {

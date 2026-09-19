@@ -42,7 +42,7 @@ public interface DatabaseResourceManager extends AutoCloseable {
      * @param connection connection to close
      *
      */
-    default void close(final Connection connection) {
+    default void close(Connection connection) {
         closeQuietly(connection);
     }
 
@@ -53,7 +53,7 @@ public interface DatabaseResourceManager extends AutoCloseable {
      * @param statement statement to close
      *
      */
-    default void close(final PreparedStatement statement) {
+    default void close(PreparedStatement statement) {
         closeQuietly(statement);
     }
 
@@ -64,7 +64,7 @@ public interface DatabaseResourceManager extends AutoCloseable {
      * @param resultSet result set to close
      *
      */
-    default void close(final ResultSet resultSet) {
+    default void close(ResultSet resultSet) {
         closeQuietly(resultSet);
     }
 
@@ -75,7 +75,7 @@ public interface DatabaseResourceManager extends AutoCloseable {
      * @param resource resource to close
      *
      */
-    private static void closeQuietly(final AutoCloseable resource) {
+    private static void closeQuietly(AutoCloseable resource) {
         if (resource == null) {
             return;
         }

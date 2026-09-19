@@ -44,7 +44,7 @@ public record JdbcUpsertResult(long inserted, long updated) {
      * @param other result to combine
      * @return combined result
      */
-    public JdbcUpsertResult plus(final JdbcUpsertResult other) {
+    public JdbcUpsertResult plus(JdbcUpsertResult other) {
         return new JdbcUpsertResult(
                 Math.addExact(inserted, other.inserted),
                 Math.addExact(updated, other.updated));

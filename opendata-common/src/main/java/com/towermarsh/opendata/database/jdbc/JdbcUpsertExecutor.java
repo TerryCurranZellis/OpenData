@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class JdbcUpsertExecutor {
+public class JdbcUpsertExecutor {
 
     private JdbcUpsertExecutor() {
         // Utility class.
@@ -34,10 +34,10 @@ public final class JdbcUpsertExecutor {
      * @throws SQLException when persistence fails
      */
     public static <T, C> JdbcUpsertResult execute(
-            final Connection connection,
-            final Iterable<T> records,
-            final C context,
-            final JdbcUpsertAdapter<T, C> adapter) throws SQLException {
+            Connection connection,
+            Iterable<T> records,
+            C context,
+            JdbcUpsertAdapter<T, C> adapter) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         Objects.requireNonNull(records, "records");
         Objects.requireNonNull(context, "context");

@@ -70,7 +70,7 @@ public record PluginDefinition(
      * @param name endpoint name
      * @return matching endpoint definition
      */
-    public PluginEndpointDefinition requireEndpoint(final String name) {
+    public PluginEndpointDefinition requireEndpoint(String name) {
         return endpoints.stream()
                 .filter(endpoint -> endpoint.name().equalsIgnoreCase(name))
                 .findFirst()
@@ -84,7 +84,7 @@ public record PluginDefinition(
      * @param name property name
      * @return matching property definition when present
      */
-    public Optional<PluginPropertyDefinition> findProperty(final String name) {
+    public Optional<PluginPropertyDefinition> findProperty(String name) {
         return Optional.ofNullable(properties.get(name.toLowerCase(java.util.Locale.ROOT)));
     }
 
@@ -94,7 +94,7 @@ public record PluginDefinition(
      * @param name property name
      * @return property value
      */
-    public String requireProperty(final String name) {
+    public String requireProperty(String name) {
         return findProperty(name)
                 .map(PluginPropertyDefinition::value)
                 .filter(value -> !value.isBlank())

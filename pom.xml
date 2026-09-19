@@ -35,10 +35,10 @@
     </properties>
 
     <modules>
+        <module>opendata-core</module>
         <module>opendata-api</module>
         <module>opendata-common</module>
         <module>opendata-plugins</module>
-        <module>opendata-core</module>
     </modules>
 
     <dependencyManagement>

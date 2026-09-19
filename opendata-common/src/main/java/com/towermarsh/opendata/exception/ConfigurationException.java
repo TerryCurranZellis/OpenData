@@ -12,7 +12,7 @@ package com.towermarsh.opendata.exception;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class ConfigurationException extends RuntimeException {
+public class ConfigurationException extends RuntimeException {
 
     /**
      * Creates a new configuration exception.
@@ -20,7 +20,7 @@ public final class ConfigurationException extends RuntimeException {
      * @param message the detail message
      *
      */
-    public ConfigurationException(final String message) {
+    public ConfigurationException(String message) {
         super(message);
     }
 
@@ -31,7 +31,7 @@ public final class ConfigurationException extends RuntimeException {
      * @param cause the cause of this exception
      *
      */
-    public ConfigurationException(final String message, final Throwable cause) {
+    public ConfigurationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

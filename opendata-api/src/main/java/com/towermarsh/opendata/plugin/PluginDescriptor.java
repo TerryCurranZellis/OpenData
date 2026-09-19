@@ -51,11 +51,11 @@ public record PluginDescriptor(
      * @return trimmed text value
      */
     private static String requireText(
-            final String value,
-            final String fieldName) {
+            String value,
+            String fieldName) {
 
         Objects.requireNonNull(value, fieldName);
-        final String result = value.trim();
+        String result = value.trim();
         if (result.isEmpty()) {
             throw new IllegalArgumentException(
                     fieldName + " must not be blank.");

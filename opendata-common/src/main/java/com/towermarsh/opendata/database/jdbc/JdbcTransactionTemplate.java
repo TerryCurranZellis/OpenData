@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class JdbcTransactionTemplate {
+public class JdbcTransactionTemplate {
 
     private static final JdbcConnectionCleanup NO_CLEANUP = connection -> {
         // No connection-scoped state to remove.
@@ -30,7 +30,7 @@ public final class JdbcTransactionTemplate {
      *
      * @param database database resource manager
      */
-    public JdbcTransactionTemplate(final DatabaseResourceManager database) {
+    public JdbcTransactionTemplate(DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }
 
@@ -43,8 +43,8 @@ public final class JdbcTransactionTemplate {
      * @return transaction result
      */
     public <T> T execute(
-            final String failureMessage,
-            final JdbcTransaction<T> transaction) {
+            String failureMessage,
+            JdbcTransaction<T> transaction) {
         return execute(failureMessage, transaction, NO_CLEANUP);
     }
 
@@ -59,9 +59,9 @@ public final class JdbcTransactionTemplate {
      * @return transaction result
      */
     public <T> T execute(
-            final String failureMessage,
-            final JdbcTransaction<T> transaction,
-            final JdbcConnectionCleanup cleanup) {
+            String failureMessage,
+            JdbcTransaction<T> transaction,
+            JdbcConnectionCleanup cleanup) {
         Validation.requireArguments(failureMessage, transaction, cleanup);
         try (var connection = database.getConnection()) {
             return execute(connection, transaction, cleanup);
@@ -74,14 +74,14 @@ public final class JdbcTransactionTemplate {
 
     @SuppressWarnings("ThrowFromFinallyBlock")
     private static <T> T execute(
-            final Connection connection,
-            final JdbcTransaction<T> transaction,
-            final JdbcConnectionCleanup cleanup) throws Exception {
-        final boolean originalAutoCommit = connection.getAutoCommit();
+            Connection connection,
+            JdbcTransaction<T> transaction,
+            JdbcConnectionCleanup cleanup) throws Exception {
+        var originalAutoCommit = connection.getAutoCommit();
         connection.setAutoCommit(false);
         Exception primaryFailure = null;
         try {
-            final T result = transaction.execute(connection);
+            T result = transaction.execute(connection);
             connection.commit();
             return result;
         } catch (Exception exception) {
@@ -89,8 +89,7 @@ public final class JdbcTransactionTemplate {
             rollback(connection, exception);
             throw exception;
         } finally {
-            final SQLException cleanupFailure
-                    = cleanup(connection, cleanup, originalAutoCommit);
+            SQLException cleanupFailure = cleanup(connection, cleanup, originalAutoCommit);
             if (cleanupFailure != null) {
                 if (primaryFailure == null) {
                     throw cleanupFailure;
@@ -101,8 +100,8 @@ public final class JdbcTransactionTemplate {
     }
 
     private static void rollback(
-            final Connection connection,
-            final Exception originalFailure) {
+            Connection connection,
+            Exception originalFailure) {
         try {
             connection.rollback();
         } catch (SQLException rollbackFailure) {
@@ -111,9 +110,9 @@ public final class JdbcTransactionTemplate {
     }
 
     private static SQLException cleanup(
-            final Connection connection,
-            final JdbcConnectionCleanup cleanup,
-            final boolean originalAutoCommit) {
+            Connection connection,
+            JdbcConnectionCleanup cleanup,
+            boolean originalAutoCommit) {
         SQLException failure = null;
         try {
             cleanup.cleanup(connection);
@@ -138,9 +137,9 @@ public final class JdbcTransactionTemplate {
         }
 
         private static void requireArguments(
-                final String failureMessage,
-                final JdbcTransaction<?> transaction,
-                final JdbcConnectionCleanup cleanup) {
+                String failureMessage,
+                JdbcTransaction<?> transaction,
+                JdbcConnectionCleanup cleanup) {
             if (failureMessage == null || failureMessage.isBlank()) {
                 throw new IllegalArgumentException("failureMessage must not be blank");
             }

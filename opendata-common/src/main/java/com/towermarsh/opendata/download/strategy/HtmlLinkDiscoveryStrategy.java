@@ -25,7 +25,7 @@ import com.towermarsh.opendata.exception.DownloadException;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class HtmlLinkDiscoveryStrategy {
+public class HtmlLinkDiscoveryStrategy {
 
     private final HttpClient httpClient;
     private final HtmlLinkResolver linkResolver;
@@ -37,7 +37,7 @@ public final class HtmlLinkDiscoveryStrategy {
      * @param connectTimeout HTTP connection timeout
      */
     public HtmlLinkDiscoveryStrategy(
-            final Duration connectTimeout) {
+            Duration connectTimeout) {
 
         Objects.requireNonNull(connectTimeout, "connectTimeout");
         this.httpClient = HttpClient.newBuilder()
@@ -61,17 +61,17 @@ public final class HtmlLinkDiscoveryStrategy {
      * @throws com.towermarsh.opendata.exception.DownloadException
      */
     public ResolvedDownload download(
-            final URI landingPageUri,
-            final Path destination,
-            final Map<String, String> headers,
-            final Duration requestTimeout,
-            final LinkDiscoveryDefinition discovery) throws DownloadException {
+            URI landingPageUri,
+            Path destination,
+            Map<String, String> headers,
+            Duration requestTimeout,
+            LinkDiscoveryDefinition discovery) throws DownloadException {
 
-        final var html = fetchHtml(
+        var html = fetchHtml(
                 landingPageUri,
                 headers,
                 requestTimeout);
-        final var resolvedUri = linkResolver.resolve(
+        var resolvedUri = linkResolver.resolve(
                 landingPageUri,
                 html,
                 discovery);
@@ -84,18 +84,18 @@ public final class HtmlLinkDiscoveryStrategy {
     }
 
     private String fetchHtml(
-            final URI uri,
-            final Map<String, String> headers,
-            final Duration timeout) throws DownloadException {
+            URI uri,
+            Map<String, String> headers,
+            Duration timeout) throws DownloadException {
 
-        final var builder
+        var builder
                 = HttpRequest.newBuilder(uri)
                         .GET()
                         .timeout(timeout);
         headers.forEach(builder::header);
 
         try {
-            final var response = httpClient.send(
+            var response = httpClient.send(
                     builder.build(),
                     HttpResponse.BodyHandlers.ofString());
 
