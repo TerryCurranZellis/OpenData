@@ -21,7 +21,7 @@ import java.util.Objects;
  * The deployment-style folder {@code config/plugins} is checked first. The
  * development source-tree fallbacks include the local
  * {@code src/main/resources/config/plugins} directory plus
- * {@code opendata-plugins/*/src/main/resources/config/plugins} beneath the
+ * {@code opendata-plugins/<module>/src/main/resources/config/plugins} beneath the
  * working directory and its parent so the same GUI operation works while
  * OpenData is being run directly from a development checkout. The classpath
  * index file is deliberately ignored: GUI registration discovers complete

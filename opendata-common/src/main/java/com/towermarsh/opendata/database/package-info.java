@@ -10,6 +10,7 @@
  * <ul>
  * <li>{@link DatabaseAccessException} &mdash; Wraps checked persistence failures with stable application-facing messages.</li>
  * <li>{@link DatabaseException} &mdash; Signals an irrecoverable database operation failure.</li>
+ * <li>{@link UnavailableDatabaseResourceManager} &mdash; Dry-run marker resource that rejects persistent writes.</li>
  * </ul>
  *
  * @author Terry Curran

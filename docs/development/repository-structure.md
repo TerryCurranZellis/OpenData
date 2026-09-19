@@ -15,8 +15,8 @@
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
 | `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable support code |
-| `opendata-plugins` | Bundled plugin registry infrastructure, packaged plugin definitions, and provider implementations |
-| `opendata-core` | Application entry points, runtime orchestration, GUI/CLI, and SQL Server resources |
+| `opendata-plugins` | Maven aggregator for bundled plugin modules such as `opendata-plugin-ofgem`, each with its own implementation code and packaged definition resources |
+| `opendata-core` | Application entry points, runtime orchestration, plugin registry services, GUI/CLI, and SQL Server resources |
 | `sql` | Ordered SQL Server installation, schemas, permissions and verification |
 | `docs` | Authoritative Markdown, PlantUML, manifests, examples and templates |
 | `config` | Documentation and code-quality configuration |
@@ -36,9 +36,8 @@ src/test/java
 
 Tests must live with the module that owns the production code they verify.
 `opendata-common` therefore owns the shared JDBC, validation, exception, and
-reusable support tests, `opendata-plugins` owns plugin registry/provider tests,
-and `opendata-core` keeps application, parser, GUI, and provider-integration
-tests.
+reusable support tests, `opendata-core` owns application and plugin-registry
+tests, and each `opendata-plugin-*` module owns its provider-specific tests.
 
 ## Java ownership
 
@@ -47,8 +46,8 @@ The split source tree keeps one logical package namespace below
 
 - `opendata-api`: `config.model`, `database`, `plugin`
 - `opendata-common`: `database`, `database.jdbc`, `download.strategy`, `exception`, `logging`, `util`, `validation`
-- `opendata-plugins`: `plugin` and provider packages below `plugin.<plugin-id>`
-- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, `gui`, `logging`, `model`, and `parser`
+- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, `gui`, `logging`, `model`, `parser`, and plugin-registry/orchestration classes in `plugin`
+- `opendata-plugin-*`: provider packages below `plugin.<plugin-id>`
 
 Provider-specific code remains below:
 

@@ -56,7 +56,7 @@ public final class OpenData {
     public static void main(String[] args) {
         var startedAt = Instant.now();
         var processor = new CommandLineArgumentsProcessor();
-        status = ExecutionStatus.NOT_STARTED;
+        var status = ExecutionStatus.NOT_STARTED;
         try {
             enableUTF8Console();
             LoggingManager.initialise(Path.of("logs"));

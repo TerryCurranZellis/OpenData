@@ -24,7 +24,7 @@ class ClasspathPluginRegistryTest {
                 new ClasspathPluginRegistry();
 
         assertEquals(
-                List.of("ofgem", "openmeteo", "octopus"),
+                List.of("octopus", "ofgem", "openmeteo"),
                 registry.list().stream()
                         .map(PluginDescriptor::id)
                         .toList());
