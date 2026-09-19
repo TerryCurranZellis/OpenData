@@ -25,7 +25,7 @@ import java.util.Properties;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class PropertiesFileConfigurationPropertiesSource
+public class PropertiesFileConfigurationPropertiesSource
         implements ConfigurationPropertiesSource {
 
     private final Path file;

@@ -12,7 +12,7 @@ import java.util.UUID;
 * @author Terry Curran
 * @version 1.0.0
 */
-public final class NoOpPluginRunAudit implements PluginRunAudit {
+public class NoOpPluginRunAudit implements PluginRunAudit {
 
     /**
      *

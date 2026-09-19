@@ -15,7 +15,7 @@ import com.towermarsh.opendata.exception.ConfigurationException;
  * @author Terry Curran
  * @version 2.1
  */
-public final class StandardConfigurationValidator implements ConfigurationValidator {
+public class StandardConfigurationValidator implements ConfigurationValidator {
 
     /**
      * {@inheritDoc}

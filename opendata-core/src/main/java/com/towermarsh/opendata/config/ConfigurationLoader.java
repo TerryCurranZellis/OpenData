@@ -31,7 +31,7 @@ import java.io.InputStreamReader;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class ConfigurationLoader {
+public class ConfigurationLoader {
 
     /**
      * Application resources file

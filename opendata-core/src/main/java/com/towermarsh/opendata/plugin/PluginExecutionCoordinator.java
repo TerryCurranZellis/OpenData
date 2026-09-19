@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 2.1
  */
-public final class PluginExecutionCoordinator {
+public class PluginExecutionCoordinator {
     private static final Logger LOGGER = Logger.getLogger(PluginExecutionCoordinator.class.getName());
 
     private final PluginFactory pluginFactory;

@@ -20,7 +20,7 @@ import java.util.UUID;
 * @author Terry Curran
 * @version 1.0.0
 */
-public final class JdbcPluginRunAudit implements PluginRunAudit {
+public class JdbcPluginRunAudit implements PluginRunAudit {
     private static final String INSERT_SQL = """
             INSERT INTO [core].[PluginRun]
                 ([RunId], [PluginId], [Status], [StartedAt], [ThreadName], [HostName])

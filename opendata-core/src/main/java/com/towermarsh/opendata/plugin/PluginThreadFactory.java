@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 * @author Terry Curran
 * @version 1.0.0
 */
-public final class PluginThreadFactory implements ThreadFactory {
+public class PluginThreadFactory implements ThreadFactory {
     private final AtomicInteger sequence = new AtomicInteger();
 
     /**

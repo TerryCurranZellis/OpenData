@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class JdbcConfigurationPropertiesSource
+public class JdbcConfigurationPropertiesSource
         implements ConfigurationPropertiesSource {
 
     private static final String SELECT_APPLICATION_SQL = """

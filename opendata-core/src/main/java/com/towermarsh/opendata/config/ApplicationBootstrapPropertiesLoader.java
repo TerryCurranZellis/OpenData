@@ -22,7 +22,7 @@ import java.util.Properties;
  * @author Terry Curran
  * @version 2.1
  */
-public final class ApplicationBootstrapPropertiesLoader {
+public class ApplicationBootstrapPropertiesLoader {
 
     private final Path filePath;
     private final ClassLoader classLoader;

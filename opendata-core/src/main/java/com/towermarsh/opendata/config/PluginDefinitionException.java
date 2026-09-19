@@ -12,7 +12,7 @@ package com.towermarsh.opendata.config;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class PluginDefinitionException extends RuntimeException {
+public class PluginDefinitionException extends RuntimeException {
 
     /**
      * Creates a new plugin definition exception.

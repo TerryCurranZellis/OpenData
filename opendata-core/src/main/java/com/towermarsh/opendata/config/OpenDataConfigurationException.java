@@ -12,7 +12,7 @@ package com.towermarsh.opendata.config;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class OpenDataConfigurationException extends RuntimeException {
+public class OpenDataConfigurationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

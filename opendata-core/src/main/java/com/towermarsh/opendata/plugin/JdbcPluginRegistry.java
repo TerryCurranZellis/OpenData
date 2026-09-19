@@ -27,7 +27,7 @@ import java.util.Optional;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class JdbcPluginRegistry implements PluginRegistry {
+public class JdbcPluginRegistry implements PluginRegistry {
 
     private static final String SELECT_ALL_SQL = """
             SELECT [plugin_id], [display_name], [description],

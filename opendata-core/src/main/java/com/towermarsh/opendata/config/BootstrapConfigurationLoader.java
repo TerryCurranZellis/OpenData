@@ -21,7 +21,7 @@ import com.towermarsh.opendata.config.model.BootstrapConfig;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class BootstrapConfigurationLoader {
+public class BootstrapConfigurationLoader {
 
     /**
      * location of the resource file

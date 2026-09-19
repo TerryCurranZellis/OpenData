@@ -30,7 +30,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.0.0
  */
-public final class PluginConfigurationDirectoryScanner {
+public class PluginConfigurationDirectoryScanner {
 
     private static final String INDEX_FILE = "index.properties";
 

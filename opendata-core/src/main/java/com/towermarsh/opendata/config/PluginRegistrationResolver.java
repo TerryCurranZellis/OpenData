@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.0.0
  */
-public final class PluginRegistrationResolver {
+public class PluginRegistrationResolver {
 
     private final ClassLoader classLoader;
 

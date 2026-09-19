@@ -11,7 +11,7 @@ package com.towermarsh.opendata.plugin;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class PluginRegistryException extends RuntimeException {
+public class PluginRegistryException extends RuntimeException {
 
     /**
      *

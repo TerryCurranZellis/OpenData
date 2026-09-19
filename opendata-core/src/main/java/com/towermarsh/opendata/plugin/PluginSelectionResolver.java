@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.0.0
  */
-public final class PluginSelectionResolver {
+public class PluginSelectionResolver {
 
     /**
      * Resolves an explicit plugin-id snapshot against the authoritative

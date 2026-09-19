@@ -32,7 +32,7 @@ import javax.crypto.Cipher;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class RsaConfigurationPasswordCipher implements ConfigurationPasswordCipher {
+public class RsaConfigurationPasswordCipher implements ConfigurationPasswordCipher {
 
     /** Prefix used to mark encrypted values. */
     public static final String ENCRYPTED_PREFIX = "{enc}";

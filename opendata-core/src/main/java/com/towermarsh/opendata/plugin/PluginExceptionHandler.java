@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class PluginExceptionHandler {
+public class PluginExceptionHandler {
 
     /** Executes a plugin and normalises any stage failure.
      * @param pluginId

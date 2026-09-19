@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 * @author Terry Curran
 * @version 1.0.0
 */
-public final class ReflectionPluginFactory implements PluginFactory {
+public class ReflectionPluginFactory implements PluginFactory {
 
     /**
      *

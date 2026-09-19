@@ -18,7 +18,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class PluginDefinitionValidator {
+public class PluginDefinitionValidator {
 
     // plugin id must start with a letter
     private static final Pattern PLUGIN_ID = Pattern.compile("[a-z][a-z0-9-]{1,99}");
