@@ -65,7 +65,23 @@
         </dependency>
         <dependency>
             <groupId>com.towermarsh</groupId>
-            <artifactId>opendata-plugins</artifactId>
+            <artifactId>opendata-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-plugin-ofgem</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-plugin-openmeteo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-plugin-octopus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-plugin-octopus-adjustment</artifactId>
         </dependency>
         <!-- Java fx -->
         <dependency>
@@ -140,10 +156,6 @@
             <artifactId>spotbugs-annotations</artifactId>
             <version>4.10.3</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-common</artifactId>
         </dependency>
     </dependencies>
     <build>
