@@ -14,8 +14,8 @@ This inventory reflects the current four-module reactor source tree.
 |---|---|---|
 | `opendata-api` | plugin contracts, plugin execution records, immutable plugin/configuration records, database resource interfaces | Implemented |
 | `opendata-common` | shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and HTML link resolution support | Implemented |
-| `opendata-plugins` | plugin registry/execution infrastructure, packaged plugin definitions, and bundled providers | Implemented |
-| `opendata-core` | application entry points, JavaFX GUI, CLI, bootstrap/configuration, downloads, parsers, and audit | Implemented |
+| `opendata-plugins` | packaged plugin definitions and bundled providers | Implemented |
+| `opendata-core` | application entry points, JavaFX GUI, CLI, bootstrap/configuration, plugin registry/execution infrastructure, downloads, parsers, and audit | Implemented |
 
 ## Functional inventory
 
@@ -30,5 +30,5 @@ This inventory reflects the current four-module reactor source tree.
 | Download/discovery | JDK HTTP, Jsoup discovery and strategies | Implemented across `opendata-core` and `opendata-common` |
 | Shared JDBC execution | transaction template, cleanup callback, batch executor and typed upsert executor | Implemented in `opendata-common` |
 | Connection pooling | DBCP-backed SQL Server resource and pool snapshot contracts | Implemented across `opendata-core` and `opendata-api` |
-| Plugin registry | packaged catalogue, persistent registry, execution coordinator and reflection factory | Implemented across `opendata-plugins` and `opendata-core` |
+| Plugin registry | packaged catalogue, persistent registry, execution coordinator and reflection factory | Implemented in `opendata-core` |
 | Bundled plugins | Ofgem, OpenMeteo, Octopus, Octopus Adjustment | Implemented in `opendata-plugins` |

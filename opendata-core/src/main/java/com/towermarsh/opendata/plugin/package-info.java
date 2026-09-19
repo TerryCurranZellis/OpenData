@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Bundled plugin registry, execution, auditing, factory, and provider
- * implementations.
+ * Provider-neutral plugin registry, execution, auditing, and factory support.
  *
  * <h2>Classes</h2>
  * <ul>
