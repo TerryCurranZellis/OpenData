@@ -11,11 +11,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.towermarsh.opendata.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
-import com.towermarsh.opendata.plugin.PluginRegistry;
-import com.towermarsh.opendata.plugin.PluginRunStatus;
+import com.towermarsh.opendata.core.plugin.PluginRegistry;
+import com.towermarsh.opendata.core.plugin.PluginRunStatus;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -12,7 +12,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.towermarsh.opendata.config.model.BootstrapConfig;
+import com.towermarsh.opendata.core.config.model.BootstrapConfig;
 
 /**
  * @author Terry Curran

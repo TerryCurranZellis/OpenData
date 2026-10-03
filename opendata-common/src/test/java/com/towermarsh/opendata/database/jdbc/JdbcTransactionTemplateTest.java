@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.database.jdbc;
+package com.towermarsh.opendata.common.database.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.towermarsh.opendata.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import java.sql.Connection;
 import java.sql.SQLException;

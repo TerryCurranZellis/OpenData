@@ -1,0 +1,257 @@
+
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package com.towermarsh.opendata.core.database;
+
+import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.DatabaseException;
+import com.towermarsh.opendata.config.DatabasePoolConfiguration;
+import com.towermarsh.opendata.database.DatabasePoolSnapshot;
+import com.towermarsh.opendata.database.DatabaseResourceManager;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.dbcp2.ConnectionFactory;
+import org.apache.commons.dbcp2.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDriver;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+/**
+ * Singleton SQL Server resource backed by Apache Commons DBCP.
+ *
+ * <p>
+ * The pool is thread-safe. Each repository obtains a connection for its own
+ * transaction and returns it with try-with-resources. A JDBC connection is
+ * never shared between plugin threads.</p>
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
+public class SQLServerResource implements DatabaseResourceManager {
+
+    private static final Logger LOGGER = Logger.getLogger(SQLServerResource.class.getName());
+    
+    /**
+     * pool settings
+     */
+    private static final String POOL_URL_PREFIX = "jdbc:apache:commons:dbcp:";
+    private static final Object LOCK = new Object();
+    private static SQLServerResource instance;
+
+    private final String poolName;
+    private final String poolUrl;
+    private final GenericObjectPool<PoolableConnection> connectionPool;
+    private final AtomicBoolean closed = new AtomicBoolean(false);
+
+    /**
+     * Creates and prepares the singleton SQL Server resource.
+     *
+     * @param configuration database pool configuration
+     */
+    private SQLServerResource(DatabasePoolConfiguration configuration) {
+        Objects.requireNonNull(configuration, "configuration");
+        poolName = configuration.poolName();
+        poolUrl = POOL_URL_PREFIX + poolName;
+        try {
+            Class.forName(configuration.driverClass());
+            Class.forName("org.apache.commons.dbcp2.PoolingDriver");
+
+            ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
+                    configuration.jdbcUrl(), configuration.user(), configuration.password());
+            var poolableFactory = new PoolableConnectionFactory(connectionFactory, null);
+            poolableFactory.setValidationQuery(configuration.validationQuery());
+            poolableFactory.setValidationQueryTimeout(configuration.maxWait());
+
+            var poolConfig = new GenericObjectPoolConfig<PoolableConnection>();
+            poolConfig.setMaxTotal(configuration.maxTotal());
+            poolConfig.setMaxIdle(configuration.maxIdle());
+            poolConfig.setMinIdle(configuration.minIdle());
+            poolConfig.setMaxWait(configuration.maxWait());
+            poolConfig.setTestOnBorrow(true);
+            poolConfig.setTestWhileIdle(true);
+            poolConfig.setBlockWhenExhausted(true);
+
+            connectionPool = new GenericObjectPool<>(poolableFactory, poolConfig);
+            poolableFactory.setPool(connectionPool);
+            var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
+            poolingDriver.registerPool(poolName, connectionPool);
+            connectionPool.preparePool();
+            LOGGER.log(Level.INFO,
+                    "SQL Server pool {0} initialised; maxTotal={1}, minIdle={2}",
+                    new Object[]{poolName, configuration.maxTotal(), configuration.minIdle()});
+        } catch (ClassNotFoundException | SQLException exception) {
+            throw new DatabaseAccessException("Unable to initialise SQL Server connection pool.", exception);
+        } catch (Exception exception) {
+            throw new DatabaseAccessException("Unable to prepare SQL Server connection pool.", exception);
+        }
+    }
+
+    /**
+     * Initialises the singleton SQL Server resource when required.
+     *
+     * @param configuration database pool configuration
+     * @return initialised singleton resource
+     */
+    public static SQLServerResource initialise(DatabasePoolConfiguration configuration) {
+        synchronized (LOCK) {
+            if (instance != null && !instance.closed.get()) {
+                return instance;
+            }
+            instance = new SQLServerResource(configuration);
+            return instance;
+        }
+    }
+
+    /**
+     * Returns the already-initialised singleton SQL Server resource.
+     *
+     * @return singleton SQL Server resource
+     */
+    public static SQLServerResource getInstance() {
+        synchronized (LOCK) {
+            if (instance == null || instance.closed.get()) {
+                throw new IllegalStateException("SQLServerResource has not been initialised.");
+            }
+            return instance;
+        }
+    }
+
+    /**
+     * Borrows a connection from the registered DBCP pool.
+     *
+     * @return pooled SQL Server connection
+     * @throws DatabaseException if the pool is closed or a connection cannot be
+     * obtained
+     */
+    @Override
+    public Connection getConnection() throws DatabaseException {
+        if (closed.get()) {
+            throw new DatabaseException("SQL Server connection pool is closed.");
+        }
+        try {
+            return DriverManager.getConnection(poolUrl);
+        } catch (SQLException exception) {
+            throw new DatabaseException("Unable to initialise the SQL Server connection pool.", exception);
+        }
+    }
+
+    /**
+     * Closes a borrowed JDBC connection.
+     *
+     * @param connection connection to close
+     */
+    @Override
+    public void close(Connection connection) {
+        closeAndLog(connection, "connection");
+    }
+
+    /**
+     * Closes a prepared statement.
+     *
+     * @param statement statement to close
+     */
+    @Override
+    public void close(PreparedStatement statement) {
+        closeAndLog(statement, "prepared statement");
+    }
+
+    /**
+     * Closes a result set.
+     *
+     * @param resultSet result set to close
+     */
+    @Override
+    public void close(ResultSet resultSet) {
+        closeAndLog(resultSet, "result set");
+    }
+
+    /**
+     * Closes the registered SQL Server connection pool.
+     */
+    @Override
+    public void close() {
+        if (!closed.compareAndSet(false, true)) {
+            return;
+        }
+        try {
+            var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
+            poolingDriver.closePool(poolName);
+            LOGGER.log(Level.INFO, "SQL Server pool {0} closed.", poolName);
+        } catch (SQLException exception) {
+            throw new DatabaseException("Unable to close SQL Server pool " + poolName, exception);
+        } finally {
+            clearInstance();
+        }
+    }
+
+    /**
+     * Clears the singleton instance in a thread-safe manner. This method uses
+     * synchronization on the private lock to safely write to the static field.
+     */
+    private static void clearInstance() {
+        synchronized (LOCK) {
+            instance = null;
+        }
+    }
+
+    /**
+     * Returns the number of active pooled connections.
+     *
+     * @return active connection count
+     */
+    public int activeConnections() {
+        return connectionPool.getNumActive();
+    }
+
+    /**
+     * Returns the number of idle pooled connections.
+     *
+     * @return idle connection count
+     */
+    public int idleConnections() {
+        return connectionPool.getNumIdle();
+    }
+
+    /**
+     * Gets the number of active, and idle connections in the pool
+     *
+     * @return pool snapshot with connection counts and state
+     */
+    @Override
+    public DatabasePoolSnapshot getPoolSnapshot() {
+        return new DatabasePoolSnapshot(
+                activeConnections(),
+                idleConnections(),
+                connectionPool.getMaxTotal(),
+                closed.get());
+    }
+
+    /**
+     * Closes a JDBC resource and reports close failures consistently.
+     *
+     * @param resource resource to close
+     * @param description resource description for error reporting
+     */
+    private static void closeAndLog(AutoCloseable resource, String description) {
+        if (resource == null) {
+            return;
+        }
+        try {
+            resource.close();
+        } catch (Exception exception) {
+            throw new DatabaseException("Unable to close JDBC " + description + '.', exception);
+        }
+    }
+}

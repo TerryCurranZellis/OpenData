@@ -7,7 +7,7 @@ package com.towermarsh.opendata.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.towermarsh.opendata.plugin.PluginRunStatus;
+import com.towermarsh.opendata.core.plugin.PluginRunStatus;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.plugin.PluginExecutionSummary;
+import com.towermarsh.opendata.core.plugin.PluginExecutionSummary;
 import java.util.List;
 import java.util.Objects;
 import javafx.geometry.Insets;

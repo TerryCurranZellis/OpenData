@@ -6,10 +6,10 @@
 package com.towermarsh.opendata.config;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
-import com.towermarsh.opendata.plugin.ClasspathPluginRegistry;
+import com.towermarsh.opendata.core.plugin.ClasspathPluginRegistry;
 import com.towermarsh.opendata.plugin.OpenDataPlugin;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
-import com.towermarsh.opendata.plugin.PluginRegistryException;
+import com.towermarsh.opendata.core.plugin.PluginRegistryException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;

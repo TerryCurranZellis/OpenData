@@ -7,8 +7,8 @@ package com.towermarsh.opendata.gui;
 
 import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
 import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
-import com.towermarsh.opendata.database.SQLServerResource;
-import com.towermarsh.opendata.plugin.JdbcPluginRegistry;
+import com.towermarsh.opendata.core.database.SQLServerResource;
+import com.towermarsh.opendata.core.plugin.JdbcPluginRegistry;
 import java.util.List;
 import java.util.Map;
 

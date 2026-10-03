@@ -7,8 +7,8 @@ package com.towermarsh.opendata.gui;
 
 import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
 
-import com.towermarsh.opendata.logging.LoggingManager;
-import com.towermarsh.opendata.plugin.PluginExecutionSummary;
+import com.towermarsh.opendata.core.logging.LoggingManager;
+import com.towermarsh.opendata.core.plugin.PluginExecutionSummary;
 import com.towermarsh.opendata.app.ApplicationInfo;
 import java.util.List;
 import java.util.Objects;

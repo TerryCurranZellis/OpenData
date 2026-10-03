@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import com.towermarsh.opendata.config.model.BootstrapConfig;
+import com.towermarsh.opendata.core.config.model.BootstrapConfig;
 
 /**
  * Loads application bootstrap configuration from the classpath.

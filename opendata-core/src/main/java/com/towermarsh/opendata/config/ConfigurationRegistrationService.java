@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
-import com.towermarsh.opendata.plugin.JdbcPluginRegistry;
+import com.towermarsh.opendata.core.plugin.JdbcPluginRegistry;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;

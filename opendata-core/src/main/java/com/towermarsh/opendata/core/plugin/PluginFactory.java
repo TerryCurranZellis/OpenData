@@ -1,0 +1,28 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package com.towermarsh.opendata.core.plugin;
+
+import com.towermarsh.opendata.plugin.OpenDataPlugin;
+
+/**
+ * Creates a fresh plugin instance for one task.
+ *
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
+@FunctionalInterface
+public interface PluginFactory {
+
+    /**
+     * Creates a fresh plugin instance for one resolved plugin definition.
+     *
+     * @param plugin resolved plugin metadata and definition
+     * @return plugin instance ready for execution
+     *
+     */
+    OpenDataPlugin create(ResolvedPlugin plugin);
+}

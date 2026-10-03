@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
-import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
+import com.towermarsh.opendata.common.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;

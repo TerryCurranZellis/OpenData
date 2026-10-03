@@ -1,0 +1,40 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package com.towermarsh.opendata.core.database.audit;
+
+/**
+ * Persisted lifecycle status for one dataset ingestion run.
+  *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
+public enum IngestionStatus {
+
+    /**
+     * Started access
+     */
+    STARTED,
+
+    /**
+     * Completed access
+     */
+    SUCCEEDED,
+
+    /**
+     * completed but not everything is accepted
+     */
+    SUCCEEDED_WITH_REJECTIONS,
+
+    /**
+     * failed completely
+     */
+    FAILED,
+
+    /**
+     * cancelled
+     */
+    CANCELLED
+}

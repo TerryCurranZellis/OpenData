@@ -7,8 +7,8 @@ package com.towermarsh.opendata.plugin.ofgem.load;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.database.jdbc.JdbcBatchExecutor;
-import com.towermarsh.opendata.database.jdbc.JdbcTransactionTemplate;
+import com.towermarsh.opendata.common.database.jdbc.JdbcBatchExecutor;
+import com.towermarsh.opendata.common.database.jdbc.JdbcTransactionTemplate;
 import com.towermarsh.opendata.download.strategy.ResolvedDownload;
 import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapLevel;
 import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapPeriod;

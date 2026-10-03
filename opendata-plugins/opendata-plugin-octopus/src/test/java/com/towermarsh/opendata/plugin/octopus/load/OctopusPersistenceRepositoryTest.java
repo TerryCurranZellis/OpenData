@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.towermarsh.opendata.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;

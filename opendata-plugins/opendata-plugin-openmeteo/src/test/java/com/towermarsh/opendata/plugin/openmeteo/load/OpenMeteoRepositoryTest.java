@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import com.towermarsh.opendata.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;

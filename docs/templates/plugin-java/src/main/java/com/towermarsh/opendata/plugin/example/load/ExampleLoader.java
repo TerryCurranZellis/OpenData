@@ -6,8 +6,8 @@
 package com.towermarsh.opendata.plugin.example.load;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.database.jdbc.JdbcBatchExecutor;
-import com.towermarsh.opendata.database.jdbc.JdbcTransactionTemplate;
+import com.towermarsh.opendata.common.database.jdbc.JdbcBatchExecutor;
+import com.towermarsh.opendata.common.database.jdbc.JdbcTransactionTemplate;
 import com.towermarsh.opendata.plugin.example.transform.model.ExampleRecord;
 import java.util.List;
 import java.util.Objects;

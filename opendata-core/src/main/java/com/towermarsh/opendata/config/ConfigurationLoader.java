@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import com.towermarsh.opendata.cli.CommandLineArguments;
-import com.towermarsh.opendata.config.model.BootstrapConfig;
+import com.towermarsh.opendata.core.config.model.BootstrapConfig;
 import com.towermarsh.opendata.exception.ConfigurationException;
 import java.io.InputStreamReader;
 

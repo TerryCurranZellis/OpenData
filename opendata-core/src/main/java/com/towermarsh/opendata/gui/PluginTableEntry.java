@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.plugin.PluginRunStatus;
+import com.towermarsh.opendata.core.plugin.PluginRunStatus;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;

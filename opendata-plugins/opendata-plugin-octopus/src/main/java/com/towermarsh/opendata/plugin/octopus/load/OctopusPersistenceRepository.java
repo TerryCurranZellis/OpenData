@@ -6,8 +6,8 @@
 package com.towermarsh.opendata.plugin.octopus.load;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.database.jdbc.JdbcTransactionTemplate;
-import com.towermarsh.opendata.database.jdbc.JdbcUpsertExecutor;
+import com.towermarsh.opendata.common.database.jdbc.JdbcTransactionTemplate;
+import com.towermarsh.opendata.common.database.jdbc.JdbcUpsertExecutor;
 import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
 import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
 import java.sql.Connection;

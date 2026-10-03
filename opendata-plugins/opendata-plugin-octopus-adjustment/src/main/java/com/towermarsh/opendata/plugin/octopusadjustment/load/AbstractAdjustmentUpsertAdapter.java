@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.plugin.octopusadjustment.load;
 
-import com.towermarsh.opendata.database.jdbc.JdbcUpsertAdapter;
+import com.towermarsh.opendata.common.database.jdbc.JdbcUpsertAdapter;
 import com.towermarsh.opendata.validation.ValidationRules;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

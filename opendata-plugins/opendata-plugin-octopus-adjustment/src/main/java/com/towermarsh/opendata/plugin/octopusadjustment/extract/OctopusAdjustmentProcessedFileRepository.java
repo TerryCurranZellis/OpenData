@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.plugin.octopusadjustment.extract;
 
-import com.towermarsh.opendata.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import java.sql.SQLException;
 import java.util.HashSet;

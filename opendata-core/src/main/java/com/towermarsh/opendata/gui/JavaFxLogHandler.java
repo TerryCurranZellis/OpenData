@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.logging.ContextualLogFormatter;
+import com.towermarsh.opendata.core.logging.ContextualLogFormatter;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;

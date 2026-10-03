@@ -8,7 +8,7 @@ package com.towermarsh.opendata.gui;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.towermarsh.opendata.config.LoggingConfiguration;
-import com.towermarsh.opendata.logging.LoggingManager;
+import com.towermarsh.opendata.core.logging.LoggingManager;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

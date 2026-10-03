@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.etl;
 
-import com.towermarsh.opendata.database.DatabaseRepository;
+import com.towermarsh.opendata.core.database.DatabaseRepository;
 import com.towermarsh.opendata.exception.ImportException;
 import com.towermarsh.opendata.model.ImportResult;
 

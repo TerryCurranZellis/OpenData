@@ -6,8 +6,8 @@
 package com.towermarsh.opendata.plugin.openmeteo.load;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.database.jdbc.JdbcBatchExecutor;
-import com.towermarsh.opendata.database.jdbc.JdbcTransactionTemplate;
+import com.towermarsh.opendata.common.database.jdbc.JdbcBatchExecutor;
+import com.towermarsh.opendata.common.database.jdbc.JdbcTransactionTemplate;
 import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;
 import com.towermarsh.opendata.validation.SqlIdentifiers;

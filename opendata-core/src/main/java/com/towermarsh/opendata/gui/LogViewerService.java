@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.logging.LoggingManager;
+import com.towermarsh.opendata.core.logging.LoggingManager;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

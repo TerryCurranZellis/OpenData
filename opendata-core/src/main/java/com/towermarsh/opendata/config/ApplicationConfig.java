@@ -8,7 +8,7 @@ package com.towermarsh.opendata.config;
 import java.util.Map;
 import java.util.Objects;
 
-import com.towermarsh.opendata.config.model.BootstrapConfig;
+import com.towermarsh.opendata.core.config.model.BootstrapConfig;
 import com.towermarsh.opendata.config.model.PluginDefinition;
 
 /**

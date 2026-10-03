@@ -1,0 +1,35 @@
+/*
+ * Copyright © 2026 Terry Curran
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+package com.towermarsh.opendata.core.plugin;
+
+/**
+ * Indicates invalid or missing plugin registry metadata.
+  *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
+public class PluginRegistryException extends RuntimeException {
+
+    /**
+     *
+     * @param message
+     */
+    public PluginRegistryException(final String message) {
+        super(message);
+    }
+
+    /**
+     *
+     * @param message
+     * @param cause
+     */
+    public PluginRegistryException(
+            final String message,
+            final Throwable cause) {
+
+        super(message, cause);
+    }
+}

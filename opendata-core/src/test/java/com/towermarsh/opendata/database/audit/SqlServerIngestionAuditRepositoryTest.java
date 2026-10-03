@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.database.audit;
+package com.towermarsh.opendata.core.database.audit;
 
-import com.towermarsh.opendata.database.DatabaseConnectionManager;
-import com.towermarsh.opendata.database.DatabaseException;
+import com.towermarsh.opendata.core.database.DatabaseConnectionManager;
+import com.towermarsh.opendata.common.database.DatabaseException;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
