@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Provides pooled JDBC resources to repositories.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.3.0
  */
 public interface DatabaseResourceManager extends AutoCloseable {
 
@@ -36,44 +36,36 @@ public interface DatabaseResourceManager extends AutoCloseable {
     }
 
     /**
-     *
      * Closes a borrowed JDBC connection.
      *
      * @param connection connection to close
-     *
      */
     default void close(Connection connection) {
         closeQuietly(connection);
     }
 
     /**
-     *
      * Closes a prepared statement.
      *
      * @param statement statement to close
-     *
      */
     default void close(PreparedStatement statement) {
         closeQuietly(statement);
     }
 
     /**
-     *
      * Closes a result set.
      *
      * @param resultSet result set to close
-     *
      */
     default void close(ResultSet resultSet) {
         closeQuietly(resultSet);
     }
 
     /**
-     *
      * Closes a resource while suppressing any secondary close failure.
      *
      * @param resource resource to close
-     *
      */
     private static void closeQuietly(AutoCloseable resource) {
         if (resource == null) {
@@ -87,9 +79,7 @@ public interface DatabaseResourceManager extends AutoCloseable {
     }
 
     /**
-     *
      * Closes the underlying database resource.
-     *
      */
     @Override
     void close();

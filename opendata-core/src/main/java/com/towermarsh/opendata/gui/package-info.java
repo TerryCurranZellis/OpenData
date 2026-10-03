@@ -52,6 +52,8 @@
  * configuration for the JavaFX detail dialog.</li>
  * <li>{@link PluginExecutionGateway} &mdash; Resource-owning adapter for JavaFX
  * plugin execution and dry-run operations.</li>
+ * <li>{@link PluginSelectionSupport} &mdash; Counts, inspects and updates
+ * plugin-table checkbox state consistently.</li>
  * <li>{@link PluginRow} &mdash; Presentation model for one plugin displayed in
  * the JavaFX main-window table.</li>
  * <li>{@link PluginTableDataLoader} &mdash; Opens the bootstrap database
@@ -73,6 +75,6 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.3.0
  */
 package com.towermarsh.opendata.gui;

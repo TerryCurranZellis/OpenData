@@ -7,14 +7,12 @@ package com.towermarsh.opendata.plugin.octopusadjustment.extract;
 
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.octopusadjustment.initialise.OctopusAdjustmentConfiguration;
+import com.towermarsh.opendata.util.PathDigestSupport;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -31,7 +29,7 @@ import java.util.regex.Pattern;
  * opaque source identity and no date is parsed from it.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 3.3.0
  * @since 3.1.0
  */
 public final class OctopusAdjustmentExtract {
@@ -71,9 +69,9 @@ public final class OctopusAdjustmentExtract {
         try (var paths = Files.list(inputDirectory)) {
             candidates = paths
                     .filter(Files::isRegularFile)
-                    .filter(path -> candidatePattern.matcher(fileName(path)).matches())
+                    .filter(path -> candidatePattern.matcher(PathDigestSupport.fileName(path)).matches())
                     .sorted(Comparator.comparing(
-                            OctopusAdjustmentExtract::fileName,
+                            PathDigestSupport::fileName,
                             String.CASE_INSENSITIVE_ORDER))
                     .toList();
         }
@@ -81,8 +79,8 @@ public final class OctopusAdjustmentExtract {
         final List<ExtractedOctopusAdjustment> extracted = new ArrayList<>();
         var skipped = 0;
         for (var path : candidates) {
-            final var name = fileName(path);
-            final var hash = sha256(path);
+            final var name = PathDigestSupport.fileName(path);
+            final var hash = PathDigestSupport.sha256(path);
             if (processed.contains(OctopusAdjustmentProcessedFileRepository.key(name, hash))) {
                 skipped++;
                 continue;
@@ -112,31 +110,5 @@ public final class OctopusAdjustmentExtract {
         return Pattern.compile(
                 "^" + Pattern.quote(accountNumber) + "-.+\\.pdf$",
                 Pattern.CASE_INSENSITIVE);
-    }
-
-    private static String fileName(final Path path) {
-        final var name = Objects.requireNonNull(path, "path").getFileName();
-        if (name == null) {
-            throw new IllegalArgumentException("Path must include a filename: " + path);
-        }
-        return name.toString();
-    }
-
-    private static String sha256(final Path path) throws IOException {
-        try {
-            final var digest = MessageDigest.getInstance("SHA-256");
-            try (var input = Files.newInputStream(path)) {
-                final var buffer = new byte[8192];
-                int count;
-                while ((count = input.read(buffer)) >= 0) {
-                    if (count > 0) {
-                        digest.update(buffer, 0, count);
-                    }
-                }
-            }
-            return HexFormat.of().formatHex(digest.digest());
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("SHA-256 is unavailable", exception);
-        }
     }
 }

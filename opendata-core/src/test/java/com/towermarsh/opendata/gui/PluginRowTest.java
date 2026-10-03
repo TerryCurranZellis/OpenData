@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * Tests conversion from backend table data to JavaFX display values.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.3.0
  */
 class PluginRowTest {
 
@@ -51,5 +51,14 @@ class PluginRowTest {
         assertEquals("Disabled", row.enabledStateProperty().get());
         assertEquals("", row.lastRunStatusProperty().get());
         assertEquals("", row.lastRunDateProperty().get());
+    }
+
+    @Test
+    void updatesSelectionState() {
+        final var row = new PluginRow(false, "ofgem", "Ofgem", "Enabled", "", "");
+
+        row.setSelected(true);
+
+        assertEquals(true, row.isSelected());
     }
 }

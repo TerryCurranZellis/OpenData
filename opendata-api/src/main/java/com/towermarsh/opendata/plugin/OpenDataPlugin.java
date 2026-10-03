@@ -5,18 +5,22 @@
  */
 package com.towermarsh.opendata.plugin;
 
-/** Contract implemented by every executable OpenData plugin.  *
-* @author Terry Curran
-* @version 1.0.0
-*/
+/**
+ * Contract implemented by every executable OpenData plugin.
+ *
+ * @author Terry Curran
+ * @version 3.3.0
+ */
 @FunctionalInterface
 public interface OpenDataPlugin {
 
     /**
+     * Executes the plugin using the supplied run-scoped context.
      *
-     * @param context
-     * @return
-     * @throws Exception
+     * @param context plugin execution context containing resolved configuration
+     * and runtime resources
+     * @return row-count metrics describing the execution result
+     * @throws Exception if plugin execution fails
      */
     PluginMetrics execute(PluginExecutionContext context) throws Exception;
 }

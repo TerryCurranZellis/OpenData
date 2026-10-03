@@ -19,7 +19,9 @@ by the Version 3 GUI specification.
 
 Execute and Dry-run require one or more rows checked in the **Selected** column.
 The controller snapshots those plugin ids before the confirmation dialog opens.
-If no plugin is checked, the normal **No plugin selected** warning is displayed.
+The **Selected** column header includes a bulk **Select all** checkbox that
+checks or clears every visible plugin row in one action. If no plugin is
+checked, the normal **No plugin selected** warning is displayed.
 
 Execute confirms that persistent plugin data may be inserted or updated. Dry-run
 confirms that extraction/transformation still occurs but provider database writes

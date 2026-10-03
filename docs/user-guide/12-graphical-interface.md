@@ -87,8 +87,10 @@ plugin-run audit:
 | Date of Last Run | Most recent persisted run date/time; blank if never run |
 
 Select plugins using the **Selected** checkbox. Ordinary row highlighting is not
-the action-selection mechanism. The lower-right status label reports the number
-of checked rows.
+the action-selection mechanism. The **Selected** column header now includes a
+bulk **Select all** checkbox; checking it selects every row currently shown in
+the table and clearing it removes every check. The lower-right status label
+reports the number of checked rows.
 
 While plugin information is loading, the lower-left status reports
 `Loading plugin details...`. After a successful load it reports `Ready`. When no

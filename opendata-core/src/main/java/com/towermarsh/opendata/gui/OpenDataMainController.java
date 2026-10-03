@@ -21,6 +21,8 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -37,7 +39,7 @@ import javafx.stage.Window;
  * presentation refresh.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.3.0
  */
 public final class OpenDataMainController {
 
@@ -49,10 +51,12 @@ public final class OpenDataMainController {
     private final ApplicationSettingsGateway settingsGateway;
     private final LogViewerService logViewerService;
     private final PluginExecutionGateway pluginExecutionGateway;
+    private final CheckBox selectAllCheckBox = new CheckBox();
     private Task<List<PluginTableEntry>> pluginLoadTask;
     private Task<?> administrationTask;
     private Task<?> informationTask;
     private Task<PluginExecutionSummary> executionTask;
+    private boolean updatingSelectAllState;
 
     @FXML
     private TableView<PluginRow> pluginTable;
@@ -189,6 +193,7 @@ public final class OpenDataMainController {
     private void initialize() {
         pluginTable.setEditable(true);
         pluginTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        configureSelectAllCheckBox();
 
         selectedColumn.setCellValueFactory(data -> data.getValue().selectedProperty());
         selectedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectedColumn));
@@ -202,6 +207,23 @@ public final class OpenDataMainController {
     }
 
     /**
+     * Configures the bulk-selection checkbox shown in the Selected column header.
+     */
+    private void configureSelectAllCheckBox() {
+        selectAllCheckBox.setAllowIndeterminate(true);
+        selectAllCheckBox.setFocusTraversable(false);
+        selectAllCheckBox.setOnAction(event -> {
+            if (updatingSelectAllState) {
+                return;
+            }
+            PluginSelectionSupport.setAllSelected(pluginTable.getItems(), selectAllCheckBox.isSelected());
+            updateSelectionCount();
+        });
+        selectedColumn.setGraphic(selectAllCheckBox);
+        selectedColumn.setContentDisplay(ContentDisplay.RIGHT);
+    }
+
+    /**
      * Reloads the main table from the persistent plugin registry.
      */
     void refreshPluginTable() {
@@ -212,7 +234,7 @@ public final class OpenDataMainController {
         setState("Loading plugin details...");
         tablePlaceholderLabel.setText("Loading plugin details...");
         setMutatingActionsDisabled(true);
-        pluginTable.setDisable(true);
+        setPluginTableDisabled(true);
         pluginTable.getItems().clear();
         updateSelectionCount();
 
@@ -230,7 +252,7 @@ public final class OpenDataMainController {
             }
             replaceRows(task.getValue());
             tablePlaceholderLabel.setText("No plugins registered");
-            pluginTable.setDisable(false);
+            setPluginTableDisabled(false);
             setMutatingActionsDisabled(false);
             setState("Ready");
         });
@@ -246,7 +268,7 @@ public final class OpenDataMainController {
             LOGGER.log(Level.FINE, "Plugin table loading failure details.", exception);
             pluginTable.getItems().clear();
             tablePlaceholderLabel.setText("Plugin details could not be loaded");
-            pluginTable.setDisable(true);
+            setPluginTableDisabled(true);
             setMutatingActionsDisabled(false);
             updateSelectionCount();
             setState("Unable to load plugin details");
@@ -267,10 +289,36 @@ public final class OpenDataMainController {
     }
 
     private void updateSelectionCount() {
-        final long count = pluginTable.getItems().stream()
-                .filter(row -> row.selectedProperty().get())
-                .count();
+        final long count = PluginSelectionSupport.countSelected(pluginTable.getItems());
         selectedLabel.setText(count + (count == 1 ? " item selected" : " items selected"));
+        updateSelectAllCheckBox();
+    }
+
+    /**
+     * Updates the header checkbox so it mirrors the current row-selection state.
+     */
+    private void updateSelectAllCheckBox() {
+        updatingSelectAllState = true;
+        try {
+            final var rows = pluginTable.getItems();
+            final var anySelected = PluginSelectionSupport.anySelected(rows);
+            final var allSelected = PluginSelectionSupport.allSelected(rows);
+            selectAllCheckBox.setSelected(allSelected);
+            selectAllCheckBox.setIndeterminate(anySelected && !allSelected);
+            selectAllCheckBox.setDisable(pluginTable.isDisable() || rows.isEmpty());
+        } finally {
+            updatingSelectAllState = false;
+        }
+    }
+
+    /**
+     * Enables or disables the table and its bulk-selection checkbox together.
+     *
+     * @param disabled whether the table should be disabled
+     */
+    private void setPluginTableDisabled(final boolean disabled) {
+        pluginTable.setDisable(disabled);
+        updateSelectAllCheckBox();
     }
 
     private void setState(final String state) {
@@ -455,7 +503,7 @@ public final class OpenDataMainController {
         setState((dryRun ? "Dry-running" : "Executing")
                 + " selected plugin" + pluralSuffix(pluginIds) + "...");
         setMutatingActionsDisabled(true);
-        pluginTable.setDisable(true);
+        setPluginTableDisabled(true);
         executionWindow.show();
 
         final var task = new Task<PluginExecutionSummary>() {
@@ -481,7 +529,7 @@ public final class OpenDataMainController {
                     ? operationName + " completed successfully"
                     : operationName + " completed with failures");
             setMutatingActionsDisabled(false);
-            pluginTable.setDisable(false);
+            setPluginTableDisabled(false);
             refreshPluginTable();
         });
 
@@ -501,7 +549,7 @@ public final class OpenDataMainController {
             executionWindow.fail(message);
             setState(operationName + " failed");
             setMutatingActionsDisabled(false);
-            pluginTable.setDisable(false);
+            setPluginTableDisabled(false);
             refreshPluginTable();
         });
 
@@ -523,7 +571,7 @@ public final class OpenDataMainController {
                     setState("Ready");
                     OpenDataInformationDialogs.showProperties(
                             ownerWindow(),
-                            "Plugin Detail Ã¢â‚¬â€ " + pluginId,
+                            "Plugin Detail — " + pluginId,
                             "Stored configuration for " + pluginId,
                             entries);
                 },
@@ -612,7 +660,7 @@ public final class OpenDataMainController {
 
     private List<String> selectedPluginIds() {
         return pluginTable.getItems().stream()
-                .filter(row -> row.selectedProperty().get())
+                .filter(PluginRow::isSelected)
                 .map(row -> row.pluginIdProperty().get())
                 .toList();
     }
@@ -655,7 +703,7 @@ public final class OpenDataMainController {
 
         setState(workingState);
         setMutatingActionsDisabled(true);
-        pluginTable.setDisable(true);
+        setPluginTableDisabled(true);
 
         final var task = new Task<T>() {
             @Override
@@ -671,7 +719,7 @@ public final class OpenDataMainController {
             }
             administrationTask = null;
             setMutatingActionsDisabled(false);
-            pluginTable.setDisable(false);
+            setPluginTableDisabled(false);
             onSucceeded.accept(task.getValue());
         });
 
@@ -685,7 +733,7 @@ public final class OpenDataMainController {
             LOGGER.log(Level.SEVERE, failureState + ": {0}", message);
             LOGGER.log(Level.FINE, "GUI plugin administration failure details.", exception);
             setMutatingActionsDisabled(false);
-            pluginTable.setDisable(false);
+            setPluginTableDisabled(false);
             setState(failureState);
             OpenDataDialogs.error(ownerWindow(), failureState, message);
         });
@@ -787,7 +835,7 @@ public final class OpenDataMainController {
     private static String registrationSummary(
             final List<PluginRegistrationCandidate> candidates) {
         return candidates.stream()
-                .map(candidate -> "%s Ã¢â‚¬â€ %s (%s)".formatted(
+                .map(candidate -> "%s — %s (%s)".formatted(
                 candidate.pluginId(),
                 candidate.displayName(),
                 candidate.file().getFileName()))

@@ -5,10 +5,10 @@
  */
 package com.towermarsh.opendata.discovery;
 
+import com.towermarsh.opendata.util.DiscoveryTextNormalizer;
 import com.towermarsh.opendata.exception.DiscoveryException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -20,7 +20,7 @@ import java.util.Objects;
  * file after a publisher changes its page.</p>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.3.0
  */
 public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
 
@@ -38,13 +38,11 @@ public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
      * Creates a selector with configurable tie handling.
      *
      * @param failOnTie whether equal best scores should be rejected
-     *
      */
-    public HighestScoringLinkSelector(boolean failOnTie) {
+    public HighestScoringLinkSelector(final boolean failOnTie) {
         this.failOnTie = failOnTie;
     }
 
-    @Override
     /**
      * Selects the highest-scoring discovered link.
      *
@@ -54,11 +52,12 @@ public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
      * @throws DiscoveryException if no candidates are available or the best
      * score is tied
      */
+    @Override
     public DiscoveredLink select(
-            List<DiscoveredLink> candidates,
-            List<String> preferredTerms) throws DiscoveryException {
+            final List<DiscoveredLink> candidates,
+            final List<String> preferredTerms) throws DiscoveryException {
         Objects.requireNonNull(candidates, "candidates");
-        var terms = normalize(preferredTerms);
+        var terms = DiscoveryTextNormalizer.normalizeTerms(preferredTerms);
         if (candidates.isEmpty()) {
             throw new DiscoveryException("No candidate data links were discovered");
         }
@@ -84,9 +83,9 @@ public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
      * @param terms preferred search terms
      * @return computed score
      */
-    private static int score(DiscoveredLink link, List<String> terms) {
-        var fileName = normalizeText(link.fileName());
-        var descriptive = normalizeText(link.linkText() + " " + link.title());
+    private static int score(final DiscoveredLink link, final List<String> terms) {
+        var fileName = DiscoveryTextNormalizer.normalizeFreeText(link.fileName());
+        var descriptive = DiscoveryTextNormalizer.normalizeFreeText(link.linkText() + " " + link.title());
         var score = "https".equalsIgnoreCase(link.targetUri().getScheme()) ? 1 : 0;
         for (var term : terms) {
             if (fileName.contains(term)) {
@@ -97,37 +96,6 @@ public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
             }
         }
         return score;
-    }
-
-    /**
-     * Normalises preferred search terms for case-insensitive matching.
-     *
-     * @param terms raw preferred terms
-     * @return normalised terms
-     */
-    private static List<String> normalize(List<String> terms) {
-        if (terms == null) {
-            return List.of();
-        }
-        return terms.stream()
-                .filter(Objects::nonNull)
-                .map(HighestScoringLinkSelector::normalizeText)
-                .map(String::trim)
-                .filter(term -> !term.isEmpty())
-                .distinct()
-                .toList();
-    }
-
-    /**
-     * Normalises link text for token-based matching.
-     *
-     * @param value text to normalise
-     * @return normalised text
-     */
-    private static String normalizeText(final String value) {
-        return value.toLowerCase(Locale.ROOT)
-                .replaceAll("[^a-z0-9]+", " ")
-                .trim();
     }
 
     private record ScoredLink(DiscoveredLink link, int score) {

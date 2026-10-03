@@ -20,13 +20,12 @@ import com.towermarsh.opendata.plugin.JdbcPluginRegistry;
 import com.towermarsh.opendata.plugin.JdbcPluginRunAudit;
 import com.towermarsh.opendata.plugin.NoOpPluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginExecutionCoordinator;
+import com.towermarsh.opendata.plugin.PluginExecutionSupport;
 import com.towermarsh.opendata.plugin.PluginExecutionSummary;
 import com.towermarsh.opendata.plugin.PluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginSelectionResolver;
 import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
 import com.towermarsh.opendata.plugin.ResolvedPlugin;
-import com.towermarsh.opendata.util.DurationFormatter;
-import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.time.Clock;
 import java.util.List;
@@ -50,7 +49,7 @@ import java.util.logging.Logger;
  * application thread.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.3.0
  */
 public final class PluginExecutionGateway {
 
@@ -103,7 +102,7 @@ public final class PluginExecutionGateway {
                     definitionLoader.load(descriptor.id(), Map.of())))
                     .toList();
         } finally {
-            closeDatabase(configurationDatabase);
+            PluginExecutionSupport.closeDatabase(LOGGER, configurationDatabase);
         }
 
         final int parallelism = runtime.execution().maxParallelPlugins();
@@ -129,44 +128,10 @@ public final class PluginExecutionGateway {
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
             final var summary = coordinator.execute(plugins, parallelism, dryRun);
-            logSummary(summary);
+            PluginExecutionSupport.logSummary(LOGGER, summary);
             return summary;
         } finally {
-            closeDatabase(executionDatabase);
-        }
-    }
-
-    private static void logSummary(final PluginExecutionSummary summary) {
-        summary.results().forEach(result -> LOGGER.log(
-                result.successful() ? Level.INFO : Level.SEVERE,
-                "Plugin summary: id={0}, status={1}, duration={2}, read={3}, inserted={4}, "
-                + "updated={5}, skipped={6}, error={7}",
-                new Object[]{
-                    result.pluginId(),
-                    result.status().name(),
-                    DurationFormatter.formatElapsed(result.duration()),
-                    result.metrics().read(),
-                    result.metrics().inserted(),
-                    result.metrics().updated(),
-                    result.metrics().skipped(),
-                    result.errorMessage().orElse("")
-                }));
-        LOGGER.log(Level.INFO,
-                "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
-                new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
-    }
-
-    private static void closeDatabase(final DatabaseResourceManager database) {
-        if (database == null) {
-            return;
-        }
-        try {
-            database.close();
-        } catch (RuntimeException exception) {
-            LOGGER.log(Level.SEVERE,
-                    "Database shutdown failed: {0}",
-                    ExceptionMessages.rootCauseMessage(exception));
-            LOGGER.log(Level.FINE, "Database shutdown failure details.", exception);
+            PluginExecutionSupport.closeDatabase(LOGGER, executionDatabase);
         }
     }
 }

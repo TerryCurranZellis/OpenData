@@ -1,5 +1,5 @@
 /*
- * Copyright Ã‚Â© 2026 Terry Curran
+ * Copyright © 2026 Terry Curran
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -28,7 +28,7 @@ import java.util.Properties;
  * @param copyright copyright info
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.3.0
  */
 public record ApplicationInfo(
         String productName,
@@ -61,7 +61,7 @@ public record ApplicationInfo(
                 + "into a local database for use by other projects.",
                 "Java " + javaVersion,
                 "Apache License 2.0",
-                "Copyright Ã‚Â© 2026 Terry Curran");
+                "Copyright © 2026 Terry Curran");
     }
 
     /**

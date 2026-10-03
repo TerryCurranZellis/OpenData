@@ -5,10 +5,9 @@
  */
 package com.towermarsh.opendata.discovery;
 
+import com.towermarsh.opendata.util.DiscoveryTextNormalizer;
 import java.net.URI;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -24,7 +23,7 @@ import java.util.regex.Pattern;
  * @param textPattern optional regular expression applied to link text and title
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 3.3.0
  */
 public record LinkDiscoveryRequest(
         URI pageUri,
@@ -49,9 +48,9 @@ public record LinkDiscoveryRequest(
      */
     public LinkDiscoveryRequest {
         Objects.requireNonNull(pageUri, "pageUri");
-        allowedExtensions = normalizeExtensions(allowedExtensions);
-        requiredTerms = normalizeTerms(requiredTerms);
-        excludedTerms = normalizeTerms(excludedTerms);
+        allowedExtensions = DiscoveryTextNormalizer.normalizeExtensions(allowedExtensions);
+        requiredTerms = DiscoveryTextNormalizer.normalizeTerms(requiredTerms);
+        excludedTerms = DiscoveryTextNormalizer.normalizeTerms(excludedTerms);
     }
 
     @Override
@@ -111,33 +110,5 @@ public record LinkDiscoveryRequest(
         }
         var descriptiveText = (link.linkText() + " " + link.title()).trim();
         return textPattern == null || textPattern.matcher(descriptiveText).find();
-    }
-
-    private static Set<String> normalizeExtensions(Set<String> extensions) {
-        if (extensions == null || extensions.isEmpty()) {
-            return Set.of();
-        }
-        var normalized = new LinkedHashSet<String>();
-        for (var extension : extensions) {
-            if (extension != null && !extension.isBlank()) {
-                normalized.add(extension.trim()
-                        .replaceFirst("^\\.", "")
-                        .toLowerCase(Locale.ROOT));
-            }
-        }
-        return Set.copyOf(normalized);
-    }
-
-    private static List<String> normalizeTerms(List<String> terms) {
-        if (terms == null || terms.isEmpty()) {
-            return List.of();
-        }
-        return terms.stream()
-                .filter(Objects::nonNull)
-                .map(String::trim)
-                .filter(term -> !term.isEmpty())
-                .map(term -> term.toLowerCase(Locale.ROOT))
-                .distinct()
-                .toList();
     }
 }

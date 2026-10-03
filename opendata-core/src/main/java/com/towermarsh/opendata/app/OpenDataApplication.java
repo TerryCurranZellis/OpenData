@@ -29,14 +29,13 @@ import com.towermarsh.opendata.plugin.JdbcPluginRunAudit;
 import com.towermarsh.opendata.plugin.NoOpPluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionCoordinator;
+import com.towermarsh.opendata.plugin.PluginExecutionSupport;
 import com.towermarsh.opendata.plugin.PluginExecutionSummary;
 import com.towermarsh.opendata.plugin.PluginRegistryException;
 import com.towermarsh.opendata.plugin.PluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginSelectionResolver;
 import com.towermarsh.opendata.plugin.ReflectionPluginFactory;
 import com.towermarsh.opendata.plugin.ResolvedPlugin;
-import com.towermarsh.opendata.util.DurationFormatter;
-import com.towermarsh.opendata.util.ExceptionMessages;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -124,7 +123,7 @@ public final class OpenDataApplication {
 
             return runPlugins(arguments, bootstrap, configurationDatabase, registeredPlugins);
         } finally {
-            closeDatabase(configurationDatabase);
+            PluginExecutionSupport.closeDatabase(LOGGER, configurationDatabase);
         }
     }
 
@@ -213,7 +212,7 @@ public final class OpenDataApplication {
                 new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), arguments.dryRun()});
 
         DatabaseResourceManager executionDatabase = null;
-        closeDatabase(configurationDatabase);
+        PluginExecutionSupport.closeDatabase(LOGGER, configurationDatabase);
         try {
             PluginRunAudit audit;
             if (arguments.dryRun()) {
@@ -230,12 +229,12 @@ public final class OpenDataApplication {
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
             var summary = coordinator.execute(plugins, parallelism, arguments.dryRun());
-            logSummary(summary);
+            PluginExecutionSupport.logSummary(LOGGER, summary);
             return summary.allSuccessful()
                     ? ExecutionStatus.SUCCESS
                     : ExecutionStatus.PLUGIN_FAILURE;
         } finally {
-            closeDatabase(executionDatabase);
+            PluginExecutionSupport.closeDatabase(LOGGER, executionDatabase);
         }
     }
 
@@ -368,42 +367,6 @@ private static void administerSelected(
             LOGGER.log(Level.INFO,
                     "--parallelism is ignored for plugin administration operations.");
         }
-    }
-
-    /**
-     * disconnect from the database and close down
-     * @param database database to disconnect from
-     */
-    private static void closeDatabase(DatabaseResourceManager database) {
-        if (database == null) {
-            return;
-        }
-        try {
-            database.close();
-        } catch (RuntimeException exception) {
-            LOGGER.log(Level.SEVERE, "Database shutdown failed: {0}", ExceptionMessages.rootCauseMessage(exception));
-            LOGGER.log(Level.FINE, "Database shutdown failure details.", exception);
-        }
-    }
-
-    /**
-     * show the execution summary
-     * @param summary the results of running the plugin
-     */
-    private static void logSummary(PluginExecutionSummary summary) {
-        summary.results().forEach((var result) -> {
-            LOGGER.log(
-                    result.successful() ? Level.INFO : Level.SEVERE,
-                    "Plugin summary: id={0}, status={1}, duration={2}, read={3}, inserted={4}, updated={5}, skipped={6}, error={7}",
-                    new Object[]{
-                        result.pluginId(), result.status().name(), DurationFormatter.formatElapsed(result.duration()),
-                        result.metrics().read(), result.metrics().inserted(), result.metrics().updated(),
-                        result.metrics().skipped(), result.errorMessage().orElse("")
-                    });
-        });
-        LOGGER.log(Level.INFO,
-                "Plugin execution complete; selected={0}, succeeded={1}, failed={2}",
-                new Object[]{summary.results().size(), summary.succeeded(), summary.failed()});
     }
 
     /**

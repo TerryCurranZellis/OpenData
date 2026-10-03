@@ -25,7 +25,7 @@ import javafx.beans.property.StringProperty;
  * layer.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 3.3.0
  */
 public final class PluginRow {
 
@@ -113,6 +113,24 @@ public final class PluginRow {
     )
     public BooleanProperty selectedProperty() {
         return selected;
+    }
+
+    /**
+     * Returns the current row-selection state.
+     *
+     * @return {@code true} when the row is selected
+     */
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    /**
+     * Updates the row-selection state.
+     *
+     * @param selectedState new selected state
+     */
+    public void setSelected(final boolean selectedState) {
+        selected.set(selectedState);
     }
 
     /**
