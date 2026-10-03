@@ -5,6 +5,9 @@
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning"/>
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="module-info\.java$"/>
+    </module>
     <module name="NewlineAtEndOfFile"/>
     <module name="FileTabCharacter"/>
     <module name="LineLength">
