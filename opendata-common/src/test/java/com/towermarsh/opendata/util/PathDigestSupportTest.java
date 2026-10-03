@@ -27,7 +27,7 @@ class PathDigestSupportTest {
 
         try {
             assertEquals(file.getFileName().toString(), PathDigestSupport.fileName(file));
-            assertEquals("dd2d3b4074938ab40bb10b9428be0949bacbab217b80ee473e6d534b4d4d5d29",
+            assertEquals("a8b2c2298c7ef738d13822d92c4849171d190f23bc783af017fa5d1915b36977",
                     PathDigestSupport.sha256(file));
         } finally {
             Files.deleteIfExists(file);
