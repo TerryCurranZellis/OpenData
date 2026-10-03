@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.core.plugin;
 
 import com.towermarsh.opendata.common.logging.PluginLogContext;
-import com.towermarsh.opendata.core.logging.PluginLogContext;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.OpenDataPlugin;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;

@@ -192,7 +192,7 @@ public final class OpenDataMainController {
     @FXML
     private void initialize() {
         pluginTable.setEditable(true);
-        pluginTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        pluginTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         configureSelectAllCheckBox();
 
         selectedColumn.setCellValueFactory(data -> data.getValue().selectedProperty());
@@ -220,7 +220,6 @@ public final class OpenDataMainController {
             updateSelectionCount();
         });
         selectedColumn.setGraphic(selectAllCheckBox);
-        selectedColumn.setContentDisplay(ContentDisplay.RIGHT);
     }
 
     /**

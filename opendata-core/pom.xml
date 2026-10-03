@@ -201,7 +201,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>OpenData</Automatic-Module-Name>
+                            <Automatic-Module-Name>com.towermarsh.opendata.core</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

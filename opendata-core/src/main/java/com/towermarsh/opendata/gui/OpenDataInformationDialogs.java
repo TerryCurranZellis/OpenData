@@ -58,7 +58,7 @@ final class OpenDataInformationDialogs {
 
         final var table = new TableView<ConfigurationDisplayEntry>();
         table.setEditable(false);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefSize(920, 560);
         table.setPlaceholder(new Label("No values are available."));
 
