@@ -210,7 +210,7 @@ public final class OpenDataMainController {
      * Configures the bulk-selection checkbox shown in the Selected column header.
      */
     private void configureSelectAllCheckBox() {
-        selectAllCheckBox.setAllowIndeterminate(true);
+        selectAllCheckBox.setAllowIndeterminate(false);
         selectAllCheckBox.setFocusTraversable(false);
         selectAllCheckBox.setOnAction(event -> {
             if (updatingSelectAllState) {
