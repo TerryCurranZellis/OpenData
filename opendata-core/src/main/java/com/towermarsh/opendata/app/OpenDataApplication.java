@@ -30,7 +30,6 @@ import com.towermarsh.opendata.core.plugin.NoOpPluginRunAudit;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.core.plugin.PluginExecutionCoordinator;
 import com.towermarsh.opendata.core.plugin.PluginExecutionSupport;
-import com.towermarsh.opendata.core.plugin.PluginExecutionSummary;
 import com.towermarsh.opendata.core.plugin.PluginRegistryException;
 import com.towermarsh.opendata.core.plugin.PluginRunAudit;
 import com.towermarsh.opendata.core.plugin.PluginSelectionResolver;
@@ -52,7 +51,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.0.0
  */
-public final class OpenDataApplication {
+public class OpenDataApplication {
 
     /**
      * default logger for this class
@@ -141,7 +140,7 @@ public final class OpenDataApplication {
         var pluginId = arguments.pluginIds().get(0);
         var plugin = registry.find(pluginId)
                 .orElseThrow(() -> new PluginRegistryException(
-                "Registered plugin was not found: " + pluginId));
+                        "Registered plugin was not found: " + pluginId));
 
         var properties = new JdbcConfigurationPropertiesSource(database)
                 .loadPluginProperties(pluginId);
@@ -154,8 +153,8 @@ public final class OpenDataApplication {
         System.out.println("Status : " + (plugin.enabled() ? "enabled" : "disabled"));
         System.out.println();
 
-        properties.forEach((key, value) ->
-                System.out.printf("%-35s = %s%n", key, value));
+        properties.forEach((key, value)
+                -> System.out.printf("%-35s = %s%n", key, value));
 
         System.out.println();
         noteIgnoredParallelism(arguments);
@@ -190,7 +189,7 @@ public final class OpenDataApplication {
         final List<PluginDescriptor> selected;
         if (arguments.allPluginsRequested()) {
             selected = registry.list().stream()
-                    .filter(PluginDescriptor::enabled)
+                    .filter(pluginDescriptor -> pluginDescriptor.enabled())
                     .toList();
             if (selected.isEmpty()) {
                 throw new PluginRegistryException("No enabled plugins are installed.");
@@ -201,8 +200,8 @@ public final class OpenDataApplication {
         var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
         var plugins = selected.stream()
                 .map(descriptor -> new ResolvedPlugin(
-                descriptor,
-                definitionLoader.load(descriptor.id(), Map.of())))
+                        descriptor,
+                        definitionLoader.load(descriptor.id(), Map.of())))
                 .toList();
 
         var parallelism = arguments.parallelism().orElse(
@@ -238,15 +237,16 @@ public final class OpenDataApplication {
         }
     }
 
-  /**
-   * register one of more plugins
-   * @param arguments command line arguments
-   * @param bootstrap bootstrap application
-   * @param bootstrapLoader bootstrap loader
-   * @param passwordCipher password key 
-   * @param database  database connection manager
-   * @param registeredPlugins list of registered plugins
-   */
+    /**
+     * register one of more plugins
+     *
+     * @param arguments command line arguments
+     * @param bootstrap bootstrap application
+     * @param bootstrapLoader bootstrap loader
+     * @param passwordCipher password key
+     * @param database database connection manager
+     * @param registeredPlugins list of registered plugins
+     */
     private static void registerPlugins(
             CommandLineArguments arguments,
             ApplicationBootstrapProperties bootstrap,
@@ -276,9 +276,11 @@ public final class OpenDataApplication {
 
         registrations.forEach((var registration) -> {
             var actual = registeredPlugins.find(registration.descriptor().id())
-                    .orElseThrow(() -> new PluginRegistryException(
-                    "Registered plugin could not be read back: "
-                    + registration.descriptor().id()));
+                    .orElseThrow(() -> {
+                        return new PluginRegistryException(
+                                "Registered plugin could not be read back: "
+                                + registration.descriptor().id());
+                    });
             LOGGER.info(String.format(
                     "Registered plugin: %s (%s)%n",
                     actual.id(),
@@ -287,13 +289,15 @@ public final class OpenDataApplication {
         noteIgnoredParallelism(arguments);
     }
 
-/**
- * we are deciding what to do with a plugin
- * @param arguments command line arguments
- * @param registry where we are registering plugins
- * @param action what we are doing, registering, un-registering, enabling, disabling
- */
-private static void administerSelected(
+    /**
+     * we are deciding what to do with a plugin
+     *
+     * @param arguments command line arguments
+     * @param registry where we are registering plugins
+     * @param action what we are doing, registering, un-registering, enabling,
+     * disabling
+     */
+    private static void administerSelected(
             CommandLineArguments arguments,
             JdbcPluginRegistry registry,
             AdministrationAction action) {
@@ -322,6 +326,7 @@ private static void administerSelected(
 
     /**
      * show list of plugins
+     *
      * @param registry database connection to registry
      */
     private static void printRegisteredPlugins(JdbcPluginRegistry registry) {
@@ -343,6 +348,7 @@ private static void administerSelected(
 
     /**
      * get the database password so we can register plugins
+     *
      * @param bootstrap loader
      * @param arguments
      */
@@ -360,6 +366,7 @@ private static void administerSelected(
 
     /**
      * An information message as we don't care about running in parallel
+     *
      * @param arguments check if parallel is set
      */
     private static void noteIgnoredParallelism(CommandLineArguments arguments) {
