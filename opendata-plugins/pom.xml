@@ -17,5 +17,7 @@
         <module>opendata-plugin-openmeteo</module>
         <module>opendata-plugin-octopus</module>
         <module>opendata-plugin-octopus-adjustment</module>
+        <module>opendata-plugin-electric-demand</module>
+        <module>opendata-plugin-electric-supply</module>
     </modules>
 </project>

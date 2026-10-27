@@ -145,3 +145,8 @@ exact artifacts.
 Review this file whenever `pom.xml`, build plugins, JavaFX, documentation tooling
 or release packaging changes. The exact resolved dependency graph remains the
 release authority.
+
+
+## Electricity plugin additions (NESO)
+
+New electricity plugins use Apache Commons CSV 1.14.1 (Apache-2.0) and Jackson Databind 2.22.1 (Apache-2.0), and JUnit Jupiter (EPL-2.0; tests only). Historical GB demand and generation datasets are supplied by NESO under NESO Open Data Licence. See `docs/third-party-electricity-addendum.md`.

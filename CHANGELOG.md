@@ -110,3 +110,8 @@ plugins, SQL Server persistence, dry-run support and documentation automation.
 This release record is historical and does not describe the current 2.0.0 code.
 
 [1.0.0]: https://github.com/TerryCurranZellis/OpenData/releases/tag/v1.0.0
+
+
+## Electricity plugins (unreleased)
+
+Added separate NESO historic electric-demand and electric-supply plugins, two database tables, Maven modules, tests, source attribution and documentation.

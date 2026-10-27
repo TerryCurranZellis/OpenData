@@ -251,3 +251,8 @@ which the entire command line is supplied as one string. Single or double quotes
 preserve spaces in a plugin definition filename.
 
 ---
+
+
+## Historic electricity plugins (NESO)
+
+Execute independently with `opendata --plugin electric-demand --execute` or `opendata --plugin electric-supply --execute`; `--dry-run` is supported.

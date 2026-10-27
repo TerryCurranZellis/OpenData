@@ -36,3 +36,8 @@ Use the repository's maintained documentation wrappers:
 Every generated document is defined by a JSON file under `docs/manifests`.
 Changing composition should normally require Markdown and manifest updates rather
 than PowerShell changes.
+
+
+## Historic electricity plugins (NESO)
+
+See [Historical electricity plugins](electricity-plugins.md) for independent GB demand and generation mix ingestion.

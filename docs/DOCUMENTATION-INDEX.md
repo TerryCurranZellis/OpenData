@@ -70,3 +70,8 @@ When documents conflict, use this order:
 3. current user, operations, developer and reference guides;
 4. accepted ADRs; and
 5. dated reviews and historical release records.
+
+
+## Historic electricity plugins (NESO)
+
+See [Historical electricity plugins](electricity-plugins.md) for independent GB demand and generation mix ingestion.

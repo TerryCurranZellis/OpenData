@@ -158,3 +158,8 @@ separate lawful basis, permission, redaction and disclosure review exist.
 Review these notices whenever a source URL, API plan, endpoint, workbook,
 statement format, provider term, attribution rule or plugin acquisition method
 changes. Provider terms can change independently of an OpenData release.
+
+
+## NESO Historic GB Electricity (2026)
+
+Data supplied by National Energy System Operator (NESO): https://www.neso.energy/data-portal/historic-demand-data and https://www.neso.energy/data-portal/historic-generation-mix. Subject to NESO Open Data Licence. Review licence terms before redistribution.

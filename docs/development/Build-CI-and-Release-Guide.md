@@ -82,3 +82,8 @@ Retain the verified commit, Java and Maven versions, dependency report, test and
 quality reports, SQL Server version/scripts, GUI acceptance results, screenshot
 set, documentation outputs, checksums and release approval. Redact or exclude
 secrets and customer source data.
+
+
+## Historic electricity plugins (NESO)
+
+Add the two new Maven modules to the `opendata-plugins` reactor. JUnit Jupiter tests are test-scoped; see electricity plugin guide.

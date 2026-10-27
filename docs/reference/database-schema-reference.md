@@ -75,3 +75,8 @@ See the [Ofgem data dictionary](ofgem-price-cap-data-dictionary.md).
 
 The coexistence of `core.PluginRun` and `core.ingestion_run` is transitional and
 must not be interpreted as the permanent target model.
+
+
+## Historic electricity plugins (NESO)
+
+Separate tables `electricdemand.Demand` and `electricsupply.GenerationMix`, installed using `sql/01-electric-demand.sql` and `sql/02-electric-supply.sql` from the electricity plugin patch.

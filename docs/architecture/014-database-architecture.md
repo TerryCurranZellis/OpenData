@@ -83,3 +83,8 @@ and [security and credentials](017-security-and-credentials.md).
 :::
 
 ![OpenData database schemas](../diagrams/generated/opendata-database.svg){width=16cm}
+
+
+## Historic electricity plugins (NESO)
+
+The two independently loaded tables are `electricdemand.Demand` (SettlementDate + SettlementPeriod) and `electricsupply.GenerationMix` (DateTimeUtc). No cross-plugin foreign key or dependency.

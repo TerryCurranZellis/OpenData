@@ -43,3 +43,8 @@ modules, but the supported full build remains Java 24 or later.
 Use the [documentation index](docs/DOCUMENTATION-INDEX.md) for the maintained
 manual set and the [developer guide](docs/development/README.md) for build,
 module, and contribution guidance.
+
+
+## Historic electricity plugins (NESO)
+
+Two independent plugins: `electric-demand` and `electric-supply`. See [electricity plugin guide](docs/electricity-plugins.md).

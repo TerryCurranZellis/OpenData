@@ -90,3 +90,8 @@ than calling `System.exit`.
 This is an internal framework extension API, not a separately versioned public
 binary compatibility guarantee. Breaking contract changes require migration
 notes and an appropriate project version increment.
+
+
+## Historic electricity plugins (NESO)
+
+The independent `ElectricDemandPlugin` and `ElectricSupplyPlugin` implement `OpenDataPlugin`, accept `PluginDefinition` constructors and return `PluginMetrics`. See [guide](../electricity-plugins.md).

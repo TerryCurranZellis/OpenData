@@ -166,3 +166,8 @@ The current status and stored `plugin.enabled` property can be inspected with
 `--plugin <id> --detail`.
 
 ---
+
+
+## Historic electricity plugins (NESO)
+
+Both plugins support `start-date`, `end-date`, `api.base-url`, `api.dataset-id`, `http.connect-timeout-seconds` and `http.request-timeout-seconds`. See [guide](../electricity-plugins.md).
