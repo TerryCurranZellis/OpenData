@@ -6,7 +6,7 @@
 package com.towermarsh.opendata.gui;
 
 import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
-import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.core.database.SQLServerResource;
 import com.towermarsh.opendata.core.plugin.JdbcPluginRegistry;
 import java.util.List;
@@ -31,7 +31,7 @@ public final class PluginTableDataLoader {
      * @return current registered plugin rows
      */
     public List<PluginTableEntry> load() {
-        final var passwordCipher = new RsaConfigurationPasswordCipher();
+        final var passwordCipher = new AesConfigurationPasswordCipher();
         final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 

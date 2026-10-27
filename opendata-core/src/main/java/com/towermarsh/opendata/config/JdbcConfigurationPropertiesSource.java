@@ -156,10 +156,16 @@ public class JdbcConfigurationPropertiesSource
                 final var key = resultSet.getString(1);
                 final var value = resultSet.getString(2);
                 final var encrypted = resultSet.getBoolean(3);
-                values.put(key, encrypted && value != null
-                        && !value.startsWith(RsaConfigurationPasswordCipher.ENCRYPTED_PREFIX)
-                        ? RsaConfigurationPasswordCipher.ENCRYPTED_PREFIX + value
-                        : value);
+                // Retain the self-describing cipher prefix. Legacy unprefixed
+                // database values must be re-registered, not guessed as AES.
+                if (encrypted && value != null
+                        && !value.startsWith(AesConfigurationPasswordCipher.ENCRYPTED_PREFIX)
+                        && !value.startsWith("{enc}")) {
+                    throw new OpenDataConfigurationException(
+                            "Encrypted database property has no supported cipher prefix: " + key
+                            + ". Re-register application configuration.");
+                }
+                values.put(key, value);
             }
             return values;
         } catch (SQLException exception) {

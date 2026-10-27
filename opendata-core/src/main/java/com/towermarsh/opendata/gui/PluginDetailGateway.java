@@ -7,7 +7,7 @@ package com.towermarsh.opendata.gui;
 
 import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
 import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
-import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.core.database.SQLServerResource;
 import com.towermarsh.opendata.core.plugin.JdbcPluginRegistry;
 import com.towermarsh.opendata.core.plugin.PluginRegistryException;
@@ -40,7 +40,7 @@ public final class PluginDetailGateway {
             throw new IllegalArgumentException("pluginId must not be blank.");
         }
 
-        final var passwordCipher = new RsaConfigurationPasswordCipher();
+        final var passwordCipher = new AesConfigurationPasswordCipher();
         final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 

@@ -11,7 +11,7 @@ import com.towermarsh.opendata.config.ClasspathConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
-import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.core.database.SQLServerResource;
 import com.towermarsh.opendata.common.database.UnavailableDatabaseResourceManager;
@@ -73,7 +73,7 @@ public final class PluginExecutionGateway {
             throw new IllegalArgumentException("At least one plugin must be selected.");
         }
 
-        final var passwordCipher = new RsaConfigurationPasswordCipher();
+        final var passwordCipher = new AesConfigurationPasswordCipher();
         final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 

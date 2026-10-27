@@ -15,27 +15,19 @@ stored in documentation or retained in ordinary source resources. Encryption is
 one control; key separation, operating-system permissions and deployment design
 are equally important.
 
-## Implemented password protection
+## Implemented password protection (AES migration)
 
-`RsaConfigurationPasswordCipher` uses
-`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`:
+`AesConfigurationPasswordCipher` uses AES-256-GCM with a fresh 96-bit nonce,
+128-bit authentication tag and a 256-bit random key in an ACL-protected file
+outside the repository and packaged resources. Ciphertext uses the `{aes}`
+prefix followed by unpadded Base64URL. An unchanged `ConfigurationPasswordCipher`
+interface keeps bootstrap loading, application registration and the GUI
+integration intact. The bootstrap and `core.application_property` are both
+re-encrypted when configuration is registered. Legacy `{enc}` RSA values need
+an explicit migration from the known SQL password.
 
-- the public X.509 certificate encrypts the database password;
-- the matching PKCS#12 private key store decrypts it;
-- encrypted values use the `{enc}` prefix followed by Base64;
-- an already encrypted value is not encrypted a second time;
-- `ApplicationBootstrapPropertiesLoader` decrypts before constructing runtime
-  database configuration;
-- `--plugin <id|all> --register` stores the encrypted password in both
-  `core.application_property` and the rewritten bootstrap file.
-
-A PKCS#12 password can be supplied through the Java system property
-`opendata.config.keystore.password`. The intended environment-variable path is
-currently defective: `KEYSTORE_PASSWORD_ENVIRONMENT_VARIABLE` is set to
-`nopassword`, so the runtime does not read the documented
-`OPENDATA_CONFIG_KEYSTORE_PASSWORD` name. This must be corrected and tested
-before that environment interface is claimed. Neither mechanism is a managed
-secret provider; both are local password inputs.
+For setup and migration see
+`docs/guides/database-configuration-and-security.md`.
 
 ## Critical baseline finding
 

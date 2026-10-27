@@ -9,7 +9,7 @@ import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
 import com.towermarsh.opendata.config.ApplicationRuntimeConfiguration;
 import com.towermarsh.opendata.config.ClasspathConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
-import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.core.database.SQLServerResource;
 import com.towermarsh.opendata.core.logging.LoggingManager;
 import com.towermarsh.opendata.app.ApplicationInfo;
@@ -35,7 +35,7 @@ public final class ApplicationSettingsGateway {
      * @return immutable display rows
      */
     public List<ConfigurationDisplayEntry> load() {
-        final var passwordCipher = new RsaConfigurationPasswordCipher();
+        final var passwordCipher = new AesConfigurationPasswordCipher();
         final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 

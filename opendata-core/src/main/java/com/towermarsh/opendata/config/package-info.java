@@ -24,7 +24,7 @@
  * <li>{@link PluginRegistrationResolver} &mdash; Resolves validated plugin registrations from packaged or external properties.</li>
  * <li>{@link PropertiesFileConfigurationPropertiesSource} &mdash; Reads one plugin definition from an external UTF-8 properties file.</li>
  * <li>{@link PropertiesPluginDefinitionLoader} &mdash; Parses Phase 1 plugin definitions from classpath properties files.</li>
- * <li>{@link RsaConfigurationPasswordCipher} &mdash; Encrypts bootstrap passwords with an RSA public certificate and decrypts them with the matching private PKCS#12 certificate store.</li>
+ * <li>{@link AesConfigurationPasswordCipher} &mdash; Encrypts bootstrap passwords using AES-256-GCM and an external key file.</li>
  * <li>{@link StandardConfigurationValidator} &mdash; Performs framework-level validation common to every dataset plugin.</li>
  * </ul>
  *

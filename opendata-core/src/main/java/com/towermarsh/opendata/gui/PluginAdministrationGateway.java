@@ -14,7 +14,7 @@ import com.towermarsh.opendata.config.JdbcConfigurationPropertiesSource;
 import com.towermarsh.opendata.config.PluginConfigurationDirectoryScanner;
 import com.towermarsh.opendata.config.PluginRegistration;
 import com.towermarsh.opendata.config.PluginRegistrationResolver;
-import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.core.database.SQLServerResource;
 import com.towermarsh.opendata.core.plugin.JdbcPluginRegistry;
@@ -228,7 +228,7 @@ public final class PluginAdministrationGateway {
 
     private static <T> T withContext(
             final Function<AdministrationContext, T> operation) {
-        final ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
+        final ConfigurationPasswordCipher passwordCipher = new AesConfigurationPasswordCipher();
         final var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
         final var bootstrap = bootstrapLoader.load(Map.of());
         try (var database = SQLServerResource.initialise(

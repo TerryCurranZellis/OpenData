@@ -19,7 +19,7 @@ import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.PluginRegistration;
 import com.towermarsh.opendata.config.PluginRegistrationResolver;
 import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
-import com.towermarsh.opendata.config.RsaConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.core.database.SQLServerResource;
 import com.towermarsh.opendata.common.database.UnavailableDatabaseResourceManager;
@@ -77,7 +77,7 @@ public class OpenDataApplication {
         }
 
         // read the password for the database
-        ConfigurationPasswordCipher passwordCipher = new RsaConfigurationPasswordCipher();
+        ConfigurationPasswordCipher passwordCipher = new AesConfigurationPasswordCipher();
         var bootstrapLoader = new ApplicationBootstrapPropertiesLoader(passwordCipher);
         var bootstrap = bootstrapLoader.load(Map.of());
         requireDatabasePassword(bootstrap, arguments);

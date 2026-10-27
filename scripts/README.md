@@ -72,17 +72,16 @@ The `landscape.lua` filter creates A4 landscape sections for explicitly marked f
 
 Maintained scripts target Windows PowerShell 5.1. Pandoc must be on `PATH`; diagram rendering requires Java and the configured PlantUML JAR. PDF output additionally requires the configured LaTeX engine and either `rsvg-convert` or Inkscape.
 
-## Configuration encryption certificate
+## Configuration encryption key
 
-`New-ConfigurationCertificate.ps1` creates the certificate files used by the
-current bootstrap password encryption flow:
+`New-ConfigurationEncryptionKey.ps1` creates the random AES-256 key in a
+**private location outside the project repository**:
 
 ```powershell
-. .\scripts\New-ConfigurationCertificate.ps1
-New-ConfigurationCertificate
+.\scripts\New-ConfigurationEncryptionKey.ps1 `
+    -Path 'C:\ProgramData\OpenData\security\database.key'
+$env:OPENDATA_CONFIG_KEY_FILE = 'C:\ProgramData\OpenData\security\database.key'
 ```
 
-The script exports:
-
-- `src/main/resources/config/security/opendata-config-public.cer`
-- `src/main/resources/config/security/opendata-config-private.pfx`
+Protect the key file using NTFS ACLs; never commit it. For migration and
+startup instructions see `docs/guides/database-configuration-and-security.md`.

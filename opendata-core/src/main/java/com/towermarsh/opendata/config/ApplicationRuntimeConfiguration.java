@@ -29,7 +29,7 @@ public record ApplicationRuntimeConfiguration(
     private static final String DEFAULT_DRIVER_CLASS = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private static final String DEFAULT_POOL_NAME = "OpenData";
     private static final ConfigurationPasswordCipher PASSWORD_CIPHER
-            = new RsaConfigurationPasswordCipher();
+            = new AesConfigurationPasswordCipher();
 
     /** 
      * Validates and normalises record components. 

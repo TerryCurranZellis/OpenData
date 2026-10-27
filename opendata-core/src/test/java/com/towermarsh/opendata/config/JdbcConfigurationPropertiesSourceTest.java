@@ -41,19 +41,19 @@ class JdbcConfigurationPropertiesSourceTest {
     private ResultSet resultSet;
 
     @Test
-    void loadApplicationPropertiesRestoresEncryptedPrefixFromDatabaseFlag() throws Exception {
+    void loadApplicationPropertiesPreservesAesPrefixFromDatabase() throws Exception {
         when(database.getConnection()).thenReturn(connection);
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(statement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, true, false);
         when(resultSet.getString(1)).thenReturn("database.password", "database.user");
-        when(resultSet.getString(2)).thenReturn("ciphertext", "OpenData");
+        when(resultSet.getString(2)).thenReturn("{aes}ciphertext", "OpenData");
         when(resultSet.getBoolean(3)).thenReturn(true, false);
 
         final var source = new JdbcConfigurationPropertiesSource(database);
         final Map<String, String> properties = source.loadApplicationProperties();
 
-        assertEquals("{enc}ciphertext", properties.get("database.password"));
+        assertEquals("{aes}ciphertext", properties.get("database.password"));
         assertEquals("OpenData", properties.get("database.user"));
     }
 }

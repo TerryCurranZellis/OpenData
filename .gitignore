@@ -56,3 +56,8 @@ work/
 archive/
 
 .opendata
+# Local configuration and secret key material (untrack already-committed files)
+/opendata-core/src/main/resources/config/application.properties
+/opendata-core/src/main/resources/config/security/*.pfx
+/opendata-core/src/main/resources/config/security/*.cer
+*.key
