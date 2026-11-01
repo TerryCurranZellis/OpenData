@@ -12,9 +12,11 @@
 | [Ofgem](ofgem/README.md) | HTML discovery and XLSX | Transactional period replacement with source lineage | Implemented; live SQL acceptance pending |
 | [OpenMeteo](openmeteo/README.md) | Historical JSON API | Idempotent location/date upsert | Implemented; live SQL acceptance pending |
 | [Octopus](octopus/README.md) | Local PDF statements | Transactional electricity/gas upsert plus processed-file ledger | Implemented; live SQL acceptance pending |
+| [Octopus Adjustment](octopus-adjustment/README.md) | Local PDF adjustment bills | Separate adjustment tables plus processed-file ledger | Implemented; live SQL acceptance pending |
+| [Electricity](../electricity-plugins.md) (`electric-demand`, `electric-supply`) | NESO CKAN CSV | Idempotent business-key upsert | Implemented; live SQL acceptance pending |
 
 Packaged plugin definitions are listed in
-`opendata-plugins/src/main/resources/config/plugins/index.properties`. They are available for
+`opendata-core/src/main/resources/config/plugins/index.properties`. They are available for
 registration but are not automatically installed. The SQL Server table
 `core.plugin_registry` is authoritative for list, status and execution.
 

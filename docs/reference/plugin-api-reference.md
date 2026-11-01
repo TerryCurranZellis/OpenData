@@ -10,7 +10,16 @@
 
 The plugin API is compiled from the `opendata-api` module. Runtime registries,
 selection, factories, and execution orchestration are compiled from
-`opendata-core`. Provider implementations remain in `opendata-plugins`.
+`opendata-core`. Provider implementations are packages of `opendata-core`.
+
+## `PluginRegistrar`
+
+`PluginRegistrar` (in `opendata-api`) is the registration hook each plugin
+provides as a class named `RegisterPlugin` in the same package as its
+`OpenDataPlugin`. `register(DatabaseResourceManager)` must be idempotent and
+creates the plugin's schema and tables. `SqlResourcePluginRegistrar`
+(`opendata-common`) runs a classpath SQL script whose batches are separated by
+`GO` lines; plugins normally only extend it with their script name.
 
 ## `OpenDataPlugin`
 

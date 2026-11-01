@@ -83,7 +83,7 @@ implement `OpenDataPlugin`.
 
 The JavaFX **Register** command scans `<working directory>/config/plugins` and
 then the development fallback
-`<working directory>/opendata-plugins/src/main/resources/config/plugins`
+`<working directory>/opendata-core/src/main/resources/config/plugins`
 (plus the sibling-module equivalent when running from `opendata-core`). It
 validates complete `*.properties` definitions, ignores `index.properties`, and
 offers only plugin ids not already present in `core.plugin_registry`.

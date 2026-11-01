@@ -16,14 +16,16 @@ non-production instance first.
 2. `002-create-core-schema.sql`
 3. `003-create-configuration-store.sql`
 4. `003a-create-plugin-registry.sql`
-5. `004-create-ofgem-schema.sql`
-6. `005-seed-reference-data.sql`
-7. `006-create-plugin-run-audit.sql`
-8. `007-create-openmeteo-schema.sql`
-9. `007a-create-octopus-schema.sql`
-10. `008-grant-application-permissions.sql`
-11. `009-grant-shared-schema-permissions.sql`
-12. `010-verification-queries.sql` as a read-only verification aid
+5. `006-create-plugin-run-audit.sql`
+6. `008-grant-application-permissions.sql`
+7. `009-grant-shared-schema-permissions.sql`
+8. `010-verification-queries.sql` as a read-only verification aid
+
+Plugin schemas and tables (Ofgem, OpenMeteo, Octopus, Octopus Adjustment,
+Electric Demand, Electric Supply) are created by the application when each
+plugin is registered, using the plugin's own `RegisterPlugin` class and
+`sql/plugins/<id>.sql` resource. The `OpenData` login needs permission to create
+schemas and tables (for example `db_owner`).
 
 The application expects database `OpenData` and normally connects as login/user
 `OpenData`. Supply the login password locally through the SQLCMD variable; do not

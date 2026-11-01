@@ -1,6 +1,6 @@
 @startuml
 !pragma layout smetana
-title Principal Package Dependencies - Version 3.0.0
+title Principal Package Dependencies - Version 3.1.0
 top to bottom direction
 
 package app
@@ -11,13 +11,15 @@ package "plugin (shared runtime)" as Plugin
 
 package "plugin.<id> (provider)" as Provider {
   [workflow facade] as Facade
-  [config] as ProviderConfig
+  [RegisterPlugin] as ProviderRegister
+  [initialise / config] as ProviderConfig
   [download] as ProviderDownload
   [extract] as ProviderExtract
   [transform] as ProviderTransform
   [transform.model] as ProviderModel
   [transform.validate] as ProviderValidate
   [load] as ProviderLoad
+  [finalise] as ProviderFinalise
 }
 
 package discovery
@@ -44,6 +46,9 @@ Plugin --> database
 Plugin --> logging
 Facade --> Plugin
 Facade --> ProviderConfig
+Facade --> ProviderFinalise
+Plugin --> ProviderRegister : PluginRegistrar on registration
+ProviderRegister --> database : creates schema
 Facade --> ProviderDownload
 Facade --> ProviderExtract
 Facade --> ProviderTransform

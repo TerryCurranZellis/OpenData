@@ -18,7 +18,7 @@ start
 fork
   :Add classpath plugin properties\nand registry index entry;
 fork again
-  :Add ordered SQL, constraints,\npermissions and verification;
+  :Add RegisterPlugin and idempotent\nsql/plugins/<id>.sql schema script;
 fork again
   :Add unit, component and\nSQL Server tests;
 fork again

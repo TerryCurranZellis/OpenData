@@ -5,17 +5,17 @@ This pack implements the new `octopus-adjustment` plugin without replacing or ed
 ## Contents
 
 - new Java package `com.towermarsh.opendata.plugin.octopusadjustment`;
-- new plugin definition `opendata-plugins/src/main/resources/config/plugins/octopus-adjustment.properties`;
-- new SQL script `sql/011-create-octopus-adjustment-tables.sql`;
+- new plugin definition `opendata-core/src/main/resources/config/plugins/octopus-adjustment.properties`;
+- database tables are created automatically when the plugin is registered (`sql/plugins/octopus-adjustment.sql`);
 - new JUnit tests under `src/test/java/.../octopusadjustment`.
 
 ## Installation
 
 1. Copy the files into the matching repository-relative paths. All paths in this pack are new.
-2. Run `sql/011-create-octopus-adjustment-tables.sql` against the OpenData database.
+2. No SQL script needs to be run: registering the plugin creates its tables.
 3. Build and test the project.
 4. Start OpenData in GUI mode.
-5. Use the GUI **Register** action to register `octopus-adjustment.properties`. New plugins are registered through the GUI only; do not use the CLI to register this plugin.
+5. Use the GUI **Register** action to register `octopus-adjustment.properties`. Registering runs the plugin's `RegisterPlugin`, which creates its tables.
 6. Verify the registration with:
 
    ```text

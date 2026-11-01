@@ -86,4 +86,4 @@ secrets and customer source data.
 
 ## Historic electricity plugins (NESO)
 
-Add the two new Maven modules to the `opendata-plugins` reactor. JUnit Jupiter tests are test-scoped; see electricity plugin guide.
+The electricity plugins are packages of `opendata-core`; no extra Maven modules are required. JUnit Jupiter tests are test-scoped; see the electricity plugin guide.

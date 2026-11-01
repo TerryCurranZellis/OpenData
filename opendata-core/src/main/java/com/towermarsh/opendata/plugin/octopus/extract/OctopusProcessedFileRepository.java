@@ -54,7 +54,7 @@ public final class OctopusProcessedFileRepository {
             return Set.copyOf(keys);
         } catch (SQLException exception) {
             throw new DatabaseAccessException(
-                    "Unable to read processed Octopus statement files. Run sql/007a-create-octopus-schema.sql.",
+                    "Unable to read processed Octopus statement files. Re-register the octopus plugin to create its tables.",
                     exception);
         }
     }

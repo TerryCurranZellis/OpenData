@@ -19,20 +19,21 @@ ready to leave the current repository or release train yet.
 ## Decision
 
 Keep one modular-monolith release and one Maven reactor, but split the source
-into four modules:
+into three modules:
 
 - `opendata-api` for shared plugin contracts, immutable plugin/configuration
   records, and database resource interfaces;
 - `opendata-common` for reusable validation, JDBC helpers, base exceptions, and
   support strategies;
-- `opendata-plugins` for the bundled plugin registry infrastructure, packaged
-  plugin definitions, and provider implementations; and
 - `opendata-core` for the executable application, SQL Server resources, GUI,
-  CLI, and runtime orchestration.
+  CLI, runtime orchestration, and the bundled plugins and their packaged
+  definitions.
 
-Bundled provider plugins remain in the shared reactor and executable release
-train, but now build in `opendata-plugins` until they are ready for a separate
-project boundary.
+Bundled provider plugins live in `opendata-core` as `plugin.<id>` packages with
+one shared `config/plugins/index.properties`. An earlier revision built each
+plugin as a separate `opendata-plugin-*` module; that was withdrawn because
+the plugin classes were not on the core classpath when registering a plugin
+from a properties file, and because each module needed its own index.
 
 ## Consequences
 

@@ -17,8 +17,7 @@ and explicit module and package ownership.
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
 | `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable support strategies |
-| `opendata-plugins` | Bundled plugin definitions and provider implementations |
-| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, SQL Server resources, CLI, and JavaFX GUI |
+| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, bundled plugins, SQL Server resources, CLI, and JavaFX GUI |
 
 ## Principal components
 

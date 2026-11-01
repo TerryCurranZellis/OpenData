@@ -1,0 +1,28 @@
+@startuml
+title Plugin Registration Creates Plugin Tables - Version 3.1.0
+
+actor Operator
+participant "CLI --register /\nGUI Register or Register from File" as Entry
+participant PluginRegistrationResolver as Resolver
+participant ConfigurationRegistrationService as Service
+participant JdbcPluginRegistry as Registry
+participant PluginRegistrarLocator as Locator
+participant "plugin.<id>.RegisterPlugin" as RegisterPlugin
+participant SqlScriptExecutor as Runner
+database "SQL Server" as DB
+
+Operator -> Entry : choose plugin or properties file
+Entry -> Resolver : resolve definition
+Resolver -> Resolver : validate properties and\nplugin.implementation-class on classpath
+Entry -> Service : register(bootstrap, registrations)
+loop each plugin
+  Service -> Registry : installPluginSchema(descriptor)
+  Registry -> Locator : install(descriptor, database)
+  Locator -> RegisterPlugin : instantiate <implementation package>.RegisterPlugin
+  Locator -> RegisterPlugin : register(database)
+  RegisterPlugin -> Runner : run sql/plugins/<id>.sql
+  Runner -> DB : each GO batch (IF ... IS NULL guards)
+  Service -> Registry : register(descriptor, properties)
+  Registry -> DB : core.plugin_registry + core.plugin_property
+end
+@enduml

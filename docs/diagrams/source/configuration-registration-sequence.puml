@@ -8,6 +8,7 @@ participant ClasspathPluginRegistry as Catalogue
 participant PropertiesFileConfigurationPropertiesSource as ExternalFile
 participant ConfigurationRegistrationService as Register
 participant JdbcPluginRegistry as Registry
+participant "plugin.<id>.RegisterPlugin" as RegisterPlugin
 participant JdbcConfigurationPropertiesSource as Properties
 participant SQLServerResource as SQL
 
@@ -25,6 +26,9 @@ Register -> Cipher : encrypt database password
 Register -> Properties : save application properties
 Properties -> SQL : core.application_property
 loop each selected plugin
+  Register -> Registry : installPluginSchema(descriptor)
+  Registry -> RegisterPlugin : register(database)
+  RegisterPlugin -> SQL : create schema and tables if missing
   Register -> Registry : upsert metadata and replace properties
   Registry -> SQL : core.plugin_registry + core.plugin_property
 end

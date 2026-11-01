@@ -20,7 +20,7 @@ working directory.
 ## 2. Install SQL Server
 
 Run the numbered scripts in `sql/README.md`, including
-`003a-create-plugin-registry.sql` and `007a-create-octopus-schema.sql`.
+`003a-create-plugin-registry.sql`. Plugin tables are created automatically when each plugin is registered.
 
 ## 3. Prepare certificate and bootstrap
 

@@ -18,7 +18,7 @@ lookup and contains version, database-backed switch, JDBC URL, user and plain
 
 `config/plugins/index.properties` and `config/plugins/<id>.properties` describe
 plugins available for registration. In the source tree they are packaged from
-`opendata-plugins/src/main/resources/config/plugins`. They are not the
+`opendata-core/src/main/resources/config/plugins`. They are not the
 authoritative installed state.
 
 ## Persistent registry and configuration

@@ -108,7 +108,7 @@ Choose **Register > Register** or the Register toolbar button to scan the normal
 OpenData plugin-configuration folders for complete `*.properties` definitions
 that are not already registered. The GUI checks deployment-style
 `config/plugins` first and, when running from a source checkout,
-`opendata-plugins/src/main/resources/config/plugins`. `index.properties` is
+`opendata-core/src/main/resources/config/plugins`. `index.properties` is
 ignored because it is a catalogue rather than a complete plugin definition.
 
 Discovered definitions are validated before they are offered. If one or more new

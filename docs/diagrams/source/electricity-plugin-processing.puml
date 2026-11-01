@@ -1,0 +1,39 @@
+@startuml
+!pragma layout smetana
+title Electricity Plugin Processing (electric-demand and electric-supply) - Version 3.1.0
+
+actor Operator
+participant "ElectricDemandPlugin /\nElectricSupplyPlugin" as Plugin
+participant "ElectricXxxInitialise" as Initialise
+participant NesoSettings
+participant "ElectricXxxExtract" as Extract
+participant NesoCkanClient
+participant "ElectricXxxTransform" as Transform
+participant "ElectricXxxLoad" as Load
+participant "ElectricXxxFinalise" as Finalise
+participant "NESO CKAN" as Neso
+database "SQL Server\nelectricdemand / electricsupply" as DB
+
+Operator -> Plugin : --plugin electric-demand|electric-supply
+Plugin -> Initialise : execute(context)
+Initialise -> NesoSettings : read start/end dates, API, timeouts
+Initialise -> Extract : extract(settings)
+Extract -> NesoCkanClient : list CSV resources
+NesoCkanClient -> Neso : datapackage_show
+Extract -> NesoCkanClient : download each resource
+NesoCkanClient -> Neso : HTTPS GET CSV
+Extract --> Initialise : files in temporary working directory
+Initialise -> Transform : transform(files, settings)
+Transform --> Initialise : records within date range
+alt dry run
+  Initialise -> Load : load(records, dryRun)
+  Load --> Initialise : counts only, no writes
+else execute
+  Initialise -> Load : load(records)
+  Load -> DB : update or insert by business key (one transaction)
+  Load --> Initialise : read, inserted, updated
+end
+Initialise -> Finalise : finalise (always)
+Finalise -> Finalise : delete working directory, log statistics
+Initialise --> Plugin : PluginMetrics
+@enduml

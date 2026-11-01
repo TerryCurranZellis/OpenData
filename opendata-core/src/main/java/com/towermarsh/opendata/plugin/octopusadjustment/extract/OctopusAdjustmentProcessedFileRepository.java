@@ -56,7 +56,7 @@ public final class OctopusAdjustmentProcessedFileRepository {
             return Set.copyOf(keys);
         } catch (SQLException exception) {
             throw new DatabaseAccessException(
-                    "Unable to read processed Octopus adjustment files. Run sql/011-create-octopus-adjustment-tables.sql.",
+                    "Unable to read processed Octopus adjustment files. Re-register the octopus-adjustment plugin to create its tables.",
                     exception);
         }
     }

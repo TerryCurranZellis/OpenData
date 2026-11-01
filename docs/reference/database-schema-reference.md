@@ -79,4 +79,4 @@ must not be interpreted as the permanent target model.
 
 ## Historic electricity plugins (NESO)
 
-Separate tables `electricdemand.Demand` and `electricsupply.GenerationMix`, installed using `sql/01-electric-demand.sql` and `sql/02-electric-supply.sql` from the electricity plugin patch.
+Separate tables `electricdemand.Demand` and `electricsupply.GenerationMix`, created when the plugins are registered, from `sql/plugins/electric-demand.sql` and `sql/plugins/electric-supply.sql`.

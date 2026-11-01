@@ -8,12 +8,18 @@ contain release blockers.
 
 ### Added
 
+- `electric-demand` and `electric-supply` plugins follow the initialise, extract, transform, load, finalise steps.
+- `PluginRegistrar` (`opendata-api`) and a `RegisterPlugin` class in every plugin: registering a plugin creates its schema and tables from `sql/plugins/<id>.sql`. `sql/004`, `005`, `007`, `007a`, `011`, `01` and `02` are replaced by these scripts.
+- Failed plugin runs record the failing step, the full cause chain with SQL state and error codes, and key stack frames in `core.PluginRun.ErrorMessage`; the stack trace is logged.
+- Octopus extract logs the expected file pattern and the number of ignored files when nothing matches.
 - Split the source tree into `opendata-api`, `opendata-common`, and `opendata-core` Maven modules while retaining one reactor build.
 - Added module-local build verification to `opendata-api` and `opendata-common`, including Java/Maven enforcement, Surefire, Checkstyle, SpotBugs, JaCoCo, Javadoc, and dependency analysis.
 - Added new package-level Javadocs for split API/common packages and ADRs covering module boundaries, module-local build verification, and test ownership.
 
 ### Changed
 
+- The reactor is now `opendata-api`, `opendata-common` and `opendata-core` only. All plugins moved into `opendata-core` with a single `config/plugins/index.properties`; this fixes `octopus-adjustment`, `electric-demand` and `electric-supply` not being found or registrable.
+- Fixed the Octopus adjustment extract log message (wrong format arguments).
 - Corrected the reactor module list to build the `opendata-api` directory.
 - Renamed the old `OpenDataPluginSupport` core dependency reference to `OpenData Common` (`opendata-common`).
 - Moved shared JDBC, validation, and HTML link resolver tests into `opendata-common` so tests are owned by the module that compiles the production code.

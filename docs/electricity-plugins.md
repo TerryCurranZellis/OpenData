@@ -2,16 +2,13 @@
 
 ## Overview
 
-Two independent OpenData plugins, `electric-demand` and `electric-supply`, load historical Great Britain datasets supplied by the National Energy System Operator (NESO). Each depends only on `opendata-api` and its own third-party parsing libraries, never on the other plugin. No existing core Java modifications are required. Northern Ireland is not covered.
+Two independent OpenData plugins, `electric-demand` and `electric-supply`, load historical Great Britain datasets supplied by the National Energy System Operator (NESO). Both are packages of `opendata-core` (`plugin.electricdemand`, `plugin.electricsupply`) and never depend on each other; shared NESO helpers live in `plugin.neso`. Each follows the standard initialise, extract, transform, load, finalise steps. Northern Ireland is not covered.
 
 ## Installation
 
-1. Copy both `opendata-plugin-*` directories into the existing `opendata-plugins` folder.
-2. Add the two `<module>` entries shown in `integration/opendata-plugins-pom-module-additions.xml` to `opendata-plugins/pom.xml`.
-3. Apply the two SQL scripts to the configured `OpenData` SQL Server database.
-4. Build with Maven using the project's standard reactor build. Both modules have JUnit Jupiter test dependencies (test-scoped); no test JARs are redistributed.
-5. Register `electric-demand.properties` and `electric-supply.properties` using the existing OpenData registration mechanism, or their packaged classpath discovery. Do not duplicate plugin ids when registering.
-6. Run `opendata --plugin electric-demand --execute --dry-run` then `opendata --plugin electric-supply --execute --dry-run`. Finally run without `--dry-run`.
+1. Build with Maven using the standard reactor build (`opendata-api`, `opendata-common`, `opendata-core`). No extra modules or SQL scripts are needed.
+2. Register `electric-demand` and `electric-supply` with the GUI **Register** or **Register from File** actions, or the CLI `--register`. Registration runs each plugin's `RegisterPlugin`, which creates the `electricdemand` and `electricsupply` schemas and tables from `sql/plugins/electric-demand.sql` and `sql/plugins/electric-supply.sql`. The SQL login therefore needs permission to create schemas and tables. Do not duplicate plugin ids when registering.
+3. Run `opendata --plugin electric-demand --execute --dry-run` then `opendata --plugin electric-supply --execute --dry-run`. Finally run without `--dry-run`.
 
 ## Configuration
 
@@ -23,9 +20,23 @@ Both plugin `.properties` definitions include `start-date` and `end-date` (ISO y
 
 **Supply:** one row per NESO generation mix UTC timestamp, with fuel-category MW, imports MW, generation total and reported carbon intensity. Fuel totals and carbon intensity are sourced values, not derived. Embedded renewable figures are estimates. `OTHER` currently encompasses battery net discharge and transmission-connected solar; `STORAGE` represents pumped storage, according to NESO's dataset notes. The dataset applies corrections and seasonal processing; this is not a direct raw power station meter feed.
 
+![Electricity plugin processing](diagrams/generated/electricity-plugin-processing.svg)
+
+![Electricity data model](diagrams/generated/electricity-data-model.svg)
+
 ## Extraction and loading
 
-Each plugin independently queries CKAN `datapackage_show`, discovers matching CSV resource URLs, streams the CSV using Apache Commons CSV, validates and maps dates/numeric values, and inserts or updates SQL Server rows based on the business keys. Reruns are intended to be idempotent. Dry-run downloads and parses but performs no database writes. JDBC transactions are committed every 500 affected records for bounded transaction size, with rollback of the active transaction on failure. Previously committed batches remain committed if a later error occurs. Empty numeric cells map to SQL NULL.
+Each plugin runs the standard steps:
+
+| Step | Behaviour |
+|---|---|
+| Initialise | reads `start-date`, `end-date`, API and timeout properties and orchestrates the other steps |
+| Extract | queries CKAN `datapackage_show`, selects the matching CSV resources and downloads them to a temporary working directory |
+| Transform | parses the CSV files with Apache Commons CSV, validates and maps dates and numbers, and keeps rows inside the date range |
+| Load | inserts or updates SQL Server rows by business key in one transaction; a failure rolls the whole load back. Dry runs report records as skipped and write nothing |
+| Finalise | always runs: deletes the working directory and logs the statistics |
+
+Reruns are idempotent. Empty numeric cells map to SQL NULL.
 
 **Important operational notes:** Full-history generation mix CSVs can be large and may require several minutes and substantial bandwidth; initial import into SQL Server can be slow due to row-by-row upserts. Set the request timeout according to network behaviour. The supplied code assumes source CSV headers/CKAN metadata fields remain consistent; test against a recent file before scheduling production collection. If NESO changes resource layouts or canonical dataset identifiers, update the parser and property definition. The supplied package was not integration-tested against live NESO or a SQL Server instance in this environment.
 

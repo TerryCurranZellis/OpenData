@@ -25,7 +25,19 @@ catalogue only for registration. `JdbcPluginRegistry` reads
 status and execution selection.
 
 In the source tree, the packaged definitions and bundled provider
-implementations are owned by the `opendata-plugins` module.
+implementations are packages of the `opendata-core` module (`plugin.<id>`),
+with one `config/plugins/index.properties` listing every bundled plugin.
+
+Every plugin follows the same five steps: **initialise** (configuration and
+orchestration), **extract**, **transform**, **load** and **finalise**
+(always runs; archives or deletes working files and reports statistics).
+Every plugin also supplies a `RegisterPlugin` class (an implementation of
+`PluginRegistrar`) beside its `OpenDataPlugin`. When a plugin is registered,
+`JdbcPluginRegistry.installPluginSchema` locates it by convention and runs it so
+the plugin creates its own schema and tables from `sql/plugins/<id>.sql`. The
+scripts are idempotent, so re-registering is safe.
+
+![Plugin registration creates tables](../diagrams/generated/plugin-registration-schema-sequence.svg)
 
 Plugin property values are loaded by `PropertiesPluginDefinitionLoader` through
 a `ConfigurationPropertiesSource`:

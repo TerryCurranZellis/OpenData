@@ -84,13 +84,13 @@ validation after conversion.
 Create:
 
 ```text
-opendata-plugins/src/main/resources/config/plugins/<id>.properties
+opendata-core/src/main/resources/config/plugins/<id>.properties
 ```
 
 Add the ID to:
 
 ```text
-opendata-plugins/src/main/resources/config/plugins/index.properties
+opendata-core/src/main/resources/config/plugins/index.properties
 ```
 
 The descriptor includes `plugin.*`, `dataset.id`, one or more
@@ -105,6 +105,22 @@ checks `<working directory>/config/plugins` first. The classpath
 the GUI scanner ignores it because it is not a complete plugin definition.
 
 Do not add provider selection code to the application main class.
+
+## 5a. Add the plugin's own `RegisterPlugin`
+
+Create `plugin.<id>.RegisterPlugin` in the same package as the plugin
+implementation class, extending `SqlResourcePluginRegistrar` with the plugin id
+and the name of an idempotent SQL script, for example
+`sql/plugins/<id>.sql` under `opendata-core/src/main/resources`. Do not write
+`USE [OpenData]`, `SET` options or `schema_version` inserts in the script.
+Separate batches with `GO` lines and guard every object with
+`IF ... IS NULL`. The application runs the hook every time the plugin is
+registered, from the CLI, the GUI **Register** and **Register from File**
+actions, so no separate installation script is needed. Grant the
+`opendata_app` role on the plugin schema in the script when that role exists.
+
+Implement the five steps in sub-packages `initialise`, `extract`, `transform`,
+`load` and `finalise` below `plugin.<id>`.
 
 ## 6. Select the persistence strategy
 

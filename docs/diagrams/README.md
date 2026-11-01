@@ -44,6 +44,11 @@ under `docs/diagrams` or another legacy subdirectory.
 | OpenMeteo persistence | `openmeteo-persistence.puml` | [image](generated/openmeteo-persistence.svg) |
 | Octopus statement processing | `octopus-statement-processing.puml` | [image](generated/octopus-statement-processing.svg) |
 | Octopus data model | `octopus-data-model.puml` | [image](generated/octopus-data-model.svg) |
+| Octopus adjustment processing | `octopus-adjustment-processing.puml` | [image](generated/octopus-adjustment-processing.svg) |
+| Octopus adjustment data model | `octopus-adjustment-data-model.puml` | [image](generated/octopus-adjustment-data-model.svg) |
+| Electricity plugin processing | `electricity-plugin-processing.puml` | [image](generated/electricity-plugin-processing.svg) |
+| Electricity data model | `electricity-data-model.puml` | [image](generated/electricity-data-model.svg) |
+| Plugin registration creates tables | `plugin-registration-schema-sequence.puml` | [image](generated/plugin-registration-schema-sequence.svg) |
 | Documentation generation | `documentation-generation-flow.puml` | [image](generated/documentation-generation-flow.svg) |
 | Operational lifecycle | `operational-lifecycle.puml` | [image](generated/operational-lifecycle.svg) |
 | Manifest-driven documentation engine | `manifest-driven-documentation-engine.puml` | [image](generated/manifest-driven-documentation-engine.svg) |

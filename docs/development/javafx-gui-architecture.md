@@ -132,7 +132,7 @@ Register from File, Enable, Disable and Unregister.
 
 The normal Register action uses `PluginConfigurationDirectoryScanner` to inspect
 `config/plugins` and the source-tree fallback
-`opendata-plugins/src/main/resources/config/plugins`. Candidate definitions are
+`opendata-core/src/main/resources/config/plugins`. Candidate definitions are
 validated before being shown to the user. Already registered ids are filtered
 from the discovery result.
 

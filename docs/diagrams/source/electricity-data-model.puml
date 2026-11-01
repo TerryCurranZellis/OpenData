@@ -1,0 +1,29 @@
+@startuml
+!pragma layout smetana
+title Electricity Plugin Data Model - Version 3.1.0
+skinparam shadowing false
+
+entity "electricdemand.Demand" as Demand {
+  * SettlementDate : date <<PK>>
+  * SettlementPeriod : tinyint <<PK, 1-50>>
+  --
+  NationalDemandMW : decimal(18,3)
+  TransmissionSystemDemandMW : decimal(18,3)
+  EnglandWalesDemandMW : decimal(18,3)
+  EmbeddedWindMW : decimal(18,3)
+  EmbeddedSolarMW : decimal(18,3)
+  PumpingMW : decimal(18,3)
+}
+
+entity "electricsupply.GenerationMix" as Mix {
+  * DateTimeUtc : datetime2(0) <<PK>>
+  --
+  GasMW, CoalMW, NuclearMW, WindMW : decimal(18,3)
+  EmbeddedWindMW, HydroMW, ImportsMW : decimal(18,3)
+  BiomassMW, OtherMW, SolarMW, StorageMW : decimal(18,3)
+  GenerationMW, CarbonIntensity : decimal(18,3)
+}
+
+note bottom of Demand : Created by electric-demand RegisterPlugin
+note bottom of Mix : Created by electric-supply RegisterPlugin
+@enduml

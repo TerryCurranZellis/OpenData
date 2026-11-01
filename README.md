@@ -12,11 +12,13 @@ command-line entry point.
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable plugin/configuration records, and database resource interfaces |
 | `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable download-support strategies |
-| `opendata-plugins` | Bundled plugin definitions and provider implementations |
-| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, SQL Server resources, and GUI/CLI |
+| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, SQL Server resources, GUI/CLI, and the bundled plugins (`plugin.<id>` packages) |
 
-The current bundled plugins now build in `opendata-plugins` and remain part of
-the same reactor and executable release train.
+The bundled plugins (Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric
+Demand and Electric Supply) are packages inside `opendata-core`. Each plugin
+follows the initialise, extract, transform, load, finalise steps and ships its
+own `RegisterPlugin` class that creates its database schema and tables when
+the plugin is registered.
 
 ## Build
 

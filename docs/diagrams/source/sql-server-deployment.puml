@@ -12,7 +12,7 @@ node "Execution Host" {
 }
 
 cloud "Public data providers" as Providers
-database "SQL Server: OpenData\ncore, ofgem, openmeteo" as Database
+database "SQL Server: OpenData\ncore + plugin schemas created at registration\n(ofgem, openmeteo, octopus,\nelectricdemand, electricsupply)" as Database
 
 Operator --> Application : GUI or command-line launch
 Application --> Config : read
