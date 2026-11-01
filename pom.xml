@@ -38,7 +38,6 @@
         <module>opendata-core</module>
         <module>opendata-api</module>
         <module>opendata-common</module>
-        <module>opendata-plugins</module>
     </modules>
 
     <dependencyManagement>
@@ -51,26 +50,6 @@
             <dependency>
                 <groupId>com.towermarsh</groupId>
                 <artifactId>opendata-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.towermarsh</groupId>
-                <artifactId>opendata-plugin-ofgem</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.towermarsh</groupId>
-                <artifactId>opendata-plugin-openmeteo</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.towermarsh</groupId>
-                <artifactId>opendata-plugin-octopus</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.towermarsh</groupId>
-                <artifactId>opendata-plugin-octopus-adjustment</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

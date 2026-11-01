@@ -80,6 +80,12 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <!-- Apache PDFBox (Octopus plugins) -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.8</version>
+        </dependency>
         <!-- Apache Commons CSV -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -149,30 +155,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>opendata-common</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-ofgem</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-openmeteo</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-octopus</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-octopus-adjustment</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>

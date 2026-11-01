@@ -78,8 +78,10 @@ public class ConfigurationRegistrationService {
         databaseSource.saveApplicationProperties(
                 applicationProperties,
                 List.of("database.password"));
-        plugins.forEach(plugin -> pluginRegistry.register(
-                plugin.descriptor(), plugin.properties()));
+        plugins.forEach(plugin -> {
+            pluginRegistry.installPluginSchema(plugin.descriptor());
+            pluginRegistry.register(plugin.descriptor(), plugin.properties());
+        });
         bootstrapLoader.store(bootstrapProperties.withUseDatabaseProperties(true));
     }
 }

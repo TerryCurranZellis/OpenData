@@ -178,6 +178,16 @@ public class JdbcPluginRegistry implements PluginRegistry {
     }
 
     /**
+     * Runs the plugin's own {@code RegisterPlugin} hook so that its database
+     * schema and tables exist before the plugin is recorded as registered.
+     *
+     * @param descriptor plugin metadata
+     */
+    public void installPluginSchema(final PluginDescriptor descriptor) {
+        new PluginRegistrarLocator().install(descriptor, database);
+    }
+
+    /**
      * Removes one plugin and its stored configuration.
      *
      * @param pluginId registered plugin id

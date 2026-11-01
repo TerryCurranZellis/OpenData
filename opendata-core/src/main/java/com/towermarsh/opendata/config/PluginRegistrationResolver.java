@@ -140,19 +140,21 @@ public class PluginRegistrationResolver {
                 definition.configurationVersion());
     }
 
-    private static void validateImplementation(final String className) {
+    private void validateImplementation(final String className) {
         try {
             final var implementation = Class.forName(
                     className,
                     false,
-                    Thread.currentThread().getContextClassLoader());
+                    classLoader);
             if (!OpenDataPlugin.class.isAssignableFrom(implementation)) {
                 throw new PluginRegistryException(
                         "Plugin class does not implement OpenDataPlugin: " + className);
             }
         } catch (ClassNotFoundException exception) {
             throw new PluginRegistryException(
-                    "Plugin implementation class was not found: " + className,
+                    ("Plugin implementation class was not found on the application classpath: %s. "
+                            + "Plugins are packaged inside opendata-core; check plugin.implementation-class.")
+                            .formatted(className),
                     exception);
         }
     }

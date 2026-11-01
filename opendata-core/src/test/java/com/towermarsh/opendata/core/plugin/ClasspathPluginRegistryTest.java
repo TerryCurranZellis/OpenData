@@ -20,12 +20,12 @@ import org.junit.jupiter.api.Test;
 class ClasspathPluginRegistryTest {
 
     @Test
-    void listsOfgemOpenMeteoAndOctopusFromClasspathIndex() {
+    void listsAllBundledPluginsFromSingleClasspathIndex() {
         final PluginRegistry registry =
                 new ClasspathPluginRegistry();
 
         assertEquals(
-                List.of("octopus", "ofgem", "openmeteo"),
+                List.of("electric-demand", "electric-supply", "octopus", "octopus-adjustment", "ofgem", "openmeteo"),
                 registry.list().stream()
                         .map(PluginDescriptor::id)
                         .toList());

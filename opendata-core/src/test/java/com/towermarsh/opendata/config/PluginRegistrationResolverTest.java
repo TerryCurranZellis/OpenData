@@ -36,7 +36,7 @@ class PluginRegistrationResolverTest {
                 .map(plugin -> plugin.id())
                 .toList();
 
-        assertEquals(List.of("octopus", "ofgem", "openmeteo"), ids);
+        assertEquals(List.of("electric-demand", "electric-supply", "octopus", "octopus-adjustment", "ofgem", "openmeteo"), ids);
     }
 
     @Test

@@ -10,7 +10,6 @@ import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.OpenDataPlugin;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
-import com.towermarsh.opendata.util.ExceptionMessages;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -152,17 +151,13 @@ public class PluginExecutionCoordinator {
         } catch (Exception exception) {
             final boolean interrupted = Thread.currentThread().isInterrupted();
             status = interrupted ? PluginRunStatus.CANCELLED : PluginRunStatus.FAILED;
-            final String failureMessage = ExceptionMessages.rootCauseMessage(exception);
+            final String failureMessage = PluginFailureReport.describe(exception);
             error = Optional.of(failureMessage);
             LOGGER.log(
                     interrupted ? Level.WARNING : Level.SEVERE,
-                    "{0}: plugin={1}, error={2}",
-                    new Object[]{
-                        interrupted ? "Plugin execution was cancelled" : "Plugin execution failed",
-                        pluginId,
-                        failureMessage
-                    });
-            LOGGER.log(Level.FINE, "Plugin execution failure details: " + pluginId, exception);
+                    (interrupted ? "Plugin execution was cancelled: plugin=" : "Plugin execution failed: plugin=")
+                    + pluginId + ", runId=" + runId + "\n" + failureMessage,
+                    exception);
         }
 
         PluginRunResult result = new PluginRunResult(
@@ -181,7 +176,7 @@ public class PluginExecutionCoordinator {
                             clock.instant(),
                             metrics,
                             Optional.of("Plugin succeeded but run-audit completion failed: "
-                                    + auditException.getMessage()));
+                                    + PluginFailureReport.describe(auditException)));
                 }
             }
         }
