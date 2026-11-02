@@ -71,7 +71,11 @@ public final class NesoCkanClient {
         for (var r : manifest.path("result").path("resources")) {
             final var name = r.path("name").asText("");
             if ("CSV".equalsIgnoreCase(r.path("format").asText("")) && nameFilter.test(name)) {
-                final var url = r.path("url").asText();
+                final var url = r.path("url").asText("").trim();
+                if (url.isEmpty()) {
+                    LOG.log(Level.WARNING, "Skipping NESO resource without URL: {0}", name);
+                    continue;
+                }
                 if (!url.toLowerCase(Locale.ROOT).startsWith("https://")) {
                     throw new IOException("Non-HTTPS resource URL: " + url);
                 }
