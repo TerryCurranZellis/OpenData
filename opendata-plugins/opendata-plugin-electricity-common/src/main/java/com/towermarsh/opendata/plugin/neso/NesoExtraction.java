@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * Result of a NESO extract step: downloaded CSV files inside a working directory.
@@ -45,7 +44,7 @@ public record NesoExtraction(Path workingDirectory, List<NesoResource> resources
         if (".".equals(workingDirectory.toString())) {
             return;
         }
-        try (Stream<Path> files = Files.walk(workingDirectory)) {
+        try (var files = Files.walk(workingDirectory)) {
             files.sorted(java.util.Comparator.reverseOrder()).forEach(path -> {
                 try {
                     Files.deleteIfExists(path);

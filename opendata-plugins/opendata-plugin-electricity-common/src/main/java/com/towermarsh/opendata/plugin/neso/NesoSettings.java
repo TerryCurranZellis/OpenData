@@ -54,7 +54,7 @@ public record NesoSettings(
      * @param defaultDatasetId dataset slug used when none is configured
      * @return typed settings
      */
-    public static NesoSettings from(final PluginDefinition definition, final String defaultDatasetId) {
+    public static NesoSettings from(PluginDefinition definition, String defaultDatasetId) {
         Objects.requireNonNull(definition, "definition");
         return new NesoSettings(
                 LocalDate.parse(property(definition, "start-date", "2009-01-01")),
@@ -67,7 +67,7 @@ public record NesoSettings(
     }
 
     private static String property(
-            final PluginDefinition definition, final String name, final String defaultValue) {
+            PluginDefinition definition, String name, String defaultValue) {
         return definition.findProperty(name)
                 .map(p -> p.value())
                 .filter(v -> !v.isBlank())

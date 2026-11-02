@@ -25,7 +25,7 @@ public record NesoResource(String name, String url, Path file) {
      * @param downloaded local file
      * @return downloaded resource
      */
-    public NesoResource withFile(final Path downloaded) {
+    public NesoResource withFile(Path downloaded) {
         return new NesoResource(name, url, downloaded);
     }
 }
