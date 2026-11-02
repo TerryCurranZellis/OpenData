@@ -21,15 +21,20 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * AES-256-GCM encryption for bootstrap and database-stored passwords.
  *
- * <p>The 256-bit secret key is kept in a separate, access-restricted file,
- * outside the source tree and packaged JAR. The file contains a single
- * Base64-encoded 32-byte random key. Each encrypted value uses a fresh
- * 12-byte random nonce and a 128-bit authentication tag.</p>
+ * <p>
+ * The 256-bit secret key is kept in a separate, access-restricted file, outside
+ * the source tree and packaged JAR. The file contains a single Base64-encoded
+ * 32-byte random key. Each encrypted value uses a fresh 12-byte random nonce
+ * and a 128-bit authentication tag.</p>
  *
- * <p>Legacy RSA values ({@code {enc}}) deliberately require migration;
- * they are never mistaken for plain text.</p>
+ * <p>
+ * Legacy RSA values ({@code {enc}}) deliberately require migration; they are
+ * never mistaken for plain text.</p>
+ *
+ * @author Terry Curran
+ * @version 3.1.0
  */
-public final class AesConfigurationPasswordCipher implements ConfigurationPasswordCipher {
+public class AesConfigurationPasswordCipher implements ConfigurationPasswordCipher {
 
     public static final String ENCRYPTED_PREFIX = "{aes}";
     public static final String KEY_FILE_PROPERTY = "opendata.config.key-file";
@@ -42,31 +47,42 @@ public final class AesConfigurationPasswordCipher implements ConfigurationPasswo
 
     private final Path keyFile;
 
-    /** Uses a key-file path supplied in a JVM property or environment variable. */
+    /**
+     * Uses a key-file path supplied in a JVM property or environment variable.
+     */
     public AesConfigurationPasswordCipher() {
         this(resolveKeyFile());
     }
 
-    /** Creates a cipher pointing to an external key file (useful for testing). */
-    public AesConfigurationPasswordCipher(final Path keyFile) {
+    /**
+     * Creates a cipher pointing to an external key file (useful for testing).
+     *
+     * @param keyFile
+     */
+    public AesConfigurationPasswordCipher(Path keyFile) {
         this.keyFile = keyFile;
     }
 
+    /**
+     * Encrypt password
+     * @param plainText plain text password
+     * @return encrypted password
+     */
     @Override
-    public String encrypt(final String plainText) {
+    public String encrypt(String plainText) {
         Objects.requireNonNull(plainText, "plainText");
         rejectLegacyRsaValue(plainText);
         if (plainText.isBlank() || isEncrypted(plainText)) {
             return plainText;
         }
         try {
-            final byte[] nonce = new byte[NONCE_LENGTH];
+            var nonce = new byte[NONCE_LENGTH];
             RANDOM.nextBytes(nonce);
-            final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            var cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, loadKey(),
                     new GCMParameterSpec(TAG_LENGTH_BITS, nonce));
-            final byte[] encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
-            final byte[] combined = new byte[nonce.length + encrypted.length];
+            var encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+            var combined = new byte[nonce.length + encrypted.length];
             System.arraycopy(nonce, 0, combined, 0, nonce.length);
             System.arraycopy(encrypted, 0, combined, nonce.length, encrypted.length);
             return ENCRYPTED_PREFIX + Base64.getUrlEncoder().withoutPadding()
@@ -76,6 +92,11 @@ public final class AesConfigurationPasswordCipher implements ConfigurationPasswo
         }
     }
 
+    /**
+     * decrypt password
+     * @param storedValue
+     * @return 
+     */
     @Override
     public String decrypt(final String storedValue) {
         Objects.requireNonNull(storedValue, "storedValue");
@@ -84,14 +105,14 @@ public final class AesConfigurationPasswordCipher implements ConfigurationPasswo
             return storedValue; // Allows initial migration from local plaintext.
         }
         try {
-            final byte[] combined = Base64.getUrlDecoder()
+            var combined = Base64.getUrlDecoder()
                     .decode(storedValue.substring(ENCRYPTED_PREFIX.length()));
             if (combined.length < NONCE_LENGTH + TAG_LENGTH_BITS / 8) {
                 throw new OpenDataConfigurationException("Encrypted database password is truncated.");
             }
-            final byte[] nonce = Arrays.copyOfRange(combined, 0, NONCE_LENGTH);
-            final byte[] encrypted = Arrays.copyOfRange(combined, NONCE_LENGTH, combined.length);
-            final var cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            var nonce = Arrays.copyOfRange(combined, 0, NONCE_LENGTH);
+            var encrypted = Arrays.copyOfRange(combined, NONCE_LENGTH, combined.length);
+            var cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, loadKey(),
                     new GCMParameterSpec(TAG_LENGTH_BITS, nonce));
             return new String(cipher.doFinal(encrypted), StandardCharsets.UTF_8);
@@ -103,6 +124,11 @@ public final class AesConfigurationPasswordCipher implements ConfigurationPasswo
         }
     }
 
+    /**
+     * checks if a password is encrypted
+     * @param storedValue
+     * @return 
+     */
     @Override
     public boolean isEncrypted(final String storedValue) {
         return storedValue != null && storedValue.startsWith(ENCRYPTED_PREFIX);
@@ -114,7 +140,7 @@ public final class AesConfigurationPasswordCipher implements ConfigurationPasswo
                     + KEY_FILE_ENVIRONMENT_VARIABLE + " or -D" + KEY_FILE_PROPERTY + ".");
         }
         try {
-            final byte[] key = Base64.getDecoder().decode(
+            var key = Base64.getDecoder().decode(
                     Files.readString(keyFile, StandardCharsets.US_ASCII).trim());
             if (key.length != KEY_LENGTH_BYTES) {
                 throw new OpenDataConfigurationException(
@@ -132,15 +158,15 @@ public final class AesConfigurationPasswordCipher implements ConfigurationPasswo
     }
 
     private static Path resolveKeyFile() {
-        final String property = System.getProperty(KEY_FILE_PROPERTY);
+        var property = System.getProperty(KEY_FILE_PROPERTY);
         if (property != null && !property.isBlank()) {
             return Path.of(property);
         }
-        final String environment = System.getenv(KEY_FILE_ENVIRONMENT_VARIABLE);
+        var environment = System.getenv(KEY_FILE_ENVIRONMENT_VARIABLE);
         return environment == null || environment.isBlank() ? null : Path.of(environment);
     }
 
-    private static void rejectLegacyRsaValue(final String value) {
+    private static void rejectLegacyRsaValue(String value) {
         if (value.startsWith("{enc}")) {
             throw new OpenDataConfigurationException(
                     "Legacy RSA password found. Restore the cleartext SQL password "

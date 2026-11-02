@@ -5,15 +5,9 @@
  */
 package com.towermarsh.opendata.plugin.neso;
 
+import com.towermarsh.opendata.util.DateTimeParsers;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.util.Locale;
 import org.apache.commons.csv.CSVRecord;
 
 /**
@@ -22,7 +16,7 @@ import org.apache.commons.csv.CSVRecord;
  * @author Terry Curran
  * @version 3.1.0
  */
-public class NesoCsv {
+public final class NesoCsv {
 
     private NesoCsv() {
     }
@@ -34,7 +28,7 @@ public class NesoCsv {
      * @param aliases accepted header names
      * @return trimmed value
      */
-    public static String field(CSVRecord r, String... aliases) {
+    public static String field(final CSVRecord r, final String... aliases) {
         for (var s : aliases) {
             if (r.isMapped(s)) {
                 return r.get(s).trim();
@@ -50,61 +44,30 @@ public class NesoCsv {
      * @param aliases accepted header names
      * @return number, or {@code null} when blank
      */
-    public static Double number(CSVRecord r, String... aliases) {
-        var value = field(r, aliases);
+    public static Double number(final CSVRecord r, final String... aliases) {
+        final var value = field(r, aliases);
         return value.isBlank() || value.equalsIgnoreCase("null") ? null : Double.valueOf(value.replace(",", ""));
     }
 
     /**
-     * Parses NESO dates in the following formats:
-     *
-     * ISO: 2009-01-01 UK numeric: 01/01/2009 NESO historic: 01-JAN-2009
-     *
-     * Month names are case-insensitive.
+     * Parses a NESO date with the shared OpenData date utility.
      *
      * @param s date text
      * @return parsed date
      */
-    public static LocalDate parseDate(String s) {
-        var value = s.trim();
-        try {
-            return LocalDate.parse(value);
-        } catch (DateTimeParseException ex) {
-            // Try UK numeric format.
-        }
-        try {
-            return LocalDate.parse(
-                    value,
-                    DateTimeFormatter.ofPattern("dd/MM/uuuu"));
-        } catch (DateTimeParseException ex) {
-            // Try NESO historic format.
-        }
-
-        var historicFormat
-                = new DateTimeFormatterBuilder()
-                        .parseCaseInsensitive()
-                        .appendPattern("dd-MMM-uuuu")
-                        .toFormatter(Locale.ENGLISH);
-
-        return LocalDate.parse(value, historicFormat);
+    public static LocalDate parseDate(final String s) {
+        return DateTimeParsers.parseDate(s);
     }
 
     /**
-     * Parses an instant in ISO, offset or local (UTC) form.
+     * Parses a timestamp with the shared OpenData date utility.
+     * Local date/times without a zone are interpreted as UTC.
      *
-     * @param s text
-     * @return instant
+     * @param s timestamp text
+     * @return parsed instant
      */
-    public static Instant parseInstant(String s) {
-        try {
-            return Instant.parse(s);
-        } catch (DateTimeParseException ex) {
-            try {
-                return OffsetDateTime.parse(s).toInstant();
-            } catch (DateTimeParseException ex2) {
-                return LocalDateTime.parse(s.replace(' ', 'T')).toInstant(ZoneOffset.UTC);
-            }
-        }
+    public static Instant parseInstant(final String s) {
+        return DateTimeParsers.parseInstant(s);
     }
 
     /**
@@ -115,7 +78,7 @@ public class NesoCsv {
      * @param end last date
      * @return true when a year matches
      */
-    public static boolean includesYear(String resourceName, LocalDate start, LocalDate end) {
+    public static boolean includesYear(final String resourceName, final LocalDate start, final LocalDate end) {
         for (var year = start.getYear(); year <= end.getYear(); year++) {
             if (resourceName.matches("(?s).*\\b" + year + "\\b.*")) {
                 return true;

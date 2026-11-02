@@ -18,6 +18,8 @@ class NesoCsvTest {
     void dateFormats() {
         assertEquals(LocalDate.of(2025, 1, 1), NesoCsv.parseDate("01/01/2025"));
         assertEquals(LocalDate.of(2025, 1, 1), NesoCsv.parseDate("2025-01-01"));
+        assertEquals(LocalDate.of(2009, 1, 1), NesoCsv.parseDate("01-JAN-2009"));
+        assertEquals(LocalDate.of(2023, 1, 1), NesoCsv.parseDate("01-Jan-23"));
     }
 
     @Test

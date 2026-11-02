@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * @version 3.0.0
  */
 @SuppressWarnings("ClassWithMultipleLoggers")
-public final class LoggingManager {
+public class LoggingManager {
 
     private static final String LOGGER_NAME = "com.towermarsh.opendata";
     /**
@@ -52,7 +52,7 @@ public final class LoggingManager {
      * @param logDirectory log output directory
      * @throws IOException if logging cannot be initialised
      */
-    public static void initialise(final Path logDirectory) throws IOException {
+    public static void initialise(Path logDirectory) throws IOException {
         configure(new LoggingConfiguration(logDirectory, 10_485_760, 10, true), false);
     }
 
@@ -64,7 +64,7 @@ public final class LoggingManager {
      * @param verbose whether `FINE` logging should be enabled
      * @throws IOException if a file handler cannot be created
      */
-    public static void configure(final LoggingConfiguration configuration, final boolean verbose) throws IOException {
+    public static void configure(LoggingConfiguration configuration, boolean verbose) throws IOException {
         synchronized (LOCK) {
             Files.createDirectories(configuration.directory());
             activeLogDirectory = configuration.directory().toAbsolutePath().normalize();
@@ -72,19 +72,19 @@ public final class LoggingManager {
                 ROOT.removeHandler(handler);
                 handler.close();
             }
-            final var level = verbose ? Level.FINE : Level.INFO;
+            var level = verbose ? Level.FINE : Level.INFO;
             ROOT.setLevel(level);
 
-            final var formatter = new ContextualLogFormatter();
-            final var console = new ConsoleHandler();
+            var formatter = new ContextualLogFormatter();
+            var console = new ConsoleHandler();
             console.setLevel(level);
             console.setFormatter(formatter);
             ROOT.addHandler(console);
 
-            final var pattern = configuration.directory()
+            var pattern = configuration.directory()
                     .resolve("opendata-" + STARTUP_TIMESTAMP + "-%g.log")
                     .toString();
-            final var file = new FileHandler(
+            var file = new FileHandler(
                     pattern,
                     configuration.fileLimitBytes(),
                     configuration.fileCount(),
@@ -93,6 +93,9 @@ public final class LoggingManager {
             file.setFormatter(formatter);
             ROOT.addHandler(file);
             LOGGER.setLevel(level);
+            // Suppress non-critical PDFBox font metadata warnings.
+            Logger.getLogger("org.apache.fontbox.ttf.PostScriptTable")
+                    .setLevel(Level.SEVERE);
         }
     }
 
@@ -102,9 +105,9 @@ public final class LoggingManager {
      *
      * @param verbose whether FINE logging should be enabled
      */
-    public static void setVerbose(final boolean verbose) {
+    public static void setVerbose(boolean verbose) {
         synchronized (LOCK) {
-            final var level = verbose ? Level.FINE : Level.INFO;
+            var level = verbose ? Level.FINE : Level.INFO;
             ROOT.setLevel(level);
             for (var handler : ROOT.getHandlers()) {
                 handler.setLevel(level);
@@ -127,7 +130,7 @@ public final class LoggingManager {
      */
     public static void flush() {
         synchronized (LOCK) {
-            for (Handler handler : ROOT.getHandlers()) {
+            for (var handler : ROOT.getHandlers()) {
                 handler.flush();
             }
         }

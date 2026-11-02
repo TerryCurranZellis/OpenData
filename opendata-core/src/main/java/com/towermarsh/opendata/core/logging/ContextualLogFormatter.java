@@ -21,7 +21,7 @@ import java.util.logging.LogRecord;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class ContextualLogFormatter extends Formatter {
+public class ContextualLogFormatter extends Formatter {
 
     private static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             .withZone(ZoneId.systemDefault());
@@ -32,9 +32,9 @@ public final class ContextualLogFormatter extends Formatter {
      * @return
      */
     @Override
-    public String format(final LogRecord record) {
+    public String format(LogRecord record) {
 
-        final var builder = new StringBuilder()
+        var builder = new StringBuilder()
                 .append("[").append(TIMESTAMP.format(Instant.ofEpochMilli(record.getMillis())))
                 .append("]:[").append(record.getLevel().getName())
                 .append("]:[").append(Thread.currentThread().getName()).append(']');
@@ -43,15 +43,15 @@ public final class ContextualLogFormatter extends Formatter {
                 .append("[").append(context.pluginId()).append(']')
                 .append(":[").append(context.runId()).append(']'));
 
-        final var loggerName = record.getLoggerName();
-        final var lastDot = loggerName.lastIndexOf('.');
-        final var shortLoggerName = lastDot >= 0 ? loggerName.substring(lastDot + 1) : loggerName;
+        var loggerName = record.getLoggerName();
+        var lastDot = loggerName.lastIndexOf('.');
+        var shortLoggerName = lastDot >= 0 ? loggerName.substring(lastDot + 1) : loggerName;
 
         builder.append(shortLoggerName).append(" - ")
                 .append(formatMessage(record)).append(System.lineSeparator());
 
         if (record.getThrown() != null) {
-            final var text = new StringWriter();
+            var text = new StringWriter();
             record.getThrown().printStackTrace(new PrintWriter(text));
             builder.append(text);
         }
