@@ -15,5 +15,6 @@
         <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-api</artifactId></dependency>
         <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-common</artifactId></dependency>
         <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-plugin-electricity-common</artifactId></dependency>
+        <dependency><groupId>org.apache.commons</groupId><artifactId>commons-csv</artifactId></dependency>
     </dependencies>
 </project>

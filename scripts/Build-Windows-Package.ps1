@@ -54,38 +54,41 @@ if ($null -eq $jpackage) {
 
 Push-Location $RepositoryPath
 try {
-    if (-not $SkipBuild) {
-        & $maven.Path clean package
-        if ($LASTEXITCODE -ne 0) {
-            throw "Maven package failed with exit code $LASTEXITCODE"
-        }
-    }
-
     $target = Join-Path $RepositoryPath 'target'
     $input = Join-Path $target 'jpackage-input'
     $destination = Join-Path $target 'jpackage'
     Remove-Item -LiteralPath $input -Recurse -Force -ErrorAction SilentlyContinue
+
+    if ($SkipBuild) {
+        & $maven.Path -pl opendata-core dependency:copy-dependencies `
+            "-DincludeScope=runtime" `
+            "-DoutputDirectory=$input"
+        if ($LASTEXITCODE -ne 0) {
+            throw "Maven dependency copy failed with exit code $LASTEXITCODE"
+        }
+    } else {
+        & $maven.Path -pl opendata-core -am clean package dependency:copy-dependencies `
+            "-DincludeScope=runtime" `
+            "-DoutputDirectory=$input"
+        if ($LASTEXITCODE -ne 0) {
+            throw "Maven package or dependency copy failed with exit code $LASTEXITCODE"
+        }
+    }
+
     New-Item -ItemType Directory -Path $input -Force | Out-Null
     New-Item -ItemType Directory -Path $destination -Force | Out-Null
-
-    & $maven.Path -pl opendata-core -am dependency:copy-dependencies `
-        "-DincludeScope=runtime" `
-        "-DoutputDirectory=$input"
-    if ($LASTEXITCODE -ne 0) {
-        throw "Maven dependency copy failed with exit code $LASTEXITCODE"
-    }
 
     $coreTarget = Join-Path $RepositoryPath 'opendata-core\target'
     $applicationJar = Get-ChildItem -LiteralPath $coreTarget -Filter '*.jar' -File |
         Where-Object {
             $_.Name -notmatch '(-sources|-javadoc|original-).*\.jar$' -and
-            $_.DirectoryName -eq $target
+            $_.DirectoryName -eq $coreTarget
         } |
         Sort-Object LastWriteTime -Descending |
         Select-Object -First 1
 
     if ($null -eq $applicationJar) {
-        throw 'Unable to locate the built OpenData application JAR in target.'
+        throw 'Unable to locate the built OpenData application JAR in opendata-core/target.'
     }
     Copy-Item -LiteralPath $applicationJar.FullName -Destination $input -Force
 
