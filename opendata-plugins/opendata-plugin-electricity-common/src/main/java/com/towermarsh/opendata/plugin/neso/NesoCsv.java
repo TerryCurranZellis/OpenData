@@ -16,7 +16,7 @@ import org.apache.commons.csv.CSVRecord;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class NesoCsv {
+public class NesoCsv {
 
     private NesoCsv() {
     }
@@ -28,7 +28,7 @@ public final class NesoCsv {
      * @param aliases accepted header names
      * @return trimmed value
      */
-    public static String field(final CSVRecord r, final String... aliases) {
+    public static String field(CSVRecord r, String... aliases) {
         for (var s : aliases) {
             if (r.isMapped(s)) {
                 return r.get(s).trim();
@@ -44,8 +44,8 @@ public final class NesoCsv {
      * @param aliases accepted header names
      * @return number, or {@code null} when blank
      */
-    public static Double number(final CSVRecord r, final String... aliases) {
-        final var value = field(r, aliases);
+    public static Double number(CSVRecord r, String... aliases) {
+        var value = field(r, aliases);
         return value.isBlank() || value.equalsIgnoreCase("null") ? null : Double.valueOf(value.replace(",", ""));
     }
 
@@ -55,18 +55,18 @@ public final class NesoCsv {
      * @param s date text
      * @return parsed date
      */
-    public static LocalDate parseDate(final String s) {
+    public static LocalDate parseDate(String s) {
         return DateTimeParsers.parseDate(s);
     }
 
     /**
-     * Parses a timestamp with the shared OpenData date utility.
-     * Local date/times without a zone are interpreted as UTC.
+     * Parses a timestamp with the shared OpenData date utility. Local
+     * date/times without a zone are interpreted as UTC.
      *
      * @param s timestamp text
      * @return parsed instant
      */
-    public static Instant parseInstant(final String s) {
+    public static Instant parseInstant(String s) {
         return DateTimeParsers.parseInstant(s);
     }
 
@@ -78,7 +78,7 @@ public final class NesoCsv {
      * @param end last date
      * @return true when a year matches
      */
-    public static boolean includesYear(final String resourceName, final LocalDate start, final LocalDate end) {
+    public static boolean includesYear(String resourceName, LocalDate start, LocalDate end) {
         for (var year = start.getYear(); year <= end.getYear(); year++) {
             if (resourceName.matches("(?s).*\\b" + year + "\\b.*")) {
                 return true;
