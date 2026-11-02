@@ -10,7 +10,9 @@
 
 The plugin API is compiled from the `opendata-api` module. Runtime registries,
 selection, factories, and execution orchestration are compiled from
-`opendata-core`. Provider implementations are packages of `opendata-core`.
+`opendata-core`. Provider implementations are separate projects under
+`opendata-plugins`; `opendata-core` includes providers through project
+dependencies.
 
 ## `PluginRegistrar`
 

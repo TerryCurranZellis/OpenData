@@ -15,9 +15,10 @@
 | [Octopus Adjustment](octopus-adjustment/README.md) | Local PDF adjustment bills | Separate adjustment tables plus processed-file ledger | Implemented; live SQL acceptance pending |
 | [Electricity](../electricity-plugins.md) (`electric-demand`, `electric-supply`) | NESO CKAN CSV | Idempotent business-key upsert | Implemented; live SQL acceptance pending |
 
-Packaged plugin definitions are listed in
-`opendata-core/src/main/resources/config/plugins/index.properties`. They are available for
-registration but are not automatically installed. The SQL Server table
+Each provider project owns its definition and a
+`config/plugins/index.properties` catalogue entry. The projects are under
+`opendata-plugins`; their definitions are available for registration but are not
+automatically installed. The SQL Server table
 `core.plugin_registry` is authoritative for list, status and execution.
 
 ## Lifecycle commands

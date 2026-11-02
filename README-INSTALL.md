@@ -5,7 +5,9 @@ This pack implements the new `octopus-adjustment` plugin without replacing or ed
 ## Contents
 
 - new Java package `com.towermarsh.opendata.plugin.octopusadjustment`;
-- new plugin definition `opendata-core/src/main/resources/config/plugins/octopus-adjustment.properties`;
+- new provider project `opendata-plugins/opendata-plugin-octopus-adjustment`;
+- plugin definition and classpath index under
+  `opendata-plugins/opendata-plugin-octopus-adjustment/src/main/resources/config/plugins`;
 - database tables are created automatically when the plugin is registered (`sql/plugins/octopus-adjustment.sql`);
 - new JUnit tests under `src/test/java/.../octopusadjustment`.
 
@@ -36,6 +38,7 @@ This pack implements the new `octopus-adjustment` plugin without replacing or ed
 
 ## Important boundaries
 
+The plugin is its own Maven project under the `opendata-plugins` aggregator.
 The plugin writes only to:
 
 - `octopus.adjustment_electric_data`

@@ -68,14 +68,15 @@ try {
     New-Item -ItemType Directory -Path $input -Force | Out-Null
     New-Item -ItemType Directory -Path $destination -Force | Out-Null
 
-    & $maven.Path dependency:copy-dependencies `
+    & $maven.Path -pl opendata-core -am dependency:copy-dependencies `
         "-DincludeScope=runtime" `
         "-DoutputDirectory=$input"
     if ($LASTEXITCODE -ne 0) {
         throw "Maven dependency copy failed with exit code $LASTEXITCODE"
     }
 
-    $applicationJar = Get-ChildItem -LiteralPath $target -Filter '*.jar' -File |
+    $coreTarget = Join-Path $RepositoryPath 'opendata-core\target'
+    $applicationJar = Get-ChildItem -LiteralPath $coreTarget -Filter '*.jar' -File |
         Where-Object {
             $_.Name -notmatch '(-sources|-javadoc|original-).*\.jar$' -and
             $_.DirectoryName -eq $target

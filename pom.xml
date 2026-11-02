@@ -10,8 +10,8 @@
     <version>3.1.0</version>
     <packaging>pom</packaging>
 
-    <name>OpenData Main</name>
-    <description>Parent and build aggregator for the OpenData modules.</description>
+    <name>OpenData</name>
+    <description>Parent and root build aggregator for the OpenData projects.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,9 +35,10 @@
     </properties>
 
     <modules>
-        <module>opendata-core</module>
         <module>opendata-api</module>
         <module>opendata-common</module>
+        <module>opendata-plugins</module>
+        <module>opendata-core</module>
     </modules>
 
     <dependencyManagement>
@@ -53,9 +54,69 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-electric-demand</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-electric-supply</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-octopus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-octopus-adjustment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-ofgem</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-openmeteo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-electricity-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.towermarsh</groupId>
+                <artifactId>opendata-plugin-octopus-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>1.14.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.22.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>5.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>3.0.8</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>

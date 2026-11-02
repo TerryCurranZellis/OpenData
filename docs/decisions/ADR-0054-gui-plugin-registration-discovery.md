@@ -31,9 +31,10 @@ The JavaFX administration layer uses two registration routes:
    that one plugin.
 
 The scanner checks `config/plugins` beneath the process working directory first.
-While running from a development checkout it also checks
-`opendata-core/src/main/resources/config/plugins`. `index.properties` is an
-index/catalogue, not a plugin definition, and is ignored by GUI discovery.
+While running from a development checkout it also checks each provider project's
+`src/main/resources/config/plugins` directory under `opendata-plugins`.
+`index.properties` is an index/catalogue, not a plugin definition, and is
+ignored by GUI discovery.
 
 Duplicate files that declare the same unregistered `plugin.id` are treated as a
 configuration error rather than selecting one definition implicitly.

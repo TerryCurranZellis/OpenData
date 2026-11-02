@@ -86,4 +86,8 @@ secrets and customer source data.
 
 ## Historic electricity plugins (NESO)
 
-The electricity plugins are packages of `opendata-core`; no extra Maven modules are required. JUnit Jupiter tests are test-scoped; see the electricity plugin guide.
+Electric Demand and Electric Supply are separate projects under
+`opendata-plugins`; shared NESO implementation helpers are owned by
+`opendata-plugin-electricity-common`. The root reactor includes all three.
+Use `mvn -pl opendata-plugins/opendata-plugin-electric-demand -am verify` to
+build one provider with its dependencies.

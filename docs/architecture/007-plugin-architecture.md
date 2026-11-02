@@ -24,9 +24,13 @@ catalogue only for registration. `JdbcPluginRegistry` reads
 `core.plugin_registry` and is authoritative for installed metadata, enabled
 status and execution selection.
 
-In the source tree, the packaged definitions and bundled provider
-implementations are packages of the `opendata-core` module (`plugin.<id>`),
-with one `config/plugins/index.properties` listing every bundled plugin.
+Each provider implementation is in its own Maven project under
+`opendata-plugins` (`opendata-plugin-<id>`). That project owns the provider
+source, tests, SQL script, definition, and a `config/plugins/index.properties`
+that lists only its plugin. Shared provider code lives in separate support
+projects under the same aggregator. `opendata-core` depends on the provider
+projects needed by the packaged application, making their separate JAR
+resources available to the classpath catalogue and reflective loader.
 
 Every plugin follows the same five steps: **initialise** (configuration and
 orchestration), **extract**, **transform**, **load** and **finalise**
@@ -67,7 +71,9 @@ own context and runs selected plugins in a bounded executor.
 - plugin instances are task-confined and must not share JDBC connections;
 - plugins are required to honour `context.dryRun()` and return `PluginMetrics`;
 - plugins do not implement their own CLI or read global bootstrap files;
-- provider SQL and source parsing remain inside the provider package;
+- provider-specific SQL and source parsing remain in the provider project;
+- provider implementations may share code only through support projects under
+  `opendata-plugins`, not through another provider project;
 - finalisation must distinguish dry run, successful completion and failure.
 
 Ofgem is the HTML-to-XLSX reference, OpenMeteo is the parameterised JSON API

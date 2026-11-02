@@ -36,8 +36,9 @@ services. Execute, Dry-run and information dialogs remain later-batch work.
 ## Configuration-folder search order
 
 1. `<working directory>/config/plugins`
-2. `<working directory>/opendata-core/src/main/resources/config/plugins` (development
-   checkout fallback)
+2. each provider project's `src/main/resources/config/plugins` directory under
+   `opendata-plugins` (development checkout fallback; the Version 3.1.0 baseline
+   used `opendata-core/src/main/resources/config/plugins`)
 
 Only regular `*.properties` files are candidates. The second location preserves
 current source-tree development behaviour while allowing a deployment-style

@@ -12,13 +12,14 @@ command-line entry point.
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable plugin/configuration records, and database resource interfaces |
 | `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable download-support strategies |
-| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, SQL Server resources, GUI/CLI, and the bundled plugins (`plugin.<id>` packages) |
+| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, SQL Server resources, GUI/CLI, and runtime dependencies on provider plugins |
+| `opendata-plugins` | Aggregator for independent provider plugin projects and shared plugin-support projects |
 
-The bundled plugins (Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric
-Demand and Electric Supply) are packages inside `opendata-core`. Each plugin
-follows the initialise, extract, transform, load, finalise steps and ships its
-own `RegisterPlugin` class that creates its database schema and tables when
-the plugin is registered.
+Each provider plugin (Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric
+Demand and Electric Supply) is its own Maven project under `opendata-plugins`.
+Shared NESO and Octopus implementation support also has separate projects.
+`opendata-core` depends on the provider projects so their per-project classpath
+catalogues, implementations, and registration SQL remain available at runtime.
 
 ## Build
 
@@ -33,9 +34,13 @@ Run the full reactor build from the repository root:
 mvn clean verify
 ```
 
-Each module now carries the same build-environment, test, coverage, static
-analysis, and dependency-analysis verification so the split modules are checked
-independently inside the shared reactor build.
+The reactor verifies the shared modules, application, provider plugins, and
+plugin-support projects together. Provider projects can also be selected with
+their required dependencies, for example:
+
+```powershell
+mvn -pl opendata-plugins/opendata-plugin-openmeteo -am verify
+```
 
 Older JDKs may still be used for limited compilation checks of the non-JavaFX
 modules, but the supported full build remains Java 24 or later.

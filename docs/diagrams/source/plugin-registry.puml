@@ -4,7 +4,7 @@ title Packaged Catalogue and Persistent Plugin Registry
 skinparam componentStyle rectangle
 [CommandLineArgumentsProcessor] as CLI
 [ClasspathPluginRegistry\nregistration catalogue] as Catalogue
-[single index.properties + packaged definitions\n(opendata-core)] as Packaged
+[per-project index.properties + definitions\n(opendata-plugins)] as Packaged
 [PropertiesFileConfigurationPropertiesSource] as External
 [JdbcPluginRegistry\nauthoritative lifecycle registry] as Registry
 [core.plugin_registry] as RegistryTable
@@ -13,7 +13,7 @@ skinparam componentStyle rectangle
 [PropertiesPluginDefinitionLoader] as Loader
 [ReflectionPluginFactory] as Factory
 [PluginRegistrarLocator] as Locator
-[plugin.<id>.RegisterPlugin\nPluginRegistrar] as RegisterPlugin
+[plugin.<id>.RegisterPlugin\nPluginRegistrar in provider project] as RegisterPlugin
 [plugin schema tables] as PluginTables
 
 CLI --> Catalogue : register without --file

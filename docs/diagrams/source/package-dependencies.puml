@@ -9,7 +9,7 @@ package gui
 package config
 package "plugin (shared runtime)" as Plugin
 
-package "plugin.<id> (provider)" as Provider {
+package "plugin.<id> (provider project)" as Provider {
   [workflow facade] as Facade
   [RegisterPlugin] as ProviderRegister
   [initialise / config] as ProviderConfig
@@ -30,6 +30,7 @@ package database
 package logging
 package exception
 package util
+package "plugin support projects" as ProviderSupport
 
 app --> cli
 app --> gui
@@ -54,6 +55,7 @@ Facade --> ProviderExtract
 Facade --> ProviderTransform
 Facade --> ProviderValidate
 Facade --> ProviderLoad
+Provider --> ProviderSupport : shared provider code
 ProviderDownload --> download
 ProviderDownload --> discovery
 ProviderExtract --> parser

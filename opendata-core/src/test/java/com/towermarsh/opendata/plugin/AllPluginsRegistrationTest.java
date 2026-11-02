@@ -3,12 +3,12 @@ package com.towermarsh.opendata.plugin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.towermarsh.opendata.common.database.SqlScriptExecutor;
 import com.towermarsh.opendata.config.PluginRegistrationResolver;
 import com.towermarsh.opendata.core.plugin.PluginRegistrarLocator;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class AllPluginsRegistrationTest {
@@ -35,12 +35,14 @@ class AllPluginsRegistrationTest {
     }
 
     @Test
-    void externalFileRegistrationOfNewPluginsSucceeds() {
+    void everyPluginDefinitionIsAvailableFromItsProject() throws Exception {
         var resolver = new PluginRegistrationResolver();
         for (var id : new String[]{"electric-demand", "electric-supply", "octopus-adjustment"}) {
-            var path = java.nio.file.Path.of("src/main/resources/config/plugins/" + id + ".properties");
-            assertTrue(java.nio.file.Files.exists(path), path.toString());
-            assertEquals(id, resolver.resolveFile(path).descriptor().id());
+            var resource = "config/plugins/" + id + ".properties";
+            try (var input = getClass().getClassLoader().getResourceAsStream(resource)) {
+                assertNotNull(input, resource);
+            }
+            assertEquals(id, resolver.resolvePackaged(List.of(id)).get(0).descriptor().id());
         }
     }
 }

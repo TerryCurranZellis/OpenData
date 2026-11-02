@@ -47,8 +47,9 @@ Packaged registration loads definitions through
 `PropertiesPluginDefinitionLoader` validates the file before
 `JdbcPluginRegistry` stores metadata and properties.
 
-In the source tree, the packaged catalogue files live under
-`opendata-core/src/main/resources/config/plugins`.
+In the source tree, each provider project owns its definition and catalogue
+index under
+`opendata-plugins/opendata-plugin-<id>/src/main/resources/config/plugins`.
 
 For an existing registry row, registration refreshes metadata and configuration
 but preserves the current enabled/disabled state. A new row uses the

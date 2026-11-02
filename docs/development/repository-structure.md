@@ -15,7 +15,8 @@
 |---|---|
 | `opendata-api` | Shared plugin contracts, immutable configuration records, and database resource interfaces |
 | `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable support code |
-| `opendata-core` | Application entry points, runtime orchestration, plugin registry services, GUI/CLI, SQL Server resources, and the bundled plugins (code, `config/plugins/*.properties` definitions and `sql/plugins/*.sql` schema scripts) |
+| `opendata-core` | Application entry points, runtime orchestration, plugin registry services, GUI/CLI, SQL Server resources, and runtime dependencies on provider plugins |
+| `opendata-plugins` | Parent aggregator for six provider projects and shared NESO/Octopus support projects; each provider owns its code, tests, definition, and SQL scripts |
 | `sql` | Ordered SQL Server installation, schemas, permissions and verification |
 | `docs` | Authoritative Markdown, PlantUML, manifests, examples and templates |
 | `config` | Documentation and code-quality configuration |
@@ -34,8 +35,9 @@ src/test/java
 ```
 
 Tests must live with the module that owns the production code they verify.
-`opendata-common` therefore owns the shared JDBC, validation, exception, and
-reusable support tests, `opendata-core` owns application, plugin-registry and bundled plugin tests.
+`opendata-common` owns the shared JDBC, validation, exception, and reusable
+support tests; `opendata-core` owns application and plugin-registry tests; each
+provider project owns its implementation tests.
 
 ## Java ownership
 
@@ -44,8 +46,9 @@ The split source tree keeps one logical package namespace below
 
 - `opendata-api`: `config.model`, `database`, `plugin`
 - `opendata-common`: `database`, `database.jdbc`, `download.strategy`, `exception`, `logging`, `util`, `validation`
-- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, `gui`, `logging`, `model`, `parser`, and plugin-registry/orchestration classes in `plugin`
-- `opendata-core` also owns the provider packages below `plugin.<plugin-id>`, each with `initialise`, `extract`, `transform`, `load`, `finalise` sub-packages and a `RegisterPlugin` class
+- `opendata-core`: root/app entry points, runtime `config`, `database.audit`, `discovery`, `download`, `etl`, `gui`, `logging`, `model`, `parser`, and provider-neutral plugin-registry/orchestration classes
+- `opendata-plugins/opendata-plugin-<id>`: provider packages below `plugin.<plugin-id>`, each with `initialise`, `extract`, `transform`, `load`, `finalise` sub-packages and a `RegisterPlugin` class
+- shared NESO/electricity and Octopus implementation helpers live in dedicated support projects under `opendata-plugins`
 
 Provider-specific code remains below:
 

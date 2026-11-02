@@ -46,7 +46,8 @@ Re-registering an existing plugin preserves its current enabled/disabled status.
 In Version 3.0.0, **Register** scans the OpenData plugin configuration folder for
 new complete `.properties` definitions. The deployment-style location is
 `config/plugins`; a development checkout also scans
-`opendata-core/src/main/resources/config/plugins`. Existing registered ids are excluded and
+the provider projects' `src/main/resources/config/plugins` directories under
+`opendata-plugins`. Existing registered ids are excluded and
 new definitions are shown for confirmation before they are written.
 
 Use **Register from File** when the definition is elsewhere. The JavaFX file

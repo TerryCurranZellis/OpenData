@@ -7,10 +7,11 @@ skinparam packageStyle rectangle
 folder "OpenData" {
   folder "opendata-api\n(contracts, PluginRegistrar)" as Api
   folder "opendata-common\n(JDBC, SQL script runner)" as Common
-  folder "opendata-core" {
-    folder "main/java\n(app, gui, plugin.<id>)" as MainJava
-    folder "main/resources/config/plugins\n(definitions + index)" as Resources
-    folder "main/resources/sql/plugins\n(per-plugin schema SQL)" as PluginSql
+  folder "opendata-core\n(runtime, GUI/CLI, registry)" as Core
+  folder "opendata-plugins" {
+    folder "opendata-plugin-<id>\n(provider code + tests)" as ProviderProjects
+    folder "provider resources\n(definition + index + SQL)" as Resources
+    folder "shared provider support" as ProviderSupport
     folder "test/java" as Tests
   }
   folder "sql" as Sql
@@ -27,12 +28,13 @@ folder "OpenData" {
 }
 
 Api --> Common
-Common --> MainJava
-Api --> MainJava
-MainJava --> Tests : verified by
-PluginSql --> MainJava : run by each RegisterPlugin
-Resources --> MainJava : bootstrap and registration definitions
-Sql --> MainJava : database contract
+Common --> Core
+Api --> Core
+ProviderProjects --> Core : runtime dependencies
+ProviderSupport --> ProviderProjects
+ProviderProjects --> Tests : verified by
+Resources --> Core : classpath catalogue and registration definitions
+Sql --> Core : database contract
 Puml --> Svg : rendered
 Markdown --> Manifests : composed by
 Manifests --> Scripts : existing documentation engine

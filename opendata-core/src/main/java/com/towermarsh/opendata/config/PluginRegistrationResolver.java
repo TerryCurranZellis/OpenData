@@ -153,7 +153,7 @@ public class PluginRegistrationResolver {
         } catch (ClassNotFoundException exception) {
             throw new PluginRegistryException(
                     ("Plugin implementation class was not found on the application classpath: %s. "
-                            + "Plugins are packaged inside opendata-core; check plugin.implementation-class.")
+                            + "Check the plugin dependency and plugin.implementation-class.")
                             .formatted(className),
                     exception);
         }

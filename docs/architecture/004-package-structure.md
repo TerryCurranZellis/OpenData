@@ -20,7 +20,9 @@
 | `opendata-common` | `exception` | Shared exception types |
 | `opendata-common` | `logging`, `util` | Shared plugin log context and reusable utility helpers |
 | `opendata-common` | `validation` | Typed property parsing and reusable validation rules |
-| `opendata-core` | `plugin.<id>` | Provider workflow facade, staged pipeline (`initialise`, `extract`, `transform`, `load`, `finalise`) and `RegisterPlugin` |
+| `opendata-plugins/opendata-plugin-<id>` | `plugin.<id>` | Provider workflow facade, staged pipeline (`initialise`, `extract`, `transform`, `load`, `finalise`) and `RegisterPlugin` |
+| `opendata-plugins/opendata-plugin-electricity-common` | `plugin.neso` | Shared NESO and electricity-provider support |
+| `opendata-plugins/opendata-plugin-octopus-common` | `plugin.octopus` | Shared Octopus statement parser, records, and PDF text extraction |
 | `opendata-core` | `core.plugin` | Provider-neutral registries, execution coordinator, audit, and factories |
 | `opendata-core` | root / `app` | Entry point, orchestration and run status |
 | `opendata-core` | `cli` | Commons CLI and immutable arguments |

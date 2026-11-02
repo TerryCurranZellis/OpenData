@@ -28,10 +28,11 @@ choice.
 
 ## 2. Copy the maintained template
 
-Copy `docs/templates/plugin-java/.../example` to:
+Create a dedicated project under `opendata-plugins` named
+`opendata-plugin-<id>`, then copy `docs/templates/plugin-java/.../example` to:
 
 ```text
-src/main/java/com/towermarsh/opendata/plugin/<id>
+opendata-plugins/opendata-plugin-<id>/src/main/java/com/towermarsh/opendata/plugin/<id>
 ```
 
 Rename the package and every `Example` symbol. The stable plugin ID uses
@@ -84,13 +85,15 @@ validation after conversion.
 Create:
 
 ```text
-opendata-core/src/main/resources/config/plugins/<id>.properties
+opendata-plugins/opendata-plugin-<id>/src/main/resources/config/plugins/<id>.properties
 ```
 
-Add the ID to:
+The project-local index lists only the new plugin id. Add the provider project
+to the `opendata-plugins` aggregator and add it as a runtime dependency of
+`opendata-core` when it should ship with the application.
 
 ```text
-opendata-core/src/main/resources/config/plugins/index.properties
+opendata-plugins/opendata-plugin-<id>/src/main/resources/config/plugins/index.properties
 ```
 
 The descriptor includes `plugin.*`, `dataset.id`, one or more
@@ -110,8 +113,9 @@ Do not add provider selection code to the application main class.
 
 Create `plugin.<id>.RegisterPlugin` in the same package as the plugin
 implementation class, extending `SqlResourcePluginRegistrar` with the plugin id
-and the name of an idempotent SQL script, for example
-`sql/plugins/<id>.sql` under `opendata-core/src/main/resources`. Do not write
+and the name of an idempotent SQL script at
+`opendata-plugins/opendata-plugin-<id>/src/main/resources/sql/plugins/<id>.sql`.
+Do not write
 `USE [OpenData]`, `SET` options or `schema_version` inserts in the script.
 Separate batches with `GO` lines and guard every object with
 `IF ... IS NULL`. The application runs the hook every time the plugin is

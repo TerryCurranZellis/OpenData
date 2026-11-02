@@ -17,14 +17,17 @@ the required five-stage package architecture.
 
 ## Use
 
-1. Copy the Java package below `src/main/java`.
-2. Copy `example.properties` below
-   `opendata-core/src/main/resources/config/plugins`.
-3. add `example` to `config/plugins/index.properties`;
-4. replace the placeholder endpoint and transformation;
-5. implement a real transactional repository before write mode;
-6. add tests and SQL; and
-7. register the plugin before ordinary execution.
+1. Create a provider project under `opendata-plugins` and copy the Java package
+   below its `src/main/java`.
+2. Copy `example.properties` below that project's
+   `src/main/resources/config/plugins`.
+3. Add an `index.properties` to that project listing only `example`.
+4. Add the project to the `opendata-plugins` aggregator and to `opendata-core`
+   dependencies if it should ship with the application.
+5. replace the placeholder endpoint and transformation;
+6. implement a real transactional repository before write mode;
+7. add tests and SQL; and
+8. register the plugin before ordinary execution.
 
 The example repository deliberately throws in write mode. Dry run can exercise
 configuration, extraction and transformation without reporting false database

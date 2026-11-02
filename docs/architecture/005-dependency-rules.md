@@ -27,6 +27,7 @@
   operations.
 - Secrets must not be logged or copied into plugin definitions.
 
-The classpath registry may name provider implementation classes as data in
-`index.properties` and plugin properties. That is registration metadata, not a
-compile-time dependency from the application layer.
+The classpath registry names provider implementation classes as data in each
+provider project's `index.properties` and plugin definition. Core uses
+reflection rather than direct Java references to implementations, while its
+Maven dependencies make the selected provider projects available at runtime.

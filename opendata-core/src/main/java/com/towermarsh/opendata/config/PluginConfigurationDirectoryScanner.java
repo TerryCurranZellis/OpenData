@@ -20,12 +20,12 @@ import java.util.Objects;
  * <p>
  * The deployment-style folder {@code config/plugins} is checked first. The
  * development source-tree fallbacks include the local
- * {@code src/main/resources/config/plugins} directory plus
- * {@code opendata-core/src/main/resources/config/plugins} beneath the
- * working directory and its parent so the same GUI operation works while
- * OpenData is being run directly from a development checkout. The classpath
- * index file is deliberately ignored: GUI registration discovers complete
- * {@code *.properties} definitions directly.</p>
+ * {@code src/main/resources/config/plugins} directory plus each provider
+ * project's {@code src/main/resources/config/plugins} directory under
+ * {@code opendata-plugins} beneath the working directory and its parent. This
+ * lets GUI registration discover definitions from a development checkout. The
+ * classpath index file is deliberately ignored: GUI registration discovers
+ * complete {@code *.properties} definitions directly.</p>
  *
  * @author Terry Curran
  * @version 3.0.0
@@ -113,12 +113,34 @@ public class PluginConfigurationDirectoryScanner {
         final List<Path> result = new ArrayList<>();
         result.add(workingDirectory.resolve("config").resolve("plugins"));
         result.add(sourceDirectory(workingDirectory));
-        result.add(sourceDirectory(workingDirectory.resolve("opendata-core")));
+        addPluginSourceDirectories(result, workingDirectory.resolve("opendata-plugins"));
         final var parent = workingDirectory.getParent();
         if (parent != null) {
-            result.add(sourceDirectory(parent.resolve("opendata-core")));
+            addPluginSourceDirectories(result, parent.resolve("opendata-plugins"));
+            if (parent.getFileName() != null
+                    && "opendata-plugins".equals(parent.getFileName().toString())) {
+                addPluginSourceDirectories(result, parent);
+            }
         }
         return List.copyOf(result);
+    }
+
+    private static void addPluginSourceDirectories(
+            final List<Path> directories,
+            final Path pluginsRoot) {
+        if (!Files.isDirectory(pluginsRoot)) {
+            return;
+        }
+        try (var projects = Files.list(pluginsRoot)) {
+            projects.filter(Files::isDirectory)
+                    .sorted()
+                    .map(PluginConfigurationDirectoryScanner::sourceDirectory)
+                    .forEach(directories::add);
+        } catch (IOException exception) {
+            throw new OpenDataConfigurationException(
+                    "Unable to scan plugin projects directory: " + pluginsRoot,
+                    exception);
+        }
     }
 
     private static Path sourceDirectory(final Path moduleRoot) {

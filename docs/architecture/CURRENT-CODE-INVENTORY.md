@@ -6,7 +6,8 @@
 **Baseline date:** 18 September 2026  
 **Minimum Java version:** 24
 
-This inventory reflects the current four-module reactor source tree.
+This inventory reflects the root reactor and its nested provider-project
+aggregator.
 
 ## Module inventory
 
@@ -14,7 +15,8 @@ This inventory reflects the current four-module reactor source tree.
 |---|---|---|
 | `opendata-api` | plugin contracts, plugin execution records, immutable plugin/configuration records, database resource interfaces | Implemented |
 | `opendata-common` | shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and HTML link resolution support | Implemented |
-| `opendata-core` | application entry points, JavaFX GUI, CLI, bootstrap/configuration, plugin registry/execution infrastructure, bundled plugins and their definitions, downloads, parsers, and audit | Implemented |
+| `opendata-core` | application entry points, JavaFX GUI, CLI, bootstrap/configuration, plugin registry/execution infrastructure, downloads, parsers, and audit | Implemented |
+| `opendata-plugins` | aggregator for provider projects and shared provider-support projects | Implemented |
 
 ## Functional inventory
 
@@ -30,4 +32,5 @@ This inventory reflects the current four-module reactor source tree.
 | Shared JDBC execution | transaction template, cleanup callback, batch executor and typed upsert executor | Implemented in `opendata-common` |
 | Connection pooling | DBCP-backed SQL Server resource and pool snapshot contracts | Implemented across `opendata-core` and `opendata-api` |
 | Plugin registry | packaged catalogue, persistent registry, execution coordinator and reflection factory | Implemented in `opendata-core` |
-| Bundled plugins | Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric Demand, Electric Supply | Implemented in `opendata-core` (`plugin.<id>`) |
+| Provider plugins | Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric Demand, Electric Supply | Separate Maven projects under `opendata-plugins` |
+| Plugin support | NESO electricity helpers and shared Octopus parser/records | Separate support projects under `opendata-plugins` |

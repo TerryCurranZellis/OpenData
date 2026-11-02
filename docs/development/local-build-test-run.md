@@ -40,6 +40,12 @@ Each module executes the same build-environment, Surefire, Checkstyle,
 SpotBugs, JaCoCo, Javadoc, and dependency-analysis configuration. Review the
 configured outputs even when advisory quality settings allow Maven to complete.
 
+Build one provider project together with its required reactor dependencies with:
+
+```powershell
+mvn -pl opendata-plugins/opendata-plugin-openmeteo -am verify
+```
+
 ## Run from an IDE
 
 Run the `opendata-core` module entry point with:

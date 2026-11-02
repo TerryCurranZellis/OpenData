@@ -2,11 +2,11 @@
 
 ## Overview
 
-Two independent OpenData plugins, `electric-demand` and `electric-supply`, load historical Great Britain datasets supplied by the National Energy System Operator (NESO). Both are packages of `opendata-core` (`plugin.electricdemand`, `plugin.electricsupply`) and never depend on each other; shared NESO helpers live in `plugin.neso`. Each follows the standard initialise, extract, transform, load, finalise steps. Northern Ireland is not covered.
+Two independent OpenData plugins, `electric-demand` and `electric-supply`, load historical Great Britain datasets supplied by the National Energy System Operator (NESO). Each is a separate project under `opendata-plugins` (`opendata-plugin-electric-demand` and `opendata-plugin-electric-supply`) and neither depends on the other; shared NESO helpers live in `opendata-plugin-electricity-common`. Each follows the standard initialise, extract, transform, load, finalise steps. Northern Ireland is not covered.
 
 ## Installation
 
-1. Build with Maven using the standard reactor build (`opendata-api`, `opendata-common`, `opendata-core`). No extra modules or SQL scripts are needed.
+1. Build with Maven using the standard root reactor, which includes the provider projects and their shared support project.
 2. Register `electric-demand` and `electric-supply` with the GUI **Register** or **Register from File** actions, or the CLI `--register`. Registration runs each plugin's `RegisterPlugin`, which creates the `electricdemand` and `electricsupply` schemas and tables from `sql/plugins/electric-demand.sql` and `sql/plugins/electric-supply.sql`. The SQL login therefore needs permission to create schemas and tables. Do not duplicate plugin ids when registering.
 3. Run `opendata --plugin electric-demand --execute --dry-run` then `opendata --plugin electric-supply --execute --dry-run`. Finally run without `--dry-run`.
 

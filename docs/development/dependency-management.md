@@ -19,27 +19,28 @@ notices when the dependency set changes.
 
 - `opendata-api` must not depend on sibling OpenData modules.
 - `opendata-common` may depend on `opendata-api` but not on `opendata-core`.
-- `opendata-core` may depend on `opendata-api` and `opendata-common` only,
-  plus required Java/external libraries. The bundled plugins are packages of
-  `opendata-core`.
+- Provider projects depend on `opendata-api`, `opendata-common`, and only the
+  shared provider-support projects and external libraries they use.
+- `opendata-core` depends on `opendata-api`, `opendata-common`, and the six
+  provider projects included with the packaged application.
 
 Keep shared contracts in `opendata-api`, reusable implementation helpers in
-`opendata-common`, and bundled provider code and
-application/runtime orchestration, registry, and execution infrastructure in
-`opendata-core`.
+`opendata-common`, provider code in its own project under `opendata-plugins`,
+and application/runtime orchestration, registry, and execution infrastructure
+in `opendata-core`.
 
 ## Current runtime dependencies
 
 | Dependency | Primary module | Purpose |
 |---|---|---|
 | Apache Commons CLI | `opendata-core` | Command-line parsing |
-| Jackson Databind | `opendata-core` | Generic JSON parsing and OpenMeteo response handling |
-| Apache Commons CSV | `opendata-core` | Standards-compliant CSV parsing |
+| Jackson Databind | `opendata-core`, `opendata-plugin-openmeteo`, `opendata-plugin-electricity-common` | Generic JSON parsing and provider response handling |
+| Apache Commons CSV | `opendata-core`, `opendata-plugin-electricity-common` | Standards-compliant CSV parsing |
 | Jsoup | `opendata-common` | Static HTML link discovery support |
-| Apache POI OOXML | `opendata-core` | XLS and XLSX workbook parsing |
+| Apache POI OOXML | `opendata-core`, `opendata-plugin-ofgem` | XLS and XLSX workbook parsing |
 | Apache Commons DBCP | `opendata-core` | JDBC connection pooling |
 | Microsoft JDBC Driver | `opendata-core` | SQL Server access |
-| Apache PDFBox | `opendata-core` | Octopus Energy PDF text extraction |
+| Apache PDFBox | `opendata-plugin-octopus-common` | Octopus Energy PDF text extraction |
 | Log4j-to-JUL bridge | `opendata-core` | Route dependency Log4j API calls into JUL |
 
 JUnit Jupiter and Mockito are test-scoped module dependencies where needed.

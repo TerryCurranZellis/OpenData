@@ -48,7 +48,7 @@ root cause.
 | `-d` starts disable | use `-n` or `--dry-run` for dry-run execution |
 | Registry table missing | apply `003a-create-plugin-registry.sql` and grants |
 | Plugin tables missing | re-register the plugin; its `RegisterPlugin` creates the schema and tables (the SQL login needs `CREATE SCHEMA`/`CREATE TABLE`) |
-| Registration fails with class not found | the `plugin.implementation-class` is not in `opendata-core`; check the spelling in the properties file |
+| Registration fails with class not found | the provider project is not on the runtime classpath or `plugin.implementation-class` is misspelled |
 | Octopus finds no files | the log lists the expected file name pattern; statements are `octopus-energy-statement-YYYY-MM-DD.pdf`, adjustments start with the account number followed by `-` |
 | Configuration database fails | encrypted bootstrap password, certificate/PFX, SQL URL and grants |
 | Pool timeout | SQL availability, long transactions, leaked connections and parallelism |

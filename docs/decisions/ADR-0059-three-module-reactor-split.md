@@ -1,7 +1,7 @@
 # ADR-0059: Split the modular monolith into API, common, plugins, and core Maven modules
 
 **Version:** 3.1.0  
-**Status:** Accepted for Version 3.1.0 implementation  
+**Status:** Superseded by ADR-0062
 **Date:** 2026-09-18  
 **Decision owners:** OpenData maintainers
 
@@ -19,7 +19,7 @@ ready to leave the current repository or release train yet.
 ## Decision
 
 Keep one modular-monolith release and one Maven reactor, but split the source
-into three modules:
+into three modules at that time:
 
 - `opendata-api` for shared plugin contracts, immutable plugin/configuration
   records, and database resource interfaces;
@@ -34,6 +34,10 @@ one shared `config/plugins/index.properties`. An earlier revision built each
 plugin as a separate `opendata-plugin-*` module; that was withdrawn because
 the plugin classes were not on the core classpath when registering a plugin
 from a properties file, and because each module needed its own index.
+
+This decision describes the Version 3.1.0 baseline only. ADR-0062 supersedes the
+provider-placement decision by assigning each provider its own Maven project
+under the `opendata-plugins` aggregator.
 
 ## Consequences
 
