@@ -21,7 +21,7 @@ package com.towermarsh.opendata.exception;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class PluginException extends OpenDataException {
+public class PluginException extends OpenDataException {
 
     private final String pluginName;
 
@@ -32,7 +32,7 @@ public final class PluginException extends OpenDataException {
      *                   exception (e.g. {@code "octopus"}, {@code "ofgem"})
      * @param message    the detail message
      */
-    public PluginException(final String pluginName, final String message) {
+    public PluginException(String pluginName, String message) {
         super("[" + requirePluginName(pluginName) + "] " + message);
         this.pluginName = pluginName;
     }
@@ -46,9 +46,9 @@ public final class PluginException extends OpenDataException {
      * @param cause      the underlying cause
      */
     public PluginException(
-            final String pluginName,
-            final String message,
-            final Throwable cause) {
+            String pluginName,
+            String message,
+            Throwable cause) {
         super("[" + requirePluginName(pluginName) + "] " + message, cause);
         this.pluginName = pluginName;
     }
@@ -62,7 +62,7 @@ public final class PluginException extends OpenDataException {
         return pluginName;
     }
 
-    private static String requirePluginName(final String pluginName) {
+    private static String requirePluginName(String pluginName) {
         if (pluginName == null || pluginName.isBlank()) {
             throw new IllegalArgumentException("pluginName must not be null or blank");
         }

@@ -55,7 +55,7 @@ public record PluginDescriptor(
             String fieldName) {
 
         Objects.requireNonNull(value, fieldName);
-        String result = value.trim();
+        var result = value.trim();
         if (result.isEmpty()) {
             throw new IllegalArgumentException(
                     fieldName + " must not be blank.");

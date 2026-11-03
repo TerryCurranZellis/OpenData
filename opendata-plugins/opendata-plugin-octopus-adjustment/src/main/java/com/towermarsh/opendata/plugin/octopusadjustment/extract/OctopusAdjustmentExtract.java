@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * @version 3.3.0
  * @since 3.1.0
  */
-public final class OctopusAdjustmentExtract {
+public class OctopusAdjustmentExtract {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusAdjustmentExtract.class.getName());
 
@@ -47,25 +47,25 @@ public final class OctopusAdjustmentExtract {
      * @since 3.1.0
      */
     public List<ExtractedOctopusAdjustment> extract(
-            final OctopusAdjustmentConfiguration configuration,
-            final PluginExecutionContext context) throws IOException {
+            OctopusAdjustmentConfiguration configuration,
+            PluginExecutionContext context) throws IOException {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(context, "context");
 
-        final var inputDirectory = configuration.inputDirectory();
+        var inputDirectory = configuration.inputDirectory();
         if (!Files.isDirectory(inputDirectory)) {
             throw new IOException(
                     "Octopus adjustment input directory does not exist or is not a directory: "
                     + inputDirectory);
         }
 
-        final var candidatePattern = candidatePattern(configuration.accountNumber());
-        final var processed = context.dryRun()
+        var candidatePattern = candidatePattern(configuration.accountNumber());
+        var processed = context.dryRun()
                 ? Set.<String>of()
                 : new OctopusAdjustmentProcessedFileRepository(context.database())
                         .findProcessedFileKeys();
 
-        final List<Path> candidates;
+        List<Path> candidates;
         try (var paths = Files.list(inputDirectory)) {
             candidates = paths
                     .filter(Files::isRegularFile)
@@ -76,11 +76,11 @@ public final class OctopusAdjustmentExtract {
                     .toList();
         }
 
-        final List<ExtractedOctopusAdjustment> extracted = new ArrayList<>();
+        List<ExtractedOctopusAdjustment> extracted = new ArrayList<>();
         var skipped = 0;
         for (var path : candidates) {
-            final var name = PathDigestSupport.fileName(path);
-            final var hash = PathDigestSupport.sha256(path);
+            var name = PathDigestSupport.fileName(path);
+            var hash = PathDigestSupport.sha256(path);
             if (processed.contains(OctopusAdjustmentProcessedFileRepository.key(name, hash))) {
                 skipped++;
                 continue;
@@ -92,7 +92,7 @@ public final class OctopusAdjustmentExtract {
                     Files.size(path)));
         }
 
-        final int skippedCount = skipped;
+        int skippedCount = skipped;
         LOGGER.log(Level.INFO,
                 "Octopus adjustment extract: discovered {0} matching PDF(s), selected {1} "
                 + "new/changed file(s), skipped {2} completed file(s)",
@@ -105,7 +105,7 @@ public final class OctopusAdjustmentExtract {
         return List.copyOf(extracted);
     }
 
-    private static long countIgnored(final java.nio.file.Path directory) {
+    private static long countIgnored(java.nio.file.Path directory) {
         try (var paths = Files.list(directory)) {
             return paths.filter(Files::isRegularFile).count();
         } catch (IOException exception) {
@@ -113,13 +113,13 @@ public final class OctopusAdjustmentExtract {
         }
     }
 
-    static boolean matchesCandidate(final String fileName, final String accountNumber) {
+    static boolean matchesCandidate(String fileName, String accountNumber) {
         Objects.requireNonNull(fileName, "fileName");
         Objects.requireNonNull(accountNumber, "accountNumber");
         return candidatePattern(accountNumber).matcher(fileName).matches();
     }
 
-    private static Pattern candidatePattern(final String accountNumber) {
+    private static Pattern candidatePattern(String accountNumber) {
         return Pattern.compile(
                 "^" + Pattern.quote(accountNumber) + "-.+\\.pdf$",
                 Pattern.CASE_INSENSITIVE);

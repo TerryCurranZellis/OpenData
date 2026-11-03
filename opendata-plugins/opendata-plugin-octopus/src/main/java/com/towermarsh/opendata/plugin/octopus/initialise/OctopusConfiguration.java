@@ -56,14 +56,14 @@ public record OctopusConfiguration(
      * @return typed Octopus configuration
      * @since 2.0.0
      */
-    public static OctopusConfiguration from(final PluginDefinition definition) {
+    public static OctopusConfiguration from(PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!"octopus".equalsIgnoreCase(definition.id())) {
             throw new IllegalArgumentException(
                     "Expected plugin id 'octopus' but received '" + definition.id() + "'");
         }
 
-        final var properties = new PluginPropertyValues(definition);
+        var properties = new PluginPropertyValues(definition);
         return new OctopusConfiguration(
                 properties.requiredPath(PROP_INPUT_DIRECTORY),
                 properties.requiredPath(PROP_WORKING_DIRECTORY),

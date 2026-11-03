@@ -19,7 +19,7 @@ import java.util.UUID;
  * @version 3.1.0
  * @since 3.1.0
  */
-final class AdjustmentGasRecordUpsertAdapter
+class AdjustmentGasRecordUpsertAdapter
         extends AbstractAdjustmentUpsertAdapter<GasRecord> {
 
     private static final String EXISTS_SQL = """
@@ -79,9 +79,9 @@ final class AdjustmentGasRecordUpsertAdapter
 
     @Override
     protected int bindKey(
-            final PreparedStatement statement,
-            final GasRecord record,
-            final int index) throws SQLException {
+            PreparedStatement statement,
+            GasRecord record,
+            int index) throws SQLException {
         int parameter = index;
         statement.setDate(parameter++, Date.valueOf(record.billDate()));
         statement.setDate(parameter++, Date.valueOf(record.tariffPeriodStart()));
@@ -96,9 +96,9 @@ final class AdjustmentGasRecordUpsertAdapter
 
     @Override
     protected void bindInsert(
-            final PreparedStatement statement,
-            final GasRecord record,
-            final UUID runId) throws SQLException {
+            PreparedStatement statement,
+            GasRecord record,
+            UUID runId) throws SQLException {
         int parameter = 1;
         statement.setDate(parameter++, Date.valueOf(record.billDate()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodStart()));
@@ -125,9 +125,9 @@ final class AdjustmentGasRecordUpsertAdapter
 
     @Override
     protected void bindUpdate(
-            final PreparedStatement statement,
-            final GasRecord record,
-            final UUID runId) throws SQLException {
+            PreparedStatement statement,
+            GasRecord record,
+            UUID runId) throws SQLException {
         int parameter = 1;
         statement.setDate(parameter++, Date.valueOf(record.billPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodEnd()));

@@ -24,10 +24,11 @@ import com.towermarsh.opendata.exception.DownloadException;
 /**
  * Streams a remote HTTP resource to a local file.
  *
- * <p>The response is written to a temporary part file and moved into place only
+ * <p>
+ * The response is written to a temporary part file and moved into place only
  * after a successful 2xx response. Interrupted requests preserve the thread's
  * interrupt status.</p>
-  *
+ *
  * @author Terry Curran
  * @version 1.0.0
  */
@@ -71,12 +72,9 @@ public class DirectHttpDownloadStrategy {
         Objects.requireNonNull(headers, "headers");
         Objects.requireNonNull(requestTimeout, "requestTimeout");
 
-        var absoluteDestination =
-                destination.toAbsolutePath().normalize();
+        var absoluteDestination = destination.toAbsolutePath().normalize();
         var parent = absoluteDestination.getParent();
-        var partFile =
-                absoluteDestination.resolveSibling(
-                        absoluteDestination.getFileName() + ".part");
+        var partFile = absoluteDestination.resolveSibling(absoluteDestination.getFileName() + ".part");
 
         try {
             if (parent != null) {
@@ -84,8 +82,8 @@ public class DirectHttpDownloadStrategy {
             }
             Files.deleteIfExists(partFile);
 
-            var requestBuilder =
-                    HttpRequest.newBuilder(requestedUri)
+            var requestBuilder
+                    = HttpRequest.newBuilder(requestedUri)
                             .GET()
                             .timeout(requestTimeout);
 

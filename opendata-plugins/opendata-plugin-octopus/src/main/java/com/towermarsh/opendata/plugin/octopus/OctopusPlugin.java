@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class OctopusPlugin implements OpenDataPlugin {
+public class OctopusPlugin implements OpenDataPlugin {
 
     /** 
      * Stable plugin identifier used in configuration and CLI selection. 
@@ -69,7 +69,7 @@ public final class OctopusPlugin implements OpenDataPlugin {
      *
      * @param configuration typed Octopus configuration
      */
-    public OctopusPlugin(final OctopusConfiguration configuration) {
+    public OctopusPlugin(OctopusConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.initialise = new OctopusInitialise(configuration);
     }
@@ -82,12 +82,12 @@ public final class OctopusPlugin implements OpenDataPlugin {
      * @throws Exception if a pipeline phase fails
      */
     @Override
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         LOGGER.info(() -> "OctopusPlugin.execute starting (runId=%s, dryRun=%s)"
                 .formatted(context.runId(), context.dryRun()));
 
-        final var metrics = initialise.execute(context);
+        var metrics = initialise.execute(context);
 
         LOGGER.info(() -> "OctopusPlugin.execute complete: read=%d inserted=%d updated=%d skipped=%d"
                 .formatted(metrics.read(), metrics.inserted(), metrics.updated(), metrics.skipped()));

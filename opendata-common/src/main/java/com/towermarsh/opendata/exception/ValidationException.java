@@ -11,8 +11,7 @@ package com.towermarsh.opendata.exception;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class ValidationException
-        extends OpenDataException {
+public class ValidationException extends OpenDataException {
 
     /**
      * Creates a new validation exception.

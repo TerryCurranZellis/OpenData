@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class OctopusFinalise {
+public class OctopusFinalise {
     private static final Logger LOGGER = Logger.getLogger(OctopusFinalise.class.getName());
 
     /**
@@ -35,12 +35,12 @@ public final class OctopusFinalise {
      * @param completed
      */
     public void finalise(
-            final OctopusConfiguration configuration,
-            final List<ExtractedOctopusStatement> statements,
-            final OctopusParseResult parseResult,
-            final PluginMetrics metrics,
-            final boolean dryRun,
-            final boolean completed) {
+            OctopusConfiguration configuration,
+            List<ExtractedOctopusStatement> statements,
+            OctopusParseResult parseResult,
+            PluginMetrics metrics,
+            boolean dryRun,
+            boolean completed) {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(statements, "statements");
         Objects.requireNonNull(parseResult, "parseResult");
@@ -52,7 +52,7 @@ public final class OctopusFinalise {
         try {
             Files.createDirectories(configuration.archiveDirectory());
             for (var statement : statements) {
-                final var target = configuration.archiveDirectory().resolve(statement.fileName());
+                var target = configuration.archiveDirectory().resolve(statement.fileName());
                 Files.move(statement.path(), target, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException exception) {

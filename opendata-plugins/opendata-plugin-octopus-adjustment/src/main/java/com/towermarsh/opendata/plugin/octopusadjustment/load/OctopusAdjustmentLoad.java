@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public final class OctopusAdjustmentLoad {
+public class OctopusAdjustmentLoad {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusAdjustmentLoad.class.getName());
 
@@ -33,9 +33,9 @@ public final class OctopusAdjustmentLoad {
      * @since 3.1.0
      */
     public PluginMetrics load(
-            final OctopusAdjustmentParseResult result,
-            final OctopusAdjustmentConfiguration configuration,
-            final PluginExecutionContext context) {
+            OctopusAdjustmentParseResult result,
+            OctopusAdjustmentConfiguration configuration,
+            PluginExecutionContext context) {
         Objects.requireNonNull(result, "result");
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(context, "context");
@@ -54,7 +54,7 @@ public final class OctopusAdjustmentLoad {
             return PluginMetrics.ZERO;
         }
 
-        final var saved = new OctopusAdjustmentPersistenceRepository(context.database())
+        var saved = new OctopusAdjustmentPersistenceRepository(context.database())
                 .save(result, context.runId());
         return new PluginMetrics(
                 result.totalRecords(),

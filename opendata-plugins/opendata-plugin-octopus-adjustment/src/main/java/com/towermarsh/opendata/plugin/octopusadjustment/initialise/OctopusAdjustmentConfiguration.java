@@ -56,7 +56,7 @@ public record OctopusAdjustmentConfiguration(
      * @return typed adjustment configuration
      * @since 3.1.0
      */
-    public static OctopusAdjustmentConfiguration from(final PluginDefinition definition) {
+    public static OctopusAdjustmentConfiguration from(PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!OctopusAdjustmentPlugin.PLUGIN_ID.equalsIgnoreCase(definition.id())) {
             throw new IllegalArgumentException(
@@ -64,7 +64,7 @@ public record OctopusAdjustmentConfiguration(
                     + "' but received '" + definition.id() + "'");
         }
 
-        final var properties = new PluginPropertyValues(definition);
+        var properties = new PluginPropertyValues(definition);
         return new OctopusAdjustmentConfiguration(
                 properties.requiredText(PROP_ACCOUNT_NUMBER),
                 properties.requiredPath(PROP_INPUT_DIRECTORY),
@@ -72,9 +72,9 @@ public record OctopusAdjustmentConfiguration(
                 properties.requiredPath(PROP_ARCHIVE_DIRECTORY));
     }
 
-    private static String requireSafeAccountNumber(final String value) {
+    private static String requireSafeAccountNumber(String value) {
         Objects.requireNonNull(value, "accountNumber");
-        final var result = value.trim();
+        var result = value.trim();
         if (result.isEmpty()) {
             throw new IllegalArgumentException("accountNumber must not be blank");
         }

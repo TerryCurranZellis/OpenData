@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class OctopusInitialise {
+public class OctopusInitialise {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusInitialise.class.getName());
 
@@ -50,7 +50,7 @@ public final class OctopusInitialise {
      *
      * @param configuration typed Octopus plugin configuration
      */
-    public OctopusInitialise(final OctopusConfiguration configuration) {
+    public OctopusInitialise(OctopusConfiguration configuration) {
         this(
                 configuration,
                 new OctopusExtract(),
@@ -60,11 +60,11 @@ public final class OctopusInitialise {
     }
 
     OctopusInitialise(
-            final OctopusConfiguration configuration,
-            final OctopusExtract extractor,
-            final OctopusTransform transformer,
-            final OctopusLoad loader,
-            final OctopusFinalise finaliser) {
+            OctopusConfiguration configuration,
+            OctopusExtract extractor,
+            OctopusTransform transformer,
+            OctopusLoad loader,
+            OctopusFinalise finaliser) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.extractor = Objects.requireNonNull(extractor, "extractor");
         this.transformer = Objects.requireNonNull(transformer, "transformer");
@@ -80,7 +80,7 @@ public final class OctopusInitialise {
      * @return plugin metrics summarising the run
      * @throws Exception if any pipeline phase fails
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
 
         LOGGER.info(() -> "Octopus initialise: starting pipeline (dryRun=%s)"

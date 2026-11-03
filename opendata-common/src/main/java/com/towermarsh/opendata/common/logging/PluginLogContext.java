@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class PluginLogContext {
+public class PluginLogContext {
 
     private static final ThreadLocal<Entry> CURRENT = new ThreadLocal<>();
 
@@ -34,8 +34,8 @@ public final class PluginLogContext {
      * @param runId plugin run identifier
      * @return scope that restores the previous thread context when closed
      */
-    public static Scope open(final String pluginId, final UUID runId) {
-        final Entry previous = CURRENT.get();
+    public static Scope open(String pluginId, UUID runId) {
+        var previous = CURRENT.get();
         CURRENT.set(new Entry(pluginId, runId));
         return () -> {
             if (previous == null) {
@@ -65,9 +65,6 @@ public final class PluginLogContext {
      */
     public record Entry(String pluginId, UUID runId) {
 
-        /**
-         * Validates and normalises record components.
-         */
         /**
          * Validates and normalises record components.
          */

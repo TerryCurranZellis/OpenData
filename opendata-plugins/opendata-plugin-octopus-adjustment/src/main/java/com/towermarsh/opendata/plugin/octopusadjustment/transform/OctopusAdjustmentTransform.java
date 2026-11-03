@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public final class OctopusAdjustmentTransform {
+public class OctopusAdjustmentTransform {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusAdjustmentTransform.class.getName());
 
@@ -40,14 +40,14 @@ public final class OctopusAdjustmentTransform {
      * @since 3.1.0
      */
     public OctopusAdjustmentParseResult transform(
-            final List<ExtractedOctopusAdjustment> sources) throws IOException {
+            List<ExtractedOctopusAdjustment> sources) throws IOException {
         Objects.requireNonNull(sources, "sources");
 
-        final List<ElectricityRecord> electricity = new ArrayList<>();
-        final List<GasRecord> gas = new ArrayList<>();
+        List<ElectricityRecord> electricity = new ArrayList<>();
+        List<GasRecord> gas = new ArrayList<>();
         for (var source : sources) {
             Objects.requireNonNull(source, "source");
-            final var parsed = OctopusStatementParser.parseAllFromFile(source.path());
+            var parsed = OctopusStatementParser.parseAllFromFile(source.path());
             electricity.addAll(parsed.electricityRecords());
             gas.addAll(parsed.gasRecords());
         }

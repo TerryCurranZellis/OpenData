@@ -20,7 +20,7 @@ import java.util.Objects;
  * @version 3.3.0
  * @since 3.3.0
  */
-public final class PathDigestSupport {
+public class PathDigestSupport {
 
     private PathDigestSupport() {
         // Utility class.
@@ -32,8 +32,8 @@ public final class PathDigestSupport {
      * @param path source path
      * @return filename text
      */
-    public static String fileName(final Path path) {
-        final var fileName = Objects.requireNonNull(path, "path").getFileName();
+    public static String fileName(Path path) {
+        var fileName = Objects.requireNonNull(path, "path").getFileName();
         if (fileName == null) {
             throw new IllegalArgumentException("Path must include a file name: " + path);
         }
@@ -47,11 +47,11 @@ public final class PathDigestSupport {
      * @return lower-case hexadecimal digest
      * @throws IOException if the file cannot be read
      */
-    public static String sha256(final Path path) throws IOException {
+    public static String sha256(Path path) throws IOException {
         try {
-            final var digest = MessageDigest.getInstance("SHA-256");
+            var digest = MessageDigest.getInstance("SHA-256");
             try (var input = Files.newInputStream(path)) {
-                final var buffer = new byte[8192];
+                var buffer = new byte[8192];
                 int count;
                 while ((count = input.read(buffer)) >= 0) {
                     if (count > 0) {

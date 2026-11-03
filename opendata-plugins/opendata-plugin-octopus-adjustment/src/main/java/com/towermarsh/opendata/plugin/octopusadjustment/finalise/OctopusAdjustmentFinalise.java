@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public final class OctopusAdjustmentFinalise {
+public class OctopusAdjustmentFinalise {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusAdjustmentFinalise.class.getName());
 
@@ -44,12 +44,12 @@ public final class OctopusAdjustmentFinalise {
      * @since 3.1.0
      */
     public void finalise(
-            final OctopusAdjustmentConfiguration configuration,
-            final List<ExtractedOctopusAdjustment> sources,
-            final OctopusAdjustmentParseResult parseResult,
-            final PluginMetrics metrics,
-            final boolean dryRun,
-            final boolean completed) {
+            OctopusAdjustmentConfiguration configuration,
+            List<ExtractedOctopusAdjustment> sources,
+            OctopusAdjustmentParseResult parseResult,
+            PluginMetrics metrics,
+            boolean dryRun,
+            boolean completed) {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(sources, "sources");
         Objects.requireNonNull(parseResult, "parseResult");
@@ -71,7 +71,7 @@ public final class OctopusAdjustmentFinalise {
         try {
             Files.createDirectories(configuration.archiveDirectory());
             for (var source : sources) {
-                final var target = configuration.archiveDirectory().resolve(source.fileName());
+                var target = configuration.archiveDirectory().resolve(source.fileName());
                 Files.move(source.path(), target, StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException exception) {

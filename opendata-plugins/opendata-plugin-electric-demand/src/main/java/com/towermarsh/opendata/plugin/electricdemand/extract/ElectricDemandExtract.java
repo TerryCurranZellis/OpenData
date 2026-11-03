@@ -17,13 +17,14 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
- * Extract step: finds the NESO historic demand CSV resources (resource names containing a year inside the configured date range) in the
- * NESO catalogue and downloads them to a temporary working directory.
+ * Extract step: finds the NESO historic demand CSV resources (resource names
+ * containing a year inside the configured date range) in the NESO catalogue and
+ * downloads them to a temporary working directory.
  *
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricDemandExtract {
+public class ElectricDemandExtract {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandExtract.class.getName());
 
@@ -35,16 +36,16 @@ public final class ElectricDemandExtract {
      * @throws IOException on catalogue, download or file failure
      * @throws InterruptedException when interrupted
      */
-    public NesoExtraction extract(final NesoSettings settings) throws IOException, InterruptedException {
+    public NesoExtraction extract(NesoSettings settings) throws IOException, InterruptedException {
         Objects.requireNonNull(settings, "settings");
-        final var client = new NesoCkanClient(settings);
-        final var resources = client.listCsvResources(
+        var client = new NesoCkanClient(settings);
+        var resources = client.listCsvResources(
                 name -> NesoCsv.includesYear(name, settings.startDate(), settings.endDate()));
         if (resources.isEmpty()) {
             throw new IOException("No matching CSV resources found for NESO dataset " + settings.datasetId());
         }
-        final var directory = Files.createTempDirectory("opendata-electric-demand-");
-        final var downloaded = new ArrayList<NesoResource>();
+        var directory = Files.createTempDirectory("opendata-electric-demand-");
+        var downloaded = new ArrayList<NesoResource>();
         try {
             var index = 0;
             for (var resource : resources) {

@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /** Transforms a complete extraction batch without rereading its PDF files. */
-public final class OctopusTransform {
+public class OctopusTransform {
     private static final Logger LOGGER = Logger.getLogger(OctopusTransform.class.getName());
 
     /**
@@ -21,12 +21,12 @@ public final class OctopusTransform {
      * @param statements
      * @return
      */
-    public OctopusParseResult transform(final List<ExtractedOctopusStatement> statements) {
+    public OctopusParseResult transform(List<ExtractedOctopusStatement> statements) {
         Objects.requireNonNull(statements, "statements");
-        final List<ElectricityRecord> electricity = new ArrayList<>();
-        final List<GasRecord> gas = new ArrayList<>();
-        for (ExtractedOctopusStatement statement : statements) {
-            final OctopusParseResult result = OctopusStatementParser.parseExtracted(
+        List<ElectricityRecord> electricity = new ArrayList<>();
+        List<GasRecord> gas = new ArrayList<>();
+        for (var statement : statements) {
+            var result = OctopusStatementParser.parseExtracted(
                     statement.text(), statement.fileName(), statement.statementDate());
             electricity.addAll(result.electricityRecords());
             gas.addAll(result.gasRecords());

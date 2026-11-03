@@ -43,9 +43,9 @@ public record ExtractedOctopusAdjustment(
         }
     }
 
-    private static String requireText(final String value, final String name) {
+    private static String requireText(String value, String name) {
         Objects.requireNonNull(value, name);
-        final var result = value.trim();
+        var result = value.trim();
         if (result.isEmpty()) {
             throw new IllegalArgumentException(name + " must not be blank");
         }

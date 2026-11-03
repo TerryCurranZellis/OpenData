@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.1
  */
-public final class ExceptionMessages {
+public  class ExceptionMessages {
 
     private ExceptionMessages() {
         // Utility class.

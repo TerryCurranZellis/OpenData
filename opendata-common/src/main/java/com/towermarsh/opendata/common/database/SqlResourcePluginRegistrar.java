@@ -30,7 +30,7 @@ public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
      * @param pluginId plugin identifier
      * @param scriptResource classpath resource of the schema script, e.g. {@code sql/plugins/x.sql}
      */
-    protected SqlResourcePluginRegistrar(final String pluginId, final String scriptResource) {
+    protected SqlResourcePluginRegistrar(String pluginId, String scriptResource) {
         this.pluginId = Objects.requireNonNull(pluginId, "pluginId");
         this.scriptResource = Objects.requireNonNull(scriptResource, "scriptResource");
     }
@@ -41,7 +41,7 @@ public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
     }
 
     @Override
-    public void register(final DatabaseResourceManager database) {
+    public void register(DatabaseResourceManager database) {
         LOGGER.info(() -> "Creating database objects for plugin %s from %s".formatted(pluginId, scriptResource));
         try {
             SqlScriptExecutor.executeResource(database, getClass().getClassLoader(), scriptResource);

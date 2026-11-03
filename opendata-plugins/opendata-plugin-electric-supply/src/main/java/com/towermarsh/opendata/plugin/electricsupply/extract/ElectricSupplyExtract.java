@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.plugin.electricsupply.extract;
 
 import com.towermarsh.opendata.plugin.neso.NesoCkanClient;
-import com.towermarsh.opendata.plugin.neso.NesoCsv;
 import com.towermarsh.opendata.plugin.neso.NesoExtraction;
 import com.towermarsh.opendata.plugin.neso.NesoResource;
 import com.towermarsh.opendata.plugin.neso.NesoSettings;
@@ -24,7 +23,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricSupplyExtract {
+public class ElectricSupplyExtract {
 
     private static final Logger LOG = Logger.getLogger(ElectricSupplyExtract.class.getName());
 
@@ -36,16 +35,16 @@ public final class ElectricSupplyExtract {
      * @throws IOException on catalogue, download or file failure
      * @throws InterruptedException when interrupted
      */
-    public NesoExtraction extract(final NesoSettings settings) throws IOException, InterruptedException {
+    public NesoExtraction extract(NesoSettings settings) throws IOException, InterruptedException {
         Objects.requireNonNull(settings, "settings");
-        final var client = new NesoCkanClient(settings);
-        final var resources = client.listCsvResources(
+        var client = new NesoCkanClient(settings);
+        var resources = client.listCsvResources(
                 name -> name.toLowerCase(Locale.ROOT).contains("generation"));
         if (resources.isEmpty()) {
             throw new IOException("No matching CSV resources found for NESO dataset " + settings.datasetId());
         }
-        final var directory = Files.createTempDirectory("opendata-electric-supply-");
-        final var downloaded = new ArrayList<NesoResource>();
+        var directory = Files.createTempDirectory("opendata-electric-supply-");
+        var downloaded = new ArrayList<NesoResource>();
         try {
             var index = 0;
             for (var resource : resources) {

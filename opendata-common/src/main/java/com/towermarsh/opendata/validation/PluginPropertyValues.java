@@ -25,7 +25,7 @@ import java.util.Optional;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class PluginPropertyValues {
+public class PluginPropertyValues {
 
     private final PluginDefinition definition;
 
@@ -34,7 +34,7 @@ public final class PluginPropertyValues {
      *
      * @param definition resolved plugin definition
      */
-    public PluginPropertyValues(final PluginDefinition definition) {
+    public PluginPropertyValues(PluginDefinition definition) {
         this.definition = Objects.requireNonNull(definition, "definition");
     }
 
@@ -44,7 +44,7 @@ public final class PluginPropertyValues {
      * @param name property name
      * @return trimmed text
      */
-    public String requiredText(final String name) {
+    public String requiredText(String name) {
         return raw(name).orElseThrow(() -> missing(name));
     }
 
@@ -55,7 +55,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return trimmed text
      */
-    public String text(final String name, final String defaultValue) {
+    public String text(String name, String defaultValue) {
         return raw(name).orElseGet(
                 () -> ValidationRules.requireText(defaultValue, name + " default"));
     }
@@ -67,7 +67,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed integer
      */
-    public int integer(final String name, final int defaultValue) {
+    public int integer(String name, int defaultValue) {
         return parse(name, Integer.toString(defaultValue), Integer::parseInt, "an integer");
     }
 
@@ -78,7 +78,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed long
      */
-    public long longValue(final String name, final long defaultValue) {
+    public long longValue(String name, long defaultValue) {
         return parse(name, Long.toString(defaultValue), Long::parseLong, "a long integer");
     }
 
@@ -89,7 +89,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed double
      */
-    public double doubleValue(final String name, final double defaultValue) {
+    public double doubleValue(String name, double defaultValue) {
         return parse(name, Double.toString(defaultValue), Double::parseDouble, "a decimal number");
     }
 
@@ -99,7 +99,7 @@ public final class PluginPropertyValues {
      * @param name property name
      * @return parsed double
      */
-    public double requiredDouble(final String name) {
+    public double requiredDouble(String name) {
         return parseRequired(name, Double::parseDouble, "a decimal number");
     }
 
@@ -110,7 +110,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed decimal
      */
-    public BigDecimal decimal(final String name, final BigDecimal defaultValue) {
+    public BigDecimal decimal(String name, BigDecimal defaultValue) {
         Objects.requireNonNull(defaultValue, "defaultValue");
         return parse(name, defaultValue.toPlainString(), BigDecimal::new, "a decimal number");
     }
@@ -122,7 +122,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed boolean
      */
-    public boolean booleanValue(final String name, final boolean defaultValue) {
+    public boolean booleanValue(String name, boolean defaultValue) {
         return parse(
                 name,
                 Boolean.toString(defaultValue),
@@ -137,7 +137,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed duration
      */
-    public Duration duration(final String name, final Duration defaultValue) {
+    public Duration duration(String name, Duration defaultValue) {
         Objects.requireNonNull(defaultValue, "defaultValue");
         return parse(name, defaultValue.toString(), Duration::parse, "an ISO-8601 duration");
     }
@@ -148,7 +148,7 @@ public final class PluginPropertyValues {
      * @param name property name
      * @return parsed date
      */
-    public LocalDate requiredDate(final String name) {
+    public LocalDate requiredDate(String name) {
         return parseRequired(name, LocalDate::parse, "an ISO date in yyyy-MM-dd form");
     }
 
@@ -158,7 +158,7 @@ public final class PluginPropertyValues {
      * @param name property name
      * @return optional parsed date
      */
-    public Optional<LocalDate> optionalDate(final String name) {
+    public Optional<LocalDate> optionalDate(String name) {
         return raw(name).map(value -> parseValue(
                 name,
                 value,
@@ -172,7 +172,7 @@ public final class PluginPropertyValues {
      * @param name property name
      * @return parsed path
      */
-    public Path requiredPath(final String name) {
+    public Path requiredPath(String name) {
         return parseRequired(name, Path::of, "a file-system path");
     }
 
@@ -183,7 +183,7 @@ public final class PluginPropertyValues {
      * @param defaultValue fallback value
      * @return parsed URI
      */
-    public URI uri(final String name, final URI defaultValue) {
+    public URI uri(String name, URI defaultValue) {
         Objects.requireNonNull(defaultValue, "defaultValue");
         return parse(name, defaultValue.toString(), URI::create, "a URI");
     }
@@ -198,9 +198,9 @@ public final class PluginPropertyValues {
      * @return parsed value
      */
     public <T> T parseRequired(
-            final String name,
-            final ValueParser<T> parser,
-            final String expectedDescription) {
+            String name,
+            ValueParser<T> parser,
+            String expectedDescription) {
         return parseValue(name, requiredText(name), parser, expectedDescription);
     }
 
@@ -215,16 +215,16 @@ public final class PluginPropertyValues {
      * @return parsed value
      */
     public <T> T parse(
-            final String name,
-            final String defaultValue,
-            final ValueParser<T> parser,
-            final String expectedDescription) {
-        final String value = raw(name).orElseGet(
+            String name,
+            String defaultValue,
+            ValueParser<T> parser,
+            String expectedDescription) {
+        var value = raw(name).orElseGet(
                 () -> ValidationRules.requireText(defaultValue, name + " default"));
         return parseValue(name, value, parser, expectedDescription);
     }
 
-    private Optional<String> raw(final String name) {
+    private Optional<String> raw(String name) {
         ValidationRules.requireText(name, "property name");
         return definition.findProperty(name)
                 .map(PluginPropertyDefinition::value)
@@ -233,10 +233,10 @@ public final class PluginPropertyValues {
     }
 
     private <T> T parseValue(
-            final String name,
-            final String value,
-            final ValueParser<T> parser,
-            final String expectedDescription) {
+            String name,
+            String value,
+            ValueParser<T> parser,
+            String expectedDescription) {
         Objects.requireNonNull(parser, "parser");
         ValidationRules.requireText(expectedDescription, "expectedDescription");
         try {
@@ -248,22 +248,22 @@ public final class PluginPropertyValues {
         }
     }
 
-    private IllegalArgumentException missing(final String name) {
+    private IllegalArgumentException missing(String name) {
         return new IllegalArgumentException(
                 "Plugin '" + definition.id() + "' requires property '" + name + "'.");
     }
 
     private IllegalArgumentException invalid(
-            final String name,
-            final String expectedDescription,
-            final Exception cause) {
+            String name,
+            String expectedDescription,
+            Exception cause) {
         return new IllegalArgumentException(
                 "Plugin '" + definition.id() + "' property '" + name
                         + "' must be " + expectedDescription + '.',
                 cause);
     }
 
-    private static boolean parseBoolean(final String value) {
+    private static boolean parseBoolean(String value) {
         return switch (value.toLowerCase(Locale.ROOT)) {
             case "true", "yes", "1", "on" -> true;
             case "false", "no", "0", "off" -> false;

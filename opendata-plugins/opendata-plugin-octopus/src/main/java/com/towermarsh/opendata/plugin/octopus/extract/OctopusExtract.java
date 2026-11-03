@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @author Terry Curran
  * @version 3.3.0
  */
-public final class OctopusExtract {
+public class OctopusExtract {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusExtract.class.getName());
 
@@ -48,19 +48,19 @@ public final class OctopusExtract {
      * @throws java.io.IOException
      */
     public List<ExtractedOctopusStatement> extract(
-            final OctopusConfiguration configuration,
-            final PluginExecutionContext context) throws IOException {
+            OctopusConfiguration configuration,
+            PluginExecutionContext context) throws IOException {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(context, "context");
-        final var inputDirectory = configuration.inputDirectory();
+        var inputDirectory = configuration.inputDirectory();
         if (!Files.isDirectory(inputDirectory)) {
             throw new IOException("Octopus input directory does not exist or is not a directory: " + inputDirectory);
         }
 
-        final var processed = context.dryRun()
+        var processed = context.dryRun()
                 ? Set.of()
                 : new OctopusProcessedFileRepository(context.database()).findProcessedFileKeys();
-        final List<Path> candidates;
+        List<Path> candidates;
         try (var files = Files.list(inputDirectory)) {
             candidates = files.filter(Files::isRegularFile)
                     .filter(path -> FILE_PATTERN.matcher(PathDigestSupport.fileName(path)).matches())
@@ -69,11 +69,11 @@ public final class OctopusExtract {
                     .toList();
         }
 
-        final List<ExtractedOctopusStatement> extracted = new ArrayList<>();
+        List<ExtractedOctopusStatement> extracted = new ArrayList<>();
         var skipped = 0;
         for (var path : candidates) {
-            final var candidateFileName = PathDigestSupport.fileName(path);
-            final var hash = PathDigestSupport.sha256(path);
+            var candidateFileName = PathDigestSupport.fileName(path);
+            var hash = PathDigestSupport.sha256(path);
             if (processed.contains(OctopusProcessedFileRepository.key(candidateFileName, hash))) {
                 skipped++;
                 continue;
@@ -90,13 +90,13 @@ public final class OctopusExtract {
             LOGGER.warning(() -> "Octopus extract: no file in %s matches %s; %d other file(s) were ignored"
                     .formatted(inputDirectory, FILE_PATTERN.pattern(), countFiles(inputDirectory)));
         }
-        final var skippedCount = skipped;
+        var skippedCount = skipped;
         LOGGER.info(() -> "Octopus extract: discovered %d matching PDF(s), selected %d new/changed file(s), skipped %d completed file(s)"
                 .formatted(candidates.size(), extracted.size(), skippedCount));
         return List.copyOf(extracted);
     }
 
-    private static long countFiles(final Path directory) {
+    private static long countFiles(Path directory) {
         try (var files = Files.list(directory)) {
             return files.filter(Files::isRegularFile).count();
         } catch (IOException exception) {
@@ -109,9 +109,9 @@ public final class OctopusExtract {
      * @param path path to file
      * @return  the statement date
      */
-    static LocalDate statementDate(final Path path) {
-       final var fileName = PathDigestSupport.fileName(path);
-       final var matcher = FILE_PATTERN.matcher(fileName);
+    static LocalDate statementDate(Path path) {
+       var fileName = PathDigestSupport.fileName(path);
+       var matcher = FILE_PATTERN.matcher(fileName);
        if (!matcher.matches()) {
            throw new IllegalArgumentException("Invalid Octopus statement filename: " + fileName);
        }

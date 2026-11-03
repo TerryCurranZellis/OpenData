@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricSupplyPlugin implements OpenDataPlugin {
+public class ElectricSupplyPlugin implements OpenDataPlugin {
 
     /** Stable plugin identifier. */
     public static final String PLUGIN_ID = "electric-supply";
@@ -36,7 +36,7 @@ public final class ElectricSupplyPlugin implements OpenDataPlugin {
      *
      * @param definition resolved plugin definition
      */
-    public ElectricSupplyPlugin(final PluginDefinition definition) {
+    public ElectricSupplyPlugin(PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!PLUGIN_ID.equals(definition.id())) {
             throw new IllegalArgumentException("Wrong plugin id: " + definition.id());
@@ -45,7 +45,7 @@ public final class ElectricSupplyPlugin implements OpenDataPlugin {
     }
 
     @Override
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         return initialise.execute(Objects.requireNonNull(context, "context"));
     }
 }

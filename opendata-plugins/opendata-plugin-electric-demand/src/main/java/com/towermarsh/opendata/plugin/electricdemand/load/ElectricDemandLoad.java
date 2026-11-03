@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricDemandLoad {
+public class ElectricDemandLoad {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandLoad.class.getName());
     private static final String UPDATE = "UPDATE electricdemand.Demand SET NationalDemandMW=?,TransmissionSystemDemandMW=?,EnglandWalesDemandMW=?,EmbeddedWindMW=?,EmbeddedSolarMW=?,PumpingMW=? WHERE SettlementDate=? AND SettlementPeriod=?";
@@ -37,7 +37,7 @@ public final class ElectricDemandLoad {
      * @return metrics
      * @throws SQLException when the database write fails
      */
-    public PluginMetrics load(final List<DemandRecord> records, final PluginExecutionContext context)
+    public PluginMetrics load(List<DemandRecord> records, PluginExecutionContext context)
             throws SQLException {
         Objects.requireNonNull(records, "records");
         Objects.requireNonNull(context, "context");
@@ -48,7 +48,7 @@ public final class ElectricDemandLoad {
         var inserted = 0L;
         var updated = 0L;
         try (var connection = context.database().getConnection()) {
-            final var original = connection.getAutoCommit();
+            var original = connection.getAutoCommit();
             connection.setAutoCommit(false);
             try (var update = connection.prepareStatement(UPDATE);
                     var insert = connection.prepareStatement(INSERT)) {
@@ -78,7 +78,7 @@ public final class ElectricDemandLoad {
         return new PluginMetrics(records.size(), inserted, updated, 0);
     }
 
-    private static void bind(final PreparedStatement statement, final int first, final List<Double> values)
+    private static void bind(PreparedStatement statement, int first, List<Double> values)
             throws SQLException {
         for (var i = 0; i < values.size(); i++) {
             if (values.get(i) == null) {

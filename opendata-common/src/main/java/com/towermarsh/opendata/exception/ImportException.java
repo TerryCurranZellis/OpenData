@@ -12,8 +12,7 @@ package com.towermarsh.opendata.exception;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class ImportException
-        extends OpenDataException {
+public class ImportException extends OpenDataException {
 
     /**
      * Creates a new import exception.

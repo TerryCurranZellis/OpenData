@@ -19,7 +19,7 @@ import java.util.UUID;
  * @version 2.0.0
  * @since 2.0.0
  */
-final class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecord> {
+class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecord> {
 
     private static final String EXISTS_SQL = """
             SELECT 1
@@ -80,10 +80,10 @@ final class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecor
     /** {@inheritDoc} */
     @Override
     protected int bindKey(
-            final PreparedStatement statement,
-            final GasRecord record,
-            final int index) throws SQLException {
-        int parameter = index;
+            PreparedStatement statement,
+            GasRecord record,
+            int index) throws SQLException {
+        var parameter = index;
         statement.setDate(parameter++, Date.valueOf(record.billDate()));
         statement.setDate(parameter++, Date.valueOf(record.tariffPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.tariffPeriodEnd()));
@@ -98,10 +98,10 @@ final class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecor
     /** {@inheritDoc} */
     @Override
     protected void bindInsert(
-            final PreparedStatement statement,
-            final GasRecord record,
-            final UUID runId) throws SQLException {
-        int parameter = 1;
+            PreparedStatement statement,
+            GasRecord record,
+            UUID runId) throws SQLException {
+        var parameter = 1;
         statement.setDate(parameter++, Date.valueOf(record.billDate()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodEnd()));
@@ -128,10 +128,10 @@ final class GasRecordUpsertAdapter extends AbstractOctopusUpsertAdapter<GasRecor
     /** {@inheritDoc} */
     @Override
     protected void bindUpdate(
-            final PreparedStatement statement,
-            final GasRecord record,
-            final UUID runId) throws SQLException {
-        int parameter = 1;
+            PreparedStatement statement,
+            GasRecord record,
+            UUID runId) throws SQLException {
+        var parameter = 1;
         statement.setDate(parameter++, Date.valueOf(record.billPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodEnd()));
         statement.setBigDecimal(parameter++, record.startReadingValue());

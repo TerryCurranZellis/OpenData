@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author terry
  * @version 2.0.0
  */
-public final class OctopusLoad {
+public class OctopusLoad {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusLoad.class.getName());
 

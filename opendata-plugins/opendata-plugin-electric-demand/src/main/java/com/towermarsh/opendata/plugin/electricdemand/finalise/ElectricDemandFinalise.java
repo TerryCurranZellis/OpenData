@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricDemandFinalise {
+public class ElectricDemandFinalise {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandFinalise.class.getName());
 
@@ -29,10 +29,10 @@ public final class ElectricDemandFinalise {
      * @param completed whether all previous steps completed
      */
     public void finalise(
-            final NesoExtraction extraction,
-            final PluginMetrics metrics,
-            final boolean dryRun,
-            final boolean completed) {
+            NesoExtraction extraction,
+            PluginMetrics metrics,
+            boolean dryRun,
+            boolean completed) {
         Objects.requireNonNull(extraction, "extraction");
         Objects.requireNonNull(metrics, "metrics");
         extraction.cleanUp();

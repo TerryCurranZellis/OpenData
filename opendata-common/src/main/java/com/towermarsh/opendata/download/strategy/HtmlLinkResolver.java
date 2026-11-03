@@ -46,16 +46,14 @@ public class HtmlLinkResolver {
         Objects.requireNonNull(html, "html");
         Objects.requireNonNull(definition, "definition");
 
-        var hrefPattern
-                = Pattern.compile(definition.hrefPattern());
+        var hrefPattern = Pattern.compile(definition.hrefPattern());
         var textPattern
                 = definition.textPattern().isBlank()
                 ? null
                 : Pattern.compile(definition.textPattern());
 
         List<URI> matches = new ArrayList<>();
-        var document
-                = Jsoup.parse(html, landingPageUri.toString());
+        var document = Jsoup.parse(html, landingPageUri.toString());
 
         document.select(definition.cssSelector()).forEach((var element) -> {
             var href = element.attr("href").trim();

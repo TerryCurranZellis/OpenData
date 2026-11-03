@@ -19,7 +19,7 @@ import java.util.UUID;
  * @version 2.0.0
  * @since 2.0.0
  */
-final class ElectricityRecordUpsertAdapter
+class ElectricityRecordUpsertAdapter
         extends AbstractOctopusUpsertAdapter<ElectricityRecord> {
 
     private static final String EXISTS_SQL = """
@@ -79,10 +79,10 @@ final class ElectricityRecordUpsertAdapter
     /** {@inheritDoc} */
     @Override
     protected int bindKey(
-            final PreparedStatement statement,
-            final ElectricityRecord record,
-            final int index) throws SQLException {
-        int parameter = index;
+            PreparedStatement statement,
+            ElectricityRecord record,
+            int index) throws SQLException {
+        var parameter = index;
         statement.setDate(parameter++, Date.valueOf(record.billDate()));
         statement.setDate(parameter++, Date.valueOf(record.tariffPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.tariffPeriodEnd()));
@@ -97,10 +97,10 @@ final class ElectricityRecordUpsertAdapter
     /** {@inheritDoc} */
     @Override
     protected void bindInsert(
-            final PreparedStatement statement,
-            final ElectricityRecord record,
-            final UUID runId) throws SQLException {
-        int parameter = 1;
+            PreparedStatement statement,
+            ElectricityRecord record,
+            UUID runId) throws SQLException {
+        var parameter = 1;
         statement.setDate(parameter++, Date.valueOf(record.billDate()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodEnd()));
@@ -126,10 +126,10 @@ final class ElectricityRecordUpsertAdapter
     /** {@inheritDoc} */
     @Override
     protected void bindUpdate(
-            final PreparedStatement statement,
-            final ElectricityRecord record,
-            final UUID runId) throws SQLException {
-        int parameter = 1;
+            PreparedStatement statement,
+            ElectricityRecord record,
+            UUID runId) throws SQLException {
+        var parameter = 1;
         statement.setDate(parameter++, Date.valueOf(record.billPeriodStart()));
         statement.setDate(parameter++, Date.valueOf(record.billPeriodEnd()));
         statement.setBigDecimal(parameter++, record.startReadingValue());

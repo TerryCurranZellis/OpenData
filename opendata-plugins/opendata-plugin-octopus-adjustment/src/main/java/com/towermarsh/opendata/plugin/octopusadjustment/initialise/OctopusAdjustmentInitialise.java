@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public final class OctopusAdjustmentInitialise {
+public class OctopusAdjustmentInitialise {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusAdjustmentInitialise.class.getName());
 
@@ -40,7 +40,7 @@ public final class OctopusAdjustmentInitialise {
      * @param configuration typed adjustment configuration
      * @since 3.1.0
      */
-    public OctopusAdjustmentInitialise(final OctopusAdjustmentConfiguration configuration) {
+    public OctopusAdjustmentInitialise(OctopusAdjustmentConfiguration configuration) {
         this(
                 configuration,
                 new OctopusAdjustmentExtract(),
@@ -50,11 +50,11 @@ public final class OctopusAdjustmentInitialise {
     }
 
     OctopusAdjustmentInitialise(
-            final OctopusAdjustmentConfiguration configuration,
-            final OctopusAdjustmentExtract extractor,
-            final OctopusAdjustmentTransform transformer,
-            final OctopusAdjustmentLoad loader,
-            final OctopusAdjustmentFinalise finaliser) {
+            OctopusAdjustmentConfiguration configuration,
+            OctopusAdjustmentExtract extractor,
+            OctopusAdjustmentTransform transformer,
+            OctopusAdjustmentLoad loader,
+            OctopusAdjustmentFinalise finaliser) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.extractor = Objects.requireNonNull(extractor, "extractor");
         this.transformer = Objects.requireNonNull(transformer, "transformer");
@@ -70,7 +70,7 @@ public final class OctopusAdjustmentInitialise {
      * @throws Exception when a stage fails
      * @since 3.1.0
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         LOGGER.info(() -> "Octopus adjustment initialise: starting pipeline (dryRun=%s)"
                 .formatted(context.dryRun()));

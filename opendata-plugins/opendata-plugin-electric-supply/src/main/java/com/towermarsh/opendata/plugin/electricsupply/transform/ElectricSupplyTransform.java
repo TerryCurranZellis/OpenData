@@ -28,7 +28,7 @@ import org.apache.commons.csv.CSVRecord;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricSupplyTransform {
+public class ElectricSupplyTransform {
 
     private static final Logger LOG = Logger.getLogger(ElectricSupplyTransform.class.getName());
 
@@ -40,18 +40,17 @@ public final class ElectricSupplyTransform {
      * @return parsed records
      * @throws IOException when a file cannot be read
      */
-    public List<GenerationMixRecord> transform(final NesoExtraction extraction, final NesoSettings settings)
+    public List<GenerationMixRecord> transform(NesoExtraction extraction, NesoSettings settings)
             throws IOException {
         Objects.requireNonNull(extraction, "extraction");
         Objects.requireNonNull(settings, "settings");
-        final List<GenerationMixRecord> records = new ArrayList<>();
+        List<GenerationMixRecord> records = new ArrayList<>();
         for (var resource : extraction.resources()) {
-            try (Reader reader = Files.newBufferedReader(resource.file(), StandardCharsets.UTF_8);
-                    var csv = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true)
-                            .setIgnoreSurroundingSpaces(true).setIgnoreEmptyLines(true).get().parse(reader)) {
+            try (Reader reader = Files.newBufferedReader(resource.file(), StandardCharsets.UTF_8); var csv = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true)
+                    .setIgnoreSurroundingSpaces(true).setIgnoreEmptyLines(true).get().parse(reader)) {
                 for (var row : csv) {
-                    final var record = parse(row);
-                    final var date = record.dateTimeUtc().atOffset(ZoneOffset.UTC).toLocalDate();
+                    var record = parse(row);
+                    var date = record.dateTimeUtc().atOffset(ZoneOffset.UTC).toLocalDate();
                     if (!date.isBefore(settings.startDate()) && !date.isAfter(settings.endDate())) {
                         records.add(record);
                     }
@@ -66,9 +65,9 @@ public final class ElectricSupplyTransform {
         return List.copyOf(records);
     }
 
-    static GenerationMixRecord parse(final CSVRecord row) {
-        final var instant = NesoCsv.parseInstant(NesoCsv.field(row, "DATETIME", "Date & Time"));
-        final var values = Arrays.asList(
+    static GenerationMixRecord parse(CSVRecord row) {
+        var instant = NesoCsv.parseInstant(NesoCsv.field(row, "DATETIME", "Date & Time"));
+        var values = Arrays.asList(
                 NesoCsv.number(row, "GAS"), NesoCsv.number(row, "COAL"), NesoCsv.number(row, "NUCLEAR"),
                 NesoCsv.number(row, "WIND"), NesoCsv.number(row, "WIND_EMB"), NesoCsv.number(row, "HYDRO"),
                 NesoCsv.number(row, "IMPORTS"), NesoCsv.number(row, "BIOMASS"), NesoCsv.number(row, "OTHER"),

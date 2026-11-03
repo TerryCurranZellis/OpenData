@@ -27,7 +27,7 @@ import java.util.UUID;
  * @version 2.0.0
  * @since 2.0.0
  */
-public final class OctopusPersistenceRepository {
+public class OctopusPersistenceRepository {
 
     private static final ElectricityRecordUpsertAdapter ELECTRICITY_ADAPTER
             = new ElectricityRecordUpsertAdapter();
@@ -42,7 +42,7 @@ public final class OctopusPersistenceRepository {
      * @param database database resource manager
      * @since 2.0.0
      */
-    public OctopusPersistenceRepository(final DatabaseResourceManager database) {
+    public OctopusPersistenceRepository(DatabaseResourceManager database) {
         this.transactionTemplate = new JdbcTransactionTemplate(
                 Objects.requireNonNull(database, "database"));
     }
@@ -56,8 +56,8 @@ public final class OctopusPersistenceRepository {
      * @since 2.0.0
      */
     public OctopusPersistenceResult save(
-            final OctopusParseResult batch,
-            final UUID runId) {
+            OctopusParseResult batch,
+            UUID runId) {
         Objects.requireNonNull(batch, "batch");
         Objects.requireNonNull(runId, "runId");
 
@@ -67,33 +67,33 @@ public final class OctopusPersistenceRepository {
     }
 
     private static OctopusPersistenceResult persistBatch(
-            final Connection connection,
-            final OctopusParseResult batch,
-            final UUID runId) throws SQLException {
-        final var electricity = JdbcUpsertExecutor.execute(
+            Connection connection,
+            OctopusParseResult batch,
+            UUID runId) throws SQLException {
+         var electricity = JdbcUpsertExecutor.execute(
                 connection,
                 batch.electricityRecords(),
                 runId,
                 ELECTRICITY_ADAPTER);
-        final var gas = JdbcUpsertExecutor.execute(
+        var gas = JdbcUpsertExecutor.execute(
                 connection,
                 batch.gasRecords(),
                 runId,
                 GAS_ADAPTER);
 
-        for (ExtractedOctopusStatement statement : batch.statements()) {
+        for (var statement : batch.statements()) {
             markCompleted(connection, statement, runId);
         }
 
-        final var total = electricity.plus(gas);
+        var total = electricity.plus(gas);
         return new OctopusPersistenceResult(total.inserted(), total.updated(), 0);
     }
 
     private static void markCompleted(
-            final Connection connection,
-            final ExtractedOctopusStatement statement,
-            final UUID runId) throws SQLException {
-        final String sql = """
+            Connection connection,
+            ExtractedOctopusStatement statement,
+            UUID runId) throws SQLException {
+        var sql = """
                 MERGE octopus.statement_file WITH (HOLDLOCK) AS target
                 USING (SELECT ? AS file_name, ? AS sha256) AS source
                    ON target.file_name = source.file_name
@@ -111,7 +111,7 @@ public final class OctopusPersistenceRepository {
                     VALUES (?, ?, ?, ?, 'COMPLETED', ?, SYSUTCDATETIME());
                 """;
         try (var preparedStatement = connection.prepareStatement(sql)) {
-            int parameter = 1;
+            var parameter = 1;
             preparedStatement.setString(parameter++, statement.fileName());
             preparedStatement.setString(parameter++, statement.sha256());
             preparedStatement.setDate(parameter++, Date.valueOf(statement.statementDate()));

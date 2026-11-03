@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class SqlIdentifiers {
+public class SqlIdentifiers {
 
     private static final Pattern SAFE_IDENTIFIER
             = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
@@ -29,8 +29,8 @@ public final class SqlIdentifiers {
      * @param name field name used in error messages
      * @return validated identifier
      */
-    public static String requireSafe(final String value, final String name) {
-        final String result = ValidationRules.requireText(value, name, 128);
+    public static String requireSafe(String value, String name) {
+        var result = ValidationRules.requireText(value, name, 128);
         if (!SAFE_IDENTIFIER.matcher(result).matches()) {
             throw new IllegalArgumentException(
                     name + " is not a safe SQL identifier: " + result);
@@ -45,7 +45,7 @@ public final class SqlIdentifiers {
      * @param name field name used in error messages
      * @return bracket-quoted identifier
      */
-    public static String quote(final String value, final String name) {
+    public static String quote(String value, String name) {
         return '[' + requireSafe(value, name) + ']';
     }
 
@@ -56,7 +56,7 @@ public final class SqlIdentifiers {
      * @param table table name
      * @return qualified table name
      */
-    public static String qualify(final String schema, final String table) {
+    public static String qualify(String schema, String table) {
         return quote(schema, "schema") + '.' + quote(table, "table");
     }
 }

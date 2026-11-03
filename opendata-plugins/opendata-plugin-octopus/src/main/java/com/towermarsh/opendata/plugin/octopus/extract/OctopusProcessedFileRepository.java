@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Terry Curran
  * @version 2.0.0
  */
-public final class OctopusProcessedFileRepository {
+public class OctopusProcessedFileRepository {
 
     /**
      * database connection
@@ -29,7 +29,7 @@ public final class OctopusProcessedFileRepository {
      * instantiate 
      * @param database database connection 
      */
-    public OctopusProcessedFileRepository(final DatabaseResourceManager database) {
+    public OctopusProcessedFileRepository(DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
     }
 
@@ -39,7 +39,7 @@ public final class OctopusProcessedFileRepository {
      * @return a set of processed files
      */
     public Set<String> findProcessedFileKeys() {
-        final String sql = """
+        var sql = """
                 SELECT [file_name], [sha256]
                   FROM [octopus].[statement_file]
                  WHERE [status] = 'COMPLETED'
@@ -47,7 +47,7 @@ public final class OctopusProcessedFileRepository {
         try (var connection = database.getConnection(); 
              var statement = connection.prepareStatement(sql); 
              var results = statement.executeQuery()) {
-            final Set<String> keys = new HashSet<>();
+            Set<String> keys = new HashSet<>();
             while (results.next()) {
                 keys.add(key(results.getString(1), results.getString(2)));
             }
@@ -65,7 +65,7 @@ public final class OctopusProcessedFileRepository {
      * @param sha256 the hash
      * @return the key has
      */
-    public static String key(final String fileName, final String sha256) {
+    public static String key(String fileName, String sha256) {
         return fileName.toLowerCase(Locale.ROOT) + "|" + sha256.toLowerCase(Locale.ROOT);
     }
 }

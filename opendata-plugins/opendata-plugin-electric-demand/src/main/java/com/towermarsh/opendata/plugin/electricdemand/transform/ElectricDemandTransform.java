@@ -27,7 +27,7 @@ import org.apache.commons.csv.CSVRecord;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricDemandTransform {
+public class ElectricDemandTransform {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandTransform.class.getName());
 
@@ -39,17 +39,17 @@ public final class ElectricDemandTransform {
      * @return parsed records
      * @throws IOException when a file cannot be read
      */
-    public List<DemandRecord> transform(final NesoExtraction extraction, final NesoSettings settings)
+    public List<DemandRecord> transform(NesoExtraction extraction, NesoSettings settings)
             throws IOException {
         Objects.requireNonNull(extraction, "extraction");
         Objects.requireNonNull(settings, "settings");
-        final List<DemandRecord> records = new ArrayList<>();
+        List<DemandRecord> records = new ArrayList<>();
         for (var resource : extraction.resources()) {
             try (Reader reader = Files.newBufferedReader(resource.file(), StandardCharsets.UTF_8);
                     var csv = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true)
                             .setIgnoreSurroundingSpaces(true).setIgnoreEmptyLines(true).get().parse(reader)) {
                 for (var row : csv) {
-                    final var record = parse(row);
+                    var record = parse(row);
                     if (!record.settlementDate().isBefore(settings.startDate())
                             && !record.settlementDate().isAfter(settings.endDate())) {
                         records.add(record);
@@ -65,10 +65,10 @@ public final class ElectricDemandTransform {
         return List.copyOf(records);
     }
 
-    static DemandRecord parse(final CSVRecord row) {
-        final var date = NesoCsv.parseDate(NesoCsv.field(row, "SETTLEMENT_DATE", "Settlement Date"));
-        final var period = Integer.parseInt(NesoCsv.field(row, "SETTLEMENT_PERIOD", "Settlement Period"));
-        final var values = Arrays.asList(
+    static DemandRecord parse(CSVRecord row) {
+        var date = NesoCsv.parseDate(NesoCsv.field(row, "SETTLEMENT_DATE", "Settlement Date"));
+        var period = Integer.parseInt(NesoCsv.field(row, "SETTLEMENT_PERIOD", "Settlement Period"));
+        var values = Arrays.asList(
                 NesoCsv.number(row, "ND", "National Demand"),
                 NesoCsv.number(row, "TSD", "Transmission System Demand"),
                 NesoCsv.number(row, "ENGLAND_WALES_DEMAND", "England and Wales Demand"),

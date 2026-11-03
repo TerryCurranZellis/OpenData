@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public final class OctopusAdjustmentPlugin implements OpenDataPlugin {
+public class OctopusAdjustmentPlugin implements OpenDataPlugin {
 
     /** Stable plugin identifier used by configuration and execution. */
     public static final String PLUGIN_ID = "octopus-adjustment";
@@ -41,7 +41,7 @@ public final class OctopusAdjustmentPlugin implements OpenDataPlugin {
      * @param definition resolved plugin definition
      * @since 3.1.0
      */
-    public OctopusAdjustmentPlugin(final PluginDefinition definition) {
+    public OctopusAdjustmentPlugin(PluginDefinition definition) {
         this(OctopusAdjustmentConfiguration.from(definition));
     }
 
@@ -51,7 +51,7 @@ public final class OctopusAdjustmentPlugin implements OpenDataPlugin {
      * @param configuration typed adjustment configuration
      * @since 3.1.0
      */
-    public OctopusAdjustmentPlugin(final OctopusAdjustmentConfiguration configuration) {
+    public OctopusAdjustmentPlugin(OctopusAdjustmentConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.initialise = new OctopusAdjustmentInitialise(configuration);
     }
@@ -65,12 +65,12 @@ public final class OctopusAdjustmentPlugin implements OpenDataPlugin {
      * @since 3.1.0
      */
     @Override
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         LOGGER.info(() -> "OctopusAdjustmentPlugin.execute starting (runId=%s, dryRun=%s)"
                 .formatted(context.runId(), context.dryRun()));
 
-        final var metrics = initialise.execute(context);
+        var metrics = initialise.execute(context);
 
         LOGGER.info(() -> "OctopusAdjustmentPlugin.execute complete: read=%d inserted=%d updated=%d skipped=%d"
                 .formatted(metrics.read(), metrics.inserted(), metrics.updated(), metrics.skipped()));

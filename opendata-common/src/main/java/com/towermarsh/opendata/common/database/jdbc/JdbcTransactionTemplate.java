@@ -89,7 +89,7 @@ public class JdbcTransactionTemplate {
             rollback(connection, exception);
             throw exception;
         } finally {
-            SQLException cleanupFailure = cleanup(connection, cleanup, originalAutoCommit);
+            var cleanupFailure = cleanup(connection, cleanup, originalAutoCommit);
             if (cleanupFailure != null) {
                 if (primaryFailure == null) {
                     throw cleanupFailure;

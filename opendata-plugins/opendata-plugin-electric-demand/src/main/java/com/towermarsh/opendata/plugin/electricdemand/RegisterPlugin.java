@@ -14,9 +14,11 @@ import com.towermarsh.opendata.common.database.SqlResourcePluginRegistrar;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class RegisterPlugin extends SqlResourcePluginRegistrar {
+public class RegisterPlugin extends SqlResourcePluginRegistrar {
 
-    /** Creates the registrar. */
+    /** 
+     * Creates the registrar. 
+     */
     public RegisterPlugin() {
         super(ElectricDemandPlugin.PLUGIN_ID, "sql/plugins/electric-demand.sql");
     }

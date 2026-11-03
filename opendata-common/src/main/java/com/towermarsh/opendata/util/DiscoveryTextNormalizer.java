@@ -18,7 +18,7 @@ import java.util.Set;
  * @version 3.3.0
  * @since 3.3.0
  */
-public final class DiscoveryTextNormalizer {
+public class DiscoveryTextNormalizer {
 
     private DiscoveryTextNormalizer() {
         // Utility class.
@@ -28,9 +28,10 @@ public final class DiscoveryTextNormalizer {
      * Normalises free text for token-based matching.
      *
      * @param value text to normalise
-     * @return normalised text, or an empty string when the value is null or blank
+     * @return normalised text, or an empty string when the value is null or
+     * blank
      */
-    public static String normalizeFreeText(final String value) {
+    public static String normalizeFreeText(String value) {
         if (value == null || value.isBlank()) {
             return "";
         }
@@ -45,7 +46,7 @@ public final class DiscoveryTextNormalizer {
      * @param terms raw search terms
      * @return immutable distinct lower-case terms
      */
-    public static List<String> normalizeTerms(final List<String> terms) {
+    public static List<String> normalizeTerms(List<String> terms) {
         if (terms == null || terms.isEmpty()) {
             return List.of();
         }
@@ -63,11 +64,11 @@ public final class DiscoveryTextNormalizer {
      * @param extensions raw extension values
      * @return immutable distinct lower-case extensions without leading dots
      */
-    public static Set<String> normalizeExtensions(final Set<String> extensions) {
+    public static Set<String> normalizeExtensions(Set<String> extensions) {
         if (extensions == null || extensions.isEmpty()) {
             return Set.of();
         }
-        final var normalized = new LinkedHashSet<String>();
+        var normalized = new LinkedHashSet<String>();
         for (var extension : extensions) {
             if (extension != null && !extension.isBlank()) {
                 normalized.add(extension.trim()

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricSupplyInitialise {
+public class ElectricSupplyInitialise {
 
     private static final Logger LOG = Logger.getLogger(ElectricSupplyInitialise.class.getName());
 
@@ -38,15 +38,15 @@ public final class ElectricSupplyInitialise {
      *
      * @param settings validated plugin settings
      */
-    public ElectricSupplyInitialise(final NesoSettings settings) {
+    public ElectricSupplyInitialise(NesoSettings settings) {
         this(settings, new ElectricSupplyExtract(), new ElectricSupplyTransform(), new ElectricSupplyLoad(), new ElectricSupplyFinalise());
     }
 
     ElectricSupplyInitialise(
-            final NesoSettings settings,
-            final ElectricSupplyExtract extractor,
-            final ElectricSupplyTransform transformer,
-            final ElectricSupplyLoad loader,
+            NesoSettings settings,
+            ElectricSupplyExtract extractor,
+            ElectricSupplyTransform transformer,
+            ElectricSupplyLoad loader,
             final ElectricSupplyFinalise finaliser) {
         this.settings = Objects.requireNonNull(settings, "settings");
         this.extractor = Objects.requireNonNull(extractor, "extractor");
@@ -62,7 +62,7 @@ public final class ElectricSupplyInitialise {
      * @return run metrics
      * @throws Exception when a step fails
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         LOG.info(() -> "electric-supply initialise: starting pipeline (dryRun=%s, %s to %s)"
                 .formatted(context.dryRun(), settings.startDate(), settings.endDate()));

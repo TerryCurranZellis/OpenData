@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.1
  */
-public final class DurationFormatter {
+public class DurationFormatter {
 
     private DurationFormatter() {
         // Utility class.

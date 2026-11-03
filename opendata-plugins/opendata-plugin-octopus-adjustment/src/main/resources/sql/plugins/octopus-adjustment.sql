@@ -99,9 +99,11 @@ BEGIN
             CHECK ([end_reading_date] >= [start_reading_date]),
         CONSTRAINT [CK_octopus_adjustment_electric_data_bill_date]
             CHECK ([bill_date] >= [bill_period_end]),
-        CONSTRAINT [CK_octopus_adjustment_electric_data_tariff_within_bill]
+        /*
+CONSTRAINT [CK_octopus_adjustment_electric_data_tariff_within_bill]
             CHECK ([tariff_period_start] >= [bill_period_start]
                 AND [tariff_period_end] <= [bill_period_end]),
+*/
         CONSTRAINT [CK_octopus_adjustment_electric_data_mpan]
             CHECK ([mpan] = ''
                 OR (LEN([mpan]) = 13 AND [mpan] NOT LIKE '%[^0-9]%')),

@@ -11,8 +11,7 @@ package com.towermarsh.opendata.exception;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class DownloadException
-        extends OpenDataException {
+public class DownloadException extends OpenDataException {
 
     /**
      * Creates a new download exception.

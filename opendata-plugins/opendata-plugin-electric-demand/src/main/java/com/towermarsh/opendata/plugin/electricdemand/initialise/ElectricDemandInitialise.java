@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public final class ElectricDemandInitialise {
+public class ElectricDemandInitialise {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandInitialise.class.getName());
 
@@ -38,16 +38,16 @@ public final class ElectricDemandInitialise {
      *
      * @param settings validated plugin settings
      */
-    public ElectricDemandInitialise(final NesoSettings settings) {
+    public ElectricDemandInitialise(NesoSettings settings) {
         this(settings, new ElectricDemandExtract(), new ElectricDemandTransform(), new ElectricDemandLoad(), new ElectricDemandFinalise());
     }
 
     ElectricDemandInitialise(
-            final NesoSettings settings,
-            final ElectricDemandExtract extractor,
-            final ElectricDemandTransform transformer,
-            final ElectricDemandLoad loader,
-            final ElectricDemandFinalise finaliser) {
+            NesoSettings settings,
+            ElectricDemandExtract extractor,
+            ElectricDemandTransform transformer,
+            ElectricDemandLoad loader,
+            ElectricDemandFinalise finaliser) {
         this.settings = Objects.requireNonNull(settings, "settings");
         this.extractor = Objects.requireNonNull(extractor, "extractor");
         this.transformer = Objects.requireNonNull(transformer, "transformer");
@@ -62,7 +62,7 @@ public final class ElectricDemandInitialise {
      * @return run metrics
      * @throws Exception when a step fails
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         LOG.info(() -> "electric-demand initialise: starting pipeline (dryRun=%s, %s to %s)"
                 .formatted(context.dryRun(), settings.startDate(), settings.endDate()));
@@ -71,7 +71,7 @@ public final class ElectricDemandInitialise {
         var completed = false;
         try {
             extraction = extractor.extract(settings);
-            final var records = transformer.transform(extraction, settings);
+            var records = transformer.transform(extraction, settings);
             metrics = loader.load(records, context);
             completed = true;
             return metrics;
