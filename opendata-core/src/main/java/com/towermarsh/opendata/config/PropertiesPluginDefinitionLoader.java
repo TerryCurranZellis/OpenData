@@ -44,7 +44,7 @@ import com.towermarsh.opendata.config.model.PluginPropertyType;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class PropertiesPluginDefinitionLoader
+public final class PropertiesPluginDefinitionLoader
         implements PluginDefinitionLoader {
 
     private final ConfigurationPropertiesSource source;

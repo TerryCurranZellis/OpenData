@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class ClasspathConfigurationPropertiesSource
+public final class ClasspathConfigurationPropertiesSource
         implements ConfigurationPropertiesSource {
 
     /**

@@ -16,7 +16,7 @@ import com.towermarsh.opendata.cli.CommandLineArguments;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class ConfigurationService {
+public final class ConfigurationService {
 
     /**
      * class loader

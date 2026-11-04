@@ -19,7 +19,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.1
  */
-public class ApplicationPropertyValues {
+public final class ApplicationPropertyValues {
 
     private final Map<String, String> values;
 

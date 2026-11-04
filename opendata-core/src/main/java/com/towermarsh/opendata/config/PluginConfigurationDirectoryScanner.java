@@ -30,7 +30,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.0.0
  */
-public class PluginConfigurationDirectoryScanner {
+public final class PluginConfigurationDirectoryScanner {
 
     private static final String INDEX_FILE = "index.properties";
 
@@ -117,8 +117,9 @@ public class PluginConfigurationDirectoryScanner {
         final var parent = workingDirectory.getParent();
         if (parent != null) {
             addPluginSourceDirectories(result, parent.resolve("opendata-plugins"));
-            if (parent.getFileName() != null
-                    && "opendata-plugins".equals(parent.getFileName().toString())) {
+            final var parentFileName = parent.getFileName();
+            if (parentFileName != null
+                    && "opendata-plugins".equals(parentFileName.toString())) {
                 addPluginSourceDirectories(result, parent);
             }
         }

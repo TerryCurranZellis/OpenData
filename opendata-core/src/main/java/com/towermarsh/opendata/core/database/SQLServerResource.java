@@ -39,7 +39,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class SQLServerResource implements DatabaseResourceManager {
+public final class SQLServerResource implements DatabaseResourceManager {
 
     private static final Logger LOGGER = Logger.getLogger(SQLServerResource.class.getName());
     

@@ -31,7 +31,7 @@ import java.util.Properties;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class ClasspathPluginRegistry implements PluginRegistry {
+public final class ClasspathPluginRegistry implements PluginRegistry {
 
     private static final String INDEX_RESOURCE
             = "config/plugins/index.properties";

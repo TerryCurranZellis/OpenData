@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class ConfigurationRegistrationService {
+public final class ConfigurationRegistrationService {
 
     private final ConfigurationPropertiesSource applicationFileSource;
     private final JdbcConfigurationPropertiesSource databaseSource;

@@ -17,7 +17,7 @@ import com.towermarsh.opendata.core.config.model.BootstrapConfig;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class ApplicationConfigurationService {
+public final class ApplicationConfigurationService {
 
     private final BootstrapConfig bootstrapConfig;
     private final PluginDefinitionLoader pluginDefinitionLoader;
