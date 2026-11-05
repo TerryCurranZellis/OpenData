@@ -39,7 +39,7 @@
         <maven.compiler.release>24</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <javafx.version>26.0.2</javafx.version>
+        <javafx.version>27</javafx.version>
         <commons.csv.version>1.14.1</commons.csv.version>
         <commons.cli.version>1.11.0</commons.cli.version>
         <commons.dbcp.version>2.14.0</commons.dbcp.version>
@@ -59,15 +59,31 @@
         <quality.failOnViolation>false</quality.failOnViolation>
     </properties>
     <dependencies>
-         <dependency>
+        <!-- Apache Commons Pool -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+
+        <!-- Jackson Core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <!-- Apache POI Core -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.22.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.5.1</version>
         </dependency>
         <!-- Java fx -->
         <dependency>
@@ -84,7 +100,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>${commons.csv.version}</version>
         </dependency>
         <!-- Apache Commons Cli -->
         <dependency>
@@ -113,12 +128,22 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>13.5.1.jre11-preview</version>
+            <version>14.1.0.jre11-preview</version>
         </dependency>
         <!-- Junit tester -->
+        <!-- JUnit Jupiter API -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>6.1.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Jupiter Engine -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>6.1.3</version>
             <scope>test</scope>
         </dependency>
         <!-- more testers -->
@@ -130,14 +155,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.23.0</version>
             <scope>test</scope>
         </dependency>
         <!-- spotbugs annotations -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
-            <version>4.10.3</version>
+            <version>4.10.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
