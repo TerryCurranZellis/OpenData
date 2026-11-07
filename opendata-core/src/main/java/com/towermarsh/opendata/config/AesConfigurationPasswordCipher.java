@@ -32,12 +32,23 @@ import javax.crypto.spec.SecretKeySpec;
  * never mistaken for plain text.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @version 4.0.0
  */
 public class AesConfigurationPasswordCipher implements ConfigurationPasswordCipher {
 
     public static final String ENCRYPTED_PREFIX = "{aes}";
+    public static final String KEY_FILE_SETTING = "security.aes-key-file";
+    /**
+     * @deprecated Since 4.0.0, use {@code security.aes-key-file} in
+     * {@code config/application.properties}; JVM key location is legacy only.
+     */
+    @Deprecated(since = "4.0.0", forRemoval = false)
     public static final String KEY_FILE_PROPERTY = "opendata.config.key-file";
+    /**
+     * @deprecated Since 4.0.0, use {@code security.aes-key-file} in
+     * {@code config/application.properties}; environment key location is legacy only.
+     */
+    @Deprecated(since = "4.0.0", forRemoval = false)
     public static final String KEY_FILE_ENVIRONMENT_VARIABLE = "OPENDATA_CONFIG_KEY_FILE";
 
     private static final int NONCE_LENGTH = 12;
@@ -48,7 +59,8 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
     private final Path keyFile;
 
     /**
-     * Uses a key-file path supplied in a JVM property or environment variable.
+     * Loads the AES key path from the ordinary application properties file.
+     * The previous JVM/environment fallbacks remain for older installations.
      */
     public AesConfigurationPasswordCipher() {
         this(resolveKeyFile());
@@ -57,7 +69,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
     /**
      * Creates a cipher pointing to an external key file (useful for testing).
      *
-     * @param keyFile
+     * @param keyFile absolute or relative path to the Base64 AES key file
      */
     public AesConfigurationPasswordCipher(Path keyFile) {
         this.keyFile = keyFile;
@@ -94,8 +106,8 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
 
     /**
      * decrypt password
-     * @param storedValue
-     * @return 
+     * @param storedValue encrypted or plain stored value
+     * @return decrypted plain-text password
      */
     @Override
     public String decrypt(final String storedValue) {
@@ -126,18 +138,23 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
 
     /**
      * checks if a password is encrypted
-     * @param storedValue
-     * @return 
+     * @param storedValue encrypted or plain stored value
+     * @return decrypted plain-text password
      */
     @Override
     public boolean isEncrypted(final String storedValue) {
         return storedValue != null && storedValue.startsWith(ENCRYPTED_PREFIX);
     }
 
+    /**
+     * Reads the configured 256-bit key and returns a JCE AES key.
+     *
+     * @return key specification
+     */
     private SecretKeySpec loadKey() {
         if (keyFile == null) {
-            throw new OpenDataConfigurationException("AES key file is not configured. Set "
-                    + KEY_FILE_ENVIRONMENT_VARIABLE + " or -D" + KEY_FILE_PROPERTY + ".");
+            throw new OpenDataConfigurationException("AES key file is not configured. Set " + KEY_FILE_SETTING
+                    + " in config/application.properties.");
         }
         try {
             var key = Base64.getDecoder().decode(
@@ -157,15 +174,72 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
         }
     }
 
+    /**
+     * Resolves the key location through the existing file-based configuration.
+     * Deprecated JVM/environment settings are supported only as fallbacks.
+     *
+     * @return configured key file or null
+     */
     private static Path resolveKeyFile() {
-        var property = System.getProperty(KEY_FILE_PROPERTY);
-        if (property != null && !property.isBlank()) {
-            return Path.of(property);
+        var configured = keyFileFromProperties(ApplicationBootstrapPropertiesLoader.DEFAULT_FILE);
+        if (configured == null) {
+            configured = keyFileFromClasspath();
         }
-        var environment = System.getenv(KEY_FILE_ENVIRONMENT_VARIABLE);
-        return environment == null || environment.isBlank() ? null : Path.of(environment);
+        if (configured != null) {
+            return configured;
+        }
+        var legacy = System.getProperty(KEY_FILE_PROPERTY);
+        if (legacy == null || legacy.isBlank()) {
+            legacy = System.getenv(KEY_FILE_ENVIRONMENT_VARIABLE);
+        }
+        return legacy == null || legacy.isBlank() ? null : Path.of(legacy);
     }
 
+    /**
+     * Reads an external file without requiring password decryption.
+     *
+     * @param file properties file
+     * @return key path or null
+     */
+    private static Path keyFileFromProperties(final Path file) {
+        if (!Files.isRegularFile(file)) {
+            return null;
+        }
+        try (var input = Files.newInputStream(file)) {
+            final var values = new java.util.Properties();
+            values.load(new java.io.InputStreamReader(input, StandardCharsets.UTF_8));
+            final var value = values.getProperty(KEY_FILE_SETTING, "").trim();
+            return value.isBlank() ? null : Path.of(value);
+        } catch (IOException exception) {
+            throw new OpenDataConfigurationException("Unable to read AES key path from " + file, exception);
+        }
+    }
+
+    /**
+     * Reads the packaged key setting only for legacy deployments.
+     *
+     * @return key path or null
+     */
+    private static Path keyFileFromClasspath() {
+        final var loader = Thread.currentThread().getContextClassLoader();
+        try (var input = loader.getResourceAsStream("config/application.properties")) {
+            if (input == null) {
+                return null;
+            }
+            final var values = new java.util.Properties();
+            values.load(new java.io.InputStreamReader(input, StandardCharsets.UTF_8));
+            final var value = values.getProperty(KEY_FILE_SETTING, "").trim();
+            return value.isBlank() ? null : Path.of(value);
+        } catch (IOException exception) {
+            throw new OpenDataConfigurationException("Unable to read packaged AES key setting.", exception);
+        }
+    }
+
+    /**
+     * Refuses to misinterpret old RSA ciphertext as an unencrypted password.
+     *
+     * @param value stored secret
+     */
     private static void rejectLegacyRsaValue(String value) {
         if (value.startsWith("{enc}")) {
             throw new OpenDataConfigurationException(

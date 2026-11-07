@@ -44,6 +44,13 @@ public class ElectricSupplyPlugin implements OpenDataPlugin {
         this.initialise = new ElectricSupplyInitialise(NesoSettings.from(definition, "historic-generation-mix"));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param context input context
+     * @return result of execute
+     * @throws Exception if execute fails
+     */
     @Override
     public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         return initialise.execute(Objects.requireNonNull(context, "context"));

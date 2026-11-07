@@ -13,6 +13,12 @@ import java.util.Objects;
 /** Enforces response-level and cross-record rules. */
 public final class ExampleValidator {
 
+    /**
+     * Validate.
+     *
+     * @param records input records
+     * @return result of validate
+     */
     public List<ExampleRecord> validate(
             final List<ExampleRecord> records) {
         Objects.requireNonNull(records, "records");

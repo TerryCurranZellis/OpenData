@@ -20,6 +20,15 @@ public final class ExampleFinalise {
     private static final Logger LOGGER = Logger.getLogger(
             ExampleFinalise.class.getName());
 
+    /**
+     * Complete.
+     *
+     * @param context input context
+     * @param source input source
+     * @param records input records
+     * @param metrics input metrics
+     * @param completed input completed
+     */
     public void complete(
             final PluginExecutionContext context,
             final DataFile source,

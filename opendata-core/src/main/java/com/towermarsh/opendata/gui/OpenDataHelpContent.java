@@ -23,6 +23,11 @@ final class OpenDataHelpContent {
     private OpenDataHelpContent() {
     }
 
+    /**
+     * Load.
+     *
+     * @return result of load
+     */
     static String load() {
         try (InputStream input = OpenDataHelpContent.class.getResourceAsStream(RESOURCE)) {
             if (input == null) {

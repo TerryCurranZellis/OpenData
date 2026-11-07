@@ -98,6 +98,12 @@ public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
         return score;
     }
 
+    /**
+     * Creates a scored link instance.
+     *
+     * @param link input link
+     * @param score input score
+     */
     private record ScoredLink(DiscoveredLink link, int score) {
 
     }

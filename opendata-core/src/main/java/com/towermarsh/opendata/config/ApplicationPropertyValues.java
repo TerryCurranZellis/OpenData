@@ -102,6 +102,12 @@ public final class ApplicationPropertyValues {
         return value != null && !value.isBlank();
     }
 
+    /**
+     * Normalise.
+     *
+     * @param value value of value
+     * @return result of normalise
+     */
     private static String normalise(final String value) {
         return Objects.requireNonNull(value, "property name").trim().toLowerCase(Locale.ROOT);
     }

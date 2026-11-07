@@ -1,3 +1,31 @@
+## [4.0.0] - 2026-11-07
+
+### Added
+
+- `init=true` deployment property invokes the first-run JavaFX database and plugin wizard.
+- SQL Server database, login, core tables and provider schema provisioning.
+- Automatic discovery/registration of all plugins in disabled state.
+- AES key-file creation and `security.aes-key-file` loaded from application properties.
+- JPMS descriptors for API and core, new setup services, tests and version 4 documentation.
+
+### Changed
+
+- Bootstrap settings now live in writable `<working-directory>/config/application.properties`.
+- Startup detects the init flag before requiring SQL Server or encrypted credentials.
+- `init=false` is written only after successful setup, through an atomic property-file replacement.
+- All Maven module versions and application metadata updated to 4.0.0.
+
+### Deprecated
+
+- `opendata.config.key-file` JVM property and `OPENDATA_CONFIG_KEY_FILE`
+  environment-variable AES-key fallbacks. Use `security.aes-key-file` in the
+  deployment `config/application.properties` file instead.
+
+### Verification
+
+- Local JDK 21 API module compilation; full JDK 24+ Maven, JavaFX and live SQL
+  Server verification is pending.
+
 # Changelog
 
 All notable OpenData changes are recorded here. The project follows semantic

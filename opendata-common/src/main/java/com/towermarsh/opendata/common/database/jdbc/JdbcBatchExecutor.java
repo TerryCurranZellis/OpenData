@@ -69,6 +69,13 @@ public class JdbcBatchExecutor {
         }
     }
 
+    /**
+     * Count.
+     *
+     * @param results input results
+     * @return result of count
+     * @throws SQLException if count fails
+     */
     private static int count(int[] results) throws SQLException {
         var affected = 0;
         for (var result : results) {

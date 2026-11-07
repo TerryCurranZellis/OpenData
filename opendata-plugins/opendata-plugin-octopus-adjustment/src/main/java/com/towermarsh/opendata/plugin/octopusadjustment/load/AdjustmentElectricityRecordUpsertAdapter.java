@@ -75,6 +75,15 @@ class AdjustmentElectricityRecordUpsertAdapter
         super(EXISTS_SQL, INSERT_SQL, UPDATE_SQL);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param statement input statement
+     * @param record input record
+     * @param index input index
+     * @return result of bind key
+     * @throws SQLException if bind key fails
+     */
     @Override
     protected int bindKey(
             PreparedStatement statement,
@@ -92,6 +101,14 @@ class AdjustmentElectricityRecordUpsertAdapter
         return parameter;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param statement input statement
+     * @param record input record
+     * @param runId requested run id
+     * @throws SQLException if bind insert fails
+     */
     @Override
     protected void bindInsert(
             PreparedStatement statement,
@@ -120,6 +137,14 @@ class AdjustmentElectricityRecordUpsertAdapter
         statement.setObject(parameter, runId, Types.VARCHAR);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param statement input statement
+     * @param record input record
+     * @param runId requested run id
+     * @throws SQLException if bind update fails
+     */
     @Override
     protected void bindUpdate(
             PreparedStatement statement,

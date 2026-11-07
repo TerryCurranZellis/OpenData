@@ -47,6 +47,14 @@ final class OpenDataInformationDialogs {
     private OpenDataInformationDialogs() {
     }
 
+    /**
+     * Show properties.
+     *
+     * @param owner input owner
+     * @param title input title
+     * @param header input header
+     * @param entries input entries
+     */
     static void showProperties(
             final Window owner,
             final String title,
@@ -81,6 +89,12 @@ final class OpenDataInformationDialogs {
         dialog.showAndWait();
     }
 
+    /**
+     * Show log.
+     *
+     * @param owner input owner
+     * @param snapshot input snapshot
+     */
     static void showLog(final Window owner, final LogSnapshot snapshot) {
         Objects.requireNonNull(snapshot, "snapshot");
         showText(
@@ -92,6 +106,11 @@ final class OpenDataInformationDialogs {
                 true);
     }
 
+    /**
+     * Show help.
+     *
+     * @param owner input owner
+     */
     static void showHelp(final Window owner) {
         showText(
                 owner,
@@ -102,6 +121,12 @@ final class OpenDataInformationDialogs {
                 false);
     }
 
+    /**
+     * Show about.
+     *
+     * @param owner input owner
+     * @param information input information
+     */
     static void showAbout(final Window owner, final ApplicationInfo information) {
         Objects.requireNonNull(information, "information");
         final var dialog = createDialog(owner, "About OpenData", ButtonType.OK);
@@ -147,6 +172,16 @@ final class OpenDataInformationDialogs {
         dialog.showAndWait();
     }
 
+    /**
+     * Show text.
+     *
+     * @param owner input owner
+     * @param title input title
+     * @param header input header
+     * @param content input content
+     * @param wrapText input wrap text
+     * @param logStyle input log style
+     */
     private static void showText(
             final Window owner,
             final String title,
@@ -172,6 +207,14 @@ final class OpenDataInformationDialogs {
         dialog.showAndWait();
     }
 
+    /**
+     * Creates dialog.
+     *
+     * @param owner input owner
+     * @param title input title
+     * @param buttonType input button type
+     * @return result of create dialog
+     */
     private static Dialog<ButtonType> createDialog(
             final Window owner,
             final String title,
@@ -193,6 +236,12 @@ final class OpenDataInformationDialogs {
         return dialog;
     }
 
+    /**
+     * Wrapping cell.
+     *
+     * @param column input column
+     * @return result of wrapping cell
+     */
     private static TableCell<ConfigurationDisplayEntry, String> wrappingCell(
             final TableColumn<ConfigurationDisplayEntry, String> column) {
         return new TableCell<>() {
@@ -202,6 +251,12 @@ final class OpenDataInformationDialogs {
                 text.textProperty().bind(itemProperty());
             }
 
+            /**
+             * {@inheritDoc}
+             *
+             * @param item input item
+             * @param empty input empty
+             */
             @Override
             protected void updateItem(final String item, final boolean empty) {
                 super.updateItem(item, empty);
@@ -211,6 +266,11 @@ final class OpenDataInformationDialogs {
         };
     }
 
+    /**
+     * Returns load splash image.
+     *
+     * @return result of load splash image
+     */
     private static Image loadSplashImage() {
         try (var input = OpenDataInformationDialogs.class
                 .getResourceAsStream(SPLASH_IMAGE)) {

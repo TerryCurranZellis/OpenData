@@ -70,6 +70,12 @@ public final class PluginFailureReport {
         return result.length() <= MAX_LENGTH ? result : result.substring(0, MAX_LENGTH);
     }
 
+    /**
+     * Step.
+     *
+     * @param failure input failure
+     * @return result of step
+     */
     static java.util.Optional<String> step(final Throwable failure) {
         final var chain = new ArrayList<Throwable>();
         for (Throwable t = failure; t != null && chain.size() < MAX_CAUSES && !chain.contains(t); t = t.getCause()) {
@@ -91,6 +97,12 @@ public final class PluginFailureReport {
         return java.util.Optional.empty();
     }
 
+    /**
+     * Summary.
+     *
+     * @param t input t
+     * @return result of summary
+     */
     private static String summary(final Throwable t) {
         final var message = t.getMessage();
         final var text = new StringBuilder(t.getClass().getName());

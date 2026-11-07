@@ -65,6 +65,12 @@ public class ElectricDemandTransform {
         return List.copyOf(records);
     }
 
+    /**
+     * Parse.
+     *
+     * @param row input row
+     * @return result of parse
+     */
     static DemandRecord parse(CSVRecord row) {
         var date = NesoCsv.parseDate(NesoCsv.field(row, "SETTLEMENT_DATE", "Settlement Date"));
         var period = Integer.parseInt(NesoCsv.field(row, "SETTLEMENT_PERIOD", "Settlement Period"));

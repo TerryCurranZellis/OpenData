@@ -127,6 +127,13 @@ public class DirectHttpDownloadStrategy {
         }
     }
 
+    /**
+     * Move completed file.
+     *
+     * @param partFile target part file
+     * @param destination input destination
+     * @throws IOException if move completed file fails
+     */
     private static void moveCompletedFile(
             Path partFile,
             Path destination) throws IOException {
@@ -145,6 +152,11 @@ public class DirectHttpDownloadStrategy {
         }
     }
 
+    /**
+     * Delete quietly.
+     *
+     * @param file target file
+     */
     private static void deleteQuietly(Path file) {
         try {
             Files.deleteIfExists(file);

@@ -84,3 +84,5 @@
 | [ADR-0062](ADR-0062-independent-provider-plugin-projects.md) | Build each provider plugin as an independent Maven project | Accepted | Provider modules live under the `opendata-plugins` aggregator |
 
 :::
+
+| [ADR-0063](ADR-0063-first-run-gui-initialisation.md) | GUI first-run SQL Server and disabled plugin registration | Accepted | Version 4.0.0 |

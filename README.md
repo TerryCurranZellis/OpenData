@@ -1,6 +1,6 @@
 # OpenData
 
-Version: **3.1.0**
+Version: **4.0.0**
 
 OpenData is a Java 24 modular monolith for acquiring, validating, and loading
 OpenData sources through a shared framework, a JavaFX desktop interface, and a
@@ -20,6 +20,18 @@ Demand and Electric Supply) is its own Maven project under `opendata-plugins`.
 Shared NESO and Octopus implementation support also has separate projects.
 `opendata-core` depends on the provider projects so their per-project classpath
 catalogues, implementations, and registration SQL remain available at runtime.
+
+## New in version 4: first-run configuration
+
+Set `init=true` in `config/application.properties` or use the packaged
+first-run defaults, and start OpenData with a graphical desktop. The JavaFX
+wizard provisions SQL Server, registers all discovered plugins **disabled**,
+and saves encrypted settings with `init=false` at completion. Administrator
+SQL credentials are not stored. See the
+[First-run guide](docs/guides/first-run-initialisation.md).
+
+Existing version 3 users should migrate their bootstrap file rather than
+reinitialize a live database. Full runtime validation is pending on JDK 24+.
 
 ## Build
 

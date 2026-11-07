@@ -6,6 +6,8 @@
 package com.towermarsh.opendata.gui;
 
 import java.io.IOException;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
+import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +24,7 @@ import javafx.stage.Stage;
  * startup logic.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 4.0.0
  */
 public final class OpenDataGuiApplication extends Application {
 
@@ -46,6 +48,18 @@ public final class OpenDataGuiApplication extends Application {
      */
     @Override
     public void start(final Stage stage) throws IOException {
+        if (new ApplicationBootstrapPropertiesLoader(
+                new AesConfigurationPasswordCipher()).initialisationRequested()) {
+            new InitialisationWizard(stage, () -> {
+                try {
+                    configureMainStage(stage);
+                    stage.show();
+                } catch (IOException exception) {
+                    throw new IllegalStateException("Unable to display OpenData after initialisation.", exception);
+                }
+            }).show();
+            return;
+        }
         final var splash = OpenDataSplashScreen.show();
         try {
             configureMainStage(stage);

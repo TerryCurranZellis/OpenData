@@ -65,6 +65,12 @@ public class ElectricSupplyTransform {
         return List.copyOf(records);
     }
 
+    /**
+     * Parse.
+     *
+     * @param row input row
+     * @return result of parse
+     */
     static GenerationMixRecord parse(CSVRecord row) {
         var instant = NesoCsv.parseInstant(NesoCsv.field(row, "DATETIME", "Date & Time"));
         var values = Arrays.asList(

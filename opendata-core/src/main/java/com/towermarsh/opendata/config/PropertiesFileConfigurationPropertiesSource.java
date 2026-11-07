@@ -39,11 +39,22 @@ public final class PropertiesFileConfigurationPropertiesSource
         this.file = Objects.requireNonNull(file, "file").toAbsolutePath().normalize();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of load application properties
+     */
     @Override
     public Map<String, String> loadApplicationProperties() {
         return Map.of();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param pluginId requested plugin id
+     * @return result of load plugin properties
+     */
     @Override
     public Map<String, String> loadPluginProperties(final String pluginId) {
         if (!Files.isRegularFile(file)) {
@@ -66,6 +77,12 @@ public final class PropertiesFileConfigurationPropertiesSource
         return Map.copyOf(values);
     }
 
+    /**
+     * Normalise.
+     *
+     * @param value value of value
+     * @return result of normalise
+     */
     private static String normalise(final String value) {
         return Objects.requireNonNull(value, "value")
                 .trim()

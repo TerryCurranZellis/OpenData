@@ -130,6 +130,12 @@ public final class PluginRegistrationResolver {
         return new PluginRegistration(toDescriptor(definition), properties);
     }
 
+    /**
+     * Converts a value to descriptor.
+     *
+     * @param definition input definition
+     * @return result of to descriptor
+     */
     private static PluginDescriptor toDescriptor(final PluginDefinition definition) {
         return new PluginDescriptor(
                 definition.id(),
@@ -140,6 +146,11 @@ public final class PluginRegistrationResolver {
                 definition.configurationVersion());
     }
 
+    /**
+     * Validates implementation.
+     *
+     * @param className requested class name
+     */
     private void validateImplementation(final String className) {
         try {
             final var implementation = Class.forName(

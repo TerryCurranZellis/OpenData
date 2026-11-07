@@ -86,6 +86,11 @@ public final class PluginTableDataService {
                 .toList();
     }
 
+    /**
+     * Returns load latest runs.
+     *
+     * @return result of load latest runs
+     */
     private Map<String, LatestRun> loadLatestRuns() {
         final Map<String, LatestRun> result = new HashMap<>();
         try (var connection = database.getConnection();
@@ -104,6 +109,12 @@ public final class PluginTableDataService {
         }
     }
 
+    /**
+     * Creates a latest run instance.
+     *
+     * @param status input status
+     * @param startedAtUtc input started at utc
+     */
     private record LatestRun(PluginRunStatus status, LocalDateTime startedAtUtc) {
 
         private LatestRun {

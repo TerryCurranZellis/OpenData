@@ -22,6 +22,11 @@ public record OctopusParseResult(
         statements = List.copyOf(Objects.requireNonNull(statements, "statements"));
     }
 
+    /**
+     * Total records.
+     *
+     * @return result of total records
+     */
     public int totalRecords() {
         return electricityRecords.size() + gasRecords.size();
     }

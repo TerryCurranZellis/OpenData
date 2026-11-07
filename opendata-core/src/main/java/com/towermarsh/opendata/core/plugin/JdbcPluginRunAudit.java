@@ -100,10 +100,21 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
         }
     }
 
+    /**
+     * Utc date time.
+     *
+     * @param instant input instant
+     * @return result of utc date time
+     */
     private static LocalDateTime utcDateTime(final Instant instant) {
         return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
     }
 
+    /**
+     * Returns resolve host name.
+     *
+     * @return result of resolve host name
+     */
     private static String resolveHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
@@ -112,6 +123,13 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
         }
     }
 
+    /**
+     * Truncate.
+     *
+     * @param value value of value
+     * @param maxLength input max length
+     * @return result of truncate
+     */
     private static String truncate(final String value, final int maxLength) {
         if (value == null || value.length() <= maxLength) {
             return value;

@@ -83,6 +83,15 @@ public class HtmlLinkDiscoveryStrategy {
                 requestTimeout);
     }
 
+    /**
+     * Fetch html.
+     *
+     * @param uri input uri
+     * @param headers input headers
+     * @param timeout input timeout
+     * @return result of fetch html
+     * @throws DownloadException if fetch html fails
+     */
     private String fetchHtml(
             URI uri,
             Map<String, String> headers,

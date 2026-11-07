@@ -1,3 +1,10 @@
+> **Historical document:** This file describes an earlier OpenData 3.1.0
+> encryption-only patch, **not** the OpenData 4.0.0 installer. For new
+> installations use `docs/guides/first-run-initialisation.md` and set `init=true`
+> in `config/application.properties`. The v4 key-file setting is
+> `security.aes-key-file` in that same properties file; do not follow the
+> legacy environment/JVM instructions below for a new installation.
+
 # OpenData 3.1.0 — AES-256-GCM migration patch
 
 This is a **source-file patch**, not a complete OpenData distribution.

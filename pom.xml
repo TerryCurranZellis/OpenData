@@ -7,7 +7,7 @@
 
     <groupId>com.towermarsh</groupId>
     <artifactId>opendata-parent</artifactId>
-    <version>3.1.0</version>
+    <version>4.0.0</version>
     <packaging>pom</packaging>
 
     <name>OpenData</name>

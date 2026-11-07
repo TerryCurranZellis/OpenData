@@ -54,6 +54,9 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 4.0.0
+
+ * <p><b>Version 4 bootstrap:</b> {@link ApplicationBootstrapPropertiesLoader} reads the
+ * init switch; {@link AesConfigurationPasswordCipher} uses security.aes-key-file.</p>
  */
 package com.towermarsh.opendata.config;

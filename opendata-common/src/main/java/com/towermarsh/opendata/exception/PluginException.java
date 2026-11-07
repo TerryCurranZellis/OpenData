@@ -62,6 +62,12 @@ public class PluginException extends OpenDataException {
         return pluginName;
     }
 
+    /**
+     * Validates plugin name.
+     *
+     * @param pluginName requested plugin name
+     * @return result of require plugin name
+     */
     private static String requirePluginName(String pluginName) {
         if (pluginName == null || pluginName.isBlank()) {
             throw new IllegalArgumentException("pluginName must not be null or blank");

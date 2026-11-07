@@ -28,6 +28,13 @@ final class OpenDataDialogs {
     private OpenDataDialogs() {
     }
 
+    /**
+     * Warning.
+     *
+     * @param owner input owner
+     * @param header input header
+     * @param message input message
+     */
     static void warning(
             final Window owner,
             final String header,
@@ -35,6 +42,13 @@ final class OpenDataDialogs {
         showAlert(Alert.AlertType.WARNING, owner, "Warning", header, message);
     }
 
+    /**
+     * Error.
+     *
+     * @param owner input owner
+     * @param header input header
+     * @param message input message
+     */
     static void error(
             final Window owner,
             final String header,
@@ -42,6 +56,13 @@ final class OpenDataDialogs {
         showAlert(Alert.AlertType.ERROR, owner, "Error", header, message);
     }
 
+    /**
+     * Information.
+     *
+     * @param owner input owner
+     * @param header input header
+     * @param message input message
+     */
     static void information(
             final Window owner,
             final String header,
@@ -49,6 +70,15 @@ final class OpenDataDialogs {
         showAlert(Alert.AlertType.INFORMATION, owner, APPLICATION_TITLE, header, message);
     }
 
+    /**
+     * Confirm.
+     *
+     * @param owner input owner
+     * @param title input title
+     * @param header input header
+     * @param message input message
+     * @return result of confirm
+     */
     static boolean confirm(
             final Window owner,
             final String title,
@@ -96,6 +126,15 @@ final class OpenDataDialogs {
                 : Optional.of(selected.toPath().toAbsolutePath().normalize());
     }
 
+    /**
+     * Show alert.
+     *
+     * @param type input type
+     * @param owner input owner
+     * @param title input title
+     * @param header input header
+     * @param message input message
+     */
     private static void showAlert(
             final Alert.AlertType type,
             final Window owner,
@@ -110,6 +149,12 @@ final class OpenDataDialogs {
         alert.showAndWait();
     }
 
+    /**
+     * Init owner.
+     *
+     * @param dialog input dialog
+     * @param owner input owner
+     */
     private static void initOwner(final Dialog<?> dialog, final Window owner) {
         if (owner != null) {
             dialog.initOwner(owner);

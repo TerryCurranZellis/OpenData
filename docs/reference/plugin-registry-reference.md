@@ -1,5 +1,12 @@
 # Plugin Registry Reference
 
+> **OpenData 4.0.0:** This document contains legacy version 3 examples.
+> For the current first-run workflow, read
+> [First-run configuration wizard](../guides/first-run-initialisation.md)
+> and [First-run architecture](../architecture/030-first-run-initialisation.md).
+> With `init=true`, the GUI wizard runs before CLI commands.
+
+
 **Document ID:** REF-REGISTRY-001  
 **Version:** 3.0.0  
 **Status:** OpenData 3.0.0 implementation reference  

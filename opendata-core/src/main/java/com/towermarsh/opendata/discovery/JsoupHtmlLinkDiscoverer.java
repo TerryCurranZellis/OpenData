@@ -56,6 +56,13 @@ public final class JsoupHtmlLinkDiscoverer implements HtmlLinkDiscoverer {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param request input request
+     * @return result of discover
+     * @throws DiscoveryException if discover fails
+     */
     @Override
     public List<DiscoveredLink> discover(LinkDiscoveryRequest request)
             throws DiscoveryException {

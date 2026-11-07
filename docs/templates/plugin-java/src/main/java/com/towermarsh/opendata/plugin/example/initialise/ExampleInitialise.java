@@ -38,6 +38,13 @@ public final class ExampleInitialise {
         this.finalise = new ExampleFinalise();
     }
 
+    /**
+     * Execute.
+     *
+     * @param context input context
+     * @return result of execute
+     * @throws Exception if execute fails
+     */
     public PluginMetrics execute(final PluginExecutionContext context)
             throws Exception {
         Objects.requireNonNull(context, "context");

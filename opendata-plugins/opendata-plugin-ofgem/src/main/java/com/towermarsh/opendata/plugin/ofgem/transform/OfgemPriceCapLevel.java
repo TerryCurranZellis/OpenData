@@ -48,6 +48,13 @@ public record OfgemPriceCapLevel(
         sourceCell = requireText(sourceCell, "sourceCell");
     }
 
+    /**
+     * Validates text.
+     *
+     * @param value value of value
+     * @param name requested name
+     * @return result of require text
+     */
     private static String requireText(String value, String name) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(name + " cannot be blank");

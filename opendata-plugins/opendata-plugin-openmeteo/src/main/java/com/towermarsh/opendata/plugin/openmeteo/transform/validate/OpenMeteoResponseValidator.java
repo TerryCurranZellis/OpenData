@@ -39,6 +39,14 @@ public final class OpenMeteoResponseValidator {
         return response;
     }
 
+    /**
+     * Validates length.
+     *
+     * @param name requested name
+     * @param values value of values
+     * @param expected input expected
+     * @throws IllegalArgumentException if validate length fails
+     */
     private static void validateLength(
             final String name,
             final List<?> values,

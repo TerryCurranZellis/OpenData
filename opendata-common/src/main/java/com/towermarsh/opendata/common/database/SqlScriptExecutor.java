@@ -79,6 +79,14 @@ public class SqlScriptExecutor {
         return List.copyOf(result);
     }
 
+    /**
+     * Execute.
+     *
+     * @param connection input connection
+     * @param script input script
+     * @param name requested name
+     * @throws SQLException if execute fails
+     */
     private static void execute(
             Connection connection,
             String script,

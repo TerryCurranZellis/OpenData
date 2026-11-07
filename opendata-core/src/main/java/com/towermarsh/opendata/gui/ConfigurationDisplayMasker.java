@@ -27,6 +27,12 @@ final class ConfigurationDisplayMasker {
     private ConfigurationDisplayMasker() {
     }
 
+    /**
+     * Entries.
+     *
+     * @param values value of values
+     * @return result of entries
+     */
     static List<ConfigurationDisplayEntry> entries(final Map<String, String> values) {
         final var source = Map.copyOf(Objects.requireNonNull(values, "values"));
         return source.entrySet().stream()
@@ -39,6 +45,13 @@ final class ConfigurationDisplayMasker {
                 .toList();
     }
 
+    /**
+     * Should mask.
+     *
+     * @param key input key
+     * @param values value of values
+     * @return result of should mask
+     */
     static boolean shouldMask(final String key, final Map<String, String> values) {
         final var normalised = Objects.requireNonNull(key, "key")
                 .trim().toLowerCase(Locale.ROOT);

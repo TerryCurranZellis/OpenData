@@ -43,6 +43,13 @@ public final class LogViewerService {
         return new LogSnapshot(file, Files.readString(file, StandardCharsets.UTF_8));
     }
 
+    /**
+     * Locate log file.
+     *
+     * @param directory target directory
+     * @return result of locate log file
+     * @throws IOException if locate log file fails
+     */
     private static Optional<Path> locateLogFile(final Path directory) throws IOException {
         final var current = directory.resolve(CURRENT_LOG_NAME);
         if (Files.isRegularFile(current)) {
@@ -59,12 +66,24 @@ public final class LogViewerService {
         }
     }
 
+    /**
+     * Checks whether open data log file.
+     *
+     * @param path target path
+     * @return result of is open data log file
+     */
     private static boolean isOpenDataLogFile(final Path path) {
         final var fileName = path.getFileName();
         return fileName != null
                 && fileName.toString().matches("opendata-(?:\\d{14}-)?\\d+\\.log");
     }
 
+    /**
+     * Last modified.
+     *
+     * @param file target file
+     * @return result of last modified
+     */
     private static long lastModified(final Path file) {
         try {
             return Files.getLastModifiedTime(file).toMillis();

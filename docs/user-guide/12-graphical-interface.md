@@ -1,5 +1,10 @@
 # Graphical Interface User Guide
 
+> **Version 4.0.0:** Initial setup is now available through the
+> [first-run GUI wizard](../guides/first-run-initialisation.md). The manual
+> bootstrap below is retained for pre-v4 installations and administration.
+
+
 **Document ID:** USER-GUI-001  
 **Version:** 3.0.0  
 **Status:** Current merged GUI baseline  

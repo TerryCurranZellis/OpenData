@@ -238,6 +238,11 @@ public final class OpenDataMainController {
         updateSelectionCount();
 
         final var task = new Task<List<PluginTableEntry>>() {
+            /**
+             * {@inheritDoc}
+             *
+             * @return result of call
+             */
             @Override
             protected List<PluginTableEntry> call() {
                 return pluginDataLoader.load();
@@ -278,6 +283,11 @@ public final class OpenDataMainController {
         worker.start();
     }
 
+    /**
+     * Replace rows.
+     *
+     * @param entries input entries
+     */
     private void replaceRows(final List<PluginTableEntry> entries) {
         final var rows = FXCollections.observableArrayList(
                 entries.stream().map(PluginRow::from).toList());
@@ -287,6 +297,9 @@ public final class OpenDataMainController {
         updateSelectionCount();
     }
 
+    /**
+     * Updates selection count.
+     */
     private void updateSelectionCount() {
         final long count = PluginSelectionSupport.countSelected(pluginTable.getItems());
         selectedLabel.setText(count + (count == 1 ? " item selected" : " items selected"));
@@ -320,15 +333,26 @@ public final class OpenDataMainController {
         updateSelectAllCheckBox();
     }
 
+    /**
+     * Updates state.
+     *
+     * @param state input state
+     */
     private void setState(final String state) {
         stateLabel.setText(state);
     }
 
+    /**
+     * Handles the exit GUI action.
+     */
     @FXML
     private void onExit() {
         Platform.exit();
     }
 
+    /**
+     * Handles the settings GUI action.
+     */
     @FXML
     private void onSettings() {
         runInformationTask(
@@ -345,6 +369,9 @@ public final class OpenDataMainController {
                 "Unable to load application settings");
     }
 
+    /**
+     * Handles the save GUI action.
+     */
     @FXML
     private void onSave() {
         setState("Ready");
@@ -446,16 +473,27 @@ public final class OpenDataMainController {
         changeEnabledState(false);
     }
 
+    /**
+     * Handles the execute GUI action.
+     */
     @FXML
     private void onExecute() {
         startExecution(false);
     }
 
+    /**
+     * Handles the dry run GUI action.
+     */
     @FXML
     private void onDryRun() {
         startExecution(true);
     }
 
+    /**
+     * Start execution.
+     *
+     * @param dryRun input dry run
+     */
     private void startExecution(final boolean dryRun) {
         final var pluginIds = selectedPluginIdsOrWarn();
         if (pluginIds.isEmpty()) {
@@ -506,6 +544,12 @@ public final class OpenDataMainController {
         executionWindow.show();
 
         final var task = new Task<PluginExecutionSummary>() {
+            /**
+             * {@inheritDoc}
+             *
+             * @return result of call
+             * @throws Exception if call fails
+             */
             @Override
             protected PluginExecutionSummary call() throws Exception {
                 return pluginExecutionGateway.execute(pluginIds, dryRun);
@@ -557,6 +601,9 @@ public final class OpenDataMainController {
         worker.start();
     }
 
+    /**
+     * Handles the plugin detail GUI action.
+     */
     @FXML
     private void onPluginDetail() {
         final var pluginId = singleSelectedPluginIdOrWarn();
@@ -577,6 +624,9 @@ public final class OpenDataMainController {
                 "Unable to load plugin details");
     }
 
+    /**
+     * Handles the logs GUI action.
+     */
     @FXML
     private void onLogs() {
         runInformationTask(
@@ -589,18 +639,29 @@ public final class OpenDataMainController {
                 "Unable to load application log");
     }
 
+    /**
+     * Handles the help GUI action.
+     */
     @FXML
     private void onHelp() {
         setState("Ready");
         OpenDataHelpLauncher.show(ownerWindow());
     }
 
+    /**
+     * Handles the about GUI action.
+     */
     @FXML
     private void onAbout() {
         setState("Ready");
         OpenDataInformationDialogs.showAbout(ownerWindow(), ApplicationInfo.current());
     }
 
+    /**
+     * Register discovered plugins.
+     *
+     * @param candidates requested candidates
+     */
     private void registerDiscoveredPlugins(
             final List<PluginRegistrationCandidate> candidates) {
         runAdministrationTask(
@@ -613,6 +674,11 @@ public final class OpenDataMainController {
                 "Unable to register discovered plugin" + pluralSuffix(candidates));
     }
 
+    /**
+     * Change enabled state.
+     *
+     * @param enabled input enabled
+     */
     private void changeEnabledState(final boolean enabled) {
         final var pluginIds = selectedPluginIdsOrWarn();
         if (pluginIds.isEmpty()) {
@@ -638,6 +704,11 @@ public final class OpenDataMainController {
                         + pluralSuffix(pluginIds));
     }
 
+    /**
+     * Single selected plugin id or warn.
+     *
+     * @return result of single selected plugin id or warn
+     */
     private String singleSelectedPluginIdOrWarn() {
         final var pluginIds = selectedPluginIds();
         if (pluginIds.isEmpty()) {
@@ -657,6 +728,11 @@ public final class OpenDataMainController {
         return pluginIds.get(0);
     }
 
+    /**
+     * Selected plugin ids.
+     *
+     * @return result of selected plugin ids
+     */
     private List<String> selectedPluginIds() {
         return pluginTable.getItems().stream()
                 .filter(PluginRow::isSelected)
@@ -664,6 +740,11 @@ public final class OpenDataMainController {
                 .toList();
     }
 
+    /**
+     * Selected plugin ids or warn.
+     *
+     * @return result of selected plugin ids or warn
+     */
     private List<String> selectedPluginIdsOrWarn() {
         final var pluginIds = selectedPluginIds();
         if (pluginIds.isEmpty()) {
@@ -675,6 +756,14 @@ public final class OpenDataMainController {
         return pluginIds;
     }
 
+    /**
+     * Run administration task.
+     *
+     * @param workingState input working state
+     * @param operation input operation
+     * @param onSucceeded input on succeeded
+     * @param failureState input failure state
+     */
     private <T> void runAdministrationTask(
             final String workingState,
             final Callable<T> operation,
@@ -705,6 +794,12 @@ public final class OpenDataMainController {
         setPluginTableDisabled(true);
 
         final var task = new Task<T>() {
+            /**
+             * {@inheritDoc}
+             *
+             * @return result of call
+             * @throws Exception if call fails
+             */
             @Override
             protected T call() throws Exception {
                 return operation.call();
@@ -742,6 +837,14 @@ public final class OpenDataMainController {
         worker.start();
     }
 
+    /**
+     * Run information task.
+     *
+     * @param workingState input working state
+     * @param operation input operation
+     * @param onSucceeded input on succeeded
+     * @param failureState input failure state
+     */
     private <T> void runInformationTask(
             final String workingState,
             final Callable<T> operation,
@@ -769,6 +872,12 @@ public final class OpenDataMainController {
 
         setState(workingState);
         final var task = new Task<T>() {
+            /**
+             * {@inheritDoc}
+             *
+             * @return result of call
+             * @throws Exception if call fails
+             */
             @Override
             protected T call() throws Exception {
                 return operation.call();
@@ -802,6 +911,11 @@ public final class OpenDataMainController {
         worker.start();
     }
 
+    /**
+     * Updates mutating actions disabled.
+     *
+     * @param disabled input disabled
+     */
     private void setMutatingActionsDisabled(final boolean disabled) {
         setAdministrationActionsDisabled(disabled);
         executeMenuItem.setDisable(disabled);
@@ -810,6 +924,11 @@ public final class OpenDataMainController {
         dryRunButton.setDisable(disabled);
     }
 
+    /**
+     * Updates administration actions disabled.
+     *
+     * @param disabled input disabled
+     */
     private void setAdministrationActionsDisabled(final boolean disabled) {
         registerMenuItem.setDisable(disabled);
         registerFromFileMenuItem.setDisable(disabled);
@@ -822,15 +941,32 @@ public final class OpenDataMainController {
         disableButton.setDisable(disabled);
     }
 
+    /**
+     * Owner window.
+     *
+     * @return result of owner window
+     */
     private Window ownerWindow() {
         return pluginTable.getScene() == null ? null : pluginTable.getScene().getWindow();
     }
 
+    /**
+     * Selection summary.
+     *
+     * @param pluginIds requested plugin ids
+     * @return result of selection summary
+     */
     private static String selectionSummary(final List<String> pluginIds) {
         return "Selected plugin" + pluralSuffix(pluginIds) + ":\n"
                 + String.join(System.lineSeparator(), pluginIds);
     }
 
+    /**
+     * Registration summary.
+     *
+     * @param candidates requested candidates
+     * @return result of registration summary
+     */
     private static String registrationSummary(
             final List<PluginRegistrationCandidate> candidates) {
         return candidates.stream()
@@ -841,6 +977,12 @@ public final class OpenDataMainController {
                 .collect(java.util.stream.Collectors.joining(System.lineSeparator()));
     }
 
+    /**
+     * Plural suffix.
+     *
+     * @param values value of values
+     * @return result of plural suffix
+     */
     private static String pluralSuffix(final List<?> values) {
         return values.size() == 1 ? "" : "s";
     }

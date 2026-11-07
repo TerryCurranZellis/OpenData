@@ -47,6 +47,11 @@ public final class JavaFxLogHandler extends Handler {
         setFormatter(new ContextualLogFormatter());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param record input record
+     */
     @Override
     public void publish(final LogRecord record) {
         if (closed.get() || !isLoggable(record)) {
@@ -61,11 +66,17 @@ public final class JavaFxLogHandler extends Handler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void flush() {
         scheduleDrain();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() {
         if (closed.compareAndSet(false, true)) {
@@ -73,6 +84,9 @@ public final class JavaFxLogHandler extends Handler {
         }
     }
 
+    /**
+     * Schedule drain.
+     */
     private void scheduleDrain() {
         if (pending.isEmpty() || !drainScheduled.compareAndSet(false, true)) {
             return;
@@ -86,6 +100,9 @@ public final class JavaFxLogHandler extends Handler {
         }
     }
 
+    /**
+     * Drain on java fx thread.
+     */
     private void drainOnJavaFxThread() {
         final var text = new StringBuilder();
         String next;

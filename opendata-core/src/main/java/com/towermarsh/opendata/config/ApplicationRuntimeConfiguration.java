@@ -19,7 +19,7 @@ import java.util.Objects;
  * @param logging logging settings
   *
  * @author Terry Curran
- * @version 2.1
+ * @version 4.0.0
  */
 public record ApplicationRuntimeConfiguration(
         DatabasePoolConfiguration database,
@@ -28,8 +28,6 @@ public record ApplicationRuntimeConfiguration(
 
     private static final String DEFAULT_DRIVER_CLASS = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private static final String DEFAULT_POOL_NAME = "OpenData";
-    private static final ConfigurationPasswordCipher PASSWORD_CIPHER
-            = new AesConfigurationPasswordCipher();
 
     /** 
      * Validates and normalises record components. 
@@ -70,7 +68,7 @@ public record ApplicationRuntimeConfiguration(
                 properties.text("database.driver-class", DEFAULT_DRIVER_CLASS),
                 properties.requiredText("database.url"),
                 properties.requiredText("database.user"),
-                PASSWORD_CIPHER.decrypt(properties.text("database.password", "")),
+                new AesConfigurationPasswordCipher().decrypt(properties.text("database.password", "")),
                 properties.text("database.pool.name", DEFAULT_POOL_NAME),
                 properties.integer("database.pool.max-total", 8),
                 properties.integer("database.pool.max-idle", 8),

@@ -50,6 +50,13 @@ public final class CsvDataParser implements DataParser {
         this.options = Objects.requireNonNull(options, "options");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param file target file
+     * @return result of parse
+     * @throws ImportException if parse fails
+     */
     @Override
     public List<Map<String, String>> parse(Path file) throws ImportException {
         Objects.requireNonNull(file, "file");

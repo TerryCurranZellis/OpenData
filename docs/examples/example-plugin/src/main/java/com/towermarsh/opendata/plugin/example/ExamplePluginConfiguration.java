@@ -24,6 +24,12 @@ public record ExamplePluginConfiguration(
         }
     }
 
+    /**
+     * From.
+     *
+     * @param definition input definition
+     * @return result of from
+     */
     public static ExamplePluginConfiguration from(
             final PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");

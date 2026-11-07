@@ -66,6 +66,14 @@ public final class DatabaseHealthCheck {
         }
     }
 
+    /**
+     * Creates a result instance.
+     *
+     * @param databaseName requested database name
+     * @param loginName requested login name
+     * @param databaseUser input database user
+     * @param checkedAt input checked at
+     */
     public record Result(
             String databaseName,
             String loginName,

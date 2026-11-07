@@ -190,6 +190,12 @@ public record OpenMeteoConfiguration(
         return new DateRange(effectiveStart, effectiveEnd);
     }
 
+    /**
+     * Slug.
+     *
+     * @param value value of value
+     * @return result of slug
+     */
     private static String slug(final String value) {
         final String result = ValidationRules.requireText(value, "location-name")
                 .toLowerCase(Locale.ROOT)

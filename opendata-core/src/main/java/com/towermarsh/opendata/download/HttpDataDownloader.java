@@ -67,6 +67,14 @@ public final class HttpDataDownloader implements DataDownloader {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param sourceUri input source uri
+     * @param destination input destination
+     * @return result of download
+     * @throws DownloadException if download fails
+     */
     @Override
     public DataFile download(URI sourceUri, Path destination)
             throws DownloadException {

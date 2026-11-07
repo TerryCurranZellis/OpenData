@@ -100,6 +100,13 @@ public final class OpenMeteoTransformer {
         }
     }
 
+    /**
+     * Validates value.
+     *
+     * @param value value of value
+     * @param description input description
+     * @return result of require value
+     */
     private static <T> T requireValue(final T value, final String description) {
         if (value == null) {
             throw new IllegalArgumentException(description + " must not be null");

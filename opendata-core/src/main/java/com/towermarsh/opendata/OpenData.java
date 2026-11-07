@@ -11,6 +11,8 @@ import com.towermarsh.opendata.cli.CommandLineArguments;
 import com.towermarsh.opendata.cli.CommandLineArgumentsProcessor;
 import com.towermarsh.opendata.cli.CommandLineProcessingException;
 import com.towermarsh.opendata.config.OpenDataConfigurationException;
+import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
+import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.config.PluginDefinitionException;
 import com.towermarsh.opendata.common.database.DatabaseException;
 import com.towermarsh.opendata.core.logging.LoggingManager;
@@ -32,7 +34,7 @@ import java.util.logging.Logger;
  * OpenData application entry point.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 4.0.0
  */
 public final class OpenData {
 
@@ -68,7 +70,18 @@ public final class OpenData {
             var arguments = processor.parse(effectiveArguments);
             LoggingManager.setVerbose(arguments.verbose());
             logStartup(ApplicationInfo.current(), arguments);
-            if (arguments.guiRequested()) {
+            // The file-based first-run switch takes precedence over every CLI
+            // operation; no SQL connection or AES key is needed to inspect it.
+            if (new ApplicationBootstrapPropertiesLoader(
+                    new AesConfigurationPasswordCipher()).initialisationRequested()) {
+                if (java.awt.GraphicsEnvironment.isHeadless()) {
+                    throw new OpenDataConfigurationException(
+                            "init=true requires a desktop session. Start OpenData with a graphical desktop.");
+                }
+                logger.info("init=true: opening GUI setup wizard instead of command-line execution.");
+                GuiLauncher.launch(new String[0]);
+                status = ExecutionStatus.SUCCESS;
+            } else if (arguments.guiRequested()) {
                 GuiLauncher.launch(new String[0]);
                 status = ExecutionStatus.SUCCESS;
             } else if (arguments.aboutRequested()) {

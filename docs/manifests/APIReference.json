@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "API and configuration reference",
     "audience": "Plugin developers, integrators and support engineers",
-    "revisionSummary": "Version 3.0.0 API, configuration, plugin, data and dependency reference aligned with the merged JavaFX release baseline"
+    "revisionSummary": "Version 4.0.0 file-based first-run GUI provisioning; legacy sections retained for reference"
   },
   "sections": [
     "shared/introduction.md",
