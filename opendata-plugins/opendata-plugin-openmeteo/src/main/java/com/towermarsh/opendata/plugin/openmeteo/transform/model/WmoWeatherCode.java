@@ -11,7 +11,7 @@ package com.towermarsh.opendata.plugin.openmeteo.transform.model;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class WmoWeatherCode {
+public class WmoWeatherCode {
 
     /**
      * Prevents instantiation of this utility class.
@@ -25,7 +25,7 @@ public final class WmoWeatherCode {
      * @param code WMO code
      * @return description
      */
-    public static String description(final int code) {
+    public static String description(int code) {
         return switch (code) {
             case 0 ->
                 "Clear sky";

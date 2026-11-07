@@ -1,4 +1,4 @@
-package com.towermarsh.opendata.plugin;
+package com.towermarsh.opendata.core.plugin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,13 +6,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.towermarsh.opendata.common.database.SqlScriptExecutor;
 import com.towermarsh.opendata.config.PluginRegistrationResolver;
-import com.towermarsh.opendata.core.plugin.PluginRegistrarLocator;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Integration checks for packaged plugin registrars and their SQL resources.
+ *
+ * <p>The test belongs to the Core package because the API owns
+ * {@code com.towermarsh.opendata.plugin} as a named JPMS module package.</p>
+ *
+ * @author Terry Curran
+ * @version 4.0.0
+ */
 class AllPluginsRegistrationTest {
 
+    /** Checks the registration hook and SQL script for every bundled plugin. */
     @Test
     void everyBundledPluginResolvesAndShipsRegistrationSql() throws Exception {
         var resolver = new PluginRegistrationResolver();
@@ -34,6 +43,7 @@ class AllPluginsRegistrationTest {
         }
     }
 
+    /** Checks selected plugin descriptors are resolvable from resources. */
     @Test
     void everyPluginDefinitionIsAvailableFromItsProject() throws Exception {
         var resolver = new PluginRegistrationResolver();

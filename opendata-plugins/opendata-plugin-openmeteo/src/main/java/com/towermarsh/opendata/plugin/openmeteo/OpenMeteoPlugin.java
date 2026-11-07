@@ -1,4 +1,7 @@
-/* Copyright © 2026 Terry Curran; SPDX-License-Identifier: Apache-2.0 */
+/* 
+ * Copyright © 2026 Terry Curran; 
+ * SPDX-License-Identifier: Apache-2.0 
+ */
 package com.towermarsh.opendata.plugin.openmeteo;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
@@ -12,45 +15,53 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-/** Open-Meteo plugin entry point; delegates flow control to Initialise. */
-public final class OpenMeteoPlugin implements OpenDataPlugin {
+/**
+ * Open-Meteo plugin entry point delegates flow control to Initialise.
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
+public class OpenMeteoPlugin implements OpenDataPlugin {
 
-    /**
-     *
-     */
     public static final String PLUGIN_ID = "openmeteo";
     private final OpenMeteoInitialise initialise;
 
     /**
+     * Open the plugin
      *
      * @param definition
      */
-    public OpenMeteoPlugin(final PluginDefinition definition) { this(OpenMeteoConfiguration.from(definition)); }
+    public OpenMeteoPlugin(PluginDefinition definition) {
+        this(OpenMeteoConfiguration.from(definition));
+    }
 
     /**
      *
      * @param configuration
      */
-    public OpenMeteoPlugin(final OpenMeteoConfiguration configuration) { this.initialise = new OpenMeteoInitialise(configuration); }
+    public OpenMeteoPlugin(OpenMeteoConfiguration configuration) {
+        this.initialise = new OpenMeteoInitialise(configuration);
+    }
 
     /**
-     *
+     * execute the plugin
      * @param context
      * @return
      * @throws Exception
      */
-    @Override public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    @Override
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         return initialise.execute(Objects.requireNonNull(context, "context"));
     }
 
     /**
-     *
+     * Execute the plugin
      * @param start
      * @param end
      * @return
      * @throws Exception
      */
-    public List<DailyWeatherRecord> execute(final LocalDate start, final LocalDate end) throws Exception {
+    public List<DailyWeatherRecord> execute(LocalDate start, LocalDate end) throws Exception {
         return initialise.execute(start, end);
     }
 
@@ -58,5 +69,7 @@ public final class OpenMeteoPlugin implements OpenDataPlugin {
      *
      * @return
      */
-    public OpenMeteoConfiguration configuration() { return initialise.configuration(); }
+    public OpenMeteoConfiguration configuration() {
+        return initialise.configuration();
+    }
 }

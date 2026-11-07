@@ -184,7 +184,7 @@ public record OpenMeteoResponse(
      * @param values value of values
      * @return result of immutable copy
      */
-    private static <T> List<T> immutableCopy(final List<T> values) {
+    private static <T> List<T> immutableCopy(List<T> values) {
         return values == null ? List.of() : List.copyOf(values);
     }
 }

@@ -156,7 +156,7 @@ final class OpenDataInformationDialogs {
         final var details = new TextArea(String.join(System.lineSeparator(),
                 information.description(),
                 "",
-                information.runtime() + "  â€¢  " + information.licence(),
+                information.runtime() + "(c)" + information.licence(),
                 information.copyright()));
         details.setEditable(false);
         details.setWrapText(true);

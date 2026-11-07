@@ -11,6 +11,8 @@ module com.towermarsh.opendata.core {
     requires java.sql;
     requires java.logging;
     requires java.net.http;
+    // HTTP server is needed by integration tests, not at application runtime.
+    requires static jdk.httpserver;
     requires java.desktop;
     requires javafx.controls;
     requires javafx.fxml;
