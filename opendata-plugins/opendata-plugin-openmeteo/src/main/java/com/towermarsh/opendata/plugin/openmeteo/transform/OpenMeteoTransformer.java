@@ -6,7 +6,6 @@
 package com.towermarsh.opendata.plugin.openmeteo.transform;
 
 import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
-import com.towermarsh.opendata.plugin.openmeteo.transform.OpenMeteoResponse;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.DailyWeatherRecord;
 import com.towermarsh.opendata.plugin.openmeteo.transform.model.WmoWeatherCode;
 import java.time.LocalDate;
@@ -21,7 +20,7 @@ import java.util.Objects;
 * @author Terry Curran
 * @version 1.0.0
 */
-public final class OpenMeteoTransformer {
+public class OpenMeteoTransformer {
 
     /**
      *
@@ -31,34 +30,34 @@ public final class OpenMeteoTransformer {
      * @throws IllegalArgumentException
      */
     public List<DailyWeatherRecord> transform(
-            final OpenMeteoResponse response,
-            final OpenMeteoConfiguration configuration) throws IllegalArgumentException {
+            OpenMeteoResponse response,
+            OpenMeteoConfiguration configuration) throws IllegalArgumentException {
         Objects.requireNonNull(response, "response");
         Objects.requireNonNull(configuration, "configuration");
-        final var daily = requireValue(response.daily(), "response.daily");
-        final var dates = requireValue(daily.time(), "daily.time");
-        final var weatherCodes = requireValue(daily.weatherCodes(), "daily.weatherCodes");
-        final var daylightDurations = requireValue(
+        var daily = requireValue(response.daily(), "response.daily");
+        var dates = requireValue(daily.time(), "daily.time");
+        var weatherCodes = requireValue(daily.weatherCodes(), "daily.weatherCodes");
+        var daylightDurations = requireValue(
                 daily.daylightDurationSeconds(),
                 "daily.daylightDurationSeconds");
-        final var minimumTemperatures = requireValue(
+        var minimumTemperatures = requireValue(
                 daily.minimumTemperatures(),
                 "daily.minimumTemperatures");
-        final var maximumTemperatures = requireValue(
+        var maximumTemperatures = requireValue(
                 daily.maximumTemperatures(),
                 "daily.maximumTemperatures");
-        final var meanTemperatures = requireValue(
+        var meanTemperatures = requireValue(
                 daily.meanTemperatures(),
                 "daily.meanTemperatures");
-        final var sunriseTimes = requireValue(daily.sunrise(), "daily.sunrise");
-        final var sunsetTimes = requireValue(daily.sunset(), "daily.sunset");
-        final var results = new ArrayList<DailyWeatherRecord>(dates.size());
+        var sunriseTimes = requireValue(daily.sunrise(), "daily.sunrise");
+        var sunsetTimes = requireValue(daily.sunset(), "daily.sunset");
+        var results = new ArrayList<DailyWeatherRecord>(dates.size());
         try {
-            for (int index = 0; index < dates.size(); index++) {
-                final int weatherCode = requireValue(
+            for (var index = 0; index < dates.size(); index++) {
+                 int weatherCode = requireValue(
                         weatherCodes.get(index),
                         "daily.weatherCodes[%d]".formatted(index));
-                final long daylightMinutes =
+                long daylightMinutes =
                         Math.round(requireValue(
                                 daylightDurations.get(index),
                                 "daily.daylightDurationSeconds[%d]".formatted(index)) / 60.0);
@@ -100,7 +99,14 @@ public final class OpenMeteoTransformer {
         }
     }
 
-    private static <T> T requireValue(final T value, final String description) {
+    /**
+     * Validates value.
+     *
+     * @param value value of value
+     * @param description input description
+     * @return result of require value
+     */
+    private static <T> T requireValue(T value, String description) {
         if (value == null) {
             throw new IllegalArgumentException(description + " must not be null");
         }

@@ -61,3 +61,8 @@ archive/
 /opendata-core/src/main/resources/config/security/*.pfx
 /opendata-core/src/main/resources/config/security/*.cer
 *.key
+
+# OpenData v4 first-run credentials and encryption secrets
+/config/application.properties
+/config/keys/
+**/opendata-aes.key

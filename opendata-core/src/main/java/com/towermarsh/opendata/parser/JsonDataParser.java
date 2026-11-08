@@ -34,6 +34,13 @@ public final class JsonDataParser
                 = new ObjectMapper();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param file target file
+     * @return result of parse
+     * @throws ImportException if parse fails
+     */
     @Override
     public List<Map<String, String>> parse(
             Path file)

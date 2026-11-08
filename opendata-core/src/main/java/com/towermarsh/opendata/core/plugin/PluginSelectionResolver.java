@@ -44,6 +44,12 @@ public class PluginSelectionResolver {
         return requested.stream().map(registry::requireEnabled).toList();
     }
 
+    /**
+     * Canonical id.
+     *
+     * @param pluginId requested plugin id
+     * @return result of canonical id
+     */
     private static String canonicalId(final String pluginId) {
         return pluginId.trim().toLowerCase(Locale.ROOT);
     }

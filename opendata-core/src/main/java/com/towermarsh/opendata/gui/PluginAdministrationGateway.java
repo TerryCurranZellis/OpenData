@@ -199,6 +199,13 @@ public final class PluginAdministrationGateway {
                 (registry, pluginId) -> registry.setEnabled(pluginId, enabled));
     }
 
+    /**
+     * Mutate.
+     *
+     * @param pluginIds requested plugin ids
+     * @param mutation input mutation
+     * @return result of mutate
+     */
     private List<String> mutate(
             final List<String> pluginIds,
             final RegistryMutation mutation) {
@@ -214,6 +221,12 @@ public final class PluginAdministrationGateway {
         });
     }
 
+    /**
+     * Register.
+     *
+     * @param context input context
+     * @param registrations input registrations
+     */
     private static void register(
             final AdministrationContext context,
             final List<PluginRegistration> registrations) {
@@ -226,6 +239,12 @@ public final class PluginAdministrationGateway {
                 .register(context.bootstrap(), registrations);
     }
 
+    /**
+     * With context.
+     *
+     * @param operation input operation
+     * @return result of with context
+     */
     private static <T> T withContext(
             final Function<AdministrationContext, T> operation) {
         final ConfigurationPasswordCipher passwordCipher = new AesConfigurationPasswordCipher();
@@ -244,6 +263,15 @@ public final class PluginAdministrationGateway {
     }
 
 
+    /**
+     * Creates a administration context instance.
+     *
+     * @param bootstrap input bootstrap
+     * @param bootstrapLoader input bootstrap loader
+     * @param passwordCipher input password cipher
+     * @param database input database
+     * @param registry input registry
+     */
     private record AdministrationContext(
             ApplicationBootstrapProperties bootstrap,
             ApplicationBootstrapPropertiesLoader bootstrapLoader,

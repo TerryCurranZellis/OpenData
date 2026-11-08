@@ -77,6 +77,14 @@ public class ElectricSupplyLoad {
         return new PluginMetrics(records.size(), inserted, updated, 0);
     }
 
+    /**
+     * Bind.
+     *
+     * @param statement input statement
+     * @param first input first
+     * @param values value of values
+     * @throws SQLException if bind fails
+     */
     private static void bind(PreparedStatement statement, int first, List<Double> values)
             throws SQLException {
         for (var i = 0; i < values.size(); i++) {

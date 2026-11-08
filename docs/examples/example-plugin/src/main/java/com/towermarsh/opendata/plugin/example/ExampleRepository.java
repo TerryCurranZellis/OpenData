@@ -21,6 +21,13 @@ public final class ExampleRepository {
                 database, "database");
     }
 
+    /**
+     * Save.
+     *
+     * @param records input records
+     * @param runId requested run id
+     * @return result of save
+     */
     public SaveResult save(
             final List<ExampleRecord> records,
             final UUID runId) {
@@ -33,6 +40,13 @@ public final class ExampleRepository {
                 "Implement example database persistence");
     }
 
+    /**
+     * Creates a save result instance.
+     *
+     * @param inserted input inserted
+     * @param updated input updated
+     * @param skipped input skipped
+     */
     public record SaveResult(
             long inserted,
             long updated,

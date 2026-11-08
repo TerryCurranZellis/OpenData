@@ -95,6 +95,12 @@ public final class PluginRow {
                 date);
     }
 
+    /**
+     * Title case.
+     *
+     * @param value value of value
+     * @return result of title case
+     */
     private static String titleCase(final String value) {
         if (value == null || value.isBlank()) {
             return "";
@@ -111,6 +117,11 @@ public final class PluginRow {
             value = "EI_EXPOSE_REP",
             justification = "JavaFX property accessor intentionally exposes the live property for binding."
     )
+    /**
+     * Selected property.
+     *
+     * @return result of selected property
+     */
     public BooleanProperty selectedProperty() {
         return selected;
     }
@@ -142,6 +153,11 @@ public final class PluginRow {
             value = "EI_EXPOSE_REP",
             justification = "JavaFX property accessor intentionally exposes the live property for binding."
     )
+    /**
+     * Plugin id property.
+     *
+     * @return result of plugin id property
+     */
     public StringProperty pluginIdProperty() {
         return pluginId;
     }
@@ -155,6 +171,11 @@ public final class PluginRow {
             value = "EI_EXPOSE_REP",
             justification = "JavaFX property accessor intentionally exposes the live property for binding."
     )
+    /**
+     * Description property.
+     *
+     * @return result of description property
+     */
     public StringProperty descriptionProperty() {
         return description;
     }
@@ -168,6 +189,11 @@ public final class PluginRow {
             value = "EI_EXPOSE_REP",
             justification = "JavaFX property accessor intentionally exposes the live property for binding."
     )
+    /**
+     * Enabled state property.
+     *
+     * @return result of enabled state property
+     */
     public StringProperty enabledStateProperty() {
         return enabledState;
     }
@@ -181,6 +207,11 @@ public final class PluginRow {
             value = "EI_EXPOSE_REP",
             justification = "JavaFX property accessor intentionally exposes the live property for binding."
     )
+    /**
+     * Last run status property.
+     *
+     * @return result of last run status property
+     */
     public StringProperty lastRunStatusProperty() {
         return lastRunStatus;
     }
@@ -194,6 +225,11 @@ public final class PluginRow {
             value = "EI_EXPOSE_REP",
             justification = "JavaFX property accessor intentionally exposes the live property for binding."
     )
+    /**
+     * Last run date property.
+     *
+     * @return result of last run date property
+     */
     public StringProperty lastRunDateProperty() {
         return lastRunDate;
     }

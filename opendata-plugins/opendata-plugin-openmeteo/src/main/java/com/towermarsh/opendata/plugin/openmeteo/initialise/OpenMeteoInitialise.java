@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class OpenMeteoInitialise {
+public class OpenMeteoInitialise {
     private final OpenMeteoConfiguration configuration;
     private final OpenMeteoExtract extract;
     private final OpenMeteoTransform transform;
@@ -32,7 +32,7 @@ public final class OpenMeteoInitialise {
      * Instantiate
      * @param configuration 
      */
-    public OpenMeteoInitialise(final OpenMeteoConfiguration configuration) {
+    public OpenMeteoInitialise(OpenMeteoConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.extract = new OpenMeteoExtract(configuration);
         this.transform = new OpenMeteoTransform(configuration);
@@ -43,10 +43,10 @@ public final class OpenMeteoInitialise {
      * @return
      * @throws Exception 
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         var metrics = PluginMetrics.ZERO;
         try {
-            final var records = transform.transform(extract.extract());
+            var records = transform.transform(extract.extract());
             metrics = load.load(configuration, records, context);
             return metrics;
         } finally { finalise.complete(metrics); }
@@ -58,7 +58,7 @@ public final class OpenMeteoInitialise {
      * @return
      * @throws Exception 
      */
-    public List<DailyWeatherRecord> execute(final LocalDate start, final LocalDate end) throws Exception {
+    public List<DailyWeatherRecord> execute(LocalDate start, LocalDate end) throws Exception {
         return transform.transform(extract.extract(start, end));
     }
     /**

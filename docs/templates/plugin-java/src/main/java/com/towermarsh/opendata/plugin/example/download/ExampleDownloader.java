@@ -30,6 +30,12 @@ public final class ExampleDownloader {
                 configuration.maximumBytes()));
     }
 
+    /**
+     * Download.
+     *
+     * @return result of download
+     * @throws DownloadException if download fails
+     */
     public DataFile download() throws DownloadException {
         return downloader.download(
                 configuration.sourceUri(),

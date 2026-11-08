@@ -96,6 +96,12 @@ public class OctopusExtract {
         return List.copyOf(extracted);
     }
 
+    /**
+     * Count files.
+     *
+     * @param directory target directory
+     * @return result of count files
+     */
     private static long countFiles(Path directory) {
         try (var files = Files.list(directory)) {
             return files.filter(Files::isRegularFile).count();

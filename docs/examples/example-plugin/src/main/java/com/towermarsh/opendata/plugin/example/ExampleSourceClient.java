@@ -17,6 +17,13 @@ public final class ExampleSourceClient {
             .followRedirects(HttpClient.Redirect.NORMAL)
             .build();
 
+    /**
+     * Download.
+     *
+     * @param configuration input configuration
+     * @return result of download
+     * @throws Exception if download fails
+     */
     public String download(
             final ExamplePluginConfiguration configuration)
             throws Exception {

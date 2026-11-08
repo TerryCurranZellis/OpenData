@@ -44,6 +44,14 @@ public class ReflectionPluginFactory implements PluginFactory {
         }
     }
 
+    /**
+     * Instantiate.
+     *
+     * @param implementation input implementation
+     * @param definition input definition
+     * @return result of instantiate
+     * @throws ReflectiveOperationException if instantiate fails
+     */
     private static Object instantiate(
             final Class<?> implementation,
             final PluginDefinition definition) throws ReflectiveOperationException {

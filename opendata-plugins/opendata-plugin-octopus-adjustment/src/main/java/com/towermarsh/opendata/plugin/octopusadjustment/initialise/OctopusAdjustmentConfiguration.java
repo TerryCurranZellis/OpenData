@@ -72,6 +72,12 @@ public record OctopusAdjustmentConfiguration(
                 properties.requiredPath(PROP_ARCHIVE_DIRECTORY));
     }
 
+    /**
+     * Validates safe account number.
+     *
+     * @param value value of value
+     * @return result of require safe account number
+     */
     private static String requireSafeAccountNumber(String value) {
         Objects.requireNonNull(value, "accountNumber");
         var result = value.trim();

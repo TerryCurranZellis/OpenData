@@ -97,6 +97,12 @@ public final class PluginConfigurationDirectoryScanner {
         return List.copyOf(result);
     }
 
+    /**
+     * Checks whether plugin properties file.
+     *
+     * @param path target path
+     * @return result of is plugin properties file
+     */
     private static boolean isPluginPropertiesFile(final Path path) {
         final var fileName = path.getFileName();
         if (fileName == null) {
@@ -107,6 +113,11 @@ public final class PluginConfigurationDirectoryScanner {
                 && !INDEX_FILE.equals(filename);
     }
 
+    /**
+     * Default directories.
+     *
+     * @return result of default directories
+     */
     private static List<Path> defaultDirectories() {
         final var workingDirectory = Path.of(System.getProperty("user.dir"))
                 .toAbsolutePath().normalize();
@@ -126,6 +137,12 @@ public final class PluginConfigurationDirectoryScanner {
         return List.copyOf(result);
     }
 
+    /**
+     * Add plugin source directories.
+     *
+     * @param directories input directories
+     * @param pluginsRoot input plugins root
+     */
     private static void addPluginSourceDirectories(
             final List<Path> directories,
             final Path pluginsRoot) {
@@ -144,6 +161,12 @@ public final class PluginConfigurationDirectoryScanner {
         }
     }
 
+    /**
+     * Source directory.
+     *
+     * @param moduleRoot input module root
+     * @return result of source directory
+     */
     private static Path sourceDirectory(final Path moduleRoot) {
         return moduleRoot.resolve("src").resolve("main").resolve("resources")
                 .resolve("config").resolve("plugins");

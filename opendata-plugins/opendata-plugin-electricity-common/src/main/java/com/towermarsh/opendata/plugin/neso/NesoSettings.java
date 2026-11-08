@@ -66,6 +66,14 @@ public record NesoSettings(
                 Duration.ofSeconds(Long.parseLong(property(definition, "http.request-timeout-seconds", "180"))));
     }
 
+    /**
+     * Property.
+     *
+     * @param definition input definition
+     * @param name requested name
+     * @param defaultValue value of default value
+     * @return result of property
+     */
     private static String property(
             PluginDefinition definition, String name, String defaultValue) {
         return definition.findProperty(name)

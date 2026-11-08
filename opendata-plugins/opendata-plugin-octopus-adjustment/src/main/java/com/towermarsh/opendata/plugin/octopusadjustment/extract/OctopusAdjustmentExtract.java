@@ -105,6 +105,12 @@ public class OctopusAdjustmentExtract {
         return List.copyOf(extracted);
     }
 
+    /**
+     * Count ignored.
+     *
+     * @param directory target directory
+     * @return result of count ignored
+     */
     private static long countIgnored(java.nio.file.Path directory) {
         try (var paths = Files.list(directory)) {
             return paths.filter(Files::isRegularFile).count();
@@ -113,12 +119,25 @@ public class OctopusAdjustmentExtract {
         }
     }
 
+    /**
+     * Matches candidate.
+     *
+     * @param fileName target file name
+     * @param accountNumber input account number
+     * @return result of matches candidate
+     */
     static boolean matchesCandidate(String fileName, String accountNumber) {
         Objects.requireNonNull(fileName, "fileName");
         Objects.requireNonNull(accountNumber, "accountNumber");
         return candidatePattern(accountNumber).matcher(fileName).matches();
     }
 
+    /**
+     * Candidate pattern.
+     *
+     * @param accountNumber input account number
+     * @return result of candidate pattern
+     */
     private static Pattern candidatePattern(String accountNumber) {
         return Pattern.compile(
                 "^" + Pattern.quote(accountNumber) + "-.+\\.pdf$",

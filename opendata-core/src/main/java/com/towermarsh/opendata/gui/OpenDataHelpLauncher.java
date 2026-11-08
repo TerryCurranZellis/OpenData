@@ -106,6 +106,11 @@ final class OpenDataHelpLauncher {
                 .startsWith("windows");
     }
 
+    /**
+     * Default roots.
+     *
+     * @return result of default roots
+     */
     private static List<Path> defaultRoots() {
         final Set<Path> roots = new LinkedHashSet<>();
         roots.add(Path.of(System.getProperty("user.dir", ".")));
@@ -120,6 +125,11 @@ final class OpenDataHelpLauncher {
         return new ArrayList<>(roots);
     }
 
+    /**
+     * Application code location.
+     *
+     * @return result of application code location
+     */
     private static Optional<Path> applicationCodeLocation() {
         try {
             final var codeSource = OpenDataHelpLauncher.class

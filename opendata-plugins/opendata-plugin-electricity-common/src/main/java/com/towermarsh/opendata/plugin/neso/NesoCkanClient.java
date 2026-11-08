@@ -169,6 +169,12 @@ public class NesoCkanClient {
         return candidate;
     }
 
+    /**
+     * Checks whether uuid.
+     *
+     * @param id requested id
+     * @return result of is uuid
+     */
     private static boolean isUuid(String id) {
         try {
             return UUID.fromString(id).toString().equalsIgnoreCase(id);
@@ -213,6 +219,12 @@ public class NesoCkanClient {
         return resource.withFile(target);
     }
 
+    /**
+     * Request.
+     *
+     * @param uri input uri
+     * @return result of request
+     */
     private HttpRequest request(URI uri) {
         return HttpRequest.newBuilder(uri)
                 .timeout(settings.requestTimeout())

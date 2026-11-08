@@ -16,6 +16,13 @@ import java.util.Objects;
 /** Converts the downloaded example text file into typed records. */
 public final class ExampleTransformer {
 
+    /**
+     * Transform.
+     *
+     * @param source input source
+     * @return result of transform
+     * @throws IOException if transform fails
+     */
     public List<ExampleRecord> transform(final DataFile source)
             throws IOException {
         Objects.requireNonNull(source, "source");

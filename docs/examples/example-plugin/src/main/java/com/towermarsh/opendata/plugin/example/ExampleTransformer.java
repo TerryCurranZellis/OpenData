@@ -10,6 +10,12 @@ import java.util.List;
 /** Placeholder transformation; replace with real parsing and validation. */
 public final class ExampleTransformer {
 
+    /**
+     * Transform.
+     *
+     * @param payload input payload
+     * @return result of transform
+     */
     public List<ExampleRecord> transform(final String payload) {
         if (payload == null || payload.isBlank()) {
             throw new IllegalArgumentException(

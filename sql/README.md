@@ -1,3 +1,8 @@
+> **Version 4.0.0:** On a new graphical installation, the first-run wizard
+> automatically applies the core schema resources and registers plugins disabled.
+> Manual SQL scripts remain available for administrators and migrations. See
+> [first-run guide](../docs/guides/first-run-initialisation.md).
+
 # SQL Server Deployment Order
 
 All SQL Server deployment scripts now live in this folder and execute in this

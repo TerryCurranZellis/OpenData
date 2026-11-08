@@ -47,6 +47,12 @@ public class PluginExceptionHandler {
         }
     }
 
+    /**
+     * Failure message.
+     *
+     * @param failure input failure
+     * @return result of failure message
+     */
     private static String failureMessage(final Throwable failure) {
         final String message = failure.getMessage();
         return message == null || message.isBlank()

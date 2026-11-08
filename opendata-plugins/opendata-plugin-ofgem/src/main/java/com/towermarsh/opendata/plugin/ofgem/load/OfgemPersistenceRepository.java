@@ -78,6 +78,18 @@ public final class OfgemPersistenceRepository {
                 connection -> persist(connection, definition, download, data));
     }
 
+    /**
+     * Persist.
+     *
+     * @param connection input connection
+     * @param definition input definition
+     * @param download input download
+     * @param data input data
+     * @return result of persist
+     * @throws SQLException if persist fails
+     * @throws IOException if persist fails
+     * @throws NoSuchAlgorithmException if persist fails
+     */
     private static OfgemPersistenceResult persist(
             final Connection connection,
             final PluginDefinition definition,
@@ -118,6 +130,15 @@ public final class OfgemPersistenceRepository {
                 0);
     }
 
+    /**
+     * Validates dataset id.
+     *
+     * @param connection input connection
+     * @param datasetCode input dataset code
+     * @param pluginCode input plugin code
+     * @return result of require dataset id
+     * @throws SQLException if require dataset id fails
+     */
     private static long requireDatasetId(
             final Connection connection,
             final String datasetCode,
@@ -154,6 +175,15 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Insert run.
+     *
+     * @param connection input connection
+     * @param datasetId requested dataset id
+     * @param download input download
+     * @return result of insert run
+     * @throws SQLException if insert run fails
+     */
     private static long insertRun(
             final Connection connection,
             final long datasetId,
@@ -173,6 +203,17 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Insert source file.
+     *
+     * @param connection input connection
+     * @param ingestionRunId requested ingestion run id
+     * @param download input download
+     * @return result of insert source file
+     * @throws SQLException if insert source file fails
+     * @throws IOException if insert source file fails
+     * @throws NoSuchAlgorithmException if insert source file fails
+     */
     private static long insertSourceFile(
             final Connection connection,
             final long ingestionRunId,
@@ -201,6 +242,12 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Local file name.
+     *
+     * @param localFile target local file
+     * @return result of local file name
+     */
     private static String localFileName(final Path localFile) {
         final var fileName = Objects.requireNonNull(localFile, "localFile").getFileName();
         if (fileName == null) {
@@ -209,6 +256,14 @@ public final class OfgemPersistenceRepository {
         return fileName.toString();
     }
 
+    /**
+     * Returns find period id.
+     *
+     * @param connection input connection
+     * @param period input period
+     * @return result of find period id
+     * @throws SQLException if find period id fails
+     */
     private static Long findPeriodId(
             final Connection connection,
             final OfgemPriceCapPeriod period) throws SQLException {
@@ -227,6 +282,15 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Insert period.
+     *
+     * @param connection input connection
+     * @param period input period
+     * @param sourceFileId target source file id
+     * @return result of insert period
+     * @throws SQLException if insert period fails
+     */
     private static long insertPeriod(
             final Connection connection,
             final OfgemPriceCapPeriod period,
@@ -246,6 +310,15 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Updates period.
+     *
+     * @param connection input connection
+     * @param periodId requested period id
+     * @param period input period
+     * @param sourceFileId target source file id
+     * @throws SQLException if update period fails
+     */
     private static void updatePeriod(
             final Connection connection,
             final long periodId,
@@ -265,6 +338,14 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Updates period.
+     *
+     * @param statement input statement
+     * @param period input period
+     * @param sourceFileId target source file id
+     * @throws SQLException if set period fails
+     */
     private static void setPeriod(
             final PreparedStatement statement,
             final OfgemPriceCapPeriod period,
@@ -280,6 +361,12 @@ public final class OfgemPersistenceRepository {
         statement.setLong(5, sourceFileId);
     }
 
+    /**
+     * Clear current flag.
+     *
+     * @param connection input connection
+     * @throws SQLException if clear current flag fails
+     */
     private static void clearCurrentFlag(final Connection connection) throws SQLException {
         final String sql = """
                 UPDATE ofgem.price_cap_period
@@ -292,6 +379,13 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Delete levels.
+     *
+     * @param connection input connection
+     * @param periodId requested period id
+     * @throws SQLException if delete levels fails
+     */
     private static void deleteLevels(
             final Connection connection,
             final long periodId) throws SQLException {
@@ -305,6 +399,16 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Insert levels.
+     *
+     * @param connection input connection
+     * @param periodId requested period id
+     * @param ingestionRunId requested ingestion run id
+     * @param levels input levels
+     * @return result of insert levels
+     * @throws SQLException if insert levels fails
+     */
     private static int insertLevels(
             final Connection connection,
             final long periodId,
@@ -336,6 +440,15 @@ public final class OfgemPersistenceRepository {
                 });
     }
 
+    /**
+     * Complete run.
+     *
+     * @param connection input connection
+     * @param ingestionRunId requested ingestion run id
+     * @param extracted input extracted
+     * @param loaded input loaded
+     * @throws SQLException if complete run fails
+     */
     private static void completeRun(
             final Connection connection,
             final long ingestionRunId,
@@ -357,6 +470,14 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Generated key.
+     *
+     * @param statement input statement
+     * @param description input description
+     * @return result of generated key
+     * @throws SQLException if generated key fails
+     */
     private static long generatedKey(
             final PreparedStatement statement,
             final String description) throws SQLException {
@@ -368,6 +489,14 @@ public final class OfgemPersistenceRepository {
         }
     }
 
+    /**
+     * Sha256.
+     *
+     * @param file target file
+     * @return result of sha256
+     * @throws IOException if sha256 fails
+     * @throws NoSuchAlgorithmException if sha256 fails
+     */
     private static String sha256(final java.nio.file.Path file)
             throws IOException, NoSuchAlgorithmException {
         final MessageDigest digest = MessageDigest.getInstance("SHA-256");

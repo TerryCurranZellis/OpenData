@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class OpenMeteoResponseExtractor {
+public class OpenMeteoResponseExtractor {
 
     private final ObjectMapper objectMapper;
 
@@ -28,7 +28,7 @@ public final class OpenMeteoResponseExtractor {
         this(new ObjectMapper());
     }
 
-    OpenMeteoResponseExtractor(final ObjectMapper objectMapper) {
+    OpenMeteoResponseExtractor(ObjectMapper objectMapper) {
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper");
     }
 
@@ -39,7 +39,7 @@ public final class OpenMeteoResponseExtractor {
      * @return parsed API response
      * @throws IllegalArgumentException if the payload cannot be parsed
      */
-    public OpenMeteoResponse extract(final String json) throws IllegalArgumentException {
+    public OpenMeteoResponse extract(String json) throws IllegalArgumentException {
         Objects.requireNonNull(json, "json");
         try {
             return objectMapper.readValue(json, OpenMeteoResponse.class);

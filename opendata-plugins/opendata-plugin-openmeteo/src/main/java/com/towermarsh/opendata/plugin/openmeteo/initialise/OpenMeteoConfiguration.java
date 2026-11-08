@@ -133,7 +133,7 @@ public record OpenMeteoConfiguration(
      * @return typed Open-Meteo configuration
      * @since 2.0.0
      */
-    public static OpenMeteoConfiguration from(final PluginDefinition definition) {
+    public static OpenMeteoConfiguration from(PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!"openmeteo".equalsIgnoreCase(definition.id())) {
             throw new IllegalArgumentException(
@@ -141,8 +141,8 @@ public record OpenMeteoConfiguration(
                             + definition.id() + "'");
         }
 
-        final PluginPropertyValues properties = new PluginPropertyValues(definition);
-        final String locationName = properties.requiredText("location-name");
+        var properties = new PluginPropertyValues(definition);
+        var locationName = properties.requiredText("location-name");
 
         return new OpenMeteoConfiguration(
                 definition.requireEndpoint(ENDPOINT_NAME).uri(),
@@ -183,15 +183,21 @@ public record OpenMeteoConfiguration(
      * @return inclusive query date range
      * @since 2.0.0
      */
-    public DateRange resolveDateRange(final LocalDate today) {
+    public DateRange resolveDateRange(LocalDate today) {
         Objects.requireNonNull(today, "today");
-        final LocalDate effectiveStart = startDate.orElse(LocalDate.of(2000, 1, 1));
-        final LocalDate effectiveEnd = endDate.orElse(today.minusDays(1));
+        var effectiveStart = startDate.orElse(LocalDate.of(2000, 1, 1));
+        var effectiveEnd = endDate.orElse(today.minusDays(1));
         return new DateRange(effectiveStart, effectiveEnd);
     }
 
-    private static String slug(final String value) {
-        final String result = ValidationRules.requireText(value, "location-name")
+    /**
+     * Slug.
+     *
+     * @param value value of value
+     * @return result of slug
+     */
+    private static String slug(String value) {
+        var result = ValidationRules.requireText(value, "location-name")
                 .toLowerCase(Locale.ROOT)
                 .replaceAll("[^a-z0-9]+", "-")
                 .replaceAll("(^-|-$)", "");

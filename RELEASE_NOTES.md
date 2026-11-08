@@ -1,3 +1,17 @@
+# OpenData 4.0.0 Release Notes
+
+The version 4 source introduces a graphical first-run configuration wizard
+triggered by `init=true` in the writable properties file. It provisions the
+SQL Server database and core objects, installs plugin schemas, registers all
+plugins disabled, and stores AES-encrypted credentials before clearing init.
+Details: [First-run guide](docs/guides/first-run-initialisation.md) and
+[release test status](docs/release/Release-4.0.0.md).
+
+**Build and live environment acceptance remains outstanding** on the supported
+JDK and SQL Server. The historical version 3 notes follow.
+
+---
+
 # OpenData 3.0.0 Release Notes
 
 **Status:** Release candidate documentation baseline  

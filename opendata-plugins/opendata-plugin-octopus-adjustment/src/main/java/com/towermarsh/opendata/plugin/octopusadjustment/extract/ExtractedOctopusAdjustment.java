@@ -43,6 +43,13 @@ public record ExtractedOctopusAdjustment(
         }
     }
 
+    /**
+     * Validates text.
+     *
+     * @param value value of value
+     * @param name requested name
+     * @return result of require text
+     */
     private static String requireText(String value, String name) {
         Objects.requireNonNull(value, name);
         var result = value.trim();

@@ -6,10 +6,12 @@
   "metadata": {
     "documentType": "Administrator guide",
     "audience": "Database, platform and operations administrators",
-    "revisionSummary": "Version 3.0.0 administration, operations, security and release-readiness baseline"
+    "revisionSummary": "Version 4.0.0 file-based first-run GUI provisioning; legacy sections retained for reference"
   },
   "sections": [
     "shared/introduction.md",
+    "guides/first-run-initialisation.md",
+    "architecture/030-first-run-initialisation.md",
     "guides/sql-server-bootstrap.md",
     "guides/database-configuration-and-security.md",
     "guides/configuring-api-credentials.md",

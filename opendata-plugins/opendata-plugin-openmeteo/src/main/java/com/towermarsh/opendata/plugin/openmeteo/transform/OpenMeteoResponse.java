@@ -26,6 +26,14 @@ public record OpenMeteoResponse(
         String timezone,
         Daily daily) {
 
+    /**
+     * Normalises the nested daily response to a defensive immutable snapshot.
+     *
+     * @param latitude location latitude
+     * @param longitude location longitude
+     * @param timezone resolved API timezone
+     * @param daily daily weather arrays, if supplied
+     */
     public OpenMeteoResponse {
         daily = daily == null ? null : new Daily(
                 daily.time(),
@@ -66,6 +74,18 @@ public record OpenMeteoResponse(
             @JsonProperty("weather_code")
             List<Integer> weatherCodes) {
 
+        /**
+         * Copies the daily observation arrays into immutable lists.
+         *
+         * @param time observation dates
+         * @param maximumTemperatures daily high temperatures
+         * @param minimumTemperatures daily low temperatures
+         * @param meanTemperatures daily mean temperatures
+         * @param sunrise sunrise observations
+         * @param sunset sunset observations
+         * @param daylightDurationSeconds daylight duration observations
+         * @param weatherCodes WMO weather codes
+         */
         public Daily {
             time = immutableCopy(time);
             maximumTemperatures = immutableCopy(maximumTemperatures);
@@ -77,48 +97,94 @@ public record OpenMeteoResponse(
             weatherCodes = immutableCopy(weatherCodes);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of time
+         */
         @Override
         public List<String> time() {
             return List.copyOf(time);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of maximum temperatures
+         */
         @Override
         public List<Double> maximumTemperatures() {
             return List.copyOf(maximumTemperatures);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of minimum temperatures
+         */
         @Override
         public List<Double> minimumTemperatures() {
             return List.copyOf(minimumTemperatures);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of mean temperatures
+         */
         @Override
         public List<Double> meanTemperatures() {
             return List.copyOf(meanTemperatures);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of sunrise
+         */
         @Override
         public List<String> sunrise() {
             return List.copyOf(sunrise);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of sunset
+         */
         @Override
         public List<String> sunset() {
             return List.copyOf(sunset);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of daylight duration seconds
+         */
         @Override
         public List<Double> daylightDurationSeconds() {
             return List.copyOf(daylightDurationSeconds);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @return result of weather codes
+         */
         @Override
         public List<Integer> weatherCodes() {
             return List.copyOf(weatherCodes);
         }
     }
 
-    private static <T> List<T> immutableCopy(final List<T> values) {
+    /**
+     * Immutable copy.
+     *
+     * @param values value of values
+     * @return result of immutable copy
+     */
+    private static <T> List<T> immutableCopy(List<T> values) {
         return values == null ? List.of() : List.copyOf(values);
     }
 }

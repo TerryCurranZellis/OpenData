@@ -1,5 +1,10 @@
 # 3. SQL Server Setup
 
+> **Version 4.0.0:** Initial setup is now available through the
+> [first-run GUI wizard](../guides/first-run-initialisation.md). The manual
+> bootstrap below is retained for pre-v4 installations and administration.
+
+
 **Document ID:** USER-003  
 **Version:** 3.0.0  
 **Status:** Version 3.0.0 procedure  

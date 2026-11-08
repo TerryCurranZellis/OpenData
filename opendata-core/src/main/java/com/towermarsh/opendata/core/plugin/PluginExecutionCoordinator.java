@@ -114,6 +114,13 @@ public final class PluginExecutionCoordinator {
         }
     }
 
+    /**
+     * Execute one.
+     *
+     * @param resolved input resolved
+     * @param dryRun input dry run
+     * @return result of execute one
+     */
     @SuppressWarnings("try")
     private PluginRunResult executeOne(final ResolvedPlugin resolved, final boolean dryRun) {
         final String pluginId = resolved.descriptor().id();

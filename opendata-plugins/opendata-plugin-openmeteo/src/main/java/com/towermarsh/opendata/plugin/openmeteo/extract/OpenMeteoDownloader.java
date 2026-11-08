@@ -20,14 +20,16 @@ import java.util.logging.Logger;
 /**
  * Downloads raw JSON from the Open-Meteo archive API.
  *
- *
  * @author Terry Curran
  * @version 1.0.0
  */
-public final class OpenMeteoDownloader {
+public class OpenMeteoDownloader {
 
     private static final Logger LOGGER
             = Logger.getLogger(OpenMeteoDownloader.class.getName());
+    /**
+     * columns to download
+     */
     private static final String DAILY_VARIABLES = String.join(",",
             "temperature_2m_max",
             "temperature_2m_min",
@@ -47,7 +49,7 @@ public final class OpenMeteoDownloader {
      * @param configuration typed Open-Meteo configuration
      *
      */
-    public OpenMeteoDownloader(final OpenMeteoConfiguration configuration) {
+    public OpenMeteoDownloader(OpenMeteoConfiguration configuration) {
         this(
                 configuration,
                 HttpClient.newBuilder()
@@ -56,8 +58,8 @@ public final class OpenMeteoDownloader {
     }
 
     OpenMeteoDownloader(
-            final OpenMeteoConfiguration configuration,
-            final HttpClient httpClient) {
+            OpenMeteoConfiguration configuration,
+            HttpClient httpClient) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.httpClient = Objects.requireNonNull(httpClient, "httpClient");
     }
@@ -69,8 +71,8 @@ public final class OpenMeteoDownloader {
      * @throws IOException if the API call fails
      */
     public String download() throws IOException {
-        final var today = LocalDate.now(configuration.timezone());
-        final var range = configuration.resolveDateRange(today);
+        var today = LocalDate.now(configuration.timezone());
+        var range = configuration.resolveDateRange(today);
         return download(range.startDate(), range.endDate());
     }
 
@@ -82,7 +84,7 @@ public final class OpenMeteoDownloader {
      * @return raw JSON response
      * @throws IOException if the API call fails
      */
-    public String download(final LocalDate startDate, final LocalDate endDate)
+    public String download(LocalDate startDate, LocalDate endDate)
             throws IOException {
         Objects.requireNonNull(startDate, "startDate");
         Objects.requireNonNull(endDate, "endDate");
@@ -90,11 +92,11 @@ public final class OpenMeteoDownloader {
             throw new IOException("startDate must not be after endDate");
         }
 
-        final var request = buildRequest(startDate, endDate);
+        var request = buildRequest(startDate, endDate);
 
         LOGGER.info(() -> "Downloading Open-Meteo history for %s from %s to %s"
                 .formatted(configuration.locationName(), startDate, endDate));
-        final HttpResponse<String> response;
+        HttpResponse<String> response;
         try {
             response = httpClient.send(
                     request,
@@ -123,7 +125,7 @@ public final class OpenMeteoDownloader {
      * @param endDate inclusive end date
      * @return configured HTTP request
      */
-    public HttpRequest buildRequest(final LocalDate startDate, final LocalDate endDate) {
+    public HttpRequest buildRequest(LocalDate startDate, LocalDate endDate) {
         return HttpRequest.newBuilder()
                 .uri(buildUri(startDate, endDate))
                 .GET()
@@ -140,9 +142,9 @@ public final class OpenMeteoDownloader {
      * @param endDate inclusive end date
      * @return request URI
      */
-    URI buildUri(final LocalDate startDate, final LocalDate endDate) {
-        final String separator = configuration.endpoint().toString().contains("?") ? "&" : "?";
-        final String query = "latitude=" + configuration.latitude()
+    URI buildUri(LocalDate startDate, LocalDate endDate) {
+        var separator = configuration.endpoint().toString().contains("?") ? "&" : "?";
+        var query = "latitude=" + configuration.latitude()
                 + "&longitude=" + configuration.longitude()
                 + "&start_date=" + startDate
                 + "&end_date=" + endDate
@@ -157,7 +159,7 @@ public final class OpenMeteoDownloader {
      * @param value value to encode
      * @return encoded query parameter value
      */
-    private static String encode(final String value) {
+    private static String encode(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8).replace("+", "%20");
     }
 
@@ -167,11 +169,11 @@ public final class OpenMeteoDownloader {
      * @param value text to abbreviate
      * @return abbreviated text
      */
-    private static String abbreviated(final String value) {
+    private static String abbreviated(String value) {
         if (value == null) {
             return "";
         }
-        final String normalised = value.replaceAll("\\s+", " ").trim();
+        var normalised = value.replaceAll("\\s+", " ").trim();
         return normalised.length() <= 500
                 ? normalised
                 : normalised.substring(0, 500) + "...";

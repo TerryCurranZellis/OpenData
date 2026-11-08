@@ -66,6 +66,15 @@ public class OctopusPersistenceRepository {
                 connection -> persistBatch(connection, batch, runId));
     }
 
+    /**
+     * Persist batch.
+     *
+     * @param connection input connection
+     * @param batch input batch
+     * @param runId requested run id
+     * @return result of persist batch
+     * @throws SQLException if persist batch fails
+     */
     private static OctopusPersistenceResult persistBatch(
             Connection connection,
             OctopusParseResult batch,
@@ -89,6 +98,14 @@ public class OctopusPersistenceRepository {
         return new OctopusPersistenceResult(total.inserted(), total.updated(), 0);
     }
 
+    /**
+     * Mark completed.
+     *
+     * @param connection input connection
+     * @param statement input statement
+     * @param runId requested run id
+     * @throws SQLException if mark completed fails
+     */
     private static void markCompleted(
             Connection connection,
             ExtractedOctopusStatement statement,

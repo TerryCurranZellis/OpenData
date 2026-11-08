@@ -26,7 +26,7 @@ import java.util.UUID;
  * @version 2.0.0
  * @since 2.0.0
  */
-public final class OpenMeteoRepository {
+public class OpenMeteoRepository {
 
     private static final String STAGE_TABLE = "#OpenMeteoDaily";
 
@@ -38,7 +38,7 @@ public final class OpenMeteoRepository {
      * @param database database resource manager
      * @since 2.0.0
      */
-    public OpenMeteoRepository(final DatabaseResourceManager database) {
+    public OpenMeteoRepository(DatabaseResourceManager database) {
         transactions = new JdbcTransactionTemplate(
                 Objects.requireNonNull(database, "database"));
     }
@@ -53,9 +53,9 @@ public final class OpenMeteoRepository {
      * @since 2.0.0
      */
     public OpenMeteoPersistenceResult save(
-            final OpenMeteoConfiguration configuration,
-            final List<DailyWeatherRecord> records,
-            final UUID runId) {
+            OpenMeteoConfiguration configuration,
+            List<DailyWeatherRecord> records,
+            UUID runId) {
         Objects.requireNonNull(configuration, "configuration");
         Objects.requireNonNull(records, "records");
         Objects.requireNonNull(runId, "runId");
@@ -69,18 +69,28 @@ public final class OpenMeteoRepository {
                 OpenMeteoRepository::resetPooledSession);
     }
 
+    /**
+     * Save.
+     *
+     * @param connection input connection
+     * @param configuration input configuration
+     * @param records input records
+     * @param runId requested run id
+     * @return result of save
+     * @throws SQLException if save fails
+     */
     private static OpenMeteoPersistenceResult save(
-            final Connection connection,
-            final OpenMeteoConfiguration configuration,
-            final List<DailyWeatherRecord> records,
-            final UUID runId) throws SQLException {
+            Connection connection,
+            OpenMeteoConfiguration configuration,
+            List<DailyWeatherRecord> records,
+            UUID runId) throws SQLException {
         execute(connection, "DROP TABLE IF EXISTS " + STAGE_TABLE);
         execute(connection, "SET XACT_ABORT ON");
         acquireApplicationLock(connection, configuration);
 
-        final var locationId = upsertLocation(connection, configuration);
+        var locationId = upsertLocation(connection, configuration);
         createStageTable(connection);
-        final var staged = stage(
+        var staged = stage(
                 connection,
                 records,
                 configuration.databaseBatchSize());
@@ -90,17 +100,17 @@ public final class OpenMeteoRepository {
                             + " rows for " + records.size() + " records.");
         }
 
-        final long updated = updateExisting(
+        var updated = updateExisting(
                 connection,
                 configuration,
                 locationId,
                 runId);
-        final var inserted = insertMissing(
+        var inserted = insertMissing(
                 connection,
                 configuration,
                 locationId,
                 runId);
-        final var skipped = records.size() - inserted - updated;
+        var skipped = records.size() - inserted - updated;
 
         return new OpenMeteoPersistenceResult(
                 inserted,
@@ -108,10 +118,17 @@ public final class OpenMeteoRepository {
                 Math.max(0, skipped));
     }
 
+    /**
+     * Acquire application lock.
+     *
+     * @param connection input connection
+     * @param configuration input configuration
+     * @throws SQLException if acquire application lock fails
+     */
     private static void acquireApplicationLock(
-            final Connection connection,
-            final OpenMeteoConfiguration configuration) throws SQLException {
-        final var sql = """
+            Connection connection,
+            OpenMeteoConfiguration configuration) throws SQLException {
+        var sql = """
                 DECLARE @result int;
                 EXEC @result = sys.sp_getapplock
                     @Resource = ?,
@@ -135,13 +152,21 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Upsert location.
+     *
+     * @param connection input connection
+     * @param configuration input configuration
+     * @return result of upsert location
+     * @throws SQLException if upsert location fails
+     */
     private static long upsertLocation(
-            final Connection connection,
-            final OpenMeteoConfiguration configuration) throws SQLException {
-        final var table = SqlIdentifiers.qualify(
+            Connection connection,
+            OpenMeteoConfiguration configuration) throws SQLException {
+        var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.locationTable());
-        final var update = (
+        var update = (
                 "UPDATE %s WITH (UPDLOCK, HOLDLOCK) "
                         + "SET [LocationName] = ?, [Latitude] = ?, [Longitude] = ?, "
                         + "[TimeZone] = ?, [UpdatedAt] = SYSUTCDATETIME() "
@@ -158,7 +183,7 @@ public final class OpenMeteoRepository {
             }
         }
 
-        final var select = "SELECT [LocationId] FROM %s WITH "
+        var select = "SELECT [LocationId] FROM %s WITH "
                 + "(UPDLOCK, HOLDLOCK) WHERE [LocationKey] = ?";
         try (var statement = connection.prepareStatement(select.formatted(table))) {
             statement.setString(1, configuration.locationKey());
@@ -172,11 +197,19 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Insert location.
+     *
+     * @param connection input connection
+     * @param configuration input configuration
+     * @param table input table
+     * @throws SQLException if insert location fails
+     */
     private static void insertLocation(
-            final Connection connection,
-            final OpenMeteoConfiguration configuration,
-            final String table) throws SQLException {
-        final var insert = (
+            Connection connection,
+            OpenMeteoConfiguration configuration,
+            String table) throws SQLException {
+        var insert = (
                 "INSERT INTO %s "
                         + "([LocationKey], [LocationName], [Latitude], [Longitude], [TimeZone]) "
                         + "VALUES (?, ?, ?, ?, ?)")
@@ -191,7 +224,13 @@ public final class OpenMeteoRepository {
         }
     }
 
-    private static void createStageTable(final Connection connection) throws SQLException {
+    /**
+     * Creates stage table.
+     *
+     * @param connection input connection
+     * @throws SQLException if create stage table fails
+     */
+    private static void createStageTable(Connection connection) throws SQLException {
         execute(connection, """
                 CREATE TABLE #OpenMeteoDaily (
                     [ObservationDate] date NOT NULL PRIMARY KEY,
@@ -207,11 +246,20 @@ public final class OpenMeteoRepository {
                 """);
     }
 
+    /**
+     * Stage.
+     *
+     * @param connection input connection
+     * @param records input records
+     * @param batchSize input batch size
+     * @return result of stage
+     * @throws SQLException if stage fails
+     */
     private static int stage(
-            final Connection connection,
-            final List<DailyWeatherRecord> records,
-            final int batchSize) throws SQLException {
-        final var sql = """
+            Connection connection,
+            List<DailyWeatherRecord> records,
+            int batchSize) throws SQLException {
+        var sql = """
                 INSERT INTO #OpenMeteoDaily
                     ([ObservationDate], [MinimumTemperatureC], [MaximumTemperatureC],
                      [MeanTemperatureC], [Sunrise], [Sunset], [DaylightMinutes],
@@ -236,15 +284,25 @@ public final class OpenMeteoRepository {
                 });
     }
 
+    /**
+     * Updates existing.
+     *
+     * @param connection input connection
+     * @param configuration input configuration
+     * @param locationId requested location id
+     * @param runId requested run id
+     * @return result of update existing
+     * @throws SQLException if update existing fails
+     */
     private static long updateExisting(
-            final Connection connection,
-            final OpenMeteoConfiguration configuration,
-            final long locationId,
-            final UUID runId) throws SQLException {
-        final var table = SqlIdentifiers.qualify(
+            Connection connection,
+            OpenMeteoConfiguration configuration,
+            long locationId,
+            UUID runId) throws SQLException {
+        var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.dailyTable());
-        final var sql = (
+        var sql = (
                 "UPDATE target WITH (UPDLOCK, HOLDLOCK) "
                         + "SET [MinimumTemperatureC] = source.[MinimumTemperatureC], "
                         + "[MaximumTemperatureC] = source.[MaximumTemperatureC], "
@@ -276,15 +334,25 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Insert missing.
+     *
+     * @param connection input connection
+     * @param configuration input configuration
+     * @param locationId requested location id
+     * @param runId requested run id
+     * @return result of insert missing
+     * @throws SQLException if insert missing fails
+     */
     private static long insertMissing(
-            final Connection connection,
-            final OpenMeteoConfiguration configuration,
-            final long locationId,
-            final UUID runId) throws SQLException {
-        final var table = SqlIdentifiers.qualify(
+            Connection connection,
+            OpenMeteoConfiguration configuration,
+            long locationId,
+            UUID runId) throws SQLException {
+        var table = SqlIdentifiers.qualify(
                 configuration.targetSchema(),
                 configuration.dailyTable());
-        final var sql = (
+        var sql = (
                 "INSERT INTO %s "
                         + "([LocationId], [ObservationDate], [MinimumTemperatureC], "
                         + "[MaximumTemperatureC], [MeanTemperatureC], [Sunrise], [Sunset], "
@@ -307,15 +375,28 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Execute.
+     *
+     * @param connection input connection
+     * @param sql input sql
+     * @throws SQLException if execute fails
+     */
     private static void execute(
-            final Connection connection,
-            final String sql) throws SQLException {
+            Connection connection,
+            String sql) throws SQLException {
         try (var statement = connection.createStatement()) {
             statement.execute(sql);
         }
     }
 
-    private static void resetPooledSession(final Connection connection)
+    /**
+     * Reset pooled session.
+     *
+     * @param connection input connection
+     * @throws SQLException if reset pooled session fails
+     */
+    private static void resetPooledSession(Connection connection)
             throws SQLException {
         SQLException failure = null;
         try {
@@ -340,9 +421,16 @@ public final class OpenMeteoRepository {
         }
     }
 
+    /**
+     * Combine.
+     *
+     * @param existing input existing
+     * @param additional input additional
+     * @return result of combine
+     */
     private static SQLException combine(
-            final SQLException existing,
-            final SQLException additional) {
+            SQLException existing,
+            SQLException additional) {
         if (existing == null) {
             return additional;
         }

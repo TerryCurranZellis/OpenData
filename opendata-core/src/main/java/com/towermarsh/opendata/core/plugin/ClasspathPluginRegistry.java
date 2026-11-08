@@ -57,6 +57,11 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         this.plugins = loadPlugins(classLoader);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of list
+     */
     @Override
     public List<PluginDescriptor> list() {
         return plugins.values().stream()
@@ -64,11 +69,23 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param pluginId requested plugin id
+     * @return result of find
+     */
     @Override
     public Optional<PluginDescriptor> find(final String pluginId) {
         return Optional.ofNullable(plugins.get(normaliseId(pluginId)));
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param pluginId requested plugin id
+     * @return result of require enabled
+     */
     @Override
     public PluginDescriptor requireEnabled(final String pluginId) {
         final var descriptor = find(pluginId)
@@ -83,6 +100,12 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         return descriptor;
     }
 
+    /**
+     * Returns load plugins.
+     *
+     * @param classLoader input class loader
+     * @return result of load plugins
+     */
     private static Map<String, PluginDescriptor> loadPlugins(
             final ClassLoader classLoader) {
         final Map<String, PluginDescriptor> result = new LinkedHashMap<>();
@@ -98,6 +121,14 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         return Map.copyOf(result);
     }
 
+    /**
+     * Add descriptor.
+     *
+     * @param classLoader input class loader
+     * @param result input result
+     * @param id requested id
+     * @param indexResource input index resource
+     */
     private static void addDescriptor(
             final ClassLoader classLoader,
             final Map<String, PluginDescriptor> result,
@@ -117,6 +148,12 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Returns load required indexes.
+     *
+     * @param classLoader input class loader
+     * @return result of load required indexes
+     */
     private static Map<String, Properties> loadRequiredIndexes(final ClassLoader classLoader) {
         final Map<String, Properties> indexes = new LinkedHashMap<>();
         final Enumeration<java.net.URL> resources;
@@ -142,6 +179,14 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         return Map.copyOf(indexes);
     }
 
+    /**
+     * Returns read descriptor.
+     *
+     * @param indexedId requested indexed id
+     * @param properties input properties
+     * @param resource input resource
+     * @return result of read descriptor
+     */
     private static PluginDescriptor readDescriptor(
             final String indexedId,
             final Properties properties,
@@ -167,6 +212,13 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
                         1));
     }
 
+    /**
+     * Returns load required properties.
+     *
+     * @param classLoader input class loader
+     * @param resourceName requested resource name
+     * @return result of load required properties
+     */
     private static Properties loadRequiredProperties(
             final ClassLoader classLoader,
             final String resourceName) {
@@ -189,6 +241,14 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Returns load required properties.
+     *
+     * @param classLoader input class loader
+     * @param resourceName requested resource name
+     * @param resource input resource
+     * @return result of load required properties
+     */
     private static Properties loadRequiredProperties(
             final ClassLoader classLoader,
             final String resourceName,
@@ -207,6 +267,13 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Required.
+     *
+     * @param properties input properties
+     * @param key input key
+     * @return result of required
+     */
     private static String required(
             final Properties properties,
             final String key) {
@@ -218,6 +285,14 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
                 "Required registry property is missing: " + key));
     }
 
+    /**
+     * Boolean value.
+     *
+     * @param properties input properties
+     * @param key input key
+     * @param defaultValue value of default value
+     * @return result of boolean value
+     */
     private static boolean booleanValue(
             final Properties properties,
             final String key,
@@ -240,6 +315,14 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         };
     }
 
+    /**
+     * Integer value.
+     *
+     * @param properties input properties
+     * @param key input key
+     * @param defaultValue value of default value
+     * @return result of integer value
+     */
     private static int integerValue(
             final Properties properties,
             final String key,
@@ -260,6 +343,12 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Normalise id.
+     *
+     * @param pluginId requested plugin id
+     * @return result of normalise id
+     */
     private static String normaliseId(final String pluginId) {
         Objects.requireNonNull(pluginId, "pluginId");
         final var result

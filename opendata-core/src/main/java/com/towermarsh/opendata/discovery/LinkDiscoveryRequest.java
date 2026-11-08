@@ -53,16 +53,31 @@ public record LinkDiscoveryRequest(
         excludedTerms = DiscoveryTextNormalizer.normalizeTerms(excludedTerms);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of allowed extensions
+     */
     @Override
     public Set<String> allowedExtensions() {
         return Set.copyOf(allowedExtensions);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of required terms
+     */
     @Override
     public List<String> requiredTerms() {
         return List.copyOf(requiredTerms);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of excluded terms
+     */
     @Override
     public List<String> excludedTerms() {
         return List.copyOf(excludedTerms);

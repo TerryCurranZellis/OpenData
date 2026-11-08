@@ -35,11 +35,21 @@ public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
         this.scriptResource = Objects.requireNonNull(scriptResource, "scriptResource");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of plugin id
+     */
     @Override
     public String pluginId() {
         return pluginId;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param database input database
+     */
     @Override
     public void register(DatabaseResourceManager database) {
         LOGGER.info(() -> "Creating database objects for plugin %s from %s".formatted(pluginId, scriptResource));

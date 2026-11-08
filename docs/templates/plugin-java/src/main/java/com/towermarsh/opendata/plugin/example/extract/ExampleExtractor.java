@@ -20,6 +20,12 @@ public final class ExampleExtractor {
                 downloader, "downloader");
     }
 
+    /**
+     * Extract.
+     *
+     * @return result of extract
+     * @throws DownloadException if extract fails
+     */
     public DataFile extract() throws DownloadException {
         return downloader.download();
     }

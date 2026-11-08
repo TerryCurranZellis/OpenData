@@ -74,11 +74,22 @@ public final class JdbcConfigurationPropertiesSource
         this.database = Objects.requireNonNull(database, "database");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of load application properties
+     */
     @Override
     public Map<String, String> loadApplicationProperties() {
         return readApplicationProperties();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param pluginId requested plugin id
+     * @return result of load plugin properties
+     */
     @Override
     public Map<String, String> loadPluginProperties(final String pluginId) {
         final var properties = readPluginProperties(pluginId);

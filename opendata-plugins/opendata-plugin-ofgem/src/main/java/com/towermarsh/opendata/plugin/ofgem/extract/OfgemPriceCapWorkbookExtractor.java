@@ -124,6 +124,17 @@ public final class OfgemPriceCapWorkbookExtractor {
         }
     }
 
+    /**
+     * Extract section.
+     *
+     * @param sheet input sheet
+     * @param firstDataRow input first data row
+     * @param paymentMethodCode input payment method code
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @param destination input destination
+     * @throws ImportException if extract section fails
+     */
     private static void extractSection(
             Sheet sheet,
             int firstDataRow,
@@ -162,6 +173,15 @@ public final class OfgemPriceCapWorkbookExtractor {
         }
     }
 
+    /**
+     * Returns find period name.
+     *
+     * @param sheet input sheet
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @return result of find period name
+     * @throws ImportException if find period name fails
+     */
     private static String findPeriodName(
             Sheet sheet,
             DataFormatter formatter,
@@ -178,6 +198,14 @@ public final class OfgemPriceCapWorkbookExtractor {
         return periodName;
     }
 
+    /**
+     * Parses or formats period.
+     *
+     * @param periodName requested period name
+     * @param sourceColumnReference input source column reference
+     * @return result of parse period
+     * @throws ImportException if parse period fails
+     */
     private static OfgemPriceCapPeriod parsePeriod(
             String periodName,
             Integer sourceColumnReference) throws ImportException {
@@ -197,6 +225,15 @@ public final class OfgemPriceCapWorkbookExtractor {
         }
     }
 
+    /**
+     * Returns find source column reference.
+     *
+     * @param sheet input sheet
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @return result of find source column reference
+     * @throws ImportException if find source column reference fails
+     */
     private static Integer findSourceColumnReference(
             Sheet sheet,
             DataFormatter formatter,
@@ -230,6 +267,17 @@ public final class OfgemPriceCapWorkbookExtractor {
         return null;
     }
 
+    /**
+     * Returns find following row.
+     *
+     * @param sheet input sheet
+     * @param afterRow input after row
+     * @param expectedText input expected text
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @return result of find following row
+     * @throws ImportException if find following row fails
+     */
     private static int findFollowingRow(
             Sheet sheet,
             int afterRow,
@@ -246,6 +294,16 @@ public final class OfgemPriceCapWorkbookExtractor {
                 "Unable to locate '" + expectedText + "' after row " + (afterRow + 1));
     }
 
+    /**
+     * Returns find row.
+     *
+     * @param sheet input sheet
+     * @param expectedText input expected text
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @return result of find row
+     * @throws ImportException if find row fails
+     */
     private static int findRow(
             Sheet sheet,
             String expectedText,
@@ -260,6 +318,15 @@ public final class OfgemPriceCapWorkbookExtractor {
         throw new ImportException("Unable to locate Ofgem label: " + expectedText);
     }
 
+    /**
+     * Value.
+     *
+     * @param row input row
+     * @param columnIndex input column index
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @return result of value
+     */
     private static String value(
             Row row,
             int columnIndex,
@@ -268,6 +335,14 @@ public final class OfgemPriceCapWorkbookExtractor {
         return format(row == null ? null : row.getCell(columnIndex), formatter, evaluator);
     }
 
+    /**
+     * Format.
+     *
+     * @param cell input cell
+     * @param formatter input formatter
+     * @param evaluator input evaluator
+     * @return result of format
+     */
     private static String format(
             Cell cell,
             DataFormatter formatter,
@@ -275,6 +350,14 @@ public final class OfgemPriceCapWorkbookExtractor {
         return cell == null ? "" : formatter.formatCellValue(cell, evaluator);
     }
 
+    /**
+     * Parses or formats amount.
+     *
+     * @param formatted input formatted
+     * @param cell input cell
+     * @return result of parse amount
+     * @throws ImportException if parse amount fails
+     */
     private static BigDecimal parseAmount(String formatted, Cell cell)
             throws ImportException {
         String normalised = formatted
@@ -293,6 +376,13 @@ public final class OfgemPriceCapWorkbookExtractor {
         }
     }
 
+    /**
+     * Region code.
+     *
+     * @param displayName requested display name
+     * @return result of region code
+     * @throws ImportException if region code fails
+     */
     private static String regionCode(String displayName) throws ImportException {
         String normalised = displayName.trim().toLowerCase(Locale.ROOT);
         if (normalised.startsWith("gb average")) {
@@ -318,6 +408,11 @@ public final class OfgemPriceCapWorkbookExtractor {
         };
     }
 
+    /**
+     * Payment methods.
+     *
+     * @return result of payment methods
+     */
     private static Map<String, String> paymentMethods() {
         Map<String, String> result = new LinkedHashMap<>();
         result.put("Other Payment Method", "OTHER");
@@ -326,6 +421,13 @@ public final class OfgemPriceCapWorkbookExtractor {
         return Map.copyOf(result);
     }
 
+    /**
+     * Creates a column meaning instance.
+     *
+     * @param columnIndex input column index
+     * @param tariffTypeCode input tariff type code
+     * @param consumptionBasisCode input consumption basis code
+     */
     private record ColumnMeaning(
             int columnIndex,
             String tariffTypeCode,

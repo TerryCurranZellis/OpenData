@@ -14,6 +14,13 @@ import java.util.Objects;
 /** Applies dry-run policy and delegates write mode to the repository loader. */
 public final class ExampleLoad {
 
+    /**
+     * Load.
+     *
+     * @param records input records
+     * @param context input context
+     * @return result of load
+     */
     public PluginMetrics load(
             final List<ExampleRecord> records,
             final PluginExecutionContext context) {

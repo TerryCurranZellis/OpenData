@@ -109,6 +109,11 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         this.database = Objects.requireNonNull(database, "database");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return result of list
+     */
     @Override
     public List<PluginDescriptor> list() {
         try (var connection = database.getConnection();
@@ -124,6 +129,12 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param pluginId requested plugin id
+     * @return result of find
+     */
     @Override
     public Optional<PluginDescriptor> find(final String pluginId) {
         final var id = normaliseId(pluginId);
@@ -140,6 +151,12 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param pluginId requested plugin id
+     * @return result of require enabled
+     */
     @Override
     public PluginDescriptor requireEnabled(final String pluginId) {
         final var descriptor = find(pluginId)
@@ -240,6 +257,13 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Returns read descriptor.
+     *
+     * @param resultSet input result set
+     * @return result of read descriptor
+     * @throws SQLException if read descriptor fails
+     */
     private static PluginDescriptor readDescriptor(final java.sql.ResultSet resultSet)
             throws SQLException {
         return new PluginDescriptor(
@@ -251,6 +275,14 @@ public final class JdbcPluginRegistry implements PluginRegistry {
                 resultSet.getInt("configuration_version"));
     }
 
+    /**
+     * Returns read enabled.
+     *
+     * @param connection input connection
+     * @param pluginId requested plugin id
+     * @return result of read enabled
+     * @throws SQLException if read enabled fails
+     */
     private static boolean readEnabled(
             final Connection connection,
             final String pluginId) throws SQLException {
@@ -266,6 +298,15 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Upsert enabled property.
+     *
+     * @param connection input connection
+     * @param pluginId requested plugin id
+     * @param enabled input enabled
+     * @param updatedAt input updated at
+     * @throws SQLException if upsert enabled property fails
+     */
     private static void upsertEnabledProperty(
             final Connection connection,
             final String pluginId,
@@ -279,6 +320,13 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Upsert descriptor.
+     *
+     * @param connection input connection
+     * @param descriptor input descriptor
+     * @throws SQLException if upsert descriptor fails
+     */
     private static void upsertDescriptor(
             final Connection connection,
             final PluginDescriptor descriptor) throws SQLException {
@@ -295,6 +343,14 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Replace properties.
+     *
+     * @param connection input connection
+     * @param pluginId requested plugin id
+     * @param properties input properties
+     * @throws SQLException if replace properties fails
+     */
     private static void replaceProperties(
             final Connection connection,
             final String pluginId,
@@ -316,6 +372,13 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * In transaction.
+     *
+     * @param connection input connection
+     * @param work input work
+     * @throws SQLException if in transaction fails
+     */
     private static void inTransaction(
             final Connection connection,
             final SqlWork work) throws SQLException {
@@ -336,6 +399,12 @@ public final class JdbcPluginRegistry implements PluginRegistry {
         }
     }
 
+    /**
+     * Normalise id.
+     *
+     * @param pluginId requested plugin id
+     * @return result of normalise id
+     */
     private static String normaliseId(final String pluginId) {
         final var result = Objects.requireNonNull(pluginId, "pluginId")
                 .trim().toLowerCase(Locale.ROOT);

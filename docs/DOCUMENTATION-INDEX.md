@@ -13,6 +13,13 @@
 - [Release process](release/Release-Process.md)
 - [Current release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md)
 
+## OpenData 4.0.0 — initialisation
+
+- [First-run GUI wizard and recovery](guides/first-run-initialisation.md)
+- [First-run architecture and failure boundaries](architecture/030-first-run-initialisation.md)
+- [ADR-0063: Configured GUI initialization](decisions/ADR-0063-first-run-gui-initialisation.md)
+- [Version 4.0.0 release status and test plan](release/Release-4.0.0.md)
+
 ## Generated manuals
 
 | Manifest | Audience |

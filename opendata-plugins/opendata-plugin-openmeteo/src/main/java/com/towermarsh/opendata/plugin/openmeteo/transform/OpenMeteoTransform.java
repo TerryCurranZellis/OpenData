@@ -1,4 +1,7 @@
-/* Copyright © 2026 Terry Curran; SPDX-License-Identifier: Apache-2.0 */
+/* 
+ * Copyright © 2026 Terry Curran
+ * SPDX-License-Identifier: Apache-2.0 
+ */
 package com.towermarsh.opendata.plugin.openmeteo.transform;
 
 import com.towermarsh.opendata.plugin.openmeteo.initialise.OpenMeteoConfiguration;
@@ -7,8 +10,11 @@ import com.towermarsh.opendata.plugin.openmeteo.transform.validate.OpenMeteoResp
 import java.util.List;
 import java.util.Objects;
 
-/** Converts downloaded Open-Meteo JSON into validated database records. */
-public final class OpenMeteoTransform {
+/**
+ * Converts downloaded Open-Meteo JSON into validated database records.
+ */
+public class OpenMeteoTransform {
+
     private final OpenMeteoConfiguration configuration;
     private final OpenMeteoResponseExtractor extractor = new OpenMeteoResponseExtractor();
     private final OpenMeteoResponseValidator validator = new OpenMeteoResponseValidator();
@@ -18,7 +24,7 @@ public final class OpenMeteoTransform {
      *
      * @param configuration
      */
-    public OpenMeteoTransform(final OpenMeteoConfiguration configuration) {
+    public OpenMeteoTransform(OpenMeteoConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
     }
 
@@ -27,7 +33,7 @@ public final class OpenMeteoTransform {
      * @param downloadedData
      * @return
      */
-    public List<DailyWeatherRecord> transform(final String downloadedData) {
+    public List<DailyWeatherRecord> transform(String downloadedData) {
         return transformer.transform(validator.validate(extractor.extract(downloadedData)), configuration);
     }
 }

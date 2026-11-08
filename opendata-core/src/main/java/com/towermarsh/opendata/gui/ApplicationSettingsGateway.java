@@ -54,6 +54,13 @@ public final class ApplicationSettingsGateway {
                         new ClasspathConfigurationPropertiesSource(), Map.of()));
     }
 
+    /**
+     * Entries.
+     *
+     * @param databaseBacked input database backed
+     * @param runtime input runtime
+     * @return result of entries
+     */
     private static List<ConfigurationDisplayEntry> entries(
             final boolean databaseBacked,
             final ApplicationRuntimeConfiguration runtime) {

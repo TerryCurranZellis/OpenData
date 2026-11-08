@@ -224,6 +224,12 @@ public class PluginPropertyValues {
         return parseValue(name, value, parser, expectedDescription);
     }
 
+    /**
+     * Raw.
+     *
+     * @param name requested name
+     * @return result of raw
+     */
     private Optional<String> raw(String name) {
         ValidationRules.requireText(name, "property name");
         return definition.findProperty(name)
@@ -232,6 +238,15 @@ public class PluginPropertyValues {
                 .filter(value -> !value.isEmpty());
     }
 
+    /**
+     * Parses or formats value.
+     *
+     * @param name requested name
+     * @param value value of value
+     * @param parser input parser
+     * @param expectedDescription input expected description
+     * @return result of parse value
+     */
     private <T> T parseValue(
             String name,
             String value,
@@ -248,11 +263,25 @@ public class PluginPropertyValues {
         }
     }
 
+    /**
+     * Missing.
+     *
+     * @param name requested name
+     * @return result of missing
+     */
     private IllegalArgumentException missing(String name) {
         return new IllegalArgumentException(
                 "Plugin '" + definition.id() + "' requires property '" + name + "'.");
     }
 
+    /**
+     * Invalid.
+     *
+     * @param name requested name
+     * @param expectedDescription input expected description
+     * @param cause input cause
+     * @return result of invalid
+     */
     private IllegalArgumentException invalid(
             String name,
             String expectedDescription,
@@ -263,6 +292,12 @@ public class PluginPropertyValues {
                 cause);
     }
 
+    /**
+     * Parses or formats boolean.
+     *
+     * @param value value of value
+     * @return result of parse boolean
+     */
     private static boolean parseBoolean(String value) {
         return switch (value.toLowerCase(Locale.ROOT)) {
             case "true", "yes", "1", "on" -> true;

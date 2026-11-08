@@ -31,6 +31,12 @@ public final class TransformService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Clean record.
+     *
+     * @param record input record
+     * @return result of clean record
+     */
     private Map<String, String> cleanRecord(
             Map<String, String> record) {
 

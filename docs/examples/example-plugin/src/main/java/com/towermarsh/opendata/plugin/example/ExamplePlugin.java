@@ -41,6 +41,13 @@ public final class ExamplePlugin implements OpenDataPlugin {
                 transformer, "transformer");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param context input context
+     * @return result of execute
+     * @throws Exception if execute fails
+     */
     @Override
     public PluginMetrics execute(final PluginExecutionContext context)
             throws Exception {

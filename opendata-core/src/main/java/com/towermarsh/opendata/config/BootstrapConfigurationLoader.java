@@ -19,8 +19,12 @@ import com.towermarsh.opendata.core.config.model.BootstrapConfig;
  * Loads application bootstrap configuration from the classpath.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @deprecated Since 4.0.0, use {@link ApplicationBootstrapPropertiesLoader}
+ * for the first-run flag and SQL Server bootstrap settings. This Phase-1
+ * classpath-only loader is retained temporarily for compatibility.
+ * @version 4.0.0
  */
+@Deprecated(since = "4.0.0", forRemoval = false)
 public final class BootstrapConfigurationLoader {
 
     /**

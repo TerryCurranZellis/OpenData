@@ -64,6 +64,15 @@ public class OctopusAdjustmentPersistenceRepository {
                 connection -> persistBatch(connection, batch, runId));
     }
 
+    /**
+     * Persist batch.
+     *
+     * @param connection input connection
+     * @param batch input batch
+     * @param runId requested run id
+     * @return result of persist batch
+     * @throws SQLException if persist batch fails
+     */
     private static OctopusAdjustmentPersistenceResult persistBatch(
             Connection connection,
             OctopusAdjustmentParseResult batch,
@@ -90,6 +99,14 @@ public class OctopusAdjustmentPersistenceRepository {
                 0);
     }
 
+    /**
+     * Mark completed.
+     *
+     * @param connection input connection
+     * @param source input source
+     * @param runId requested run id
+     * @throws SQLException if mark completed fails
+     */
     private static void markCompleted(
             Connection connection,
             ExtractedOctopusAdjustment source,

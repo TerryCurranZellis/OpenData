@@ -66,6 +66,12 @@ public final class PluginSelectionSupport {
         snapshot(rows).forEach(row -> row.setSelected(selected));
     }
 
+    /**
+     * Snapshot.
+     *
+     * @param rows input rows
+     * @return result of snapshot
+     */
     private static List<PluginRow> snapshot(final List<PluginRow> rows) {
         return List.copyOf(Objects.requireNonNull(rows, "rows"));
     }

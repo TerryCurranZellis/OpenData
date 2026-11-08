@@ -72,6 +72,15 @@ public class JdbcTransactionTemplate {
         }
     }
 
+    /**
+     * Execute.
+     *
+     * @param connection input connection
+     * @param transaction input transaction
+     * @param cleanup input cleanup
+     * @return result of execute
+     * @throws Exception if execute fails
+     */
     @SuppressWarnings("ThrowFromFinallyBlock")
     private static <T> T execute(
             Connection connection,
@@ -99,6 +108,12 @@ public class JdbcTransactionTemplate {
         }
     }
 
+    /**
+     * Rollback.
+     *
+     * @param connection input connection
+     * @param originalFailure input original failure
+     */
     private static void rollback(
             Connection connection,
             Exception originalFailure) {
@@ -109,6 +124,14 @@ public class JdbcTransactionTemplate {
         }
     }
 
+    /**
+     * Cleanup.
+     *
+     * @param connection input connection
+     * @param cleanup input cleanup
+     * @param originalAutoCommit input original auto commit
+     * @return result of cleanup
+     */
     private static SQLException cleanup(
             Connection connection,
             JdbcConnectionCleanup cleanup,
@@ -136,6 +159,13 @@ public class JdbcTransactionTemplate {
         private Validation() {
         }
 
+        /**
+         * Validates arguments.
+         *
+         * @param failureMessage input failure message
+         * @param transaction input transaction
+         * @param cleanup input cleanup
+         */
         private static void requireArguments(
                 String failureMessage,
                 JdbcTransaction<?> transaction,

@@ -1,5 +1,12 @@
 # Configuration Architecture
 
+> **OpenData 4.0.0:** This document contains legacy version 3 examples.
+> For the current first-run workflow, read
+> [First-run configuration wizard](../guides/first-run-initialisation.md)
+> and [First-run architecture](../architecture/030-first-run-initialisation.md).
+> With `init=true`, the GUI wizard runs before CLI commands.
+
+
 **Document ID:** ARCH-011  
 **Version:** 3.0.0  
 **Status:** Persistent registry and database-backed registration implemented  
