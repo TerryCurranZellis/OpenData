@@ -30,8 +30,9 @@ import javafx.stage.Window;
 /**
  * Custom JavaFX information dialogs used by the OpenData desktop interface.
  *
- * <p>The dialogs are deliberately read-only. Configuration loading, file I/O
- * and database access happen outside this class on controller-owned JavaFX
+ * <p>
+ * The dialogs are deliberately read-only. Configuration loading, file I/O and
+ * database access happen outside this class on controller-owned JavaFX
  * tasks.</p>
  *
  * @author Terry Curran
@@ -56,29 +57,30 @@ final class OpenDataInformationDialogs {
      * @param entries input entries
      */
     static void showProperties(
-            final Window owner,
-            final String title,
-            final String header,
-            final List<ConfigurationDisplayEntry> entries) {
+            Window owner,
+            String title,
+            String header,
+            List<ConfigurationDisplayEntry> entries) {
         Objects.requireNonNull(entries, "entries");
-        final var dialog = createDialog(owner, title, ButtonType.OK);
+        var dialog = createDialog(owner, title, ButtonType.OK);
         dialog.setHeaderText(header);
 
-        final var table = new TableView<ConfigurationDisplayEntry>();
+        var table = new TableView<ConfigurationDisplayEntry>();
         table.setEditable(false);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         table.setPrefSize(920, 560);
         table.setPlaceholder(new Label("No values are available."));
 
-        final var propertyColumn = new TableColumn<ConfigurationDisplayEntry, String>("Property");
-        propertyColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(data.getValue().property()));
+        var propertyColumn = new TableColumn<ConfigurationDisplayEntry, String>("Property");
+        propertyColumn.setCellValueFactory(data
+                -> new ReadOnlyStringWrapper(data.getValue().property()));
         propertyColumn.setPrefWidth(300);
         propertyColumn.setMinWidth(190);
 
-        final var valueColumn = new TableColumn<ConfigurationDisplayEntry, String>("Value");
-        valueColumn.setCellValueFactory(data ->
-                new ReadOnlyStringWrapper(data.getValue().value()));
+        var valueColumn = new TableColumn<ConfigurationDisplayEntry, String>("Value");
+        valueColumn.setCellValueFactory(data
+                -> new ReadOnlyStringWrapper(data.getValue().value()));
         valueColumn.setPrefWidth(600);
         valueColumn.setCellFactory(column -> wrappingCell(column));
 
@@ -95,7 +97,7 @@ final class OpenDataInformationDialogs {
      * @param owner input owner
      * @param snapshot input snapshot
      */
-    static void showLog(final Window owner, final LogSnapshot snapshot) {
+    static void showLog(Window owner, LogSnapshot snapshot) {
         Objects.requireNonNull(snapshot, "snapshot");
         showText(
                 owner,
@@ -111,7 +113,7 @@ final class OpenDataInformationDialogs {
      *
      * @param owner input owner
      */
-    static void showHelp(final Window owner) {
+    static void showHelp(Window owner) {
         showText(
                 owner,
                 "OpenData Help",
@@ -127,16 +129,16 @@ final class OpenDataInformationDialogs {
      * @param owner input owner
      * @param information input information
      */
-    static void showAbout(final Window owner, final ApplicationInfo information) {
+    static void showAbout(Window owner, ApplicationInfo information) {
         Objects.requireNonNull(information, "information");
-        final var dialog = createDialog(owner, "About OpenData", ButtonType.OK);
+        var dialog = createDialog(owner, "About OpenData", ButtonType.OK);
         dialog.setHeaderText(null);
 
-        final var content = new VBox(12);
+        var content = new VBox(12);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(8, 18, 12, 18));
 
-        final var image = loadSplashImage();
+        var image = loadSplashImage();
         if (image != null) {
             final var imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
@@ -146,14 +148,14 @@ final class OpenDataInformationDialogs {
             content.getChildren().add(imageView);
         }
 
-        final var product = new Label(
+        var product = new Label(
                 information.productName() + "  Version " + information.version());
         product.getStyleClass().add("about-product-title");
 
-        final var slogan = new Label(information.slogan());
+        var slogan = new Label(information.slogan());
         slogan.getStyleClass().add("about-slogan");
 
-        final var details = new TextArea(String.join(System.lineSeparator(),
+        var details = new TextArea(String.join(System.lineSeparator(),
                 information.description(),
                 "",
                 information.runtime() + "(c)" + information.licence(),
@@ -183,16 +185,16 @@ final class OpenDataInformationDialogs {
      * @param logStyle input log style
      */
     private static void showText(
-            final Window owner,
-            final String title,
-            final String header,
-            final String content,
-            final boolean wrapText,
-            final boolean logStyle) {
-        final var dialog = createDialog(owner, title, CLOSE);
+            Window owner,
+            String title,
+            String header,
+            String content,
+            boolean wrapText,
+            boolean logStyle) {
+        var dialog = createDialog(owner, title, CLOSE);
         dialog.setHeaderText(header);
 
-        final var textArea = new TextArea(Objects.requireNonNullElse(content, ""));
+        var textArea = new TextArea(Objects.requireNonNullElse(content, ""));
         textArea.setEditable(false);
         textArea.setWrapText(wrapText);
         textArea.setPrefColumnCount(110);
@@ -216,10 +218,10 @@ final class OpenDataInformationDialogs {
      * @return result of create dialog
      */
     private static Dialog<ButtonType> createDialog(
-            final Window owner,
-            final String title,
-            final ButtonType buttonType) {
-        final var dialog = new Dialog<ButtonType>();
+            Window owner,
+            String title,
+            ButtonType buttonType) {
+        var dialog = new Dialog<ButtonType>();
         dialog.setTitle(title);
         if (owner != null) {
             dialog.initOwner(owner);
@@ -229,7 +231,7 @@ final class OpenDataInformationDialogs {
         }
         dialog.setResizable(true);
         dialog.getDialogPane().getButtonTypes().add(buttonType);
-        final var stylesheet = OpenDataInformationDialogs.class.getResource(STYLESHEET);
+        var stylesheet = OpenDataInformationDialogs.class.getResource(STYLESHEET);
         if (stylesheet != null) {
             dialog.getDialogPane().getStylesheets().add(stylesheet.toExternalForm());
         }
@@ -243,9 +245,10 @@ final class OpenDataInformationDialogs {
      * @return result of wrapping cell
      */
     private static TableCell<ConfigurationDisplayEntry, String> wrappingCell(
-            final TableColumn<ConfigurationDisplayEntry, String> column) {
+            TableColumn<ConfigurationDisplayEntry, String> column) {
         return new TableCell<>() {
             private final Text text = new Text();
+
             {
                 text.wrappingWidthProperty().bind(column.widthProperty().subtract(18));
                 text.textProperty().bind(itemProperty());
@@ -258,7 +261,7 @@ final class OpenDataInformationDialogs {
              * @param empty input empty
              */
             @Override
-            protected void updateItem(final String item, final boolean empty) {
+            protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 setGraphic(empty || item == null ? null : text);
                 setText(null);

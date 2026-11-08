@@ -14,19 +14,45 @@
     <properties>
         <mockito.agent.argLine>-javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"</mockito.agent.argLine>
     </properties>
-
     <dependencies>
-        <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-api</artifactId></dependency>
-        <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-common</artifactId></dependency>
-        <dependency><groupId>org.apache.poi</groupId><artifactId>poi</artifactId></dependency>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.towermarsh</groupId>
+            <artifactId>opendata-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter-api</artifactId><scope>test</scope></dependency>
-        <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter-engine</artifactId><scope>test</scope></dependency>
-        <dependency><groupId>org.mockito</groupId><artifactId>mockito-core</artifactId><scope>test</scope></dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-to-jul</artifactId>
+            <version>2.26.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -37,6 +63,12 @@
                     <ignoredNonTestScopedDependencies>
                         <ignoredNonTestScopedDependency>org.apache.poi:poi-ooxml</ignoredNonTestScopedDependency>
                     </ignoredNonTestScopedDependencies>
+                    <usedDependencies>
+                        <usedDependency>
+                            org.apache.logging.log4j:log4j-to-jul
+                        </usedDependency>
+                    </usedDependencies>
+                    
                 </configuration>
             </plugin>
         </plugins>

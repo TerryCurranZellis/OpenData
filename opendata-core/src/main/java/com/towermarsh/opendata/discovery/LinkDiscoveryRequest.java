@@ -54,9 +54,9 @@ public record LinkDiscoveryRequest(
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the permitted filename extensions.
      *
-     * @return result of allowed extensions
+     * @return an immutable set of allowed filename extensions
      */
     @Override
     public Set<String> allowedExtensions() {
@@ -64,9 +64,9 @@ public record LinkDiscoveryRequest(
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the terms that must appear in link metadata.
      *
-     * @return result of required terms
+     * @return an immutable list of required search terms
      */
     @Override
     public List<String> requiredTerms() {
@@ -74,9 +74,9 @@ public record LinkDiscoveryRequest(
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the terms that must not appear in link metadata.
      *
-     * @return result of excluded terms
+     * @return an immutable list of excluded search terms
      */
     @Override
     public List<String> excludedTerms() {

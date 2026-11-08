@@ -37,7 +37,7 @@ class SqlServerIngestionAuditRepositoryTest {
 
     @Mock
     DatabaseConnectionManager manager;
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     Connection connection;
     @Mock
     PreparedStatement statement;
