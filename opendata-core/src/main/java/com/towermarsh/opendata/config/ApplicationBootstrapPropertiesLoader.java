@@ -6,6 +6,7 @@ package com.towermarsh.opendata.config;
 
 import com.towermarsh.opendata.app.ApplicationInfo;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
@@ -21,15 +22,18 @@ import java.util.Properties;
  * Reads bootstrap settings from a writable deployment file, with a packaged
  * resource used only as a fallback before the first installation.
  *
- * <p>The {@code init} switch is readable without a database or an AES key.
- * A successful wizard run is the only operation that changes it to false.</p>
+ * <p>
+ * The {@code init} switch is readable without a database or an AES key. A
+ * successful wizard run is the only operation that changes it to false.</p>
  *
  * @author Terry Curran
  * @version 4.0.0
  */
 public final class ApplicationBootstrapPropertiesLoader {
 
-    /** Default writable configuration file relative to the process directory. */
+    /**
+     * Default writable configuration file relative to the process directory.
+     */
     public static final Path DEFAULT_FILE = Path.of("config", "application.properties");
     private final Path filePath;
     private final ClassLoader classLoader;
@@ -40,7 +44,7 @@ public final class ApplicationBootstrapPropertiesLoader {
      *
      * @param passwordCipher password encryption implementation
      */
-    public ApplicationBootstrapPropertiesLoader(final ConfigurationPasswordCipher passwordCipher) {
+    public ApplicationBootstrapPropertiesLoader(ConfigurationPasswordCipher passwordCipher) {
         this(DEFAULT_FILE, Thread.currentThread().getContextClassLoader(), passwordCipher);
     }
 
@@ -52,15 +56,16 @@ public final class ApplicationBootstrapPropertiesLoader {
      * @param passwordCipher password cipher
      */
     public ApplicationBootstrapPropertiesLoader(
-            final Path filePath, final ClassLoader classLoader,
-            final ConfigurationPasswordCipher passwordCipher) {
+            Path filePath, ClassLoader classLoader,
+            ConfigurationPasswordCipher passwordCipher) {
         this.filePath = Objects.requireNonNull(filePath, "filePath");
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
         this.passwordCipher = Objects.requireNonNull(passwordCipher, "passwordCipher");
     }
 
     /**
-     * Checks the first-run switch without reading secrets or opening SQL Server.
+     * Checks the first-run switch without reading secrets or opening SQL
+     * Server.
      *
      * @return true exactly when {@code init=true} in the resolved properties
      */
@@ -83,14 +88,14 @@ public final class ApplicationBootstrapPropertiesLoader {
      * @param overrides optional property overrides
      * @return validated bootstrap settings with decrypted password
      */
-    public ApplicationBootstrapProperties load(final Map<String, String> overrides) {
-        final var values = new LinkedHashMap<>(readProperties());
+    public ApplicationBootstrapProperties load(Map<String, String> overrides) {
+        var values = new LinkedHashMap<>(readProperties());
         values.putAll(Objects.requireNonNull(overrides, "overrides"));
         if (Boolean.parseBoolean(values.getOrDefault("init", "false"))) {
             throw new OpenDataConfigurationException(
                     "Initialisation is required. Start the OpenData GUI to run the setup wizard.");
         }
-        final var properties = new ApplicationPropertyValues(values);
+        var properties = new ApplicationPropertyValues(values);
         return new ApplicationBootstrapProperties(
                 ApplicationInfo.current().version(),
                 properties.requiredText("database.url"),
@@ -106,7 +111,7 @@ public final class ApplicationBootstrapPropertiesLoader {
      *
      * @param bootstrapProperties plain-text bootstrap credentials
      */
-    public void store(final ApplicationBootstrapProperties bootstrapProperties) {
+    public void store(ApplicationBootstrapProperties bootstrapProperties) {
         storeInternal(bootstrapProperties, null);
     }
 
@@ -118,7 +123,7 @@ public final class ApplicationBootstrapPropertiesLoader {
      * @param keyFile absolute external AES key path
      */
     public void completeInitialisation(
-            final ApplicationBootstrapProperties bootstrapProperties, final Path keyFile) {
+            ApplicationBootstrapProperties bootstrapProperties, Path keyFile) {
         storeInternal(bootstrapProperties,
                 Objects.requireNonNull(keyFile, "keyFile").toAbsolutePath().normalize());
     }
@@ -130,20 +135,20 @@ public final class ApplicationBootstrapPropertiesLoader {
      * @param bootstrap plain-text credentials
      * @param keyFile key path for setup, or null to preserve existing setting
      */
-    private void storeInternal(final ApplicationBootstrapProperties bootstrap, final Path keyFile) {
+    private void storeInternal(ApplicationBootstrapProperties bootstrap, Path keyFile) {
         Objects.requireNonNull(bootstrap, "bootstrap");
-        final var values = new LinkedHashMap<>(readProperties());
+        var values = new LinkedHashMap<>(readProperties());
         values.putAll(bootstrap.toFileValues(passwordCipher.encrypt(bootstrap.databasePassword())));
         if (keyFile != null) {
             values.put(AesConfigurationPasswordCipher.KEY_FILE_SETTING, keyFile.toString());
         }
         values.put("init", "false");
-        final var output = new Properties();
+        var output = new Properties();
         values.forEach(output::setProperty);
         Path temporary = null;
         try {
-            final var target = filePath.toAbsolutePath().normalize();
-            final var directory = Objects.requireNonNull(target.getParent(), "bootstrap directory");
+            var target = filePath.toAbsolutePath().normalize();
+            var directory = Objects.requireNonNull(target.getParent(), "bootstrap directory");
             Files.createDirectories(directory);
             temporary = Files.createTempFile(directory, "application-", ".properties.tmp");
             try (var writer = Files.newBufferedWriter(temporary, StandardCharsets.UTF_8)) {
@@ -169,21 +174,45 @@ public final class ApplicationBootstrapPropertiesLoader {
     }
 
     /**
+     * Opens packaged bootstrap defaults using either the traditional classpath
+     * or the application's named Java module.
+     *
+     * @return resource input stream, or null if not found
+     * @throws IOException if the module resource cannot be opened
+     */
+    private InputStream openPackagedResource() throws IOException {
+
+        var resource = ClasspathConfigurationPropertiesSource.APPLICATION_RESOURCE;
+
+        // Traditional classpath loading.
+        var input = classLoader.getResourceAsStream(resource);
+
+        // Named-module loading used by javafx:run.
+        if (input == null) {
+            input = ApplicationBootstrapPropertiesLoader.class
+                    .getModule()
+                    .getResourceAsStream(resource);
+        }
+
+        return input;
+    }
+
+    /**
      * Loads file settings, falling back to packaged defaults for first run.
      *
      * @return normalised, mutable map of bootstrap settings
      */
     private Map<String, String> readProperties() {
         if (Files.isRegularFile(filePath)) {
-            try (var input = Files.newInputStream(filePath);
-                    var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+            try (var input
+                    = Files.newInputStream(filePath); var reader
+                    = new InputStreamReader(input, StandardCharsets.UTF_8)) {
                 return load(reader);
             } catch (IOException exception) {
                 throw new OpenDataConfigurationException("Unable to read bootstrap file: " + filePath, exception);
             }
         }
-        try (var input = classLoader.getResourceAsStream(
-                ClasspathConfigurationPropertiesSource.APPLICATION_RESOURCE)) {
+        try (var input = openPackagedResource()) {
             if (input == null) {
                 throw new OpenDataConfigurationException("Application bootstrap resource was not found.");
             }
@@ -200,10 +229,10 @@ public final class ApplicationBootstrapPropertiesLoader {
      * @return lower-case-key map
      * @throws IOException if the stream cannot be read
      */
-    private static Map<String, String> load(final InputStreamReader reader) throws IOException {
-        final var properties = new Properties();
+    private static Map<String, String> load(InputStreamReader reader) throws IOException {
+        var properties = new Properties();
         properties.load(reader);
-        final Map<String, String> values = new LinkedHashMap<>();
+        Map<String, String> values = new LinkedHashMap<>();
         properties.stringPropertyNames().forEach(name -> values.put(
                 name.trim().toLowerCase(java.util.Locale.ROOT), properties.getProperty(name).trim()));
         return values;
