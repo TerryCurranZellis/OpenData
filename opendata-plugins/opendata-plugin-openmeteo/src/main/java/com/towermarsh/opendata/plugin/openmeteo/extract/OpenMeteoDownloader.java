@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class OpenMeteoDownloader {
+public final class OpenMeteoDownloader {
 
     private static final Logger LOGGER
             = Logger.getLogger(OpenMeteoDownloader.class.getName());

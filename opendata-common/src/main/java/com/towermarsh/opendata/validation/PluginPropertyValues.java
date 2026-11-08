@@ -25,7 +25,7 @@ import java.util.Optional;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class PluginPropertyValues {
+public final class PluginPropertyValues {
 
     private final PluginDefinition definition;
 

@@ -23,7 +23,9 @@ class ElectricDemandPipelineTest {
     @Test
     void transformParsesRowsInsideDateRange() throws Exception {
         var file = directory.resolve("resource-000.csv");
-        Files.writeString(file, "SETTLEMENT_DATE,SETTLEMENT_PERIOD,ND,TSD,ENGLAND_WALES_DEMAND,EMBEDDED_WIND_GENERATION,EMBEDDED_SOLAR_GENERATION,PUMP_STORAGE_PUMPING\n"
+        Files.writeString(file, "SETTLEMENT_DATE,SETTLEMENT_PERIOD,ND,TSD,"
+                + "ENGLAND_WALES_DEMAND,EMBEDDED_WIND_GENERATION,"
+                + "EMBEDDED_SOLAR_GENERATION,PUMP_STORAGE_PUMPING\n"
                 + "2025-01-01,1,100,110,90,5,,0\n2024-12-31,1,1,1,1,1,1,1\n");
         var extraction = new NesoExtraction(directory, List.of(new NesoResource("d 2025", "https://x", file)));
         var settings = new NesoSettings(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 12, 31),

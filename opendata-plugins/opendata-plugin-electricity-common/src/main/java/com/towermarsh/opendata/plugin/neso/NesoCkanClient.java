@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public class NesoCkanClient {
+public final class NesoCkanClient {
 
     private static final Logger LOG = Logger.getLogger(NesoCkanClient.class.getName());
     private static final ObjectMapper JSON = new ObjectMapper();

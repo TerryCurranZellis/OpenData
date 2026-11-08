@@ -11,6 +11,10 @@
     </parent>
     <artifactId>opendata-plugin-octopus-adjustment</artifactId>
     <name>OpenData Octopus Adjustment Plugin</name>
+    <properties>
+        <mockito.agent.argLine>-javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"</mockito.agent.argLine>
+    </properties>
+
     <dependencies>
         <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-api</artifactId></dependency>
         <dependency><groupId>com.towermarsh</groupId><artifactId>opendata-common</artifactId></dependency>

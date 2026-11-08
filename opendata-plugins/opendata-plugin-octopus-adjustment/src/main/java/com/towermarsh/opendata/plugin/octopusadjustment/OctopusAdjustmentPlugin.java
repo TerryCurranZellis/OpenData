@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public class OctopusAdjustmentPlugin implements OpenDataPlugin {
+public final class OctopusAdjustmentPlugin implements OpenDataPlugin {
 
     /** Stable plugin identifier used by configuration and execution. */
     public static final String PLUGIN_ID = "octopus-adjustment";

@@ -20,6 +20,9 @@
         <jsoup.version>1.23.2</jsoup.version>
         <junit.version>6.1.3</junit.version>
         <mockito.version>5.23.0</mockito.version>
+        <!-- Modules using Mockito opt in to its startup agent; JaCoCo adds its own agent. -->
+        <argLine></argLine>
+        <mockito.agent.argLine></mockito.agent.argLine>
         <checkstyle.version>10.26.1</checkstyle.version>
         <maven.resources.plugin.version>3.5.0</maven.resources.plugin.version>
         <maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
@@ -229,6 +232,7 @@
                     <version>${maven.surefire.plugin.version}</version>
                     <configuration>
                         <useModulePath>false</useModulePath>
+                        <argLine>@{argLine} ${mockito.agent.argLine}</argLine>
                     </configuration>
                 </plugin>
                 <plugin>

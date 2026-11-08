@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @version 3.1.0
  * @since 3.1.0
  */
-public class OctopusAdjustmentInitialise {
+public final class OctopusAdjustmentInitialise {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusAdjustmentInitialise.class.getName());
 

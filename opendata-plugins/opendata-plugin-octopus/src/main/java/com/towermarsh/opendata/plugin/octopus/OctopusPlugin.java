@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class OctopusPlugin implements OpenDataPlugin {
+public final class OctopusPlugin implements OpenDataPlugin {
 
     /** 
      * Stable plugin identifier used in configuration and CLI selection. 

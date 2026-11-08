@@ -44,6 +44,8 @@ import java.util.function.Consumer;
  */
 public final class InitialisationService {
 
+    private static final SecureRandom KEY_RANDOM = new SecureRandom();
+
     private final ApplicationBootstrapPropertiesLoader loader;
     private final PluginRegistrationResolver resolver;
     private final PluginConfigurationDirectoryScanner scanner;
@@ -204,17 +206,18 @@ public final class InitialisationService {
                 java.util.Arrays.fill(decoded, (byte) 0);
                 return;
             }
-            final var parent = keyFile.toAbsolutePath().getParent();
+            final var parent = Objects.requireNonNull(keyFile.toAbsolutePath().getParent(), "key directory");
             Files.createDirectories(parent);
             final var bytes = new byte[32];
-            new SecureRandom().nextBytes(bytes);
+            KEY_RANDOM.nextBytes(bytes);
             try {
                 final var content = Base64.getEncoder().encodeToString(bytes) + System.lineSeparator();
                 try {
                     Files.writeString(keyFile, content, StandardCharsets.US_ASCII,
                             java.nio.file.StandardOpenOption.CREATE_NEW);
                 } catch (java.nio.file.FileAlreadyExistsException exception) {
-                    throw new OpenDataConfigurationException("AES key file appeared during setup; retry without overwriting it.", exception);
+                    throw new OpenDataConfigurationException(
+                            "AES key file appeared during setup; retry without overwriting it.", exception);
                 }
                 try {
                     Files.setPosixFilePermissions(keyFile,

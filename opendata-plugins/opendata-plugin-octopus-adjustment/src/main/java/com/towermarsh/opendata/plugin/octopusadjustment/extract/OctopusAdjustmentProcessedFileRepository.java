@@ -20,7 +20,7 @@ import java.util.Set;
  * @version 3.1.0
  * @since 3.1.0
  */
-public class OctopusAdjustmentProcessedFileRepository {
+public final class OctopusAdjustmentProcessedFileRepository {
 
     private final DatabaseResourceManager database;
 

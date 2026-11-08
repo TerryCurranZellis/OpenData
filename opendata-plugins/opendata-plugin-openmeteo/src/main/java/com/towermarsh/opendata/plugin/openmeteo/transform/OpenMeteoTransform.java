@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * Converts downloaded Open-Meteo JSON into validated database records.
  */
-public class OpenMeteoTransform {
+public final class OpenMeteoTransform {
 
     private final OpenMeteoConfiguration configuration;
     private final OpenMeteoResponseExtractor extractor = new OpenMeteoResponseExtractor();

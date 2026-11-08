@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class OctopusInitialise {
+public final class OctopusInitialise {
 
     private static final Logger LOGGER = Logger.getLogger(OctopusInitialise.class.getName());
 

@@ -26,8 +26,14 @@ import java.util.logging.Logger;
 public class ElectricDemandLoad {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandLoad.class.getName());
-    private static final String UPDATE = "UPDATE electricdemand.Demand SET NationalDemandMW=?,TransmissionSystemDemandMW=?,EnglandWalesDemandMW=?,EmbeddedWindMW=?,EmbeddedSolarMW=?,PumpingMW=? WHERE SettlementDate=? AND SettlementPeriod=?";
-    private static final String INSERT = "INSERT INTO electricdemand.Demand(SettlementDate,SettlementPeriod,NationalDemandMW,TransmissionSystemDemandMW,EnglandWalesDemandMW,EmbeddedWindMW,EmbeddedSolarMW,PumpingMW) VALUES (?,?,?,?,?,?,?,?)";
+    private static final String UPDATE = "UPDATE electricdemand.Demand SET "
+            + "NationalDemandMW=?,TransmissionSystemDemandMW=?,EnglandWalesDemandMW=?,"
+            + "EmbeddedWindMW=?,EmbeddedSolarMW=?,PumpingMW=? "
+            + "WHERE SettlementDate=? AND SettlementPeriod=?";
+    private static final String INSERT = "INSERT INTO electricdemand.Demand("
+            + "SettlementDate,SettlementPeriod,NationalDemandMW,TransmissionSystemDemandMW,"
+            + "EnglandWalesDemandMW,EmbeddedWindMW,EmbeddedSolarMW,PumpingMW) "
+            + "VALUES (?,?,?,?,?,?,?,?)";
 
     /**
      * Persists the records.

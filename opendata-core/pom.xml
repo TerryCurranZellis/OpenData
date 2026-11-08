@@ -36,6 +36,7 @@
         </developer>
     </developers>
     <properties>
+        <mockito.agent.argLine>-javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"</mockito.agent.argLine>
         <maven.compiler.release>24</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -267,8 +268,27 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <configuration>
                     <ignoredUnusedDeclaredDependencies>
+                        <!-- Plugin jars, JDBC driver and Log4j bridge are loaded at runtime. -->
                         <ignoredUnusedDeclaredDependency>com.towermarsh:opendata-plugin-*</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>com.microsoft.sqlserver:mssql-jdbc</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>org.apache.logging.log4j:log4j-to-jul</ignoredUnusedDeclaredDependency>
+                        <!-- JavaFX platform-specific jars supply the implementation classes. -->
+                        <ignoredUnusedDeclaredDependency>org.openjfx:javafx-controls</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>org.openjfx:javafx-fxml</ignoredUnusedDeclaredDependency>
+                        <!-- JUnit discovers the test engine through ServiceLoader. -->
+                        <ignoredUnusedDeclaredDependency>org.junit.jupiter:junit-jupiter-engine</ignoredUnusedDeclaredDependency>
                     </ignoredUnusedDeclaredDependencies>
+                    <ignoredUsedUndeclaredDependencies>
+                        <!-- JavaFX resolves these classifier jars transitively by platform. -->
+                        <ignoredUsedUndeclaredDependency>org.openjfx:javafx-base</ignoredUsedUndeclaredDependency>
+                        <ignoredUsedUndeclaredDependency>org.openjfx:javafx-controls</ignoredUsedUndeclaredDependency>
+                        <ignoredUsedUndeclaredDependency>org.openjfx:javafx-fxml</ignoredUsedUndeclaredDependency>
+                        <ignoredUsedUndeclaredDependency>org.openjfx:javafx-graphics</ignoredUsedUndeclaredDependency>
+                    </ignoredUsedUndeclaredDependencies>
+                    <ignoredNonTestScopedDependencies>
+                        <!-- OOXML implementation is needed at runtime for Excel reading. -->
+                        <ignoredNonTestScopedDependency>org.apache.poi:poi-ooxml</ignoredNonTestScopedDependency>
+                    </ignoredNonTestScopedDependencies>
                 </configuration>
             </plugin>
             <plugin>

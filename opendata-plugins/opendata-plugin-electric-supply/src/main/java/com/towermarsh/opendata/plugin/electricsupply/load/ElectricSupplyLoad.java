@@ -26,8 +26,14 @@ import java.util.logging.Logger;
 public class ElectricSupplyLoad {
 
     private static final Logger LOG = Logger.getLogger(ElectricSupplyLoad.class.getName());
-    private static final String UPDATE = "UPDATE electricsupply.GenerationMix SET GasMW=?,CoalMW=?,NuclearMW=?,WindMW=?,EmbeddedWindMW=?,HydroMW=?,ImportsMW=?,BiomassMW=?,OtherMW=?,SolarMW=?,StorageMW=?,GenerationMW=?,CarbonIntensity=? WHERE DateTimeUtc=?";
-    private static final String INSERT = "INSERT INTO electricsupply.GenerationMix(DateTimeUtc,GasMW,CoalMW,NuclearMW,WindMW,EmbeddedWindMW,HydroMW,ImportsMW,BiomassMW,OtherMW,SolarMW,StorageMW,GenerationMW,CarbonIntensity) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE = "UPDATE electricsupply.GenerationMix SET "
+            + "GasMW=?,CoalMW=?,NuclearMW=?,WindMW=?,EmbeddedWindMW=?,HydroMW=?,"
+            + "ImportsMW=?,BiomassMW=?,OtherMW=?,SolarMW=?,StorageMW=?,"
+            + "GenerationMW=?,CarbonIntensity=? WHERE DateTimeUtc=?";
+    private static final String INSERT = "INSERT INTO electricsupply.GenerationMix("
+            + "DateTimeUtc,GasMW,CoalMW,NuclearMW,WindMW,EmbeddedWindMW,"
+            + "HydroMW,ImportsMW,BiomassMW,OtherMW,SolarMW,StorageMW,"
+            + "GenerationMW,CarbonIntensity) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     /**
      * Persists the records.

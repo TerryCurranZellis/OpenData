@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.1.0
  */
-public class ElectricDemandPlugin implements OpenDataPlugin {
+public final class ElectricDemandPlugin implements OpenDataPlugin {
 
     /** Stable plugin identifier. */
     public static final String PLUGIN_ID = "electric-demand";

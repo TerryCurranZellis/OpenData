@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class OctopusProcessedFileRepository {
+public final class OctopusProcessedFileRepository {
 
     /**
      * database connection

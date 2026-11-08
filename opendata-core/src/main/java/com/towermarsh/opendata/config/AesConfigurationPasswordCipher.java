@@ -205,9 +205,10 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
         if (!Files.isRegularFile(file)) {
             return null;
         }
-        try (var input = Files.newInputStream(file)) {
+        try (var input = Files.newInputStream(file);
+                var reader = new java.io.InputStreamReader(input, StandardCharsets.UTF_8)) {
             final var values = new java.util.Properties();
-            values.load(new java.io.InputStreamReader(input, StandardCharsets.UTF_8));
+            values.load(reader);
             final var value = values.getProperty(KEY_FILE_SETTING, "").trim();
             return value.isBlank() ? null : Path.of(value);
         } catch (IOException exception) {
@@ -227,7 +228,9 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
                 return null;
             }
             final var values = new java.util.Properties();
-            values.load(new java.io.InputStreamReader(input, StandardCharsets.UTF_8));
+            try (var reader = new java.io.InputStreamReader(input, StandardCharsets.UTF_8)) {
+                values.load(reader);
+            }
             final var value = values.getProperty(KEY_FILE_SETTING, "").trim();
             return value.isBlank() ? null : Path.of(value);
         } catch (IOException exception) {

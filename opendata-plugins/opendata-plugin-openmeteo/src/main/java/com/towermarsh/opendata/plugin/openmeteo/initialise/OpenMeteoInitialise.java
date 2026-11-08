@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class OpenMeteoInitialise {
+public final class OpenMeteoInitialise {
     private final OpenMeteoConfiguration configuration;
     private final OpenMeteoExtract extract;
     private final OpenMeteoTransform transform;

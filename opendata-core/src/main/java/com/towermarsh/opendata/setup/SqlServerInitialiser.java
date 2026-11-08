@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Creates an SQL Server database, SQL login, core schema, and permissions.
@@ -167,6 +168,10 @@ public final class SqlServerInitialiser {
      * @param request install request
      * @throws SQLException when login creation fails
      */
+    @SuppressFBWarnings(value = "SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", justification =
+            "CREATE LOGIN does not accept JDBC parameters for identifiers or its DDL password; "
+            + "InitialisationRequest restricts login identifiers to letters, digits and underscores "
+            + "and the password SQL literal has apostrophes escaped.")
     private static void createSqlLogin(final Connection master, final InitialisationRequest request)
             throws SQLException {
         try (var check = master.prepareStatement(

@@ -26,7 +26,7 @@ import java.util.UUID;
  * @version 2.0.0
  * @since 2.0.0
  */
-public class OpenMeteoRepository {
+public final class OpenMeteoRepository {
 
     private static final String STAGE_TABLE = "#OpenMeteoDaily";
 

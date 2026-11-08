@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class OpenMeteoExtract {
+public final class OpenMeteoExtract {
 
     private final OpenMeteoDownloader downloader;
 

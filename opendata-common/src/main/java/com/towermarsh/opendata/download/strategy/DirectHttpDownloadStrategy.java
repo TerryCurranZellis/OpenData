@@ -32,7 +32,7 @@ import com.towermarsh.opendata.exception.DownloadException;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class DirectHttpDownloadStrategy {
+public final class DirectHttpDownloadStrategy {
 
     private final HttpClient httpClient;
 

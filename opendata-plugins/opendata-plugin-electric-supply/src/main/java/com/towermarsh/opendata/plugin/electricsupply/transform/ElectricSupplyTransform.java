@@ -46,8 +46,14 @@ public class ElectricSupplyTransform {
         Objects.requireNonNull(settings, "settings");
         List<GenerationMixRecord> records = new ArrayList<>();
         for (var resource : extraction.resources()) {
-            try (Reader reader = Files.newBufferedReader(resource.file(), StandardCharsets.UTF_8); var csv = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true)
-                    .setIgnoreSurroundingSpaces(true).setIgnoreEmptyLines(true).get().parse(reader)) {
+            try (Reader reader = Files.newBufferedReader(resource.file(), StandardCharsets.UTF_8);
+                    var csv = CSVFormat.DEFAULT.builder()
+                            .setHeader()
+                            .setSkipHeaderRecord(true)
+                            .setIgnoreSurroundingSpaces(true)
+                            .setIgnoreEmptyLines(true)
+                            .get()
+                            .parse(reader)) {
                 for (var row : csv) {
                     var record = parse(row);
                     var date = record.dateTimeUtc().atOffset(ZoneOffset.UTC).toLocalDate();

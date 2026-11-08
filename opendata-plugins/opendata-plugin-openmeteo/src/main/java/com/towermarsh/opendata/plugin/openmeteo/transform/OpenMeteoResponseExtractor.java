@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class OpenMeteoResponseExtractor {
+public final class OpenMeteoResponseExtractor {
 
     private final ObjectMapper objectMapper;
 

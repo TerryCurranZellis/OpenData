@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author Terry Curran
  * @version 3.1.0
  */
-public class ElectricDemandInitialise {
+public final class ElectricDemandInitialise {
 
     private static final Logger LOG = Logger.getLogger(ElectricDemandInitialise.class.getName());
 

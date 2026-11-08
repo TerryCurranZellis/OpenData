@@ -25,7 +25,7 @@ import com.towermarsh.opendata.exception.DownloadException;
  * @author Terry Curran
  * @version 1.0.0
  */
-public class HtmlLinkDiscoveryStrategy {
+public final class HtmlLinkDiscoveryStrategy {
 
     private final HttpClient httpClient;
     private final HtmlLinkResolver linkResolver;

@@ -143,7 +143,7 @@ public final class ApplicationBootstrapPropertiesLoader {
         Path temporary = null;
         try {
             final var target = filePath.toAbsolutePath().normalize();
-            final var directory = target.getParent();
+            final var directory = Objects.requireNonNull(target.getParent(), "bootstrap directory");
             Files.createDirectories(directory);
             temporary = Files.createTempFile(directory, "application-", ".properties.tmp");
             try (var writer = Files.newBufferedWriter(temporary, StandardCharsets.UTF_8)) {

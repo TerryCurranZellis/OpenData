@@ -6,6 +6,7 @@
 package com.towermarsh.opendata.common.database;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import com.towermarsh.opendata.plugin.PluginRegistrar;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -30,6 +31,9 @@ public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
      * @param pluginId plugin identifier
      * @param scriptResource classpath resource of the schema script, e.g. {@code sql/plugins/x.sql}
      */
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW", justification =
+            "This intentionally extensible base validates only supplied identifiers; "
+            + "it never leaks a reference to the partially constructed registrar.")
     protected SqlResourcePluginRegistrar(String pluginId, String scriptResource) {
         this.pluginId = Objects.requireNonNull(pluginId, "pluginId");
         this.scriptResource = Objects.requireNonNull(scriptResource, "scriptResource");

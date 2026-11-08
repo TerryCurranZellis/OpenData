@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 2.0.0
  */
-public class JdbcTransactionTemplate {
+public final class JdbcTransactionTemplate {
 
     private static final JdbcConnectionCleanup NO_CLEANUP = connection -> {
         // No connection-scoped state to remove.

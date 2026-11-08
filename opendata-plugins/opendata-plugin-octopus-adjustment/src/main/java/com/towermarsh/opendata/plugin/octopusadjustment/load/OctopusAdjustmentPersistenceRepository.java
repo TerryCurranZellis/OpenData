@@ -26,7 +26,7 @@ import java.util.UUID;
  * @version 3.1.0
  * @since 3.1.0
  */
-public class OctopusAdjustmentPersistenceRepository {
+public final class OctopusAdjustmentPersistenceRepository {
 
     private static final AdjustmentElectricityRecordUpsertAdapter ELECTRICITY_ADAPTER
             = new AdjustmentElectricityRecordUpsertAdapter();
