@@ -127,18 +127,15 @@ public final class OpenData {
      */
     private static void logStartup(ApplicationInfo information, CommandLineArguments arguments) {
         logger.log(Level.INFO, "{0} {1} starting", new Object[]{information.productName(), information.version()});
-        logger.log(Level.INFO,
-                "Runtime: {0}; OS: {1} {2}; workingDirectory={3}",
-                new Object[]{
-                    information.runtime(),
-                    System.getProperty("os.name", "unknown"),
-                    System.getProperty("os.version", "unknown"),
-                    Path.of("").toAbsolutePath().normalize()
-                });
+        logger.log(Level.INFO, "Runtime: Java {0}", information.runtime());
+        logger.log(Level.INFO, "OS: {0} {1}", new Object[]{
+            System.getProperty("os.name", "unknown"),
+            System.getProperty("os.version", "unknown")});
+        logger.log(Level.INFO, "Working Directory: {0}", Path.of("").toAbsolutePath().normalize());
         if (!arguments.guiRequested()) {
-        logger.log(Level.INFO,
-                "Invocation: command={0}; dryRun={1}; verbose={2}",
-                new Object[]{arguments.command().displayName(), arguments.dryRun(), arguments.verbose()});
+            logger.log(Level.INFO,
+                    "Invocation: command={0}; dryRun={1}; verbose={2}",
+                    new Object[]{arguments.command().displayName(), arguments.dryRun(), arguments.verbose()});
         }
     }
 
