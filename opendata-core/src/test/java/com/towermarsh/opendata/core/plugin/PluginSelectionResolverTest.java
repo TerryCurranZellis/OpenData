@@ -73,6 +73,18 @@ class PluginSelectionResolverTest {
                 () -> new PluginSelectionResolver().resolve(List.of(), registry));
     }
 
+    /** Invalid identifiers are rejected before querying the registry. */
+    @Test
+    void rejectsBlankAndNullSelectedPluginIds() {
+        final PluginRegistry registry = registry(descriptor("ofgem", true));
+        final var resolver = new PluginSelectionResolver();
+
+        assertThrows(PluginRegistryException.class,
+                () -> resolver.resolve(List.of("  "), registry));
+        assertThrows(PluginRegistryException.class,
+                () -> resolver.resolve(java.util.Arrays.asList("ofgem", null), registry));
+    }
+
     @Test
     void selectedDuplicatePluginIdsAreRejected() {
         final PluginRegistry registry = registry(descriptor("ofgem", true));
