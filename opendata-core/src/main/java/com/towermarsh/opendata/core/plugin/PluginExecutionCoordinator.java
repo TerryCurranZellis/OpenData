@@ -30,32 +30,34 @@ import java.util.logging.Logger;
  * Runs each selected plugin as an isolated task on a bounded executor.
  *
  * @author Terry Curran
- * @version 2.1
+ * @since 2.1.0
+ * @version 4.1.0
  */
 public final class PluginExecutionCoordinator {
     private static final Logger LOGGER = Logger.getLogger(PluginExecutionCoordinator.class.getName());
 
-    private final PluginFactory pluginFactory;
-    private final PluginRunAudit audit;
-    private final DatabaseResourceManager database;
-    private final Clock clock;
-    private final Duration shutdownTimeout;
+    private PluginFactory pluginFactory;
+    private PluginRunAudit audit;
+    private DatabaseResourceManager database;
+    private Clock clock;
+    private Duration shutdownTimeout;
     private final PluginExceptionHandler exceptionHandler;
 
     /**
+     * Creates a coordinator with its execution services.
      *
-     * @param pluginFactory
-     * @param audit
-     * @param database
-     * @param clock
-     * @param shutdownTimeout
+     * @param pluginFactory creates configured plugin instances
+     * @param audit records plugin execution results
+     * @param database database resources passed to plugins
+     * @param clock clock used for execution timestamps
+     * @param shutdownTimeout maximum wait for executor shutdown
      */
     public PluginExecutionCoordinator(
-            final PluginFactory pluginFactory,
-            final PluginRunAudit audit,
-            final DatabaseResourceManager database,
-            final Clock clock,
-            final Duration shutdownTimeout) {
+            PluginFactory pluginFactory,
+            PluginRunAudit audit,
+            DatabaseResourceManager database,
+            Clock clock,
+            Duration shutdownTimeout) {
         this.pluginFactory = Objects.requireNonNull(pluginFactory, "pluginFactory");
         this.audit = Objects.requireNonNull(audit, "audit");
         this.database = Objects.requireNonNull(database, "database");
@@ -65,35 +67,36 @@ public final class PluginExecutionCoordinator {
     }
 
     /**
+     * Runs configured plugins concurrently up to the requested limit.
      *
-     * @param plugins
-     * @param requestedParallelism
-     * @param dryRun
-     * @return
-     * @throws InterruptedException
+     * @param plugins selected, configured plugins
+     * @param requestedParallelism requested maximum number of workers
+     * @param dryRun whether writes and run audit are disabled
+     * @return results in the same order as the selected plugins
+     * @throws InterruptedException if the calling thread is interrupted
      */
     public PluginExecutionSummary execute(
-            final List<ResolvedPlugin> plugins,
-            final int requestedParallelism,
-            final boolean dryRun) throws InterruptedException {
-        final List<ResolvedPlugin> immutablePlugins = List.copyOf(Objects.requireNonNull(plugins, "plugins"));
+            List<ResolvedPlugin> plugins,
+            int requestedParallelism,
+            boolean dryRun) throws InterruptedException {
+        var immutablePlugins = List.copyOf(Objects.requireNonNull(plugins, "plugins"));
         if (immutablePlugins.isEmpty()) {
             return new PluginExecutionSummary(List.of());
         }
-        final int parallelism = Math.max(1, Math.min(requestedParallelism, immutablePlugins.size()));
-        final ExecutorService executor = Executors.newFixedThreadPool(parallelism, new PluginThreadFactory());
+        var parallelism = Math.max(1, Math.min(requestedParallelism, immutablePlugins.size()));
+        var executor = Executors.newFixedThreadPool(parallelism, new PluginThreadFactory());
         try {
-            final List<Callable<PluginRunResult>> tasks = immutablePlugins.stream()
+            var tasks = immutablePlugins.stream()
                     .map(plugin -> (Callable<PluginRunResult>) () -> executeOne(plugin, dryRun))
                     .toList();
-            final var futures = executor.invokeAll(tasks);
-            final List<PluginRunResult> results = new ArrayList<>(futures.size());
+            var futures = executor.invokeAll(tasks);
+            var results = new ArrayList<PluginRunResult>(futures.size());
             for (int index = 0; index < futures.size(); index++) {
                 try {
                     results.add(futures.get(index).get());
                 } catch (ExecutionException exception) {
-                    final ResolvedPlugin plugin = immutablePlugins.get(index);
-                    final Instant now = clock.instant();
+                    var plugin = immutablePlugins.get(index);
+                    var now = clock.instant();
                     results.add(new PluginRunResult(
                             plugin.descriptor().id(),
                             UUID.randomUUID(),
@@ -108,24 +111,24 @@ public final class PluginExecutionCoordinator {
         } finally {
             executor.shutdown();
             if (!executor.awaitTermination(shutdownTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
-                final int cancelled = executor.shutdownNow().size();
+                var cancelled = executor.shutdownNow().size();
                 LOGGER.log(Level.WARNING, "Forced plugin executor shutdown; cancelled queued tasks: {0}", cancelled);
             }
         }
     }
 
     /**
-     * Execute one.
+     * Executes one plugin, reporting errors and recording audit details.
      *
-     * @param resolved input resolved
-     * @param dryRun input dry run
-     * @return result of execute one
+     * @param resolved resolved plugin descriptor and configuration
+     * @param dryRun whether this execution must avoid data writes
+     * @return the plugin's execution result
      */
     @SuppressWarnings("try")
-    private PluginRunResult executeOne(final ResolvedPlugin resolved, final boolean dryRun) {
-        final String pluginId = resolved.descriptor().id();
-        final UUID runId = UUID.randomUUID();
-        final Instant startedAt = clock.instant();
+    private PluginRunResult executeOne(ResolvedPlugin resolved, boolean dryRun) {
+        var pluginId = resolved.descriptor().id();
+        var runId = UUID.randomUUID();
+        var startedAt = clock.instant();
         PluginMetrics metrics = PluginMetrics.ZERO;
         @SuppressWarnings("UnusedAssignment")
         PluginRunStatus status = dryRun ? PluginRunStatus.DRY_RUN : PluginRunStatus.SUCCESS;
@@ -156,9 +159,9 @@ public final class PluginExecutionCoordinator {
             error = Optional.of("Plugin execution was interrupted.");
             LOGGER.log(Level.WARNING, "Plugin execution was interrupted: " + pluginId, exception);
         } catch (Exception exception) {
-            final boolean interrupted = Thread.currentThread().isInterrupted();
+            var interrupted = Thread.currentThread().isInterrupted();
             status = interrupted ? PluginRunStatus.CANCELLED : PluginRunStatus.FAILED;
-            final String failureMessage = PluginFailureReport.describe(exception);
+            var failureMessage = PluginFailureReport.describe(exception);
             error = Optional.of(failureMessage);
             LOGGER.log(
                     interrupted ? Level.WARNING : Level.SEVERE,
@@ -167,7 +170,7 @@ public final class PluginExecutionCoordinator {
                     exception);
         }
 
-        PluginRunResult result = new PluginRunResult(
+        var result = new PluginRunResult(
                 pluginId, runId, status, startedAt, clock.instant(), metrics, error);
         if (!dryRun && auditStarted) {
             try {
