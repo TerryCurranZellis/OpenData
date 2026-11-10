@@ -22,6 +22,8 @@ jobs:
           cache: maven
       - name: Maven verification
         run: mvn --batch-mode --no-transfer-progress -Dquality.failOnViolation=true clean verify
+      - name: Generate aggregate Javadoc
+        run: mvn --batch-mode --no-transfer-progress -DskipTests javadoc:aggregate
       - name: Upload test and quality reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -34,3 +36,4 @@ jobs:
             **/target/checkstyle-*.xml
             **/target/pmd.xml
             **/target/spotbugsXml.xml
+            target/reports/apidocs/**
