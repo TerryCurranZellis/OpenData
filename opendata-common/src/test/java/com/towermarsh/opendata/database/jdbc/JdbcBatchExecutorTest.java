@@ -6,6 +6,7 @@
 package com.towermarsh.opendata.common.database.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -69,6 +71,39 @@ class JdbcBatchExecutorTest {
         assertEquals(2, affected);
         verify(statement, times(2)).setInt(org.mockito.ArgumentMatchers.eq(1),
                 org.mockito.ArgumentMatchers.anyInt());
+    }
+
+    /**
+     * Ensures an explicitly failed JDBC batch entry is not reported as success.
+     *
+     * @throws SQLException when mocked JDBC statements fail
+     */
+    @Test
+    void rejectsFailedBatchEntries() throws SQLException {
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("INSERT INTO test(value) VALUES (?)"))
+                .thenReturn(statement);
+        when(statement.executeBatch()).thenReturn(
+                new int[]{1, Statement.EXECUTE_FAILED});
+
+        assertThrows(SQLException.class, () -> JdbcBatchExecutor.execute(
+                connection, "INSERT INTO test(value) VALUES (?)",
+                List.of("one", "two"), 2,
+                (current, value) -> current.setString(1, value)));
+        verify(statement).close();
+    }
+
+    /**
+     * Rejects zero-sized batches before acquiring a JDBC statement.
+     */
+    @Test
+    void rejectsInvalidBatchSize() {
+        var connection = mock(Connection.class);
+        assertThrows(IllegalArgumentException.class, () -> JdbcBatchExecutor.execute(
+                connection, "INSERT INTO test(value) VALUES (?)",
+                List.of("one"), 0,
+                (current, value) -> current.setString(1, value)));
     }
 
 }
