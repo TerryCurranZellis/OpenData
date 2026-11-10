@@ -41,8 +41,8 @@ public final class ConfigurationService {
      * @param validators validators for service config
      */
     public ConfigurationService(
-            final ConfigurationLoader loader,
-            final List<ConfigurationValidator> validators) {
+            ConfigurationLoader loader,
+            List<ConfigurationValidator> validators) {
 
         this.loader = Objects.requireNonNull(loader, "loader");
         this.validators = List.copyOf(Objects.requireNonNull(validators, "validators"));

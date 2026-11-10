@@ -75,8 +75,8 @@ public final class PropertiesPluginDefinitionLoader
      */
     @Override
     public PluginDefinition load(
-            final String pluginId,
-            final Map<String, String> overrides) {
+            String pluginId,
+            Map<String, String> overrides) {
 
         var normalisedPluginId = normalise(pluginId);
         var values = new LinkedHashMap<>(source.loadPluginProperties(normalisedPluginId));
@@ -127,7 +127,7 @@ public final class PropertiesPluginDefinitionLoader
      * @return list of plugin endpoints
      */
     private List<PluginEndpointDefinition> parseEndpoints(
-            final Map<String, String> values) {
+            Map<String, String> values) {
 
         var names = extractNames(values, "endpoint.");
         var result = new ArrayList<PluginEndpointDefinition>();
@@ -165,8 +165,8 @@ public final class PropertiesPluginDefinitionLoader
      * @return definition if it exists
      */
     private Optional<LinkDiscoveryDefinition> parseLinkDiscovery(
-            final Map<String, String> values,
-            final String endpointPrefix) {
+            Map<String, String> values,
+            String endpointPrefix) {
 
         var prefix = endpointPrefix + "link-discovery.";
         if (!values.containsKey(prefix + "css-selector")) {
@@ -187,7 +187,7 @@ public final class PropertiesPluginDefinitionLoader
      * @return map of plugin and properties
      */
     private Map<String, PluginPropertyDefinition> parsePluginProperties(
-            final Map<String, String> values) {
+            Map<String, String> values) {
 
         var names = extractPropertyNames(values);
         var result = new LinkedHashMap<String, PluginPropertyDefinition>();
@@ -222,7 +222,7 @@ public final class PropertiesPluginDefinitionLoader
      * @return credentials mapped to plugin
      */
     private Map<String, CredentialReference> parseCredentials(
-            final Map<String, String> values) {
+            Map<String, String> values) {
 
         var names = extractNames(values, "credential.");
         final Map<String, CredentialReference> result = new LinkedHashMap<>();
@@ -250,8 +250,8 @@ public final class PropertiesPluginDefinitionLoader
      * @return the key map
      */
     private static TreeSet<String> extractNames(
-            final Map<String, String> values,
-            final String rootPrefix) {
+            Map<String, String> values,
+            String rootPrefix) {
 
         var names = new TreeSet<String>();
         for (var key : values.keySet()) {
@@ -275,7 +275,7 @@ public final class PropertiesPluginDefinitionLoader
      * @return the properties
      */
     private static TreeSet<String> extractPropertyNames(
-            final Map<String, String> values) {
+            Map<String, String> values) {
 
         var rootPrefix = "property.";
         var names = new TreeSet<String>();
@@ -301,8 +301,8 @@ public final class PropertiesPluginDefinitionLoader
      * @return the new map
      */
     private static Map<String, String> subMap(
-            final Map<String, String> values,
-            final String prefix) {
+            Map<String, String> values,
+            String prefix) {
 
         return values.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(prefix))
@@ -319,8 +319,8 @@ public final class PropertiesPluginDefinitionLoader
      * @return the key
      */
     private static String require(
-            final Map<String, String> values,
-            final String key) {
+            Map<String, String> values,
+            String key) {
 
         return Optional.ofNullable(values.get(normalise(key)))
                 .map(String::trim)
@@ -337,8 +337,8 @@ public final class PropertiesPluginDefinitionLoader
      * @return return the value if its there
      */
     private static Optional<String> optional(
-            final Map<String, String> values,
-            final String key) {
+            Map<String, String> values,
+            String key) {
 
         return Optional.ofNullable(values.get(normalise(key)))
                 .map(String::trim)
@@ -354,9 +354,9 @@ public final class PropertiesPluginDefinitionLoader
      * @return true if the key or default is present
      */
     private static boolean getBoolean(
-            final Map<String, String> values,
-            final String key,
-            final boolean defaultValue) {
+            Map<String, String> values,
+            String key,
+            boolean defaultValue) {
 
         var value = values.get(normalise(key));
         if (value == null) {
@@ -383,9 +383,9 @@ public final class PropertiesPluginDefinitionLoader
      * @return
      */
     private static int getInt(
-            final Map<String, String> values,
-            final String key,
-            final int defaultValue) {
+            Map<String, String> values,
+            String key,
+            int defaultValue) {
 
         var value = values.get(normalise(key));
         if (value == null) {
@@ -411,9 +411,9 @@ public final class PropertiesPluginDefinitionLoader
      * @return
      */
     private static <E extends Enum<E>> E enumValue(
-            final Map<String, String> values,
-            final String key,
-            final Class<E> enumClass) {
+            Map<String, String> values,
+            String key,
+            Class<E> enumClass) {
 
         return enumValue(values, key, enumClass, null);
     }
@@ -428,10 +428,10 @@ public final class PropertiesPluginDefinitionLoader
      * @return
      */
     private static <E extends Enum<E>> E enumValue(
-            final Map<String, String> values,
-            final String key,
-            final Class<E> enumClass,
-            final E defaultValue) {
+            Map<String, String> values,
+            String key,
+            Class<E> enumClass,
+            E defaultValue) {
 
         var value = values.get(normalise(key));
         if (value == null) {
@@ -463,9 +463,9 @@ public final class PropertiesPluginDefinitionLoader
      * @param propertyValue raw property value
      */
     private static void validatePropertyValue(
-            final String propertyName,
-            final PluginPropertyType propertyType,
-            final String propertyValue) {
+            String propertyName,
+            PluginPropertyType propertyType,
+            String propertyValue) {
         if (propertyValue.isBlank()) {
             return;
         }

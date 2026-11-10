@@ -59,8 +59,8 @@ public record ApplicationRuntimeConfiguration(
      * @return resolved runtime configuration
      */
     public static ApplicationRuntimeConfiguration load(
-            final ConfigurationPropertiesSource source,
-            final Map<String, String> overrides) {
+            ConfigurationPropertiesSource source,
+            Map<String, String> overrides) {
         var values = defaultPropertyValues();
         values.putAll(Objects.requireNonNull(source, "source").loadApplicationProperties());
         values.putAll(Objects.requireNonNull(overrides, "overrides"));

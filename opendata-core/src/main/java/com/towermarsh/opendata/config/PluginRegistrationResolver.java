@@ -99,8 +99,8 @@ public final class PluginRegistrationResolver {
      * @return validated plugin registration
      */
     public PluginRegistration resolveFile(
-            final String requestedPluginId,
-            final Path file) {
+            String requestedPluginId,
+            Path file) {
         Objects.requireNonNull(requestedPluginId, "requestedPluginId");
         var source = new PropertiesFileConfigurationPropertiesSource(file);
         var properties = source.loadPluginProperties(requestedPluginId);

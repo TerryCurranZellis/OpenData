@@ -30,8 +30,8 @@ public final class ApplicationConfigurationService {
      * @param pluginDefinitionLoader loader used to resolve plugin definitions
      */
     public ApplicationConfigurationService(
-            final BootstrapConfig bootstrapConfig,
-            final PluginDefinitionLoader pluginDefinitionLoader) {
+            BootstrapConfig bootstrapConfig,
+            PluginDefinitionLoader pluginDefinitionLoader) {
 
         this.bootstrapConfig = Objects.requireNonNull(
                 bootstrapConfig,
@@ -49,8 +49,8 @@ public final class ApplicationConfigurationService {
      * @return immutable application configuration
      */
     public ApplicationConfig resolve(
-            final CommandLineArguments arguments,
-            final Map<String, String> runtimeOverrides) {
+            CommandLineArguments arguments,
+            Map<String, String> runtimeOverrides) {
 
         var pluginId = arguments.pluginIds().stream().findFirst()
                 .orElseThrow(() -> new PluginDefinitionException(

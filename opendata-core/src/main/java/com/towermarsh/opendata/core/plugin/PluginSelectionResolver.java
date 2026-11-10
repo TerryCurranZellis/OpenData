@@ -29,8 +29,8 @@ public class PluginSelectionResolver {
      * @return enabled plugin descriptors in requested order
      */
     public List<PluginDescriptor> resolve(
-            final List<String> pluginIds,
-            final PluginRegistry registry) {
+            List<String> pluginIds,
+            PluginRegistry registry) {
         Objects.requireNonNull(pluginIds, "pluginIds");
         Objects.requireNonNull(registry, "registry");
         final List<String> requested = pluginIds.stream()

@@ -67,8 +67,8 @@ public final class ConfigurationLoader {
      * @param builtInDefaults
      */
     ConfigurationLoader(
-            final ClassLoader classLoader,
-            final Map<String, String> builtInDefaults) {
+            ClassLoader classLoader,
+            Map<String, String> builtInDefaults) {
 
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
         this.builtInDefaults = Map.copyOf(Objects.requireNonNull(builtInDefaults, "builtInDefaults"));
@@ -181,8 +181,8 @@ public final class ConfigurationLoader {
      * @throws ConfigurationException if the properties cannot be parsed
      */
     private static Map<String, String> readProperties(
-            final InputStream input,
-            final String sourceDescription) throws ConfigurationException {
+            InputStream input,
+            String sourceDescription) throws ConfigurationException {
 
         var properties = new Properties();
         try {
@@ -216,9 +216,9 @@ public final class ConfigurationLoader {
      * @param sourceType source type recorded for each merged value
      */
     private static void merge(
-            final Map<String, ResolvedConfigurationValue> target,
-            final Map<String, String> source,
-            final ConfigurationSource sourceType) {
+            Map<String, ResolvedConfigurationValue> target,
+            Map<String, String> source,
+            ConfigurationSource sourceType) {
 
         source.forEach((key, value)
                 -> target.put(normaliseKey(key), new ResolvedConfigurationValue(value, sourceType)));

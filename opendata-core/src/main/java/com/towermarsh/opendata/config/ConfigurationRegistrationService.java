@@ -36,11 +36,11 @@ public final class ConfigurationRegistrationService {
      * @param passwordCipher password cipher
      */
     public ConfigurationRegistrationService(
-            final ConfigurationPropertiesSource applicationFileSource,
-            final JdbcConfigurationPropertiesSource databaseSource,
-            final JdbcPluginRegistry pluginRegistry,
-            final ApplicationBootstrapPropertiesLoader bootstrapLoader,
-            final ConfigurationPasswordCipher passwordCipher) {
+            ConfigurationPropertiesSource applicationFileSource,
+            JdbcConfigurationPropertiesSource databaseSource,
+            JdbcPluginRegistry pluginRegistry,
+            ApplicationBootstrapPropertiesLoader bootstrapLoader,
+            ConfigurationPasswordCipher passwordCipher) {
         this.applicationFileSource = Objects.requireNonNull(
                 applicationFileSource, "applicationFileSource");
         this.databaseSource = Objects.requireNonNull(databaseSource, "databaseSource");
@@ -57,8 +57,8 @@ public final class ConfigurationRegistrationService {
      * @param plugins validated plugins to register
      */
     public void register(
-            final ApplicationBootstrapProperties bootstrapProperties,
-            final List<PluginRegistration> plugins) {
+            ApplicationBootstrapProperties bootstrapProperties,
+            List<PluginRegistration> plugins) {
         Objects.requireNonNull(bootstrapProperties, "bootstrapProperties");
         Objects.requireNonNull(plugins, "plugins");
         if (plugins.isEmpty()) {

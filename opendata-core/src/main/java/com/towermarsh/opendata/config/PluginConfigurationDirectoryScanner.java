@@ -145,8 +145,8 @@ public final class PluginConfigurationDirectoryScanner {
      * @param pluginsRoot input plugins root
      */
     private static void addPluginSourceDirectories(
-            final List<Path> directories,
-            final Path pluginsRoot) {
+            List<Path> directories,
+            Path pluginsRoot) {
         if (!Files.isDirectory(pluginsRoot)) {
             return;
         }

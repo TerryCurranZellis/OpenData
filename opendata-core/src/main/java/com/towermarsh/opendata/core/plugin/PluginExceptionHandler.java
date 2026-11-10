@@ -30,9 +30,9 @@ public class PluginExceptionHandler {
      * @throws com.towermarsh.opendata.exception.PluginException
      * @throws java.lang.InterruptedException */
     public PluginMetrics execute(
-            final String pluginId,
-            final OpenDataPlugin plugin,
-            final PluginExecutionContext context) throws PluginException, InterruptedException {
+            String pluginId,
+            OpenDataPlugin plugin,
+            PluginExecutionContext context) throws PluginException, InterruptedException {
         Objects.requireNonNull(pluginId, "pluginId");
         Objects.requireNonNull(plugin, "plugin");
         Objects.requireNonNull(context, "context");

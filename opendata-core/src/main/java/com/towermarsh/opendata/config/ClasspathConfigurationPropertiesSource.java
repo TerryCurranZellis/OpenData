@@ -75,8 +75,8 @@ public final class ClasspathConfigurationPropertiesSource
      * @return normalised property values
      */
     private Map<String, String> loadRequiredResource(
-            final String resourceName,
-            final boolean allowMissing) {
+            String resourceName,
+            boolean allowMissing) {
         try (var input = classLoader.getResourceAsStream(resourceName)) {
             if (input == null) {
                 if (allowMissing) {

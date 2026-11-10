@@ -108,7 +108,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of load plugins
      */
     private static Map<String, PluginDescriptor> loadPlugins(
-            final ClassLoader classLoader) {
+            ClassLoader classLoader) {
         var result = new LinkedHashMap<String, PluginDescriptor>();
         var indexes = loadRequiredIndexes(classLoader);
 
@@ -131,10 +131,10 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @param indexResource input index resource
      */
     private static void addDescriptor(
-            final ClassLoader classLoader,
-            final Map<String, PluginDescriptor> result,
-            final String id,
-            final String indexResource) {
+            ClassLoader classLoader,
+            Map<String, PluginDescriptor> result,
+            String id,
+            String indexResource) {
         var resource = PLUGIN_RESOURCE_PATTERN.formatted(id);
         var descriptor = readDescriptor(
                 id,
@@ -189,9 +189,9 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of read descriptor
      */
     private static PluginDescriptor readDescriptor(
-            final String indexedId,
-            final Properties properties,
-            final String resource) {
+            String indexedId,
+            Properties properties,
+            String resource) {
 
         var declaredId = normaliseId(required(properties, "plugin.id"));
 
@@ -221,8 +221,8 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of load required properties
      */
     private static Properties loadRequiredProperties(
-            final ClassLoader classLoader,
-            final String resourceName) {
+            ClassLoader classLoader,
+            String resourceName) {
         try (var input = classLoader.getResourceAsStream(resourceName)) {
             if (input == null) {
                 throw new PluginRegistryException(
@@ -251,9 +251,9 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of load required properties
      */
     private static Properties loadRequiredProperties(
-            final ClassLoader classLoader,
-            final String resourceName,
-            final java.net.URL resource) {
+            ClassLoader classLoader,
+            String resourceName,
+            java.net.URL resource) {
         try (var input = resource.openStream()) {
             var properties = new Properties();
             try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
@@ -276,8 +276,8 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of required
      */
     private static String required(
-            final Properties properties,
-            final String key) {
+            Properties properties,
+            String key) {
 
         return Optional.ofNullable(properties.getProperty(key))
                 .map(String::trim)
@@ -295,9 +295,9 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of boolean value
      */
     private static boolean booleanValue(
-            final Properties properties,
-            final String key,
-            final boolean defaultValue) {
+            Properties properties,
+            String key,
+            boolean defaultValue) {
 
         final String value = properties.getProperty(key);
         if (value == null) {
@@ -325,9 +325,9 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of integer value
      */
     private static int integerValue(
-            final Properties properties,
-            final String key,
-            final int defaultValue) {
+            Properties properties,
+            String key,
+            int defaultValue) {
 
         var value = properties.getProperty(key);
         if (value == null) {
