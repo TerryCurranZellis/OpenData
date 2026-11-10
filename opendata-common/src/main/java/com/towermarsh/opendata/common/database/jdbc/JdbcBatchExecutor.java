@@ -59,12 +59,12 @@ public class JdbcBatchExecutor {
                 statement.addBatch();
                 pending++;
                 if (pending == batchSize) {
-                    affected += count(statement.executeBatch());
+                    affected = addCounts(affected, count(statement.executeBatch()));
                     pending = 0;
                 }
             }
             if (pending > 0) {
-                affected += count(statement.executeBatch());
+                affected = addCounts(affected, count(statement.executeBatch()));
             }
             return affected;
         }
@@ -72,7 +72,7 @@ public class JdbcBatchExecutor {
 
     /**
      * Counts successful batch results, counting entries with unknown row counts
-     * as one and rejecting explicitly failed entries.
+     * as one and rejecting failed, invalid or overflowing results.
      *
      * @param results JDBC update-count array
      * @return estimated affected-row count
@@ -85,11 +85,29 @@ public class JdbcBatchExecutor {
                 throw new SQLException("A JDBC batch entry failed");
             }
             if (result == Statement.SUCCESS_NO_INFO) {
-                affected++;
+                affected = addCounts(affected, 1);
+            } else if (result < 0) {
+                throw new SQLException("Unrecognised negative JDBC batch update count: " + result);
             } else {
-                affected += Math.max(result, 0);
+                affected = addCounts(affected, result);
             }
         }
         return affected;
+    }
+
+    /**
+     * Adds affected-row counts without silently wrapping the public int result.
+     *
+     * @param current accumulated row count
+     * @param increment next successful row count
+     * @return total affected rows
+     * @throws SQLException if the count exceeds the supported int range
+     */
+    private static int addCounts(int current, int increment) throws SQLException {
+        try {
+            return Math.addExact(current, increment);
+        } catch (ArithmeticException exception) {
+            throw new SQLException("JDBC batch affected-row count exceeds Integer.MAX_VALUE.", exception);
+        }
     }
 }
