@@ -13,6 +13,14 @@
     <name>OpenData API</name>
     <description>Shared OpenData contracts, plugin records, and configuration model types.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

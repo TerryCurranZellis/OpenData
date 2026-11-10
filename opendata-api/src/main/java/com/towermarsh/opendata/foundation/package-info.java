@@ -9,6 +9,8 @@
  *
  * <h2>Utility classes</h2>
  * <ul>
+ * <li>{@link com.towermarsh.opendata.foundation.CollectionCopies}
+ * &mdash; creates immutable copies of nullable collection values.</li>
  * <li>{@link com.towermarsh.opendata.foundation.DiscoveryTextNormalizer}
  * &mdash; normalises web discovery text, terms and extensions.</li>
  * <li>{@link com.towermarsh.opendata.foundation.DurationFormatter}

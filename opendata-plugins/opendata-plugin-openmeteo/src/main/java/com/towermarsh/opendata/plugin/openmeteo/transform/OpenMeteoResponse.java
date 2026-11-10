@@ -8,6 +8,7 @@ package com.towermarsh.opendata.plugin.openmeteo.transform;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import static com.towermarsh.opendata.foundation.CollectionCopies.immutableOrEmpty;
 
 /**
  * Jackson response model for the Open-Meteo historical weather API.
@@ -91,14 +92,14 @@ public record OpenMeteoResponse(
          * @param weatherCodes WMO weather codes
          */
         public Daily {
-            time = immutableCopy(time);
-            maximumTemperatures = immutableCopy(maximumTemperatures);
-            minimumTemperatures = immutableCopy(minimumTemperatures);
-            meanTemperatures = immutableCopy(meanTemperatures);
-            sunrise = immutableCopy(sunrise);
-            sunset = immutableCopy(sunset);
-            daylightDurationSeconds = immutableCopy(daylightDurationSeconds);
-            weatherCodes = immutableCopy(weatherCodes);
+            time = immutableOrEmpty(time);
+            maximumTemperatures = immutableOrEmpty(maximumTemperatures);
+            minimumTemperatures = immutableOrEmpty(minimumTemperatures);
+            meanTemperatures = immutableOrEmpty(meanTemperatures);
+            sunrise = immutableOrEmpty(sunrise);
+            sunset = immutableOrEmpty(sunset);
+            daylightDurationSeconds = immutableOrEmpty(daylightDurationSeconds);
+            weatherCodes = immutableOrEmpty(weatherCodes);
         }
 
         /**
@@ -182,14 +183,4 @@ public record OpenMeteoResponse(
         }
     }
 
-    /**
-     * Converts a nullable API list into an immutable list.
-     *
-     * @param <T> type of the weather observation
-     * @param values optional observation values
-     * @return immutable values, or an empty list when the input is null
-     */
-    private static <T> List<T> immutableCopy(List<T> values) {
-        return values == null ? List.of() : List.copyOf(values);
-    }
 }
