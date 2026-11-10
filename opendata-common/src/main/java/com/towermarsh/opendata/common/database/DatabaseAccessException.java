@@ -9,8 +9,11 @@ package com.towermarsh.opendata.common.database;
  * Unchecked wrapper for database bootstrap and persistence failures.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
+ * @deprecated Use {@link com.towermarsh.opendata.database.DatabaseAccessException}.
  */
+@Deprecated(since = "4.1.0")
 public class DatabaseAccessException extends DatabaseException {
 
     private static final long serialVersionUID = 1L;
