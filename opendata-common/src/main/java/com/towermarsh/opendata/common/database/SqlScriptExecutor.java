@@ -6,15 +6,14 @@
 package com.towermarsh.opendata.common.database;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;
+import com.towermarsh.opendata.database.SqlBatchParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * Runs SQL Server scripts whose batches are separated by lines containing only
@@ -22,12 +21,10 @@ import java.util.regex.Pattern;
  * its own schema definition.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 public class SqlScriptExecutor {
-
-    private static final Pattern GO = Pattern.compile("(?im)^\\s*GO\\s*$");
-    private static final Pattern COMMENTS = Pattern.compile("(?s)/\\*.*?\\*/|--[^\\r\\n]*");
 
     private SqlScriptExecutor() {
     }
@@ -70,13 +67,7 @@ public class SqlScriptExecutor {
      * @return ordered batches
      */
     public static List<String> batches(String script) {
-        List<String> result = new ArrayList<>();
-        for (var batch : GO.split(Objects.requireNonNull(script, "script"))) {
-            if (!COMMENTS.matcher(batch).replaceAll("").isBlank()) {
-                result.add(batch.strip());
-            }
-        }
-        return List.copyOf(result);
+        return SqlBatchParser.batches(script);
     }
 
     /**
