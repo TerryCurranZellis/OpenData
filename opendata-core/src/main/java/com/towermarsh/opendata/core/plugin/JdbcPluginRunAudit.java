@@ -16,10 +16,13 @@ import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.UUID;
 
-/** SQL Server implementation of the generic plugin-run audit.  *
-* @author Terry Curran
-* @version 1.0.0
-*/
+/**
+ * SQL Server implementation of the generic plugin-run audit.
+ *
+ * @author Terry Curran
+ * @since 1.0.0
+ * @version 4.1.0
+ */
 public final class JdbcPluginRunAudit implements PluginRunAudit {
     private static final String INSERT_SQL = """
             INSERT INTO [core].[PluginRun]
@@ -42,8 +45,9 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
     private final String hostName;
 
     /**
+     * Creates an audit writer backed by the SQL Server resource manager.
      *
-     * @param database
+     * @param database database connection provider
      */
     public JdbcPluginRunAudit(final DatabaseResourceManager database) {
         this.database = Objects.requireNonNull(database, "database");
@@ -51,11 +55,12 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
     }
 
     /**
+     * Inserts the running audit row and verifies that one row was inserted.
      *
-     * @param runId
-     * @param pluginId
-     * @param threadName
-     * @param startedAt
+     * @param runId unique run identifier
+     * @param pluginId selected plugin identifier
+     * @param threadName worker thread name
+     * @param startedAt run start time
      */
     @Override
     public void started(
@@ -70,15 +75,19 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
             statement.setObject(3, utcDateTime(startedAt));
             statement.setString(4, truncate(threadName, 128));
             statement.setString(5, truncate(hostName, 128));
-            statement.executeUpdate();
+            if (statement.executeUpdate() != 1) {
+                throw new DatabaseAccessException(
+                        "Plugin run audit start did not insert exactly one row: " + runId);
+            }
         } catch (SQLException exception) {
             throw new DatabaseAccessException("Unable to create plugin run audit row for " + pluginId, exception);
         }
     }
 
     /**
+     * Records the final status and counters for an existing run.
      *
-     * @param result
+     * @param result completed run result
      */
     @Override
     public void completed(final PluginRunResult result) {
@@ -90,7 +99,7 @@ public final class JdbcPluginRunAudit implements PluginRunAudit {
             statement.setLong(4, result.metrics().inserted());
             statement.setLong(5, result.metrics().updated());
             statement.setLong(6, result.metrics().skipped());
-            statement.setString(7, result.errorMessage().map(value -> truncate(value, 4000)).orElse(null));
+            statement.setString(7, result.errorMessage().map(value -> truncate(value, PluginFailureReport.MAX_LENGTH)).orElse(null));
             statement.setObject(8, result.runId());
             if (statement.executeUpdate() != 1) {
                 throw new DatabaseAccessException("Plugin run audit row was not found: " + result.runId());
