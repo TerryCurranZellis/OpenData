@@ -17,13 +17,14 @@ import java.util.logging.Logger;
  * {@code RegisterPlugin} class beside its {@code OpenDataPlugin} implementation.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 public final class PluginRegistrarLocator {
 
     private static final Logger LOGGER = Logger.getLogger(PluginRegistrarLocator.class.getName());
 
-    private final ClassLoader classLoader;
+    private ClassLoader classLoader;
 
     /** Creates a locator using the thread context class loader. */
     public PluginRegistrarLocator() {
@@ -35,7 +36,7 @@ public final class PluginRegistrarLocator {
      *
      * @param classLoader class loader holding plugin classes
      */
-    public PluginRegistrarLocator(final ClassLoader classLoader) {
+    public PluginRegistrarLocator(ClassLoader classLoader) {
         this.classLoader = Objects.requireNonNull(classLoader, "classLoader");
     }
 
@@ -45,12 +46,12 @@ public final class PluginRegistrarLocator {
      * @param descriptor plugin descriptor
      * @return registrar, or empty when the plugin ships none
      */
-    public Optional<PluginRegistrar> find(final PluginDescriptor descriptor) {
-        final var implementation = Objects.requireNonNull(descriptor, "descriptor").implementationClass();
-        final var dot = implementation.lastIndexOf('.');
-        final var registrarName = (dot < 0 ? "" : implementation.substring(0, dot + 1))
+    public Optional<PluginRegistrar> find(PluginDescriptor descriptor) {
+        var implementation = Objects.requireNonNull(descriptor, "descriptor").implementationClass();
+        var dot = implementation.lastIndexOf('.');
+        var registrarName = (dot < 0 ? "" : implementation.substring(0, dot + 1))
                 + PluginRegistrar.CONVENTIONAL_CLASS_NAME;
-        final Class<?> type;
+        Class<?> type;
         try {
             type = Class.forName(registrarName, true, classLoader);
         } catch (ClassNotFoundException exception) {
@@ -77,7 +78,7 @@ public final class PluginRegistrarLocator {
      * @param descriptor plugin descriptor
      * @param database database resource manager
      */
-    public void install(final PluginDescriptor descriptor, final DatabaseResourceManager database) {
+    public void install(PluginDescriptor descriptor, DatabaseResourceManager database) {
         find(descriptor).ifPresentOrElse(
                 registrar -> {
                     LOGGER.info(() -> "Running registration hook for plugin " + descriptor.id());
