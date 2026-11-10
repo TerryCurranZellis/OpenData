@@ -5,7 +5,6 @@
  */
 package com.towermarsh.opendata.common.logging;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,11 +13,12 @@ import java.util.UUID;
  *
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
+ * @deprecated Use {@link com.towermarsh.opendata.plugin.PluginLogContext} instead.
  */
-public class PluginLogContext {
-
-    private static final ThreadLocal<Entry> CURRENT = new ThreadLocal<>();
+@Deprecated(since = "4.1.0")
+public final class PluginLogContext {
 
     /**
      * Prevents instantiation of this utility class.
@@ -35,15 +35,8 @@ public class PluginLogContext {
      * @return scope that restores the previous thread context when closed
      */
     public static Scope open(String pluginId, UUID runId) {
-        var previous = CURRENT.get();
-        CURRENT.set(new Entry(pluginId, runId));
-        return () -> {
-            if (previous == null) {
-                CURRENT.remove();
-            } else {
-                CURRENT.set(previous);
-            }
-        };
+        var scope = com.towermarsh.opendata.plugin.PluginLogContext.open(pluginId, runId);
+        return scope::close;
     }
 
     /**
@@ -54,7 +47,8 @@ public class PluginLogContext {
      *
      */
     public static Optional<Entry> current() {
-        return Optional.ofNullable(CURRENT.get());
+        return com.towermarsh.opendata.plugin.PluginLogContext.current()
+                .map(context -> new Entry(context.pluginId(), context.runId()));
     }
 
     /**
@@ -69,8 +63,8 @@ public class PluginLogContext {
          * Validates and normalises record components.
          */
         public Entry {
-            Objects.requireNonNull(pluginId, "pluginId");
-            Objects.requireNonNull(runId, "runId");
+            java.util.Objects.requireNonNull(pluginId, "pluginId");
+            java.util.Objects.requireNonNull(runId, "runId");
         }
     }
 
