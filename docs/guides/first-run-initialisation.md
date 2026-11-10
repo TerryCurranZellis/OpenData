@@ -2,7 +2,8 @@
 
 **Document ID:** GUIDE-INIT-040  
 **Release:** 4.0.0  
-**Applies to:** SQL Server installations running the JavaFX desktop application
+**Applies to:** SQL Server installations running the JavaFX desktop application  
+**Compatible JavaFX baseline:** JavaFX 26.0.2 for Java 24+ (on the 4.1.0 review branch)
 
 ## When the wizard runs
 
@@ -135,3 +136,20 @@ FROM [core].[application_property] WHERE [property_key] = 'database.password';
 ```
 
 All plugin enabled values should be `0`/`false` until an operator enables them.
+
+## Screenshots and architecture diagram
+
+The capture plan is maintained in [GUI screenshot plan](../development/gui-screenshot-plan.md).
+For this first-run guide, capture the following actual application views:
+
+- `gui-init-database-server.png`: Step 1, SQL Server and administrator entries;
+- `gui-init-application-account.png`: Step 2, application login and AES key;
+- `gui-init-aes-key-file-chooser.png`: AES key path chooser;
+- `gui-init-review.png`: Step 3, review and confirmation;
+- `gui-init-progress.png`: asynchronous setup progress;
+- `gui-init-success.png`: successful completion;
+- `gui-init-failure.png`: representative safe failure and recovery.
+
+See [first-run initialisation sequence](../diagrams/source/first-run-initialisation-sequence.puml)
+for the maintainable PlantUML source. Screenshots must be captured from the
+running JavaFX application and checked for secrets before publication.
