@@ -57,4 +57,63 @@ class SqlBatchParserTest {
     void rejectsNullScript() {
         assertThrows(NullPointerException.class, () -> SqlBatchParser.batches(null));
     }
+
+    /**
+     * A GO line inside a multiline SQL literal is not a separator.
+     */
+    @Test
+    void doesNotSplitMultilineSqlString() {
+        var script = "SELECT 'first line\nGO\nlast line' AS Value;\nGO\nSELECT 2;";
+        assertEquals(List.of("SELECT 'first line\nGO\nlast line' AS Value;",
+                "SELECT 2;"), SqlBatchParser.batches(script));
+    }
+
+    /**
+     * GO in a block comment is ignored, even across line boundaries.
+     */
+    @Test
+    void ignoresGoInsideBlockComment() {
+        var script = "/* note\nGO\n*/\nSELECT 1;\nGO\nSELECT 2;";
+        assertEquals(List.of("/* note\nGO\n*/\nSELECT 1;",
+                "SELECT 2;"), SqlBatchParser.batches(script));
+    }
+
+    /**
+     * SQL strings containing comment syntax must remain executable.
+     */
+    @Test
+    void preservesCommentMarkersInsideQuotedStrings() {
+        var script = "SELECT '--not a comment', '/* not a comment */';\nGO\n";
+        assertEquals(List.of("SELECT '--not a comment', '/* not a comment */';"),
+                SqlBatchParser.batches(script));
+    }
+
+    /**
+     * Quoted multiline identifiers and escaped quote characters are respected.
+     */
+    @Test
+    void preservesEscapedQuotesAndQuotedIdentifiers() {
+        var script = "SELECT 'it''s fine', [column\nGO\nname] FROM dbo.Example;\nGO\n";
+        assertEquals(List.of("SELECT 'it''s fine', [column\nGO\nname] FROM dbo.Example;"),
+                SqlBatchParser.batches(script));
+    }
+
+    /**
+     * SQL setup scripts can contain Windows CRLF line endings.
+     */
+    @Test
+    void supportsWindowsLineEndings() {
+        var script = "SELECT 1;\r\nGO\r\nSELECT 2;\r\n";
+        assertEquals(List.of("SELECT 1;", "SELECT 2;"), SqlBatchParser.batches(script));
+    }
+
+    /**
+     * Inline GO text is not a batch separator.
+     */
+    @Test
+    void doesNotSplitGoInsideSqlStatement() {
+        assertEquals(List.of("SELECT GO FROM dbo.Example;"),
+                SqlBatchParser.batches("SELECT GO FROM dbo.Example;"));
+    }
+
 }
