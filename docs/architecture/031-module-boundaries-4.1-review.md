@@ -2,7 +2,7 @@
 
 **Documentation baseline:** OpenData 4.0.0  
 **Refactoring target:** OpenData 4.1.0  
-**Status:** Partial source clean-up committed; architectural migration **not complete**.
+**Status:** Maven and Java module boundaries refactored on the review branch; final CI and desktop verification pending.
 
 ## Architectural rules
 
@@ -17,24 +17,24 @@ Only the following compile-time (and declared Maven) dependencies are permitted 
 
 Plugin-specific shared implementation modules may depend on API and Common, but never Core. A composition/launcher module may depend on Core, Common and plugin implementation JARs, because it has no reverse dependencies into them.
 
-## Current 4.0.0 violations
+## Violations in the original 4.0.0 baseline
 
-The current `opendata-core/pom.xml` declares direct compile dependency on `opendata-common` and runtime dependencies on all six provider plugins. `module-info.java` also requires `com.towermarsh.opendata.common`.
+The original `opendata-core/pom.xml` declared direct compile dependency on `opendata-common` and runtime dependencies on all six provider plugins. `module-info.java` also required `com.towermarsh.opendata.common`.
 
 That is **not compliant** merely because the six plugin dependencies have Maven `runtime` scope. A runtime-scoped dependency is still a declared Core dependency.
 
-Core source files also directly import Common database exception types, `UnavailableDatabaseResourceManager`, `SqlScriptExecutor` and `PluginLogContext`. Removing the Maven dependency without relocating these contracts and implementations breaks the build.
+Original Core source files also directly imported Common database exception types, `UnavailableDatabaseResourceManager`, `SqlScriptExecutor` and `PluginLogContext`. Removing the Maven dependency without relocating these contracts and implementations breaks the build.
 
-## Proposed migration, subject to compilation and test verification
+## Migration implemented on the 4.1.0 review branch
 
-1. Move shared exception contracts required by Core and plugins into API, keeping backward-compatible adapters in Common until consumers can migrate.
-2. Keep the dry-run unavailable database implementation within Core's execution infrastructure, not in the Common abstraction package.
-3. Put Core-specific logging scope state and SQL Server initialisation batch handling in a layer reachable without an illegal Core -> Common dependency; preserve log context across plugin worker threads.
-4. Remove provider runtime dependencies from Core's POM. Introduce a dedicated executable composition/launcher module that depends on Core and provider implementations and packages their classpath registration resources.
-5. Verify the Java Platform Module System descriptor, Maven dependency graph, resource discovery, reflection-based factories, first-run plugin registration, CLI, GUI and dry-run behaviour.
-6. Add automated dependency-boundary tests before enabling the new module layout as a release baseline.
+1. The shared `com.towermarsh.opendata.exception` hierarchy was moved unchanged by fully-qualified name from Common to API, preserving existing callers in Core and provider plugins.
+2. `DatabaseException`, `DatabaseAccessException`, `SqlBatchParser`, validation and formatting helpers, and `PluginLogContext` are now available in API-owned packages.
+3. Core now owns its non-writing `UnavailableDatabaseResourceManager`; deprecated Common compatibility classes remain available for plugin migrations.
+4. `opendata-core` now declares an internal dependency on API only, and its module descriptor no longer requires Common.
+5. New `opendata-launcher` depends on Core, Common and all six provider implementations. Packaged-provider integration tests were relocated from Core into the launcher.
+6. The launcher tests module dependencies and forbidden source imports with `ModuleBoundariesTest`. Strict Checkstyle and SpotBugs verification is enabled in CI.
 
-Do not remove dependencies piecemeal without their replacement wiring. The `ClasspathPluginRegistry`, `PluginRegistrarLocator` and `ReflectionPluginFactory` currently load provider metadata/classes using class-loader resources or reflection; the new launcher must preserve this behaviour.
+The wiring must also be verified in a GUI desktop session; a passing CI build alone does not prove JavaFX startup or installed SQL Server behaviour.  The `ClasspathPluginRegistry`, `PluginRegistrarLocator` and `ReflectionPluginFactory` currently load provider metadata/classes using class-loader resources or reflection; the new launcher must preserve this behaviour.
 
 ## Acceptance criteria
 
@@ -49,7 +49,7 @@ The 4.1.0 refactor is complete only when:
 
 ## Build toolchain compatibility discovered during review
 
-The 4.0.0 Core POM declared JavaFX 27 while the full reactor targets Java 24. JavaFX 27 requires JDK 25 or later. The review branch corrects the JavaFX dependency to **26.0.2** for Java 24 compatibility. A GitHub Actions quality build verifies the updated configuration separately.
+The 4.0.0 Core POM declared JavaFX 27 while the full reactor targets Java 24. JavaFX 27 requires JDK 25 or later. The review branch corrects the JavaFX dependency to **26.0.2** for Java 24 compatibility. GitHub Actions uses the JDK 24 toolchain for compilation and quality verification.
 
 ## Documentation and screenshot assets
 

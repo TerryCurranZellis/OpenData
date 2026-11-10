@@ -1,24 +1,25 @@
 # OpenData Architecture Manual
 
 **Document ID:** ARCH-INDEX-001
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 implementation baseline
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Version 4.0.0 application baseline; 4.1.0 dependency refactor under review
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
 
-The numbered documents describe the current OpenData modular monolith as
-implemented in the Version 3.0.0 merged source baseline. The JavaFX desktop interface and command-line interface share application services. The application has a packaged
-registration catalogue, persistent SQL Server plugin registry, database-backed
-configuration, bounded parallel execution, contextual logging, pooled SQL Server
-access and three executable plugins: Ofgem, OpenMeteo and Octopus Energy.
+The numbered documents describe the OpenData 4.0.0 multi-module application.
+The JavaFX desktop and command-line entry points share runtime services. Version
+4.0.0 includes SQL Server first-run initialisation, AES-256-GCM encrypted
+credentials, database-backed plugin registration, bounded parallel execution,
+six independent provider plugins (Ofgem, OpenMeteo, Octopus, Octopus Adjustment,
+Electric Demand and Electric Supply), and the SQL Server audit infrastructure.
 
-The documentation distinguishes implemented behaviour from remaining release
-hardening. In particular, RSA password encryption is implemented, but encryption
-does not provide adequate protection while a private key store or a plaintext
-bootstrap password is retained in the source tree. That is an operational and
-release issue, not a future architecture feature.
+The 4.1.0 review branch separates the plugin composition/launcher from Core and
+moves shared error contracts into API. Consult the module-boundary review
+before depending on the updated layout. First-run setup is documented in
+[030](030-first-run-initialisation.md); quality and architectural change status
+is tracked in [031](031-module-boundaries-4.1-review.md).
 
 ::: {.docx-linear-table}
 
@@ -52,6 +53,9 @@ release issue, not a future architecture feature.
 | [026](026-openmeteo-historical-weather-architecture.md) | OpenMeteo Historical Weather Architecture |
 | [027](027-octopus-energy-statement-architecture.md) | Octopus Energy Statement Architecture |
 | [028](028-shared-validation-and-jdbc-infrastructure.md) | Shared Validation and JDBC Infrastructure |
+| [029](029-octopus-adjustment-architecture.md) | Octopus Adjustment Architecture |
+| [030](030-first-run-initialisation.md) | First-run SQL Server and AES Setup |
+| [031](031-module-boundaries-4.1-review.md) | Version 4.1.0 Dependency Refactor |
 
 :::
 

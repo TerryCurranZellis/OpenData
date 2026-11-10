@@ -57,7 +57,7 @@
         <jacoco.plugin.version>0.8.15</jacoco.plugin.version>
         <dependency.plugin.version>3.11.0</dependency.plugin.version>
         <project.build.outputTimestamp>2026-08-06T00:00:00Z</project.build.outputTimestamp>
-        <quality.failOnViolation>false</quality.failOnViolation>
+        <quality.failOnViolation>true</quality.failOnViolation>
     </properties>
     <dependencies>
         <!-- Apache Commons Pool -->

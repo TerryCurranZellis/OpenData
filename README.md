@@ -10,16 +10,18 @@ command-line entry point.
 
 | Module | Responsibility |
 |---|---|
-| `opendata-api` | Shared plugin contracts, immutable plugin/configuration records, and database resource interfaces |
-| `opendata-common` | Shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and reusable download-support strategies |
-| `opendata-core` | Application entry points, runtime orchestration, plugin registry/execution infrastructure, SQL Server resources, GUI/CLI, and runtime dependencies on provider plugins |
+| `opendata-api` | Shared plugin contracts, immutable configuration records, database interfaces, exception hierarchy and dependency-free validation/formatting |
+| `opendata-common` | Provider-oriented JDBC helpers, compatibility utilities and reusable download-support strategies |
+| `opendata-core` | JavaFX/CLI, first-run setup, execution orchestration, SQL Server infrastructure; depends on API only |
 | `opendata-plugins` | Aggregator for independent provider plugin projects and shared plugin-support projects |
+| `opendata-launcher` | Runnable composition module depending on Core, Common and all provider plugins; owns packaged-plugin integration tests |
 
 Each provider plugin (Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric
 Demand and Electric Supply) is its own Maven project under `opendata-plugins`.
 Shared NESO and Octopus implementation support also has separate projects.
-`opendata-core` depends on the provider projects so their per-project classpath
-catalogues, implementations, and registration SQL remain available at runtime.
+`opendata-launcher` depends on Core, Common and the provider projects, so the
+per-project classpath catalogues, implementations and registration SQL are available at runtime.
+Core itself must not depend on Common or provider implementations.
 
 ## New in version 4: first-run configuration
 
@@ -43,7 +45,7 @@ Prerequisites:
 Run the full reactor build from the repository root:
 
 ```powershell
-mvn clean verify
+mvn -Dquality.failOnViolation=true clean verify
 ```
 
 The reactor verifies the shared modules, application, provider plugins, and
@@ -56,6 +58,17 @@ mvn -pl opendata-plugins/opendata-plugin-openmeteo -am verify
 
 Older JDKs may still be used for limited compilation checks of the non-JavaFX
 modules, but the supported full build remains Java 24 or later.
+
+To launch a complete plugin-capable application from the repository root, install
+the reactor artifacts and run the launcher:
+
+```powershell
+mvn clean install
+mvn -pl opendata-launcher exec:java
+```
+
+Launch with a desktop JavaFX session when `init=true`. Running `opendata-core` alone
+no longer bundles provider JARs; use the launcher for normal application execution.
 
 ## Documentation
 
@@ -78,7 +91,7 @@ mvn -Dquality.failOnViolation=true clean verify
 
 Development of strict module boundaries is tracked in the
 [4.1.0 module-boundary review](docs/architecture/031-module-boundaries-4.1-review.md).
-The base 4.0.0 code still includes Core -> Common and Core -> provider runtime
-links; those are explicitly **not** compliant with the 4.1.0 target and must
-be removed only together with safe application/launcher restructuring.
+The 4.1.0 review branch separates provider assembly into `opendata-launcher`,
+removes Common and provider dependencies from Core, and adds source/POM boundary
+tests. The branch still requires final CI and desktop verification before release.
 JavaFX 26.0.2 is selected in the review branch to preserve JDK 24 compatibility.
