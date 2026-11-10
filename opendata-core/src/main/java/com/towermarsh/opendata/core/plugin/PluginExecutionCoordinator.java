@@ -63,6 +63,10 @@ public final class PluginExecutionCoordinator {
         this.database = Objects.requireNonNull(database, "database");
         this.clock = Objects.requireNonNull(clock, "clock");
         this.shutdownTimeout = Objects.requireNonNull(shutdownTimeout, "shutdownTimeout");
+        if (shutdownTimeout.isZero() || shutdownTimeout.isNegative()
+                || shutdownTimeout.toMillis() == 0) {
+            throw new IllegalArgumentException("shutdownTimeout must be at least one millisecond.");
+        }
         this.exceptionHandler = new PluginExceptionHandler();
     }
 
@@ -108,11 +112,25 @@ public final class PluginExecutionCoordinator {
                 }
             }
             return new PluginExecutionSummary(results);
+        } catch (InterruptedException exception) {
+            // Cancel any still-running plugins before propagating interruption.
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+            throw exception;
         } finally {
             executor.shutdown();
-            if (!executor.awaitTermination(shutdownTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
-                var cancelled = executor.shutdownNow().size();
-                LOGGER.log(Level.WARNING, "Forced plugin executor shutdown; cancelled queued tasks: {0}", cancelled);
+            if (!Thread.currentThread().isInterrupted()) {
+                try {
+                    if (!executor.awaitTermination(shutdownTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
+                        var cancelled = executor.shutdownNow().size();
+                        LOGGER.log(Level.WARNING,
+                                "Forced plugin executor shutdown; cancelled queued tasks: {0}", cancelled);
+                    }
+                } catch (InterruptedException exception) {
+                    executor.shutdownNow();
+                    Thread.currentThread().interrupt();
+                    throw exception;
+                }
             }
         }
     }
