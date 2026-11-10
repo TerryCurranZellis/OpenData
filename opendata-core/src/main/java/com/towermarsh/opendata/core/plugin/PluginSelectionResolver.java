@@ -52,6 +52,9 @@ public class PluginSelectionResolver {
      * @return result of canonical id
      */
     private static String canonicalId(final String pluginId) {
+        if (pluginId == null || pluginId.isBlank()) {
+            throw new PluginRegistryException("Selected plugin id must not be blank.");
+        }
         return pluginId.trim().toLowerCase(Locale.ROOT);
     }
 }
