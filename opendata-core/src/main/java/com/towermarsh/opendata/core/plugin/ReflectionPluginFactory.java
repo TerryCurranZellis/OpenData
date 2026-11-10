@@ -13,7 +13,8 @@ import java.lang.reflect.InvocationTargetException;
  * Creates configured plugin classes named in plugin properties.
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @since 3.3.0
+ * @version 4.1.0
  */
 public class ReflectionPluginFactory implements PluginFactory {
 
@@ -24,12 +25,12 @@ public class ReflectionPluginFactory implements PluginFactory {
      * @return executable plugin instance
      */
     @Override
-    public OpenDataPlugin create(final ResolvedPlugin plugin) {
-        final String className = plugin.descriptor().implementationClass();
+    public OpenDataPlugin create(ResolvedPlugin plugin) {
+        var className = plugin.descriptor().implementationClass();
         try {
-            final Class<?> implementation = Class.forName(
+            var implementation = Class.forName(
                     className, true, Thread.currentThread().getContextClassLoader());
-            final Object instance = instantiate(implementation, plugin.definition());
+            var instance = instantiate(implementation, plugin.definition());
             if (!(instance instanceof OpenDataPlugin executable)) {
                 throw new PluginRegistryException(
                         "Plugin class does not implement OpenDataPlugin: " + className);
@@ -38,23 +39,24 @@ public class ReflectionPluginFactory implements PluginFactory {
         } catch (ClassNotFoundException exception) {
             throw new PluginRegistryException("Plugin implementation class was not found: " + className, exception);
         } catch (ReflectiveOperationException exception) {
-            final Throwable cause = exception instanceof InvocationTargetException invocation
+            var cause = exception instanceof InvocationTargetException invocation
                     && invocation.getCause() != null ? invocation.getCause() : exception;
             throw new PluginRegistryException("Unable to create plugin implementation: " + className, cause);
         }
     }
 
     /**
-     * Instantiate.
+     * Creates the plugin using its configuration-aware constructor when available,
+     * otherwise falling back to the public no-argument constructor.
      *
-     * @param implementation input implementation
-     * @param definition input definition
-     * @return result of instantiate
+     * @param implementation plugin implementation class
+     * @param definition resolved plugin configuration
+     * @return newly created plugin instance
      * @throws ReflectiveOperationException if instantiate fails
      */
     private static Object instantiate(
-            final Class<?> implementation,
-            final PluginDefinition definition) throws ReflectiveOperationException {
+            Class<?> implementation,
+            PluginDefinition definition) throws ReflectiveOperationException {
         try {
             return implementation.getConstructor(PluginDefinition.class).newInstance(definition);
         } catch (NoSuchMethodException missingConfiguredConstructor) {
