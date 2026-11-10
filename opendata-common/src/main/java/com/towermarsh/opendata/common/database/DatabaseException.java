@@ -11,10 +11,12 @@ package com.towermarsh.opendata.common.database;
  * @author Terry Curran
  * @since 1.0.0
  * @version 4.1.0
- * @deprecated Use {@link com.towermarsh.opendata.database.DatabaseException}.
+ * @deprecated Use {@link com.towermarsh.opendata.database.DatabaseException} in new code.
  */
 @Deprecated(since = "4.1.0")
-public class DatabaseException extends com.towermarsh.opendata.database.DatabaseException {
+public class DatabaseException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates a new database exception.
