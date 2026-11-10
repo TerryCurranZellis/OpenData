@@ -1,9 +1,9 @@
 # Developer Documentation
 
 **Document ID:** DEV-INDEX-001  
-**Version:** 3.1.0  
-**Status:** Current Version 3.1.0 modular build baseline  
-**Baseline date:** 18 September 2026  
+**Version:** 4.0.0  
+**Status:** OpenData 4.0.0 baseline; 4.1.0 code refactor in review
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -14,16 +14,18 @@
 - Current development JDK: 26.
 - Current development IDE: Apache NetBeans 31.
 - Maven: 3.9 or later.
-- OpenData is one Maven reactor with shared `opendata-api`, `opendata-common`,
-  the application `opendata-core`, and an `opendata-plugins` aggregator that
-  contains one project per provider plus shared plugin-support projects.
+- OpenData is one Maven reactor with `opendata-api`, `opendata-common`,
+  `opendata-core`, `opendata-plugins` and a separate executable
+  `opendata-launcher` module. The launcher assembles the provider JARs
+  without making Core depend on Common or provider implementations.
 
 ## Start here
 
 - [Repository structure](repository-structure.md)
 - [Local build, test and run](local-build-test-run.md)
 - [JavaFX GUI architecture](javafx-gui-architecture.md)
-- [GUI 3.0 final acceptance checklist](gui-v3.0-final-acceptance-checklist.md)
+- [Historical GUI 3.0 final acceptance checklist](gui-v3.0-final-acceptance-checklist.md)
+- [4.1 module-boundary review](../architecture/031-module-boundaries-4.1-review.md)
 - [GUI screenshot plan](gui-screenshot-plan.md)
 - [Java quality guide](Java-Quality-Guide.md)
 - [Dependency management](dependency-management.md)
@@ -58,3 +60,10 @@ documentation, and ADRs when it creates a durable architectural decision.
 Every production package containing Java types must have `package-info.java` in
 its owning module. Package pages must describe only the types actually compiled
 from that module.
+
+## Mandatory local verification
+
+Run `mvn clean verify` with Java 24 or later. Checkstyle and SpotBugs are
+configured to fail on detected violations; the CI equivalent explicitly sets
+`-Dquality.failOnViolation=true`. Tests requiring all six provider JARs
+run in `opendata-launcher`, not in the API-only Core dependency tree.

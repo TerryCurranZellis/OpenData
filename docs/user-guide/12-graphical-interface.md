@@ -1,21 +1,22 @@
 # Graphical Interface User Guide
 
-> **Version 4.0.0:** Initial setup is now available through the
-> [first-run GUI wizard](../guides/first-run-initialisation.md). The manual
-> bootstrap below is retained for pre-v4 installations and administration.
+> **OpenData 4.0.0:** New installations run the
+> [first-run GUI wizard](../guides/first-run-initialisation.md) before the
+> normal JavaFX desktop opens. Existing installations with `init=false` use
+> the ordinary GUI or CLI. See also the [complete screenshot plan](../development/gui-screenshot-plan.md).
 
 
 **Document ID:** USER-GUI-001  
-**Version:** 3.0.0  
-**Status:** Current merged GUI baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** OpenData 4.0.0 baseline; 4.1.0 code refactor in review
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
 
 ## 1. Overview
 
-OpenData 3.0.0 provides a JavaFX desktop interface for routine plugin operation
+OpenData 4.0.0 provides a JavaFX desktop interface for routine plugin operation
 and administration. The command-line interface remains available for scripting,
 automation and advanced use.
 
@@ -31,6 +32,15 @@ The current development environment uses JDK 26 and Apache NetBeans 31. The
 minimum supported OpenData runtime remains Java 24.
 
 ## 2. Starting OpenData
+
+If `init=true`, the first-run wizard appears before ordinary application use.
+It has a database-server page, application credentials/AES key page, confirmation
+page, and asynchronous progress/completion view. It registers plugins disabled
+and sets `init=false` only on successful setup. Capture the seven mandatory
+wizard images from the [screenshot plan](../development/gui-screenshot-plan.md).
+
+After setup, the normal GUI opens and shows the registered plugins.
+
 
 The GUI startup sequence is:
 
