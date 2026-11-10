@@ -6,7 +6,7 @@
 package com.towermarsh.opendata.core.database.audit;
 
 import com.towermarsh.opendata.core.database.DatabaseConnectionManager;
-import com.towermarsh.opendata.common.database.DatabaseException;
+import com.towermarsh.opendata.database.DatabaseException;
 import java.net.URI;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +29,8 @@ import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension./**
          * @author Terry Curran
-         * @version 1.0.0
+         * @since 1.0.0
+ * @version 4.1.0
          */
         class)
 @MockitoSettings(strictness = Strictness.LENIENT)

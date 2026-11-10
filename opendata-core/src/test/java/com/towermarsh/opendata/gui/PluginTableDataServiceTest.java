@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.core.plugin.PluginRegistry;
@@ -28,17 +28,18 @@ import org.junit.jupiter.api.Test;
  * Tests the read-only registry/run-audit composition used by the GUI table.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 class PluginTableDataServiceTest {
 
     @Test
     void combinesRegistryRowsWithLatestRunAndLeavesNeverRunPluginBlank() throws Exception {
-        final var database = mock(DatabaseResourceManager.class);
-        final var registry = mock(PluginRegistry.class);
-        final var connection = mock(Connection.class);
-        final var statement = mock(PreparedStatement.class);
-        final var resultSet = mock(ResultSet.class);
+        var database = mock(DatabaseResourceManager.class);
+        var registry = mock(PluginRegistry.class);
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
+        var resultSet = mock(ResultSet.class);
 
         when(registry.list()).thenReturn(List.of(
                 descriptor("ofgem", "Ofgem Energy Price Cap", true),
@@ -49,10 +50,10 @@ class PluginTableDataServiceTest {
         when(resultSet.next()).thenReturn(true, false);
         when(resultSet.getString("PluginId")).thenReturn("OfGem");
         when(resultSet.getString("Status")).thenReturn("SUCCESS");
-        final var startedAt = LocalDateTime.of(2026, 8, 13, 18, 45);
+        var startedAt = LocalDateTime.of(2026, 8, 13, 18, 45);
         when(resultSet.getObject("StartedAt", LocalDateTime.class)).thenReturn(startedAt);
 
-        final var rows = new PluginTableDataService(database, registry).load();
+        var rows = new PluginTableDataService(database, registry).load();
 
         assertEquals(2, rows.size());
         assertEquals("ofgem", rows.get(0).pluginId());
@@ -66,8 +67,8 @@ class PluginTableDataServiceTest {
 
     @Test
     void translatesLatestRunQueryFailure() throws Exception {
-        final var database = mock(DatabaseResourceManager.class);
-        final var registry = mock(PluginRegistry.class);
+        var database = mock(DatabaseResourceManager.class);
+        var registry = mock(PluginRegistry.class);
         when(database.getConnection()).thenThrow(new SQLException("database unavailable"));
 
         assertThrows(DatabaseAccessException.class,
