@@ -7,6 +7,7 @@ package com.towermarsh.opendata.config;
 
 import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -109,18 +110,22 @@ public final class JdbcConfigurationPropertiesSource
     public void saveApplicationProperties(
             final Map<String, String> values,
             final List<String> encryptedKeys) {
+        Objects.requireNonNull(values, "values");
         final var encryptedLookup = List.copyOf(encryptedKeys);
-        try (var connection = database.getConnection();
-                var statement = connection.prepareStatement(UPSERT_APPLICATION_SQL)) {
-            final var updatedAt = LocalDateTime.now();
-            for (var entry : values.entrySet()) {
-                statement.setString(1, entry.getKey());
-                statement.setString(2, entry.getValue());
-                statement.setBoolean(3, encryptedLookup.contains(entry.getKey()));
-                statement.setObject(4, updatedAt);
-                statement.addBatch();
-            }
-            statement.executeBatch();
+        try (var connection = database.getConnection()) {
+            inTransaction(connection, () -> {
+                try (var statement = connection.prepareStatement(UPSERT_APPLICATION_SQL)) {
+                    final var updatedAt = LocalDateTime.now();
+                    for (var entry : values.entrySet()) {
+                        statement.setString(1, entry.getKey());
+                        statement.setString(2, entry.getValue());
+                        statement.setBoolean(3, encryptedLookup.contains(entry.getKey()));
+                        statement.setObject(4, updatedAt);
+                        statement.addBatch();
+                    }
+                    statement.executeBatch();
+                }
+            });
         } catch (SQLException exception) {
             throw new DatabaseAccessException("Unable to store application properties.", exception);
         }
@@ -133,22 +138,26 @@ public final class JdbcConfigurationPropertiesSource
      * @param values plugin properties
      */
     public void savePluginProperties(final String pluginId, final Map<String, String> values) {
+        Objects.requireNonNull(pluginId, "pluginId");
+        Objects.requireNonNull(values, "values");
         try (var connection = database.getConnection()) {
-            try (var deleteStatement = connection.prepareStatement(DELETE_PLUGIN_SQL)) {
-                deleteStatement.setString(1, pluginId);
-                deleteStatement.executeUpdate();
-            }
-            try (var upsertStatement = connection.prepareStatement(UPSERT_PLUGIN_SQL)) {
-                final var updatedAt = LocalDateTime.now();
-                for (var entry : values.entrySet()) {
-                    upsertStatement.setString(1, pluginId);
-                    upsertStatement.setString(2, entry.getKey());
-                    upsertStatement.setString(3, entry.getValue());
-                    upsertStatement.setObject(4, updatedAt);
-                    upsertStatement.addBatch();
+            inTransaction(connection, () -> {
+                try (var deleteStatement = connection.prepareStatement(DELETE_PLUGIN_SQL)) {
+                    deleteStatement.setString(1, pluginId);
+                    deleteStatement.executeUpdate();
                 }
-                upsertStatement.executeBatch();
-            }
+                try (var upsertStatement = connection.prepareStatement(UPSERT_PLUGIN_SQL)) {
+                    final var updatedAt = LocalDateTime.now();
+                    for (var entry : values.entrySet()) {
+                        upsertStatement.setString(1, pluginId);
+                        upsertStatement.setString(2, entry.getKey());
+                        upsertStatement.setString(3, entry.getValue());
+                        upsertStatement.setObject(4, updatedAt);
+                        upsertStatement.addBatch();
+                    }
+                    upsertStatement.executeBatch();
+                }
+            });
         } catch (SQLException exception) {
             throw new DatabaseAccessException("Unable to store properties for plugin: " + pluginId, exception);
         }
@@ -206,4 +215,37 @@ public final class JdbcConfigurationPropertiesSource
             throw new DatabaseAccessException("Unable to load plugin properties for: " + pluginId, exception);
         }
     }
+
+    /**
+     * Commits a multi-statement configuration change atomically and restores
+     * the connection's original auto-commit setting for pooled reuse.
+     *
+     * @param connection borrowed JDBC connection
+     * @param work operations to execute in one transaction
+     * @throws SQLException if the transaction fails
+     */
+    private static void inTransaction(final Connection connection, final SqlWork work)
+            throws SQLException {
+        final var originalAutoCommit = connection.getAutoCommit();
+        connection.setAutoCommit(false);
+        try {
+            work.run();
+            connection.commit();
+        } catch (SQLException | RuntimeException exception) {
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackException) {
+                exception.addSuppressed(rollbackException);
+            }
+            throw exception;
+        } finally {
+            connection.setAutoCommit(originalAutoCommit);
+        }
+    }
+
+    @FunctionalInterface
+    private interface SqlWork {
+        void run() throws SQLException;
+    }
+
 }
