@@ -42,3 +42,16 @@ mvn -Dquality.failOnViolation=true clean verify
 GitHub Actions exercises JDK 24 and JavaFX 26.0.2. Desktop UI, live SQL
 Server provisioning, provider API connectivity and document screenshot
 captures still require environment-specific validation.
+
+## Plugin execution and audit regression coverage
+
+Core tests verify bounded concurrent execution, result ordering, failure isolation
+and interruption propagation to active worker threads. The caller's interrupted
+status must be preserved, and non-positive executor shutdown timeouts are rejected.
+
+Further tests exercise the `PluginRunAudit` lifecycle: a live run is recorded,
+a dry run never writes audit rows, and an audit-completion failure does not
+produce a successful result. JDBC audit tests verify one-row INSERT/UPDATE
+expectations, UTC timestamps, persisted metrics, error-length limits and
+missing-row failure handling. These are isolated mock-JDBC tests; real SQL
+Server behaviour still needs integration verification.
