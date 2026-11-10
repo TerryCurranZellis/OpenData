@@ -8,7 +8,6 @@ package com.towermarsh.opendata.common.database;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.database.SqlBatchParser;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -65,7 +64,9 @@ public class SqlScriptExecutor {
      *
      * @param script script text
      * @return ordered batches
+     * @deprecated Use {@link SqlBatchParser#batches(String)} directly from API.
      */
+    @Deprecated(since = "4.1.0", forRemoval = false)
     public static List<String> batches(String script) {
         return SqlBatchParser.batches(script);
     }
@@ -83,7 +84,7 @@ public class SqlScriptExecutor {
             String script,
             String name) throws SQLException {
         var number = 0;
-        for (var batch : batches(script)) {
+        for (var batch : SqlBatchParser.batches(script)) {
             number++;
             try (var statement = connection.createStatement()) {
                 statement.execute(batch);
