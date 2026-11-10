@@ -57,7 +57,7 @@ method and applying domain constraints after conversion.
 
 ## Shared JDBC package
 
-The Common package `com.towermarsh.opendata.database.jdbc` contains execution
+The Common package `com.towermarsh.opendata.common.database.jdbc` contains execution
 mechanics that do not know a plugin schema. Provider implementations can use
 these utilities; Core must not depend on Common.
 
@@ -66,10 +66,10 @@ these utilities; Core must not depend on Common.
 | `JdbcTransactionTemplate` | Borrow connection, disable auto-commit, commit, roll back and restore state |
 | `JdbcConnectionCleanup` | Remove connection-scoped state before a pooled session is returned |
 | `JdbcTransaction<T>` | Typed transaction callback |
-| `JdbcBatchExecutor` | Execute typed prepared-statement batches and count results consistently |
+| `JdbcBatchExecutor` | Execute typed prepared-statement batches with subtype record collections and supertype binders |
 | `JdbcStatementBinder<T>` | Bind one record to a prepared statement |
 | `JdbcUpsertAdapter<T,C>` | Define record-specific existence, insert and update SQL operations |
-| `JdbcUpsertExecutor` | Execute the common exists/insert/update loop |
+| `JdbcUpsertExecutor` | Execute typed exists/insert/update loops, accepting subtype records and supertype adapters |
 | `JdbcUpsertResult` | Combine inserted and updated counts safely |
 
 Checked failures leaving `JdbcTransactionTemplate` are wrapped in the
@@ -78,7 +78,7 @@ exception contract is available to Core. Runtime exceptions retain their origina
 Rollback and cleanup failures are attached as suppressed exceptions rather than
 concealing the primary failure.
 
-## Persistence strategy selection
+For 4.1.0, `JdbcBatchExecutor.execute` accepts `Iterable<? extends T>`\npaired with `JdbcStatementBinder<? super T>`. `JdbcUpsertExecutor.execute`\naccepts `Iterable<? extends T>` paired with `JdbcUpsertAdapter<? super T, C>`.\nThis uses Java's variance rules to share the same binding or persistence logic\nacross subtype records without unsafe casts. Dedicated JDBC tests verify both.\n\n## Persistence strategy selection
 
 A plugin selects shared mechanics according to its data and SQL strategy.
 

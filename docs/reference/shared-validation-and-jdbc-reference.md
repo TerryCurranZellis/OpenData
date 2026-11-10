@@ -1,9 +1,9 @@
 # Shared Validation and JDBC Reference
 
 **Document ID:** REF-SHARED-VALIDATION-JDBC-001
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 implementation reference
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 reference; 4.1.0 generic enhancements
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -13,7 +13,7 @@
 Construct one reader from the resolved definition:
 
 ```java
-final var properties = new PluginPropertyValues(definition);
+var properties = new PluginPropertyValues(definition);
 ```
 
 | Method | Result |
@@ -40,15 +40,15 @@ configured value.
 Example:
 
 ```java
-final var properties = new PluginPropertyValues(definition);
-final int batchSize = ValidationRules.requireRange(
+var properties = new PluginPropertyValues(definition);
+var batchSize = ValidationRules.requireRange(
         properties.integer("database.batch-size", 500),
         1,
         10_000,
         "database.batch-size");
 ```
 
-## `ValidationRules`
+API-owned `com.towermarsh.opendata.foundation.ValidationRules` is available to Core and plugins; the Common implementation remains for provider compatibility.\n\n## `ValidationRules`
 
 | Method | Rule |
 |---|---|
@@ -69,7 +69,7 @@ Configured schema and table names cannot be passed as prepared-statement
 parameters. Validate them before SQL composition:
 
 ```java
-final String table = SqlIdentifiers.qualify(schema, tableName);
+var table = SqlIdentifiers.qualify(schema, tableName);
 ```
 
 | Method | Result |
@@ -87,7 +87,7 @@ are not substitutes for prepared-statement parameters for data values.
 Construct the template from the supplied database resource manager:
 
 ```java
-final var transactions = new JdbcTransactionTemplate(database);
+var transactions = new JdbcTransactionTemplate(database);
 ```
 
 Basic transaction:
@@ -127,7 +127,7 @@ may execute savepoints only when the plugin has a documented need.
 ## `JdbcBatchExecutor`
 
 ```java
-final int loaded = JdbcBatchExecutor.execute(
+var loaded = JdbcBatchExecutor.execute(
         connection,
         INSERT_SQL,
         records,
@@ -135,7 +135,7 @@ final int loaded = JdbcBatchExecutor.execute(
         (statement, record) -> bindRecord(statement, record));
 ```
 
-The executor rejects blank SQL, null records and non-positive batch sizes. It
+In 4.1.0, the generic signature accepts an `Iterable<? extends T>` and a\n`JdbcStatementBinder<? super T>`, so a binder handling a base record type can\nprocess records of its subtypes without casts. The executor rejects blank SQL, null records and non-positive batch sizes. It
 counts normal update results, treats `Statement.SUCCESS_NO_INFO` as one affected
 record and fails if the driver reports `Statement.EXECUTE_FAILED`.
 
@@ -144,7 +144,7 @@ record and fails if the driver reports `Statement.EXECUTE_FAILED`.
 Use the generic executor when each record follows the same natural-key flow:
 
 ```java
-final JdbcUpsertResult result = JdbcUpsertExecutor.execute(
+var result = JdbcUpsertExecutor.execute(
         connection,
         records,
         runId,
@@ -159,7 +159,7 @@ void insert(Connection connection, T record, C context);
 void update(Connection connection, T record, C context);
 ```
 
-`JdbcUpsertResult.plus(...)` combines typed results from separate record sets.
+The 4.1.0 upsert executor likewise accepts `Iterable<? extends T>` with a\n`JdbcUpsertAdapter<? super T, C>`; an adapter for a supertype may process\nsubtype records while preserving the context type.\n\n`JdbcUpsertResult.plus(...)` combines typed results from separate record sets.
 Use a set-based staging strategy instead when volume or concurrency makes one
 existence query per record inappropriate.
 
