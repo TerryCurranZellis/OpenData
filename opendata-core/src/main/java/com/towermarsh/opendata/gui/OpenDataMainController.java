@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
-import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
+import static com.towermarsh.opendata.foundation.ExceptionMessages.rootCauseMessage;
 
 import com.towermarsh.opendata.core.logging.LoggingManager;
 import com.towermarsh.opendata.core.plugin.PluginExecutionSummary;
@@ -38,7 +38,8 @@ import javafx.stage.Window;
  * presentation refresh.</p>
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @since 3.3.0
+ * @version 4.1.0
  */
 public final class OpenDataMainController {
 

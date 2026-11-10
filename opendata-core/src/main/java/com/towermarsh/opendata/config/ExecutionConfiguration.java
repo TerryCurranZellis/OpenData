@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
-import com.towermarsh.opendata.validation.ValidationRules;
+import com.towermarsh.opendata.foundation.ValidationRules;
 import java.time.Duration;
 
 /** 
@@ -14,7 +14,8 @@ import java.time.Duration;
  * @param shutdownTimeout maximum time to wait for plugin shutdown
   *
  * @author Terry Curran
- * @version 2.1
+ * @since 2.1.0
+ * @version 4.1.0
  */
 public record ExecutionConfiguration(int maxParallelPlugins, Duration shutdownTimeout) {
     /** 

@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
-import com.towermarsh.opendata.validation.ValidationRules;
+import com.towermarsh.opendata.foundation.ValidationRules;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -23,7 +23,8 @@ import java.util.Objects;
  * @param validationQuery SQL query used to validate pooled connections
   *
  * @author Terry Curran
- * @version 2.1
+ * @since 2.1.0
+ * @version 4.1.0
  */
 public record DatabasePoolConfiguration(
         String driverClass,

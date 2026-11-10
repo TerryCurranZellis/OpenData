@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
-import com.towermarsh.opendata.validation.ValidationRules;
+import com.towermarsh.opendata.foundation.ValidationRules;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -17,7 +17,8 @@ import java.util.Objects;
  * @param append whether existing log files are appended to
   *
  * @author Terry Curran
- * @version 2.1
+ * @since 2.1.0
+ * @version 4.1.0
  */
 public record LoggingConfiguration(Path directory, int fileLimitBytes, int fileCount, boolean append) {
     /** 

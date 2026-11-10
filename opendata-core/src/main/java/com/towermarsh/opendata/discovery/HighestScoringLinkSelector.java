@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.discovery;
 
-import com.towermarsh.opendata.util.DiscoveryTextNormalizer;
+import com.towermarsh.opendata.foundation.DiscoveryTextNormalizer;
 import com.towermarsh.opendata.exception.DiscoveryException;
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +20,8 @@ import java.util.Objects;
  * file after a publisher changes its page.</p>
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @since 3.3.0
+ * @version 4.1.0
  */
 public class HighestScoringLinkSelector implements DiscoveredLinkSelector {
 
