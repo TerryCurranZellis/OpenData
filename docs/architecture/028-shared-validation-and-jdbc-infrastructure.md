@@ -84,6 +84,17 @@ accepts `Iterable<? extends T>` paired with `JdbcUpsertAdapter<? super T, C>`.
 This uses Java's variance rules to share the same binding or persistence logic
 across subtype records without unsafe casts. Dedicated JDBC tests verify both.
 
+## Core configuration persistence
+
+The Core module cannot depend on Common's JDBC transaction helpers under the
+4.1.0 module-boundary rules. Its `JdbcConfigurationPropertiesSource` therefore
+owns a small local transaction wrapper for application-property upserts and
+plugin-property replacements. Deleting a plugin's previous configuration and
+inserting the replacement values must commit or roll back together. The
+connection's original auto-commit mode is restored before it returns to the
+pool. JUnit/Mockito tests cover both successful commits and failed writes;
+these do not replace SQL Server integration tests.
+
 ## Persistence strategy selection
 
 A plugin selects shared mechanics according to its data and SQL strategy.
