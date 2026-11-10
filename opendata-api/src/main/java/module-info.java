@@ -8,5 +8,6 @@ module com.towermarsh.opendata.api {
     requires transitive java.sql;
     exports com.towermarsh.opendata.config.model;
     exports com.towermarsh.opendata.database;
+    exports com.towermarsh.opendata.foundation;
     exports com.towermarsh.opendata.plugin;
 }
