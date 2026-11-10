@@ -21,6 +21,8 @@
  * dialog.</li>
  * <li>{@link ConfigurationDisplayMasker} &mdash; Converts configuration maps
  * into safe read-only GUI values.</li>
+ * <li>{@link InitialisationWizard} &mdash; Guides the first-run SQL Server,
+ * application credential and AES key setup, including progress and recovery.</li>
  * <li>{@link GuiLauncher} &mdash; Launches the OpenData JavaFX desktop
  * application.</li>
  * <li>{@link JavaFxLogHandler} &mdash; JUL handler that batches formatted log
@@ -75,8 +77,7 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 4.0.0
-
- * <p><b>Initialisation:</b> {@link InitialisationWizard} opens before the main GUI when init=true.</p>
+ * @since 3.0.0
+ * @version 4.1.0
  */
 package com.towermarsh.opendata.gui;
