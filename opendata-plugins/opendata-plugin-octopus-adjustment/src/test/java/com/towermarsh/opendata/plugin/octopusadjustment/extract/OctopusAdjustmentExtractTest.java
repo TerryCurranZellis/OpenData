@@ -21,7 +21,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Tests adjustment filename discovery and dry-run database isolation. */
+/** Tests adjustment filename discovery and dry-run database isolation.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class OctopusAdjustmentExtractTest {
 
     @TempDir
@@ -45,12 +48,12 @@ class OctopusAdjustmentExtractTest {
         Files.writeString(temporaryDirectory.resolve("A-5F191685-419015087-2.PDF"), "second");
         Files.writeString(temporaryDirectory.resolve("octopus-energy-statement-2026-08-01.pdf"), "ordinary");
 
-        final var configuration = new OctopusAdjustmentConfiguration(
+        var configuration = new OctopusAdjustmentConfiguration(
                 "A-5F191685",
                 temporaryDirectory,
                 temporaryDirectory.resolve("work"),
                 temporaryDirectory.resolve("archive"));
-        final var context = new PluginExecutionContext(
+        var context = new PluginExecutionContext(
                 UUID.randomUUID(),
                 new PluginDescriptor(
                         "octopus-adjustment",
@@ -64,7 +67,7 @@ class OctopusAdjustmentExtractTest {
                 Clock.systemUTC(),
                 true);
 
-        final var sources = new OctopusAdjustmentExtract().extract(configuration, context);
+        var sources = new OctopusAdjustmentExtract().extract(configuration, context);
 
         assertEquals(2, sources.size());
         assertEquals("A-5F191685-419015087-1.pdf", sources.get(0).fileName());

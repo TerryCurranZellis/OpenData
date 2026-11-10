@@ -23,23 +23,26 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-/** Tests adjustment load dry-run isolation. */
+/** Tests adjustment load dry-run isolation.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class OctopusAdjustmentLoadTest {
 
     @Test
     void dryRunReportsRecordsWithoutDatabaseAccess() {
-        final var source = new ExtractedOctopusAdjustment(
+        var source = new ExtractedOctopusAdjustment(
                 Path.of("A-5F191685-419015087-1.pdf"),
                 "A-5F191685-419015087-1.pdf",
                 "0".repeat(64),
                 100L);
-        final var result = new OctopusAdjustmentParseResult(
+        var result = new OctopusAdjustmentParseResult(
                 List.of(electricityRecord()),
                 List.of(),
                 List.of(source));
-        final var configuration = new OctopusAdjustmentConfiguration(
+        var configuration = new OctopusAdjustmentConfiguration(
                 "A-5F191685", Path.of("input"), Path.of("work"), Path.of("archive"));
-        final var context = new PluginExecutionContext(
+        var context = new PluginExecutionContext(
                 UUID.randomUUID(),
                 new PluginDescriptor(
                         "octopus-adjustment",
@@ -53,7 +56,7 @@ class OctopusAdjustmentLoadTest {
                 Clock.systemUTC(),
                 true);
 
-        final var metrics = new OctopusAdjustmentLoad().load(result, configuration, context);
+        var metrics = new OctopusAdjustmentLoad().load(result, configuration, context);
 
         assertEquals(1, metrics.read());
         assertEquals(0, metrics.inserted());

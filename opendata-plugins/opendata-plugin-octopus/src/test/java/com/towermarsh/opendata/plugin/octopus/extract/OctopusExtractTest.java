@@ -20,7 +20,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Tests Octopus statement discovery and dry-run database isolation. */
+/** Tests Octopus statement discovery and dry-run database isolation.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class OctopusExtractTest {
 
     @TempDir
@@ -42,7 +45,7 @@ class OctopusExtractTest {
 
     @Test
     void dryRunDoesNotQueryProcessedFileLedger() throws Exception {
-        final var context = new PluginExecutionContext(
+        var context = new PluginExecutionContext(
                 UUID.randomUUID(),
                 new PluginDescriptor(
                         "octopus", "Octopus", "", "example.OctopusPlugin", true, 1),
@@ -50,7 +53,7 @@ class OctopusExtractTest {
                 new UnavailableDatabaseResourceManager(),
                 Clock.systemUTC(),
                 true);
-        final var configuration = new OctopusConfiguration(
+        var configuration = new OctopusConfiguration(
                 temporaryDirectory,
                 temporaryDirectory.resolve("work"),
                 temporaryDirectory.resolve("archive"));

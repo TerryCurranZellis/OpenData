@@ -17,7 +17,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Tests adjustment finalise dry-run archive isolation. */
+/** Tests adjustment finalise dry-run archive isolation.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class OctopusAdjustmentFinaliseTest {
 
     @TempDir
@@ -25,20 +28,20 @@ class OctopusAdjustmentFinaliseTest {
 
     @Test
     void dryRunDoesNotMoveSourceFile() throws Exception {
-        final var sourcePath = temporaryDirectory.resolve("A-5F191685-419015087-1.pdf");
+        var sourcePath = temporaryDirectory.resolve("A-5F191685-419015087-1.pdf");
         Files.writeString(sourcePath, "source");
-        final var source = new ExtractedOctopusAdjustment(
+        var source = new ExtractedOctopusAdjustment(
                 sourcePath,
                 sourcePath.getFileName().toString(),
                 "0".repeat(64),
                 Files.size(sourcePath));
-        final var archive = temporaryDirectory.resolve("archive");
-        final var configuration = new OctopusAdjustmentConfiguration(
+        var archive = temporaryDirectory.resolve("archive");
+        var configuration = new OctopusAdjustmentConfiguration(
                 "A-5F191685",
                 temporaryDirectory,
                 temporaryDirectory.resolve("work"),
                 archive);
-        final var result = new OctopusAdjustmentParseResult(
+        var result = new OctopusAdjustmentParseResult(
                 List.of(), List.of(), List.of(source));
 
         new OctopusAdjustmentFinalise().finalise(

@@ -15,6 +15,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+/**
+ * Regression tests for ElectricDemandPipeline behaviour.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class ElectricDemandPipelineTest {
 
     @TempDir

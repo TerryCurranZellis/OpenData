@@ -15,12 +15,15 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-/** Tests typed Version 3.1.0 adjustment configuration. */
+/** Tests typed Version 3.1.0 adjustment configuration.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class OctopusAdjustmentConfigurationTest {
 
     @Test
     void createsConfigurationFromResolvedDefinition() {
-        final var configuration = OctopusAdjustmentConfiguration.from(definition(
+        var configuration = OctopusAdjustmentConfiguration.from(definition(
                 "octopus-adjustment", "A-5F191685"));
 
         assertEquals("A-5F191685", configuration.accountNumber());

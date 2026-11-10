@@ -12,6 +12,12 @@ import java.time.LocalDate;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Regression tests for NesoCsv behaviour.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class NesoCsvTest {
 
     @Test

@@ -16,7 +16,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Tests compiled Windows Help resolution without starting a JavaFX toolkit. */
+/** Tests compiled Windows Help resolution without starting a JavaFX toolkit.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class OpenDataHelpLauncherTest {
 
     @TempDir
@@ -31,10 +34,10 @@ class OpenDataHelpLauncherTest {
 
     @Test
     void resolvesPackagedHelpDirectoryBeforeGeneratedDocumentation() throws IOException {
-        final var packaged = temporaryDirectory
+        var packaged = temporaryDirectory
                 .resolve("help")
                 .resolve(OpenDataHelpLauncher.HELP_FILE_NAME);
-        final var generated = temporaryDirectory
+        var generated = temporaryDirectory
                 .resolve("docs")
                 .resolve("build")
                 .resolve("help")
@@ -51,7 +54,7 @@ class OpenDataHelpLauncherTest {
 
     @Test
     void resolvesGeneratedHelpForSourceTreeExecution() throws IOException {
-        final var generated = temporaryDirectory
+        var generated = temporaryDirectory
                 .resolve("docs")
                 .resolve("build")
                 .resolve("help")
