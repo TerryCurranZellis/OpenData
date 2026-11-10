@@ -24,11 +24,12 @@ import java.util.OptionalInt;
  * @param helpRequested whether help output was requested
  * @param aboutRequested whether the graphical About window was requested
  * @param listPluginsRequested whether registered plugin listing was requested
- * @param guiRequested - user wants the gui interface
+ * @param guiRequested whether the graphical interface was requested
  * @param command requested plugin operation
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public record CommandLineArguments(
         List<String> pluginIds,
@@ -60,7 +61,7 @@ public record CommandLineArguments(
      * @param aboutRequested whether the graphical About window was requested
      * @param listPluginsRequested whether registered plugin listing was
      * requested
-     * @param guiRequested - user wants the gui interface
+     * @param guiRequested whether the graphical interface was requested
      * @param command requested plugin operation
      */
     public CommandLineArguments {
@@ -88,7 +89,7 @@ public record CommandLineArguments(
     }
 
     /**
-     * Has the plugin been registered
+     * Reports whether plugin registration was requested.
      *
      * @return whether plugin registration was requested
      */
@@ -97,7 +98,7 @@ public record CommandLineArguments(
     }
 
     /**
-     * Has the plugin been un-registered
+     * Reports whether plugin unregistration was requested.
      *
      * @return whether plugin removal was requested
      */
@@ -106,7 +107,7 @@ public record CommandLineArguments(
     }
 
     /**
-     * is the plugin enabled
+     * Reports whether enabling plugins was requested.
      *
      * @return whether plugin enable was requested
      */
@@ -115,7 +116,7 @@ public record CommandLineArguments(
     }
 
     /**
-     * is the plugin disabled
+     * Reports whether disabling plugins was requested.
      *
      * @return whether plugin disable was requested
      */
@@ -124,7 +125,7 @@ public record CommandLineArguments(
     }
 
     /**
-     * have the plugin details been requested
+     * Reports whether plugin configuration details were requested.
      *
      * @return whether stored configuration details were requested
      */
@@ -133,7 +134,7 @@ public record CommandLineArguments(
     }
 
     /**
-     * Is this a run request
+     * Reports whether normal or dry-run plugin execution was requested.
      *
      * @return whether normal or dry-run plugin execution was requested
      */
