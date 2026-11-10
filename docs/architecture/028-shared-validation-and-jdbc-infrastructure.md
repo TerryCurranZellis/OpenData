@@ -78,7 +78,13 @@ exception contract is available to Core. Runtime exceptions retain their origina
 Rollback and cleanup failures are attached as suppressed exceptions rather than
 concealing the primary failure.
 
-For 4.1.0, `JdbcBatchExecutor.execute` accepts `Iterable<? extends T>`\npaired with `JdbcStatementBinder<? super T>`. `JdbcUpsertExecutor.execute`\naccepts `Iterable<? extends T>` paired with `JdbcUpsertAdapter<? super T, C>`.\nThis uses Java's variance rules to share the same binding or persistence logic\nacross subtype records without unsafe casts. Dedicated JDBC tests verify both.\n\n## Persistence strategy selection
+For 4.1.0, `JdbcBatchExecutor.execute` accepts `Iterable<? extends T>`
+paired with `JdbcStatementBinder<? super T>`. `JdbcUpsertExecutor.execute`
+accepts `Iterable<? extends T>` paired with `JdbcUpsertAdapter<? super T, C>`.
+This uses Java's variance rules to share the same binding or persistence logic
+across subtype records without unsafe casts. Dedicated JDBC tests verify both.
+
+## Persistence strategy selection
 
 A plugin selects shared mechanics according to its data and SQL strategy.
 
