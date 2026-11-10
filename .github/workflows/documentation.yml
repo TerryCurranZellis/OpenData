@@ -28,9 +28,10 @@ jobs:
       - name: Validate manifest, sources and links
         shell: pwsh
         run: ./scripts/Validate-Documentation.ps1 -FailOnWarning
-      - name: Install Pandoc
-        shell: pwsh
-        run: choco install pandoc -y --no-progress
+      - name: Set up Pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+        with:
+          pandoc-version: '3.8.3'
       - name: Build HTML manuals
         shell: pwsh
         run: ./scripts/Build-Documentation.ps1 -Document All -Format Html
