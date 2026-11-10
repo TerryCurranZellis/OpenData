@@ -36,7 +36,8 @@ import javafx.stage.Window;
  * tasks.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 final class OpenDataInformationDialogs {
 
@@ -140,7 +141,7 @@ final class OpenDataInformationDialogs {
 
         var image = loadSplashImage();
         if (image != null) {
-            final var imageView = new ImageView(image);
+            var imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setSmooth(true);
             imageView.setFitWidth(760);

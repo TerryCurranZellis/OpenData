@@ -18,7 +18,8 @@ import java.util.Objects;
  * property names are also masked defensively.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 final class ConfigurationDisplayMasker {
 
@@ -33,8 +34,8 @@ final class ConfigurationDisplayMasker {
      * @param values value of values
      * @return result of entries
      */
-    static List<ConfigurationDisplayEntry> entries(final Map<String, String> values) {
-        final var source = Map.copyOf(Objects.requireNonNull(values, "values"));
+    static List<ConfigurationDisplayEntry> entries(Map<String, String> values) {
+        var source = Map.copyOf(Objects.requireNonNull(values, "values"));
         return source.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey(String.CASE_INSENSITIVE_ORDER))
                 .map(entry -> new ConfigurationDisplayEntry(
@@ -52,8 +53,8 @@ final class ConfigurationDisplayMasker {
      * @param values value of values
      * @return result of should mask
      */
-    static boolean shouldMask(final String key, final Map<String, String> values) {
-        final var normalised = Objects.requireNonNull(key, "key")
+    static boolean shouldMask(String key, Map<String, String> values) {
+        var normalised = Objects.requireNonNull(key, "key")
                 .trim().toLowerCase(Locale.ROOT);
 
         if (normalised.contains("password")
@@ -68,7 +69,7 @@ final class ConfigurationDisplayMasker {
         }
 
         if (normalised.endsWith(".value")) {
-            final var sensitiveKey = normalised.substring(0,
+            var sensitiveKey = normalised.substring(0,
                     normalised.length() - ".value".length()) + ".sensitive";
             return values.entrySet().stream()
                     .filter(entry -> entry.getKey().equalsIgnoreCase(sensitiveKey))

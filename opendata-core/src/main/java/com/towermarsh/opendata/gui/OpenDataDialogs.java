@@ -19,7 +19,8 @@ import javafx.stage.Window;
  * Common JavaFX dialogs used by the OpenData main window.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 final class OpenDataDialogs {
 
@@ -84,7 +85,7 @@ final class OpenDataDialogs {
             final String title,
             final String header,
             final String message) {
-        final var alert = new Alert(
+        var alert = new Alert(
                 Alert.AlertType.CONFIRMATION,
                 message,
                 ButtonType.OK,
@@ -105,7 +106,7 @@ final class OpenDataDialogs {
     static Optional<Path> choosePluginDefinitionFile(
             final Window owner,
             final List<Path> preferredDirectories) {
-        final var chooser = new FileChooser();
+        var chooser = new FileChooser();
         chooser.setTitle("Register Plugin from File");
         chooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(
@@ -120,7 +121,7 @@ final class OpenDataDialogs {
                 .findFirst()
                 .ifPresent(directory -> chooser.setInitialDirectory(directory.toFile()));
 
-        final var selected = chooser.showOpenDialog(owner);
+        var selected = chooser.showOpenDialog(owner);
         return selected == null
                 ? Optional.empty()
                 : Optional.of(selected.toPath().toAbsolutePath().normalize());
@@ -141,7 +142,7 @@ final class OpenDataDialogs {
             final String title,
             final String header,
             final String message) {
-        final var alert = new Alert(type);
+        var alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(message);

@@ -25,7 +25,8 @@ import javafx.beans.property.StringProperty;
  * layer.</p>
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @since 3.3.0
+ * @version 4.1.0
  */
 public final class PluginRow {
 
@@ -52,11 +53,11 @@ public final class PluginRow {
      */
     public PluginRow(
             final boolean selected,
-            final String pluginId,
-            final String description,
-            final String enabledState,
-            final String lastRunStatus,
-            final String lastRunDate) {
+            String pluginId,
+            String description,
+            String enabledState,
+            String lastRunStatus,
+            String lastRunDate) {
         this.selected = new SimpleBooleanProperty(selected);
         this.pluginId = new SimpleStringProperty(pluginId);
         this.description = new SimpleStringProperty(description);
@@ -77,10 +78,10 @@ public final class PluginRow {
      */
     public static PluginRow from(final PluginTableEntry entry) {
         Objects.requireNonNull(entry, "entry");
-        final var status = entry.lastRunStatus()
+        var status = entry.lastRunStatus()
                 .map(value -> titleCase(value.displayName()))
                 .orElse("");
-        final var date = entry.lastRunStartedAtUtc()
+        var date = entry.lastRunStartedAtUtc()
                 .map(value -> value
                         .atOffset(ZoneOffset.UTC)
                         .atZoneSameInstant(ZoneId.systemDefault())
@@ -101,7 +102,7 @@ public final class PluginRow {
      * @param value value of value
      * @return result of title case
      */
-    private static String titleCase(final String value) {
+    private static String titleCase(String value) {
         if (value == null || value.isBlank()) {
             return "";
         }

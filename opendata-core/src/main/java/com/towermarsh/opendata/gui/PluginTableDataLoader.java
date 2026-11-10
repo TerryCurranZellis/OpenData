@@ -20,7 +20,8 @@ import java.util.Map;
  * application service if several operations benefit from sharing one session.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class PluginTableDataLoader {
 
@@ -31,13 +32,13 @@ public final class PluginTableDataLoader {
      * @return current registered plugin rows
      */
     public List<PluginTableEntry> load() {
-        final var passwordCipher = new AesConfigurationPasswordCipher();
-        final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
+        var passwordCipher = new AesConfigurationPasswordCipher();
+        var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 
         try (var database = SQLServerResource.initialise(
                 bootstrap.toDatabasePoolConfiguration())) {
-            final var registry = new JdbcPluginRegistry(database);
+            var registry = new JdbcPluginRegistry(database);
             return new PluginTableDataService(database, registry).load();
         }
     }

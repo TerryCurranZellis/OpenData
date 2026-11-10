@@ -25,7 +25,8 @@ import java.util.Map;
  * or encrypted password text crosses this GUI boundary.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class ApplicationSettingsGateway {
 
@@ -35,8 +36,8 @@ public final class ApplicationSettingsGateway {
      * @return immutable display rows
      */
     public List<ConfigurationDisplayEntry> load() {
-        final var passwordCipher = new AesConfigurationPasswordCipher();
-        final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
+        var passwordCipher = new AesConfigurationPasswordCipher();
+        var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 
         if (bootstrap.useDatabaseProperties()) {
@@ -64,7 +65,7 @@ public final class ApplicationSettingsGateway {
     private static List<ConfigurationDisplayEntry> entries(
             final boolean databaseBacked,
             final ApplicationRuntimeConfiguration runtime) {
-        final List<ConfigurationDisplayEntry> result = new ArrayList<>();
+        var result = new ArrayList<ConfigurationDisplayEntry>();
         result.add(new ConfigurationDisplayEntry(
                 "Application version", ApplicationInfo.current().version()));
         result.add(new ConfigurationDisplayEntry(

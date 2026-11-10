@@ -27,7 +27,8 @@ import javafx.application.Platform;
  * JavaFX queue entry per log record during busy multi-plugin runs.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class JavaFxLogHandler extends Handler {
 
@@ -53,7 +54,7 @@ public final class JavaFxLogHandler extends Handler {
      * @param record input record
      */
     @Override
-    public void publish(final LogRecord record) {
+    public void publish(LogRecord record) {
         if (closed.get() || !isLoggable(record)) {
             return;
         }
@@ -104,7 +105,7 @@ public final class JavaFxLogHandler extends Handler {
      * Drain on java fx thread.
      */
     private void drainOnJavaFxThread() {
-        final var text = new StringBuilder();
+        var text = new StringBuilder();
         String next;
         while ((next = pending.poll()) != null) {
             text.append(next);

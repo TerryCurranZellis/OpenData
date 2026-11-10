@@ -24,7 +24,8 @@ import javafx.util.Duration;
  * immediately before the main application stage is shown.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 final class OpenDataSplashScreen {
 
@@ -35,10 +36,10 @@ final class OpenDataSplashScreen {
             = "/com/towermarsh/opendata/gui/opendata-splash.png";
     private static final double MAXIMUM_IMAGE_WIDTH = 600.0;
 
-    private final Stage stage;
-    private final long shownAtNanos;
+    private Stage stage;
+    private long shownAtNanos;
 
-    private OpenDataSplashScreen(final Stage stage, final long shownAtNanos) {
+    private OpenDataSplashScreen(Stage stage, long shownAtNanos) {
         this.stage = stage;
         this.shownAtNanos = shownAtNanos;
     }
@@ -49,7 +50,7 @@ final class OpenDataSplashScreen {
      * @return the displayed splash instance
      */
     static OpenDataSplashScreen show() {
-        final var resource = Objects.requireNonNull(
+        var resource = Objects.requireNonNull(
                 OpenDataSplashScreen.class.getResourceAsStream(SPLASH_RESOURCE),
                 "Unable to locate splash resource " + SPLASH_RESOURCE);
 
@@ -60,17 +61,17 @@ final class OpenDataSplashScreen {
             throw new IllegalStateException("Unable to close splash resource.", exception);
         }
 
-        final var imageView = new ImageView(image);
+        var imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
 
-        final var root = new StackPane(imageView);
+        var root = new StackPane(imageView);
         root.setAlignment(Pos.CENTER);
         root.setStyle("-fx-background-color: #021639;"
                 + "-fx-border-color: #23bcee;"
                 + "-fx-border-width: 1;");
 
-        final var splashStage = new Stage(StageStyle.UNDECORATED);
+        var splashStage = new Stage(StageStyle.UNDECORATED);
         splashStage.setAlwaysOnTop(true);
         splashStage.setScene(new Scene(root));
         splashStage.sizeToScene();
@@ -87,15 +88,15 @@ final class OpenDataSplashScreen {
      *
      * @param afterClose action to run after the splash closes
      */
-    void closeAfterMinimumDisplay(final Runnable afterClose) {
+    void closeAfterMinimumDisplay(Runnable afterClose) {
         Objects.requireNonNull(afterClose, "afterClose");
 
-        final long minimumNanos = (long) (MINIMUM_DISPLAY_DURATION.toMillis() * 1_000_000L);
-        final long elapsedNanos = Math.max(0L, System.nanoTime() - shownAtNanos);
-        final long remainingNanos = Math.max(0L, minimumNanos - elapsedNanos);
-        final double remainingMillis = remainingNanos / 1_000_000.0;
+        var minimumNanos = (long) (MINIMUM_DISPLAY_DURATION.toMillis() * 1_000_000L);
+        var elapsedNanos = Math.max(0L, System.nanoTime() - shownAtNanos);
+        var remainingNanos = Math.max(0L, minimumNanos - elapsedNanos);
+        var remainingMillis = remainingNanos / 1_000_000.0;
 
-        final var pause = new PauseTransition(Duration.millis(remainingMillis));
+        var pause = new PauseTransition(Duration.millis(remainingMillis));
         pause.setOnFinished(event -> {
             afterClose.run();
             closeNow();

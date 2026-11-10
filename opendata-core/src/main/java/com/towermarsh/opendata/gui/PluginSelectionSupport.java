@@ -12,7 +12,7 @@ import java.util.Objects;
  * Shared selection helpers for the JavaFX plugin table.
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @version 4.1.0
  * @since 3.3.0
  */
 public final class PluginSelectionSupport {
@@ -27,7 +27,7 @@ public final class PluginSelectionSupport {
      * @param rows plugin rows to inspect
      * @return selected-row count
      */
-    public static long countSelected(final List<PluginRow> rows) {
+    public static long countSelected(List<PluginRow> rows) {
         return snapshot(rows).stream()
                 .filter(PluginRow::isSelected)
                 .count();
@@ -39,7 +39,7 @@ public final class PluginSelectionSupport {
      * @param rows plugin rows to inspect
      * @return {@code true} when one or more rows are selected
      */
-    public static boolean anySelected(final List<PluginRow> rows) {
+    public static boolean anySelected(List<PluginRow> rows) {
         return snapshot(rows).stream().anyMatch(PluginRow::isSelected);
     }
 
@@ -49,8 +49,8 @@ public final class PluginSelectionSupport {
      * @param rows plugin rows to inspect
      * @return {@code true} when the list is non-empty and every row is selected
      */
-    public static boolean allSelected(final List<PluginRow> rows) {
-        final var snapshot = snapshot(rows);
+    public static boolean allSelected(List<PluginRow> rows) {
+        var snapshot = snapshot(rows);
         return !snapshot.isEmpty() && snapshot.stream().allMatch(PluginRow::isSelected);
     }
 
@@ -61,7 +61,7 @@ public final class PluginSelectionSupport {
      * @param selected selection state to apply
      */
     public static void setAllSelected(
-            final List<PluginRow> rows,
+            List<PluginRow> rows,
             final boolean selected) {
         snapshot(rows).forEach(row -> row.setSelected(selected));
     }
@@ -72,7 +72,7 @@ public final class PluginSelectionSupport {
      * @param rows input rows
      * @return result of snapshot
      */
-    private static List<PluginRow> snapshot(final List<PluginRow> rows) {
+    private static List<PluginRow> snapshot(List<PluginRow> rows) {
         return List.copyOf(Objects.requireNonNull(rows, "rows"));
     }
 }

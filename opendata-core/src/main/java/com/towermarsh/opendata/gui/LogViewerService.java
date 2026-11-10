@@ -18,7 +18,8 @@ import java.util.stream.Stream;
  * Reads the current OpenData rotating log for the JavaFX log viewer.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class LogViewerService {
 
@@ -32,9 +33,9 @@ public final class LogViewerService {
      */
     public LogSnapshot load() throws IOException {
         LoggingManager.flush();
-        final var directory = LoggingManager.activeLogDirectory()
+        var directory = LoggingManager.activeLogDirectory()
                 .orElseGet(() -> Path.of("logs").toAbsolutePath().normalize());
-        final var file = locateLogFile(directory).orElse(directory.resolve(CURRENT_LOG_NAME));
+        var file = locateLogFile(directory).orElse(directory.resolve(CURRENT_LOG_NAME));
         if (!Files.isRegularFile(file)) {
             return new LogSnapshot(
                     file,
@@ -50,8 +51,8 @@ public final class LogViewerService {
      * @return result of locate log file
      * @throws IOException if locate log file fails
      */
-    private static Optional<Path> locateLogFile(final Path directory) throws IOException {
-        final var current = directory.resolve(CURRENT_LOG_NAME);
+    private static Optional<Path> locateLogFile(Path directory) throws IOException {
+        var current = directory.resolve(CURRENT_LOG_NAME);
         if (Files.isRegularFile(current)) {
             return Optional.of(current);
         }
@@ -72,8 +73,8 @@ public final class LogViewerService {
      * @param path target path
      * @return result of is open data log file
      */
-    private static boolean isOpenDataLogFile(final Path path) {
-        final var fileName = path.getFileName();
+    private static boolean isOpenDataLogFile(Path path) {
+        var fileName = path.getFileName();
         return fileName != null
                 && fileName.toString().matches("opendata-(?:\\d{14}-)?\\d+\\.log");
     }
@@ -84,7 +85,7 @@ public final class LogViewerService {
      * @param file target file
      * @return result of last modified
      */
-    private static long lastModified(final Path file) {
+    private static long lastModified(Path file) {
         try {
             return Files.getLastModifiedTime(file).toMillis();
         } catch (IOException exception) {

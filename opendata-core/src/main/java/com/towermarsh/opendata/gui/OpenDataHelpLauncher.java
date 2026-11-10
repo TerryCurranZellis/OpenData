@@ -29,7 +29,8 @@ import javafx.stage.Window;
  * the application JAR.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 final class OpenDataHelpLauncher {
 
@@ -48,7 +49,7 @@ final class OpenDataHelpLauncher {
      */
     static void show(final Window owner) {
         if (isWindows(System.getProperty("os.name", ""))) {
-            final var helpFile = locateHelpFile(defaultRoots());
+            var helpFile = locateHelpFile(defaultRoots());
             if (helpFile.isPresent()) {
                 try {
                     new ProcessBuilder("hh.exe", helpFile.orElseThrow().toString()).start();
@@ -70,18 +71,18 @@ final class OpenDataHelpLauncher {
      * @param roots candidate roots in priority order
      * @return resolved Help file, or empty when none exists
      */
-    static Optional<Path> locateHelpFile(final List<Path> roots) {
+    static Optional<Path> locateHelpFile(List<Path> roots) {
         Objects.requireNonNull(roots, "roots");
         for (Path root : roots) {
             if (root == null) {
                 continue;
             }
-            final var normalised = root.toAbsolutePath().normalize();
-            final var direct = normalised.resolve("help").resolve(HELP_FILE_NAME);
+            var normalised = root.toAbsolutePath().normalize();
+            var direct = normalised.resolve("help").resolve(HELP_FILE_NAME);
             if (Files.isRegularFile(direct)) {
                 return Optional.of(direct);
             }
-            final var generated = normalised
+            var generated = normalised
                     .resolve("docs")
                     .resolve("build")
                     .resolve("help")
@@ -100,7 +101,7 @@ final class OpenDataHelpLauncher {
      * @param osName operating-system name
      * @return true for Windows
      */
-    static boolean isWindows(final String osName) {
+    static boolean isWindows(String osName) {
         return Objects.requireNonNullElse(osName, "")
                 .toLowerCase(Locale.ROOT)
                 .startsWith("windows");
@@ -112,12 +113,12 @@ final class OpenDataHelpLauncher {
      * @return result of default roots
      */
     private static List<Path> defaultRoots() {
-        final Set<Path> roots = new LinkedHashSet<>();
+        var roots = new LinkedHashSet<Path>();
         roots.add(Path.of(System.getProperty("user.dir", ".")));
 
         applicationCodeLocation().ifPresent(location -> {
             roots.add(location);
-            final var parent = location.getParent();
+            var parent = location.getParent();
             if (parent != null) {
                 roots.add(parent);
             }
@@ -132,13 +133,13 @@ final class OpenDataHelpLauncher {
      */
     private static Optional<Path> applicationCodeLocation() {
         try {
-            final var codeSource = OpenDataHelpLauncher.class
+            var codeSource = OpenDataHelpLauncher.class
                     .getProtectionDomain()
                     .getCodeSource();
             if (codeSource == null || codeSource.getLocation() == null) {
                 return Optional.empty();
             }
-            final var location = Path.of(codeSource.getLocation().toURI())
+            var location = Path.of(codeSource.getLocation().toURI())
                     .toAbsolutePath()
                     .normalize();
             return Optional.of(Files.isDirectory(location)

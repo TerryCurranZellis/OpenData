@@ -24,7 +24,8 @@ import java.util.Objects;
  * The JavaFX controller never performs JDBC work directly.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class PluginDetailGateway {
 
@@ -34,26 +35,26 @@ public final class PluginDetailGateway {
      * @param pluginId registered plugin identifier
      * @return immutable display rows
      */
-    public List<ConfigurationDisplayEntry> load(final String pluginId) {
-        final var requestedId = Objects.requireNonNull(pluginId, "pluginId").trim();
+    public List<ConfigurationDisplayEntry> load(String pluginId) {
+        var requestedId = Objects.requireNonNull(pluginId, "pluginId").trim();
         if (requestedId.isEmpty()) {
             throw new IllegalArgumentException("pluginId must not be blank.");
         }
 
-        final var passwordCipher = new AesConfigurationPasswordCipher();
-        final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
+        var passwordCipher = new AesConfigurationPasswordCipher();
+        var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 
         try (var database = SQLServerResource.initialise(
                 bootstrap.toDatabasePoolConfiguration())) {
-            final var registry = new JdbcPluginRegistry(database);
-            final var plugin = registry.find(requestedId)
+            var registry = new JdbcPluginRegistry(database);
+            var plugin = registry.find(requestedId)
                     .orElseThrow(() -> new PluginRegistryException(
                     "Registered plugin was not found: " + requestedId));
-            final var properties = new JdbcConfigurationPropertiesSource(database)
+            var properties = new JdbcConfigurationPropertiesSource(database)
                     .loadPluginProperties(plugin.id());
 
-            final List<ConfigurationDisplayEntry> result = new ArrayList<>();
+            var result = new ArrayList<ConfigurationDisplayEntry>();
             result.add(new ConfigurationDisplayEntry("Plugin ID", plugin.id()));
             result.add(new ConfigurationDisplayEntry("Display name", plugin.displayName()));
             result.add(new ConfigurationDisplayEntry("Description", plugin.description()));
