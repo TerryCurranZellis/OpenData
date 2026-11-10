@@ -15,6 +15,13 @@ sharing provider-specific business rules or SQL. The Version 2.0.0 refactor
 removes repeated text, number, boolean, date, duration, path and SQL-identifier
 parsing and centralises transaction, batch and row-level upsert control flow.
 
+The 4.1.0 review also introduces an API-owned generic helper,
+`CollectionCopies.immutableOrEmpty(List<? extends T>)`. This replaces
+duplicate nullable-list copying logic in both OpenMeteo response models,
+accepts subtype lists without casts, and preserves immutability and rejection
+of null elements. The API module owns its dedicated JUnit tests so this
+provider-neutral operation remains independently testable.
+
 The design deliberately does **not** introduce a universal repository, an ORM,
 reflection-generated SQL or provider-neutral business keys. Each plugin retains
 its own schema knowledge, SQL statements, natural keys, provenance rules and
