@@ -15,7 +15,8 @@ import java.util.Objects;
  * Resolves named plugins or every enabled plugin from the authoritative registry.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public class PluginSelectionResolver {
 

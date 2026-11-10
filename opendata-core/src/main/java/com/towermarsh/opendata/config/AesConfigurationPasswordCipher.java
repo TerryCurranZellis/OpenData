@@ -32,7 +32,8 @@ import javax.crypto.spec.SecretKeySpec;
  * never mistaken for plain text.</p>
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 public class AesConfigurationPasswordCipher implements ConfigurationPasswordCipher {
 
@@ -207,9 +208,9 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
         }
         try (var input = Files.newInputStream(file);
                 var reader = new java.io.InputStreamReader(input, StandardCharsets.UTF_8)) {
-            final var values = new java.util.Properties();
+            var values = new java.util.Properties();
             values.load(reader);
-            final var value = values.getProperty(KEY_FILE_SETTING, "").trim();
+            var value = values.getProperty(KEY_FILE_SETTING, "").trim();
             return value.isBlank() ? null : Path.of(value);
         } catch (IOException exception) {
             throw new OpenDataConfigurationException("Unable to read AES key path from " + file, exception);
@@ -222,16 +223,16 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
      * @return key path or null
      */
     private static Path keyFileFromClasspath() {
-        final var loader = Thread.currentThread().getContextClassLoader();
+        var loader = Thread.currentThread().getContextClassLoader();
         try (var input = loader.getResourceAsStream("config/application.properties")) {
             if (input == null) {
                 return null;
             }
-            final var values = new java.util.Properties();
+            var values = new java.util.Properties();
             try (var reader = new java.io.InputStreamReader(input, StandardCharsets.UTF_8)) {
                 values.load(reader);
             }
-            final var value = values.getProperty(KEY_FILE_SETTING, "").trim();
+            var value = values.getProperty(KEY_FILE_SETTING, "").trim();
             return value.isBlank() ? null : Path.of(value);
         } catch (IOException exception) {
             throw new OpenDataConfigurationException("Unable to read packaged AES key setting.", exception);

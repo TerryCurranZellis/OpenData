@@ -15,7 +15,8 @@ import com.towermarsh.opendata.core.config.model.BootstrapConfig;
  * Creates the Phase 1 {@link ApplicationConfig}.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class ApplicationConfigurationService {
 
@@ -51,11 +52,11 @@ public final class ApplicationConfigurationService {
             final CommandLineArguments arguments,
             final Map<String, String> runtimeOverrides) {
 
-        final var pluginId = arguments.pluginIds().stream().findFirst()
+        var pluginId = arguments.pluginIds().stream().findFirst()
                 .orElseThrow(() -> new PluginDefinitionException(
                         "A named plugin is required for an execution request."));
 
-        final var plugin = pluginDefinitionLoader.load(
+        var plugin = pluginDefinitionLoader.load(
                 pluginId,
                 runtimeOverrides);
 

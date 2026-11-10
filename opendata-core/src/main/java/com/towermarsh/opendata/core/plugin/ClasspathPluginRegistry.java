@@ -29,7 +29,8 @@ import java.util.Properties;
  * packaged in JARs.</p>
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class ClasspathPluginRegistry implements PluginRegistry {
 
@@ -88,7 +89,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      */
     @Override
     public PluginDescriptor requireEnabled(final String pluginId) {
-        final var descriptor = find(pluginId)
+        var descriptor = find(pluginId)
                 .orElseThrow(() -> new PluginRegistryException(
                 "Packaged plugin definition was not found: " + pluginId));
 
@@ -108,8 +109,8 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      */
     private static Map<String, PluginDescriptor> loadPlugins(
             final ClassLoader classLoader) {
-        final Map<String, PluginDescriptor> result = new LinkedHashMap<>();
-        final var indexes = loadRequiredIndexes(classLoader);
+        var result = new LinkedHashMap<String, PluginDescriptor>();
+        var indexes = loadRequiredIndexes(classLoader);
 
         for (var entry : indexes.entrySet()) {
             Arrays.stream(required(entry.getValue(), "plugins").split(","))
@@ -134,13 +135,13 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final Map<String, PluginDescriptor> result,
             final String id,
             final String indexResource) {
-        final var resource = PLUGIN_RESOURCE_PATTERN.formatted(id);
-        final var descriptor = readDescriptor(
+        var resource = PLUGIN_RESOURCE_PATTERN.formatted(id);
+        var descriptor = readDescriptor(
                 id,
                 loadRequiredProperties(classLoader, resource),
                 resource);
 
-        final var existing = result.putIfAbsent(id, descriptor);
+        var existing = result.putIfAbsent(id, descriptor);
         if (existing != null) {
             throw new PluginRegistryException(
                     "Duplicate plugin id '%s' discovered via %s."
@@ -155,7 +156,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      * @return result of load required indexes
      */
     private static Map<String, Properties> loadRequiredIndexes(final ClassLoader classLoader) {
-        final Map<String, Properties> indexes = new LinkedHashMap<>();
+        var indexes = new LinkedHashMap<String, Properties>();
         final Enumeration<java.net.URL> resources;
         try {
             resources = classLoader.getResources(INDEX_RESOURCE);
@@ -166,8 +167,8 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
         }
 
         while (resources.hasMoreElements()) {
-            final var resource = resources.nextElement();
-            final var resourceName = resource.toExternalForm();
+            var resource = resources.nextElement();
+            var resourceName = resource.toExternalForm();
             indexes.put(resourceName, loadRequiredProperties(classLoader, resourceName, resource));
         }
 
@@ -192,7 +193,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final Properties properties,
             final String resource) {
 
-        final var declaredId = normaliseId(required(properties, "plugin.id"));
+        var declaredId = normaliseId(required(properties, "plugin.id"));
 
         if (!indexedId.equals(declaredId)) {
             throw new PluginRegistryException(
@@ -228,7 +229,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
                         "Plugin registry resource was not found: "
                         + resourceName);
             }
-            final var properties = new Properties();
+            var properties = new Properties();
             try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
                 properties.load(reader);
             }
@@ -254,7 +255,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final String resourceName,
             final java.net.URL resource) {
         try (var input = resource.openStream()) {
-            final var properties = new Properties();
+            var properties = new Properties();
             try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
                 properties.load(reader);
             }
@@ -328,7 +329,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
             final String key,
             final int defaultValue) {
 
-        final var value = properties.getProperty(key);
+        var value = properties.getProperty(key);
         if (value == null) {
             return defaultValue;
         }
@@ -351,7 +352,7 @@ public final class ClasspathPluginRegistry implements PluginRegistry {
      */
     private static String normaliseId(final String pluginId) {
         Objects.requireNonNull(pluginId, "pluginId");
-        final var result
+        var result
                 = pluginId.trim().toLowerCase(Locale.ROOT);
 
         if (result.isEmpty()) {

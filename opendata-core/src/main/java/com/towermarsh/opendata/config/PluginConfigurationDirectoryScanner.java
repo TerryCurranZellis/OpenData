@@ -28,7 +28,8 @@ import java.util.Objects;
  * complete {@code *.properties} definitions directly.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class PluginConfigurationDirectoryScanner {
 
@@ -77,7 +78,7 @@ public final class PluginConfigurationDirectoryScanner {
      * @return immutable list of plugin property files
      */
     public List<Path> scan() {
-        final var result = new LinkedHashSet<Path>();
+        var result = new LinkedHashSet<Path>();
         for (var directory : directories) {
             if (!Files.isDirectory(directory)) {
                 continue;
@@ -104,11 +105,11 @@ public final class PluginConfigurationDirectoryScanner {
      * @return result of is plugin properties file
      */
     private static boolean isPluginPropertiesFile(final Path path) {
-        final var fileName = path.getFileName();
+        var fileName = path.getFileName();
         if (fileName == null) {
             return false;
         }
-        final var filename = fileName.toString().toLowerCase(Locale.ROOT);
+        var filename = fileName.toString().toLowerCase(Locale.ROOT);
         return filename.endsWith(".properties")
                 && !INDEX_FILE.equals(filename);
     }
@@ -119,16 +120,16 @@ public final class PluginConfigurationDirectoryScanner {
      * @return result of default directories
      */
     private static List<Path> defaultDirectories() {
-        final var workingDirectory = Path.of(System.getProperty("user.dir"))
+        var workingDirectory = Path.of(System.getProperty("user.dir"))
                 .toAbsolutePath().normalize();
-        final List<Path> result = new ArrayList<>();
+        var result = new ArrayList<Path>();
         result.add(workingDirectory.resolve("config").resolve("plugins"));
         result.add(sourceDirectory(workingDirectory));
         addPluginSourceDirectories(result, workingDirectory.resolve("opendata-plugins"));
-        final var parent = workingDirectory.getParent();
+        var parent = workingDirectory.getParent();
         if (parent != null) {
             addPluginSourceDirectories(result, parent.resolve("opendata-plugins"));
-            final var parentFileName = parent.getFileName();
+            var parentFileName = parent.getFileName();
             if (parentFileName != null
                     && "opendata-plugins".equals(parentFileName.toString())) {
                 addPluginSourceDirectories(result, parent);

@@ -15,7 +15,8 @@ import java.util.Objects;
  * Server, then updates the bootstrap file for database-backed operation.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class ConfigurationRegistrationService {
 
@@ -64,7 +65,7 @@ public final class ConfigurationRegistrationService {
             throw new IllegalArgumentException("At least one plugin must be supplied for registration.");
         }
 
-        final var applicationProperties = new LinkedHashMap<>(
+        var applicationProperties = new LinkedHashMap<>(
                 ApplicationRuntimeConfiguration.defaultPropertyValues());
         applicationProperties.putAll(applicationFileSource.loadApplicationProperties());
         applicationProperties.put("application.version", bootstrapProperties.applicationVersion());

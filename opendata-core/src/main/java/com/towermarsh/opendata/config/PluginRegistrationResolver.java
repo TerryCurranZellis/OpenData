@@ -25,7 +25,8 @@ import java.util.Objects;
  * deliberately performs no database writes.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class PluginRegistrationResolver {
 
@@ -73,17 +74,17 @@ public final class PluginRegistrationResolver {
      */
     public List<PluginRegistration> resolvePackaged(final Collection<String> pluginIds) {
         Objects.requireNonNull(pluginIds, "pluginIds");
-        final var catalog = new ClasspathPluginRegistry(classLoader);
-        final var source = new ClasspathConfigurationPropertiesSource(classLoader);
-        final var loader = new PropertiesPluginDefinitionLoader(source);
-        final List<PluginRegistration> result = new ArrayList<>();
+        var catalog = new ClasspathPluginRegistry(classLoader);
+        var source = new ClasspathConfigurationPropertiesSource(classLoader);
+        var loader = new PropertiesPluginDefinitionLoader(source);
+        var result = new ArrayList<PluginRegistration>();
 
         for (var pluginId : pluginIds) {
-            final var descriptor = catalog.find(pluginId)
+            var descriptor = catalog.find(pluginId)
                     .orElseThrow(() -> new PluginRegistryException(
                     "Packaged plugin definition was not found: " + pluginId));
-            final var properties = source.loadPluginProperties(descriptor.id());
-            final var definition = loader.load(descriptor.id(), Map.of());
+            var properties = source.loadPluginProperties(descriptor.id());
+            var definition = loader.load(descriptor.id(), Map.of());
             validateImplementation(definition.implementationClass());
             result.add(new PluginRegistration(toDescriptor(definition), properties));
         }
@@ -101,9 +102,9 @@ public final class PluginRegistrationResolver {
             final String requestedPluginId,
             final Path file) {
         Objects.requireNonNull(requestedPluginId, "requestedPluginId");
-        final var source = new PropertiesFileConfigurationPropertiesSource(file);
-        final var properties = source.loadPluginProperties(requestedPluginId);
-        final var definition = new PropertiesPluginDefinitionLoader(source)
+        var source = new PropertiesFileConfigurationPropertiesSource(file);
+        var properties = source.loadPluginProperties(requestedPluginId);
+        var definition = new PropertiesPluginDefinitionLoader(source)
                 .load(requestedPluginId, Map.of());
         validateImplementation(definition.implementationClass());
         return new PluginRegistration(toDescriptor(definition), properties);
@@ -117,14 +118,14 @@ public final class PluginRegistrationResolver {
      * @return validated plugin registration
      */
     public PluginRegistration resolveFile(final Path file) {
-        final var source = new PropertiesFileConfigurationPropertiesSource(file);
-        final var properties = source.loadPluginProperties("external");
-        final var pluginId = Objects.toString(properties.get("plugin.id"), "").trim();
+        var source = new PropertiesFileConfigurationPropertiesSource(file);
+        var properties = source.loadPluginProperties("external");
+        var pluginId = Objects.toString(properties.get("plugin.id"), "").trim();
         if (pluginId.isEmpty()) {
             throw new PluginDefinitionException(
                     "Required plugin property is missing: plugin.id");
         }
-        final var definition = new PropertiesPluginDefinitionLoader(source)
+        var definition = new PropertiesPluginDefinitionLoader(source)
                 .load(pluginId, Map.of());
         validateImplementation(definition.implementationClass());
         return new PluginRegistration(toDescriptor(definition), properties);
@@ -153,7 +154,7 @@ public final class PluginRegistrationResolver {
      */
     private void validateImplementation(final String className) {
         try {
-            final var implementation = Class.forName(
+            var implementation = Class.forName(
                     className,
                     false,
                     classLoader);

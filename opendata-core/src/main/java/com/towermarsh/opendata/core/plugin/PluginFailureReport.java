@@ -22,7 +22,8 @@ import java.util.Set;
  * first plugin stack frames of the root cause.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 public final class PluginFailureReport {
 
@@ -46,17 +47,17 @@ public final class PluginFailureReport {
      */
     public static String describe(final Throwable failure) {
         Objects.requireNonNull(failure, "failure");
-        final var text = new StringBuilder();
+        var text = new StringBuilder();
         step(failure).ifPresent(step -> text.append("Step: ").append(step).append('\n'));
 
-        final List<Throwable> chain = new ArrayList<>();
+        var chain = new ArrayList<Throwable>();
         for (Throwable t = failure; t != null && chain.size() < MAX_CAUSES && !chain.contains(t); t = t.getCause()) {
             chain.add(t);
         }
         for (var i = 0; i < chain.size(); i++) {
             text.append(i == 0 ? "Error: " : "Caused by: ").append(summary(chain.get(i))).append('\n');
         }
-        final var root = chain.get(chain.size() - 1);
+        var root = chain.get(chain.size() - 1);
         var frames = 0;
         for (var frame : root.getStackTrace()) {
             if (frame.getClassName().startsWith("com.towermarsh.opendata")) {
@@ -66,7 +67,7 @@ public final class PluginFailureReport {
                 }
             }
         }
-        final var result = text.toString().stripTrailing();
+        var result = text.toString().stripTrailing();
         return result.length() <= MAX_LENGTH ? result : result.substring(0, MAX_LENGTH);
     }
 
@@ -77,17 +78,17 @@ public final class PluginFailureReport {
      * @return result of step
      */
     static java.util.Optional<String> step(final Throwable failure) {
-        final var chain = new ArrayList<Throwable>();
+        var chain = new ArrayList<Throwable>();
         for (Throwable t = failure; t != null && chain.size() < MAX_CAUSES && !chain.contains(t); t = t.getCause()) {
             chain.add(t);
         }
         for (var t : chain) {
             for (var frame : t.getStackTrace()) {
-                final var name = frame.getClassName();
+                var name = frame.getClassName();
                 if (!name.startsWith(PLUGIN_PACKAGE)) {
                     continue;
                 }
-                final var parts = name.substring(PLUGIN_PACKAGE.length()).split("\\.");
+                var parts = name.substring(PLUGIN_PACKAGE.length()).split("\\.");
                 if (parts.length >= 3 && STEPS.contains(parts[1].toLowerCase(Locale.ROOT))) {
                     return java.util.Optional.of(parts[1].toLowerCase(Locale.ROOT)
                             + " (" + frame.getClassName() + "." + frame.getMethodName() + ")");
@@ -104,8 +105,8 @@ public final class PluginFailureReport {
      * @return result of summary
      */
     private static String summary(final Throwable t) {
-        final var message = t.getMessage();
-        final var text = new StringBuilder(t.getClass().getName());
+        var message = t.getMessage();
+        var text = new StringBuilder(t.getClass().getName());
         if (message != null && !message.isBlank()) {
             text.append(": ").append(message.strip());
         }

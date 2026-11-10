@@ -42,7 +42,8 @@ import com.towermarsh.opendata.config.model.PluginPropertyType;
  * take precedence.</p>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class PropertiesPluginDefinitionLoader
         implements PluginDefinitionLoader {
@@ -77,13 +78,13 @@ public final class PropertiesPluginDefinitionLoader
             final String pluginId,
             final Map<String, String> overrides) {
 
-        final var normalisedPluginId = normalise(pluginId);
-        final var values = new LinkedHashMap<>(source.loadPluginProperties(normalisedPluginId));
+        var normalisedPluginId = normalise(pluginId);
+        var values = new LinkedHashMap<>(source.loadPluginProperties(normalisedPluginId));
         Objects.requireNonNull(overrides, "overrides")
                 .forEach((key, value)
                         -> values.put(normalise(key), value == null ? "" : value.trim()));
 
-        final var definition = parse(values);
+        var definition = parse(values);
         if (!definition.id().equals(normalisedPluginId)) {
             throw new PluginDefinitionException(
                     "Selected plugin '%s' does not match plugin.id '%s'."
@@ -101,10 +102,10 @@ public final class PropertiesPluginDefinitionLoader
      * @return the plugin definition
      */
     PluginDefinition parse(final Map<String, String> values) {
-        final var id = require(values, "plugin.id").toLowerCase(Locale.ROOT);
-        final var endpoints = parseEndpoints(values);
-        final var properties = parsePluginProperties(values);
-        final var credentials = parseCredentials(values);
+        var id = require(values, "plugin.id").toLowerCase(Locale.ROOT);
+        var endpoints = parseEndpoints(values);
+        var properties = parsePluginProperties(values);
+        var credentials = parseCredentials(values);
 
         return new PluginDefinition(
                 id,
@@ -128,12 +129,12 @@ public final class PropertiesPluginDefinitionLoader
     private List<PluginEndpointDefinition> parseEndpoints(
             final Map<String, String> values) {
 
-        final var names = extractNames(values, "endpoint.");
-        final List<PluginEndpointDefinition> result = new ArrayList<>();
+        var names = extractNames(values, "endpoint.");
+        var result = new ArrayList<PluginEndpointDefinition>();
 
         for (var name : names) {
-            final var prefix = "endpoint." + name + ".";
-            final var discovery = parseLinkDiscovery(values, prefix);
+            var prefix = "endpoint." + name + ".";
+            var discovery = parseLinkDiscovery(values, prefix);
 
             result.add(new PluginEndpointDefinition(
                     name,
@@ -167,7 +168,7 @@ public final class PropertiesPluginDefinitionLoader
             final Map<String, String> values,
             final String endpointPrefix) {
 
-        final var prefix = endpointPrefix + "link-discovery.";
+        var prefix = endpointPrefix + "link-discovery.";
         if (!values.containsKey(prefix + "css-selector")) {
             return Optional.empty();
         }
@@ -188,19 +189,19 @@ public final class PropertiesPluginDefinitionLoader
     private Map<String, PluginPropertyDefinition> parsePluginProperties(
             final Map<String, String> values) {
 
-        final var names = extractPropertyNames(values);
-        final Map<String, PluginPropertyDefinition> result = new LinkedHashMap<>();
+        var names = extractPropertyNames(values);
+        var result = new LinkedHashMap<String, PluginPropertyDefinition>();
 
         names.forEach((var name) -> {
-            final var prefix = "property." + name + ".";
-            final var propertyType = enumValue(
+            var prefix = "property." + name + ".";
+            var propertyType = enumValue(
                     values,
                     prefix + "type",
                     PluginPropertyType.class,
                     PluginPropertyType.STRING);
-            final var propertyValue = values.getOrDefault(prefix + "value", "").trim();
+            var propertyValue = values.getOrDefault(prefix + "value", "").trim();
             validatePropertyValue(name, propertyType, propertyValue);
-            final var definition
+            var definition
                     = new PluginPropertyDefinition(
                             name,
                             propertyValue,
@@ -223,12 +224,12 @@ public final class PropertiesPluginDefinitionLoader
     private Map<String, CredentialReference> parseCredentials(
             final Map<String, String> values) {
 
-        final var names = extractNames(values, "credential.");
+        var names = extractNames(values, "credential.");
         final Map<String, CredentialReference> result = new LinkedHashMap<>();
 
         names.forEach((var name) -> {
-            final var prefix = "credential." + name + ".";
-            final var reference = new CredentialReference(
+            var prefix = "credential." + name + ".";
+            var reference = new CredentialReference(
                     name,
                     enumValue(values, prefix + "authentication-type", AuthenticationType.class),
                     require(values, prefix + "provider"),
@@ -252,14 +253,14 @@ public final class PropertiesPluginDefinitionLoader
             final Map<String, String> values,
             final String rootPrefix) {
 
-        final var names = new TreeSet<String>();
+        var names = new TreeSet<String>();
         for (var key : values.keySet()) {
             if (!key.startsWith(rootPrefix)) {
                 continue;
             }
 
-            final var remainder = key.substring(rootPrefix.length());
-            final var separator = remainder.indexOf('.');
+            var remainder = key.substring(rootPrefix.length());
+            var separator = remainder.indexOf('.');
             if (separator > 0) {
                 names.add(remainder.substring(0, separator));
             }
@@ -276,15 +277,15 @@ public final class PropertiesPluginDefinitionLoader
     private static TreeSet<String> extractPropertyNames(
             final Map<String, String> values) {
 
-        final var rootPrefix = "property.";
-        final var names = new TreeSet<String>();
+        var rootPrefix = "property.";
+        var names = new TreeSet<String>();
         for (var key : values.keySet()) {
             if (!key.startsWith(rootPrefix)) {
                 continue;
             }
 
-            final var remainder = key.substring(rootPrefix.length());
-            final var lastDot = remainder.lastIndexOf('.');
+            var remainder = key.substring(rootPrefix.length());
+            var lastDot = remainder.lastIndexOf('.');
             if (lastDot > 0) {
                 names.add(remainder.substring(0, lastDot));
             }
@@ -357,7 +358,7 @@ public final class PropertiesPluginDefinitionLoader
             final String key,
             final boolean defaultValue) {
 
-        final var value = values.get(normalise(key));
+        var value = values.get(normalise(key));
         if (value == null) {
             return defaultValue;
         }
@@ -386,7 +387,7 @@ public final class PropertiesPluginDefinitionLoader
             final String key,
             final int defaultValue) {
 
-        final var value = values.get(normalise(key));
+        var value = values.get(normalise(key));
         if (value == null) {
             return defaultValue;
         }
@@ -432,7 +433,7 @@ public final class PropertiesPluginDefinitionLoader
             final Class<E> enumClass,
             final E defaultValue) {
 
-        final var value = values.get(normalise(key));
+        var value = values.get(normalise(key));
         if (value == null) {
             if (defaultValue != null) {
                 return defaultValue;

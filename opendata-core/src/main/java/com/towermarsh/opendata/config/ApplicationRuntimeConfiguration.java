@@ -19,7 +19,8 @@ import java.util.Objects;
  * @param logging logging settings
   *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 public record ApplicationRuntimeConfiguration(
         DatabasePoolConfiguration database,
@@ -60,11 +61,11 @@ public record ApplicationRuntimeConfiguration(
     public static ApplicationRuntimeConfiguration load(
             final ConfigurationPropertiesSource source,
             final Map<String, String> overrides) {
-        final var values = defaultPropertyValues();
+        var values = defaultPropertyValues();
         values.putAll(Objects.requireNonNull(source, "source").loadApplicationProperties());
         values.putAll(Objects.requireNonNull(overrides, "overrides"));
-        final var properties = new ApplicationPropertyValues(values);
-        final var database = new DatabasePoolConfiguration(
+        var properties = new ApplicationPropertyValues(values);
+        var database = new DatabasePoolConfiguration(
                 properties.text("database.driver-class", DEFAULT_DRIVER_CLASS),
                 properties.requiredText("database.url"),
                 properties.requiredText("database.user"),
@@ -75,10 +76,10 @@ public record ApplicationRuntimeConfiguration(
                 properties.integer("database.pool.min-idle", 1),
                 Duration.ofSeconds(properties.integer("database.pool.max-wait-seconds", 30)),
                 properties.text("database.pool.validation-query", "SELECT 1"));
-        final var execution = new ExecutionConfiguration(
+        var execution = new ExecutionConfiguration(
                 properties.integer("execution.max-parallel-plugins", 4),
                 Duration.ofSeconds(properties.integer("execution.shutdown-timeout-seconds", 30)));
-        final var logging = new LoggingConfiguration(
+        var logging = new LoggingConfiguration(
                 Path.of(properties.text("logging.directory", "logs")),
                 properties.integer("logging.file-limit-bytes", 10_485_760),
                 properties.integer("logging.file-count", 10),
@@ -93,7 +94,7 @@ public record ApplicationRuntimeConfiguration(
      * @return default runtime properties
      */
     public static Map<String, String> defaultPropertyValues() {
-        final Map<String, String> result = new LinkedHashMap<>();
+        var result = new LinkedHashMap<String, String>();
         result.put("database.driver-class", DEFAULT_DRIVER_CLASS);
         result.put("database.pool.name", DEFAULT_POOL_NAME);
         result.put("database.pool.max-total", "8");

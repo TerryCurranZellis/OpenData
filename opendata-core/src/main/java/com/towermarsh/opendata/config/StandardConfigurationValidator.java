@@ -13,7 +13,8 @@ import com.towermarsh.opendata.exception.ConfigurationException;
  * Performs framework-level validation common to every dataset plugin.
  *
  * @author Terry Curran
- * @version 2.1
+ * @since 2.1.0
+ * @version 4.1.0
  */
 public class StandardConfigurationValidator implements ConfigurationValidator {
 
@@ -22,8 +23,8 @@ public class StandardConfigurationValidator implements ConfigurationValidator {
      */
     @Override
     public void validate(final ApplicationConfig configuration) {
-        final var bootstrap = configuration.bootstrap();
-        final var properties = new ApplicationPropertyValues(bootstrap.values());
+        var bootstrap = configuration.bootstrap();
+        var properties = new ApplicationPropertyValues(bootstrap.values());
         try {
             if (properties.contains("http.connect-timeout-seconds")
                     && properties.integer("http.connect-timeout-seconds", 1) <= 0) {
@@ -35,7 +36,7 @@ public class StandardConfigurationValidator implements ConfigurationValidator {
                 throw new ConfigurationException("http.request-timeout-seconds must be greater than zero.");
             }
 
-            final var workingDirectory = bootstrap.workingDirectory();
+            var workingDirectory = bootstrap.workingDirectory();
             if (workingDirectory.toString().isBlank()) {
                 throw new ConfigurationException("application.working-directory must not be blank.");
             }

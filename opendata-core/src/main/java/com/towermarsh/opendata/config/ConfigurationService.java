@@ -14,7 +14,8 @@ import com.towermarsh.opendata.cli.CommandLineArguments;
  * Coordinates configuration loading and validation.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class ConfigurationService {
 
@@ -54,7 +55,7 @@ public final class ConfigurationService {
      * @return resolved configuration
      */
     public ApplicationConfig resolve(final CommandLineArguments arguments) {
-        final var configuration = loader.load(arguments);
+        var configuration = loader.load(arguments);
         validators.forEach(validator -> validator.validate(configuration));
         return configuration;
     }

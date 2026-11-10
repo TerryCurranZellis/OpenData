@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
  * Loads configuration properties from packaged classpath resources.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class ClasspathConfigurationPropertiesSource
         implements ConfigurationPropertiesSource {
@@ -62,7 +63,7 @@ public final class ClasspathConfigurationPropertiesSource
      */
     @Override
     public Map<String, String> loadPluginProperties(final String pluginId) {
-        final var resourceName = PLUGIN_RESOURCE_PATTERN.formatted(normalise(pluginId));
+        var resourceName = PLUGIN_RESOURCE_PATTERN.formatted(normalise(pluginId));
         return loadRequiredResource(resourceName, false);
     }
 
@@ -84,7 +85,7 @@ public final class ClasspathConfigurationPropertiesSource
                 throw new PluginDefinitionException(
                         "Plugin properties resource was not found: " + resourceName);
             }
-            final var properties = new Properties();
+            var properties = new Properties();
             try (var reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
                 properties.load(reader);
             }

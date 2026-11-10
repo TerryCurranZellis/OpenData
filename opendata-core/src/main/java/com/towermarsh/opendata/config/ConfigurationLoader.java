@@ -29,7 +29,8 @@ import java.io.InputStreamReader;
  * handled only by the registration command and are not invocation overrides.</p>
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class ConfigurationLoader {
 
@@ -84,24 +85,24 @@ public final class ConfigurationLoader {
     public ApplicationConfig load(final CommandLineArguments arguments) throws ConfigurationException {
         Objects.requireNonNull(arguments, "arguments");
 
-        final var pluginId = arguments.pluginIds().stream().findFirst()
+        var pluginId = arguments.pluginIds().stream().findFirst()
                 .orElseThrow(() -> new ConfigurationException(
                 "A named plugin is required before configuration can be loaded."));
 
-        final Map<String, ResolvedConfigurationValue> merged = new LinkedHashMap<>();
+        var merged = new LinkedHashMap<String, ResolvedConfigurationValue>();
         merge(merged, builtInDefaults, ConfigurationSource.BUILT_IN_DEFAULT);
         merge(merged, loadOptionalClasspathProperties(APPLICATION_RESOURCE),
                 ConfigurationSource.APPLICATION_CLASSPATH);
 
-        final var pluginResource = PLUGIN_RESOURCE_PATTERN.formatted(pluginId);
-        final var pluginDefaults = loadRequiredClasspathProperties(pluginResource);
+        var pluginResource = PLUGIN_RESOURCE_PATTERN.formatted(pluginId);
+        var pluginDefaults = loadRequiredClasspathProperties(pluginResource);
         merge(merged, pluginDefaults, ConfigurationSource.PLUGIN_CLASSPATH);
 
-        final Map<String, String> values = new LinkedHashMap<>();
+        var values = new LinkedHashMap<String, String>();
         merged.forEach((key, resolved) -> values.put(key, resolved.value()));
 
-        final var bootstrap = buildBootstrapConfig(values);
-        final var plugin = new PropertiesPluginDefinitionLoader(
+        var bootstrap = buildBootstrapConfig(values);
+        var plugin = new PropertiesPluginDefinitionLoader(
                 new ClasspathConfigurationPropertiesSource(classLoader)).load(pluginId, values);
 
         return new ApplicationConfig(
@@ -183,7 +184,7 @@ public final class ConfigurationLoader {
             final InputStream input,
             final String sourceDescription) throws ConfigurationException {
 
-        final var properties = new Properties();
+        var properties = new Properties();
         try {
             properties.load(new InputStreamReader(input, StandardCharsets.UTF_8));
         } catch (IOException exception) {
@@ -192,10 +193,10 @@ public final class ConfigurationLoader {
                     exception);
         }
 
-        final Map<String, String> result = new LinkedHashMap<>();
+        var result = new LinkedHashMap<String, String>();
         properties.stringPropertyNames().forEach((var name) -> {
-            final var key = normaliseKey(name);
-            final var value = Optional.ofNullable(properties.getProperty(name))
+            var key = normaliseKey(name);
+            var value = Optional.ofNullable(properties.getProperty(name))
                     .orElse("")
                     .trim();
             if (result.put(key, value) != null) {
@@ -232,7 +233,7 @@ public final class ConfigurationLoader {
      */
     private static String normaliseKey(final String key) throws ConfigurationException {
         Objects.requireNonNull(key, "key");
-        final var normalised = key.trim().toLowerCase(Locale.ROOT);
+        var normalised = key.trim().toLowerCase(Locale.ROOT);
         if (normalised.isEmpty()) {
             throw new ConfigurationException("Configuration property names must not be blank.");
         }
@@ -245,7 +246,7 @@ public final class ConfigurationLoader {
      * @return default configuration values
      */
     private static Map<String, String> standardDefaults() {
-        final Map<String, String> defaults = new LinkedHashMap<>();
+        var defaults = new LinkedHashMap<String, String>();
         defaults.put("application.working-directory", "data/work");
         defaults.put("application.archive-directory", "data/archive");
         defaults.put("application.failed-directory", "data/failed");
