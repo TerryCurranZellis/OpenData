@@ -2,7 +2,7 @@ name: Documentation validation
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'refactor/v4.1.0-review' ]
     paths:
       - 'docs/**'
       - 'scripts/**'
