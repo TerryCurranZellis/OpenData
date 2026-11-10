@@ -14,12 +14,12 @@ import com.towermarsh.opendata.config.OpenDataConfigurationException;
 import com.towermarsh.opendata.config.ApplicationBootstrapPropertiesLoader;
 import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.config.PluginDefinitionException;
-import com.towermarsh.opendata.common.database.DatabaseException;
+import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.core.logging.LoggingManager;
 import com.towermarsh.opendata.gui.GuiLauncher;
 import com.towermarsh.opendata.app.ApplicationInfo;
-import static com.towermarsh.opendata.util.DurationFormatter.formatElapsed;
-import static com.towermarsh.opendata.util.ExceptionMessages.rootCauseMessage;
+import static com.towermarsh.opendata.foundation.DurationFormatter.formatElapsed;
+import static com.towermarsh.opendata.foundation.ExceptionMessages.rootCauseMessage;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -34,7 +34,8 @@ import java.util.logging.Logger;
  * OpenData application entry point.
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 public final class OpenData {
 

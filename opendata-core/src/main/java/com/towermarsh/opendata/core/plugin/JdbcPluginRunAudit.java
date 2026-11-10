@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.core.plugin;
 
-import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

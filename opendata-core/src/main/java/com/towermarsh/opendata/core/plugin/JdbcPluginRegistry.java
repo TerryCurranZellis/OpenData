@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.core.plugin;
 
-import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import java.sql.Connection;
@@ -26,7 +26,8 @@ import java.util.Optional;
  * definition properties are stored in {@code core.plugin_property}.</p>
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class JdbcPluginRegistry implements PluginRegistry {
 

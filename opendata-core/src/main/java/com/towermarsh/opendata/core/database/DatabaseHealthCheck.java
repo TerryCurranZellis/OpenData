@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.core.database;
 
-import com.towermarsh.opendata.common.database.DatabaseException;
+import com.towermarsh.opendata.database.DatabaseException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Objects;
@@ -14,7 +14,8 @@ import java.util.Objects;
  * Performs a lightweight SQL Server identity and database check.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class DatabaseHealthCheck {
 

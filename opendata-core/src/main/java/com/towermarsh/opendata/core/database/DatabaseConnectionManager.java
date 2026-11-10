@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.core.database;
 
-import com.towermarsh.opendata.common.database.DatabaseException;
+import com.towermarsh.opendata.database.DatabaseException;
 import com.towermarsh.opendata.config.DatabasePoolConfiguration;
 import com.towermarsh.opendata.database.DatabasePoolSnapshot;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
@@ -17,7 +17,8 @@ import java.util.Objects;
  * Compatibility facade used by repositories to borrow pooled connections.
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class DatabaseConnectionManager implements AutoCloseable {
 

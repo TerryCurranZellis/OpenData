@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.core.logging;
 
-import com.towermarsh.opendata.common.logging.PluginLogContext;
+import com.towermarsh.opendata.plugin.PluginLogContext;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
