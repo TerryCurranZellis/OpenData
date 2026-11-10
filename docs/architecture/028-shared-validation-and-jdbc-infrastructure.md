@@ -76,7 +76,11 @@ Checked failures leaving `JdbcTransactionTemplate` are wrapped in the
 Common compatibility `DatabaseAccessException`; the independent API database
 exception contract is available to Core. Runtime exceptions retain their original type.
 Rollback and cleanup failures are attached as suppressed exceptions rather than
-concealing the primary failure.
+concealing the primary failure. Checked and unchecked cleanup failures do not
+prevent the template from attempting to restore the original auto-commit mode;
+an original transaction error retains precedence even if cleanup also fails.
+The 4.1.0 regression tests cover cleanup callback exceptions, rollback failures,
+auto-commit restoration and error suppression.
 
 For 4.1.0, `JdbcBatchExecutor.execute` accepts `Iterable<? extends T>`
 paired with `JdbcStatementBinder<? super T>`. `JdbcUpsertExecutor.execute`
@@ -94,6 +98,15 @@ inserting the replacement values must commit or roll back together. The
 connection's original auto-commit mode is restored before it returns to the
 pool. JUnit/Mockito tests cover both successful commits and failed writes;
 these do not replace SQL Server integration tests.
+
+## Core SQL Server connection-pool lifecycle
+
+Core owns the Apache DBCP-backed `SQLServerResource` singleton. Pool
+initialisation and shutdown are synchronised on the same lock so closing an
+old pool cannot race with registering a replacement using the same name.
+Shutdown clears the singleton only when it still refers to the resource being
+closed. Unit tests cover closure, reinitialisation and stale-reference close
+behaviour without requiring a live database connection.
 
 ## Persistence strategy selection
 
