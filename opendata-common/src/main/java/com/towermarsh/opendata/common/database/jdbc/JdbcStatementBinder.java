@@ -14,7 +14,8 @@ import java.sql.SQLException;
  * @param <T> record type
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 @FunctionalInterface
 public interface JdbcStatementBinder<T> {

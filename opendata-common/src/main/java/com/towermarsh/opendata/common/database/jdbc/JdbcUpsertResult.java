@@ -12,12 +12,13 @@ package com.towermarsh.opendata.common.database.jdbc;
  * @param updated updated record count
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public record JdbcUpsertResult(long inserted, long updated) {
 
     /**
-     * Validates result counts.
+     * Rejects negative inserted and updated counts.
      *
      * @param inserted inserted record count
      * @param updated updated record count
@@ -32,7 +33,7 @@ public record JdbcUpsertResult(long inserted, long updated) {
     /**
      * Returns the total records processed.
      *
-     * @return total record count
+     * @return sum of inserted and updated counts
      */
     public long processed() {
         return Math.addExact(inserted, updated);
@@ -42,7 +43,7 @@ public record JdbcUpsertResult(long inserted, long updated) {
      * Combines two upsert results.
      *
      * @param other result to combine
-     * @return combined result
+     * @return combined result, rejecting arithmetic overflow
      */
     public JdbcUpsertResult plus(JdbcUpsertResult other) {
         return new JdbcUpsertResult(

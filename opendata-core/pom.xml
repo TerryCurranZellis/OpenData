@@ -10,15 +10,13 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!-- This is the missing element -->
     <artifactId>opendata-core</artifactId>
 
     <packaging>jar</packaging>
 
     <name>OpenData Core</name>
 
-    <description>Java framework for downloading, validating and importing OpenData sources.
-        New GUI Interface</description>
+    <description>Core OpenData runtime, JavaFX GUI, CLI, first-run setup and SQL Server integration.</description>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -86,7 +84,7 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
         </dependency>
-        <!-- Java fx -->
+        <!-- JavaFX, baseline compatible with JDK 24 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -249,8 +247,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <configuration>
                     <ignoredUnusedDeclaredDependencies>
-                        <!-- Plugin jars, JDBC driver and Log4j bridge are loaded at runtime. -->
-                        <ignoredUnusedDeclaredDependency>com.towermarsh:opendata-plugin-*</ignoredUnusedDeclaredDependency>
+                        <!-- JDBC driver and Log4j bridge are loaded at runtime. -->
                         <ignoredUnusedDeclaredDependency>com.microsoft.sqlserver:mssql-jdbc</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.apache.logging.log4j:log4j-to-jul</ignoredUnusedDeclaredDependency>
                         <!-- JavaFX platform-specific jars supply the implementation classes. -->

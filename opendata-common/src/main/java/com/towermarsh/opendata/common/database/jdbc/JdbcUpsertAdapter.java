@@ -15,7 +15,8 @@ import java.sql.SQLException;
  * @param <C> operation context type, such as a plugin run identifier
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public interface JdbcUpsertAdapter<T, C> {
 

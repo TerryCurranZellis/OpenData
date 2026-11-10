@@ -7,13 +7,13 @@
  * Shared JDBC transaction, batch, and typed upsert infrastructure.
  *
  * <p>Plugin repositories retain their own SQL and schema knowledge while this
- * package supplies the common execution mechanics.
+ * package supplies the common execution mechanics.</p>
  *
  * <h2>Classes</h2>
  * <ul>
- * <li>{@link JdbcBatchExecutor} &mdash; Executes typed prepared-statement batches with consistent result counting.</li>
+ * <li>{@link JdbcBatchExecutor} &mdash; Executes generic batches with subtype records and supertype binders.</li>
  * <li>{@link JdbcTransactionTemplate} &mdash; Provides consistent JDBC transaction, rollback, and pooled-session cleanup.</li>
- * <li>{@link JdbcUpsertExecutor} &mdash; Runs the common record-by-record upsert control flow using a typed adapter.</li>
+ * <li>{@link JdbcUpsertExecutor} &mdash; Runs generic record-by-record upserts with contravariant adapters.</li>
  * </ul>
  *
  * <h2>Records</h2>
@@ -30,6 +30,7 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 package com.towermarsh.opendata.common.database.jdbc;
