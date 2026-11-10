@@ -11,14 +11,16 @@
 - [API and configuration reference](reference/README.md)
 - [Governance and compliance](governance/README.md)
 - [Release process](release/Release-Process.md)
-- [Current release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md)
+- [Version 4.0.0 release status](release/Release-4.0.0.md)
 
 ## OpenData 4.0.0 — initialisation
 
 - [First-run GUI wizard and recovery](guides/first-run-initialisation.md)
 - [First-run architecture and failure boundaries](architecture/030-first-run-initialisation.md)
 - [ADR-0063: Configured GUI initialization](decisions/ADR-0063-first-run-gui-initialisation.md)
-- [Version 4.0.0 release status and test plan](release/Release-4.0.0.md)
+- [First-run sequence diagram source](diagrams/source/first-run-initialisation-sequence.puml)
+- [GUI screenshot capture plan for 4.0.0](development/gui-screenshot-plan.md)
+- [4.1.0 dependency-boundary review and acceptance criteria](architecture/031-module-boundaries-4.1-review.md)
 
 ## Generated manuals
 
@@ -29,11 +31,11 @@
 | `manifests/DeveloperGuide.json` | Maintainers and plugin developers |
 | `manifests/APIReference.json` | Integrators and support engineers |
 
-## Version 3.0.0 GUI implementation
+## Historical Version 3.0.0 GUI implementation
 
 - [JavaFX GUI architecture](development/javafx-gui-architecture.md)
 - [Graphical interface user guide](user-guide/12-graphical-interface.md)
-- [GUI screenshot plan](development/gui-screenshot-plan.md)
+- [Version 4.0.0 GUI screenshot plan](development/gui-screenshot-plan.md)
 - [ADR-0051: JavaFX graphical interface](decisions/ADR-0051-javafx-graphical-interface.md)
 - [ADR-0052: Java 24, JavaFX lifecycle and Swing retirement](decisions/ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md)
 - [ADR-0053: JavaFX controller/service boundary](decisions/ADR-0053-javafx-controller-service-boundary.md)
@@ -60,6 +62,7 @@
 
 ## Evidence and history
 
+- [Historical 3.0.0 release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md)
 - [Version 3.0.0 release record](release/Release-3.0.0.md)
 - [Version 3.0.0 documentation update record](review/VERSION-3.0.0-DOCUMENTATION-UPDATE-2026-08-15.md)
 - [Final release checklist](release/Final-Release-Checklist.md)
