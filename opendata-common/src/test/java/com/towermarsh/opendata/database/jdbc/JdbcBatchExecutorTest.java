@@ -21,21 +21,22 @@ import org.junit.jupiter.api.Test;
  * Tests reusable JDBC batch execution.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 class JdbcBatchExecutorTest {
 
     @Test
     void executesConfiguredBatchSizesAndCountsResults() throws Exception {
-        final Connection connection = mock(Connection.class);
-        final PreparedStatement statement = mock(PreparedStatement.class);
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
         when(connection.prepareStatement("INSERT INTO test(value) VALUES (?)"))
                 .thenReturn(statement);
         when(statement.executeBatch())
                 .thenReturn(new int[]{1, Statement.SUCCESS_NO_INFO})
                 .thenReturn(new int[]{1});
 
-        final int affected = JdbcBatchExecutor.execute(
+        var affected = JdbcBatchExecutor.execute(
                 connection,
                 "INSERT INTO test(value) VALUES (?)",
                 List.of("one", "two", "three"),
@@ -46,4 +47,28 @@ class JdbcBatchExecutorTest {
         verify(statement, times(3)).addBatch();
         verify(statement, times(2)).executeBatch();
     }
+    /**
+     * A binder accepting a base type can process records of a subtype.
+     *
+     * @throws Exception when the mocked JDBC execution fails
+     */
+    @Test
+    void supportsSubtypeRecordsWithSupertypeBinder() throws Exception {
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("INSERT INTO numbers(value) VALUES (?)"))
+                .thenReturn(statement);
+        when(statement.executeBatch()).thenReturn(new int[]{1, 1});
+        JdbcStatementBinder<Number> binder =
+                (current, number) -> current.setInt(1, number.intValue());
+
+        var affected = JdbcBatchExecutor.execute(
+                connection, "INSERT INTO numbers(value) VALUES (?)",
+                List.of(1, 2), 2, binder);
+
+        assertEquals(2, affected);
+        verify(statement, times(2)).setInt(org.mockito.ArgumentMatchers.eq(1),
+                org.mockito.ArgumentMatchers.anyInt());
+    }
+
 }

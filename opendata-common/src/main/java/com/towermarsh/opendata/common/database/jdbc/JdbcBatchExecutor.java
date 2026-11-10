@@ -14,7 +14,8 @@ import java.util.Objects;
  * Executes typed prepared-statement batches with consistent result counting.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public class JdbcBatchExecutor {
 
@@ -27,9 +28,9 @@ public class JdbcBatchExecutor {
      *
      * @param connection open connection
      * @param sql parameterised SQL statement
-     * @param records records to write
+     * @param records records to write (may contain subtypes of the binder record type)
      * @param batchSize maximum records per execution
-     * @param binder record binder
+     * @param binder handler for the record type or one of its supertypes
      * @param <T> record type
      * @return affected-row count
      * @throws SQLException when statement execution fails
@@ -37,9 +38,9 @@ public class JdbcBatchExecutor {
     public static <T> int execute(
             Connection connection,
             String sql,
-            Iterable<T> records,
+            Iterable<? extends T> records,
             int batchSize,
-            JdbcStatementBinder<T> binder) throws SQLException {
+            JdbcStatementBinder<? super T> binder) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         if (sql == null || sql.isBlank()) {
             throw new IllegalArgumentException("sql must not be blank");
@@ -70,11 +71,12 @@ public class JdbcBatchExecutor {
     }
 
     /**
-     * Count.
+     * Counts successful batch results, counting entries with unknown row counts
+     * as one and rejecting explicitly failed entries.
      *
-     * @param results input results
-     * @return result of count
-     * @throws SQLException if count fails
+     * @param results JDBC update-count array
+     * @return estimated affected-row count
+     * @throws SQLException when JDBC reports an unsuccessful batch entry
      */
     private static int count(int[] results) throws SQLException {
         var affected = 0;

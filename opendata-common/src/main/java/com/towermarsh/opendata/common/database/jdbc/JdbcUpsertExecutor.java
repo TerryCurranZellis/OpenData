@@ -13,7 +13,8 @@ import java.util.Objects;
  * Runs the common record-by-record upsert control flow using a typed adapter.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public class JdbcUpsertExecutor {
 
@@ -25,9 +26,9 @@ public class JdbcUpsertExecutor {
      * Inserts or updates every supplied record.
      *
      * @param connection open transaction connection
-     * @param records records to process
+     * @param records records to process, including subtypes of the adapter type
      * @param context operation context
-     * @param adapter record-specific SQL adapter
+     * @param adapter record-specific SQL adapter accepting these records
      * @param <T> record type
      * @param <C> context type
      * @return upsert counts
@@ -35,9 +36,9 @@ public class JdbcUpsertExecutor {
      */
     public static <T, C> JdbcUpsertResult execute(
             Connection connection,
-            Iterable<T> records,
+            Iterable<? extends T> records,
             C context,
-            JdbcUpsertAdapter<T, C> adapter) throws SQLException {
+            JdbcUpsertAdapter<? super T, C> adapter) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         Objects.requireNonNull(records, "records");
         Objects.requireNonNull(context, "context");
