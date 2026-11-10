@@ -64,6 +64,24 @@ a constructor accepting `PluginDefinition` when available and otherwise a
 no-argument constructor. `PluginExecutionCoordinator` gives each instance its
 own context and runs selected plugins in a bounded executor.
 
+### Cancellation and run auditing
+
+The coordinator runs selected plugins in a bounded executor and returns results
+in selection order. Interrupting the calling thread requests immediate worker
+cancellation, preserves the thread's interrupted status and propagates
+`InterruptedException`. Interruption while awaiting executor termination
+also triggers worker cancellation rather than leaving the executor running
+without supervision. Plugin stages must respond to interruption promptly;
+a forced shutdown cannot guarantee termination of a plugin that ignores it.
+A positive shutdown timeout of at least one millisecond is required.
+
+Normal executions record `PluginRunAudit.started` and
+`PluginRunAudit.completed`. Dry runs deliberately skip persistent run audit.
+If completion of an otherwise successful live run cannot be audited, the
+coordinator reports the run as failed rather than claiming success.
+Core regression tests cover concurrent run ordering, failure isolation,
+cancellation, audit lifecycle and audit-completion errors.
+
 ## Rules
 
 - ids are lowercase, stable and unique;
