@@ -95,6 +95,66 @@ class JdbcBatchExecutorTest {
     }
 
     /**
+     * Even successful individual JDBC counts must not overflow the int total.
+     *
+     * @throws SQLException if mock JDBC setup fails
+     */
+    @Test
+    void rejectsCountOverflowWithinOneBatch() throws SQLException {
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("INSERT INTO test(value) VALUES (?)"))
+                .thenReturn(statement);
+        when(statement.executeBatch()).thenReturn(new int[]{Integer.MAX_VALUE, 1});
+
+        assertThrows(SQLException.class, () -> JdbcBatchExecutor.execute(
+                connection, "INSERT INTO test(value) VALUES (?)",
+                List.of("one", "two"), 2,
+                (current, value) -> current.setString(1, value)));
+        verify(statement).close();
+    }
+
+    /**
+     * Aggregating across successive batch executions must also reject overflow.
+     *
+     * @throws SQLException if mock JDBC setup fails
+     */
+    @Test
+    void rejectsCountOverflowAcrossBatches() throws SQLException {
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("INSERT INTO test(value) VALUES (?)"))
+                .thenReturn(statement);
+        when(statement.executeBatch()).thenReturn(new int[]{Integer.MAX_VALUE})
+                .thenReturn(new int[]{1});
+
+        assertThrows(SQLException.class, () -> JdbcBatchExecutor.execute(
+                connection, "INSERT INTO test(value) VALUES (?)",
+                List.of("one", "two"), 1,
+                (current, value) -> current.setString(1, value)));
+        verify(statement, times(2)).executeBatch();
+    }
+
+    /**
+     * Unexpected negative result codes must never silently count as zero.
+     *
+     * @throws SQLException if mock JDBC setup fails
+     */
+    @Test
+    void rejectsUnknownNegativeUpdateCount() throws SQLException {
+        var connection = mock(Connection.class);
+        var statement = mock(PreparedStatement.class);
+        when(connection.prepareStatement("INSERT INTO test(value) VALUES (?)"))
+                .thenReturn(statement);
+        when(statement.executeBatch()).thenReturn(new int[]{-4});
+
+        assertThrows(SQLException.class, () -> JdbcBatchExecutor.execute(
+                connection, "INSERT INTO test(value) VALUES (?)",
+                List.of("one"), 1,
+                (current, value) -> current.setString(1, value)));
+    }
+
+    /**
      * Rejects zero-sized batches before acquiring a JDBC statement.
      */
     @Test
