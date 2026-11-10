@@ -28,8 +28,9 @@ import java.nio.file.Path;
  *   System.out.println("Extracted " + text.length() + " characters");
  * </pre>
  *
- * @author (C) Copyright Terry Curran 2026. All Rights Reserved.
- * @version 2.0.0
+ * @author Terry Curran
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class PdfTextExtractor {
 

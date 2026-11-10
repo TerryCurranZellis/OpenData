@@ -12,19 +12,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** Transforms a complete extraction batch without rereading its PDF files. */
+/**
+ * Transforms a complete extraction batch without rereading its PDF files.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public class OctopusTransform {
     private static final Logger LOGGER = Logger.getLogger(OctopusTransform.class.getName());
 
     /**
+     * Parses all extracted statements without reopening their PDF files.
      *
-     * @param statements
-     * @return
+     * @param statements extracted statements with their provenance
+     * @return combined electricity, gas and source statement records
      */
     public OctopusParseResult transform(List<ExtractedOctopusStatement> statements) {
         Objects.requireNonNull(statements, "statements");
-        List<ElectricityRecord> electricity = new ArrayList<>();
-        List<GasRecord> gas = new ArrayList<>();
+        var electricity = new ArrayList<ElectricityRecord>();
+        var gas = new ArrayList<GasRecord>();
         for (var statement : statements) {
             var result = OctopusStatementParser.parseExtracted(
                     statement.text(), statement.fileName(), statement.statementDate());

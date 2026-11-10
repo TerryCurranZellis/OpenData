@@ -13,9 +13,13 @@ import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import com.towermarsh.opendata.plugin.ofgem.transform.validate.OfgemWorkbookDataValidator;
 import java.util.Objects;
 
-/** Sets up Ofgem configuration and controls the complete plugin flow. */
+/**
+ * Sets up Ofgem configuration and controls the complete plugin flow.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class OfgemInitialise {
-    private final OfgemConfiguration configuration;
+    private OfgemConfiguration configuration;
     private final OfgemWorkbookDownloader extract;
     private final OfgemPriceCapWorkbookExtractor transform;
     private final OfgemWorkbookDataValidator validator;
@@ -23,10 +27,11 @@ public final class OfgemInitialise {
     private final OfgemFinalise finalise;
 
     /**
+     * Creates the configured Ofgem pipeline components.
      *
-     * @param configuration
+     * @param configuration validated price-cap source configuration
      */
-    public OfgemInitialise(final OfgemConfiguration configuration) {
+    public OfgemInitialise(OfgemConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
         this.extract = new OfgemWorkbookDownloader(configuration);
         this.transform = new OfgemPriceCapWorkbookExtractor();
@@ -36,12 +41,13 @@ public final class OfgemInitialise {
     }
 
     /**
+     * Downloads, parses, validates and loads one price-cap workbook.
      *
-     * @param context
-     * @return
-     * @throws Exception
+     * @param context plugin execution context and database access
+     * @return observed and persisted row counts
+     * @throws Exception if any pipeline or finalisation step fails
      */
-    public PluginMetrics execute(final PluginExecutionContext context) throws Exception {
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         Objects.requireNonNull(context, "context");
         ResolvedDownload download = null;
         OfgemPriceCapWorkbookData records = null;
@@ -57,8 +63,9 @@ public final class OfgemInitialise {
     }
 
     /**
+     * Returns the price-cap configuration used by this pipeline.
      *
-     * @return
+     * @return validated Ofgem configuration
      */
     public OfgemConfiguration configuration() { return configuration; }
 }

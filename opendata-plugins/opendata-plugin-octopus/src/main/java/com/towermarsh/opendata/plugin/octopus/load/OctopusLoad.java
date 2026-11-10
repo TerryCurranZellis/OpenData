@@ -16,8 +16,9 @@ import java.util.logging.Logger;
 /**
  * Load the octopus data
  *
- * @author terry
- * @version 2.0.0
+ * @author Terry Curran
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public class OctopusLoad {
 

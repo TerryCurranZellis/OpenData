@@ -10,7 +10,15 @@ import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
 import java.util.List;
 import java.util.Objects;
 
-/** Combined records and source-file provenance produced by one transform batch. */
+/**
+ * Combined records and source-file provenance produced by one transform batch.
+ * @param electricityRecords electricity usage and charges for this batch
+ * @param gasRecords gas usage and charges for this batch
+ * @param statements source statement metadata and provenance
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public record OctopusParseResult(
         List<ElectricityRecord> electricityRecords,
         List<GasRecord> gasRecords,
