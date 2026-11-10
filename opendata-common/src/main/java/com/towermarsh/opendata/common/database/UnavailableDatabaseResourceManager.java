@@ -13,8 +13,11 @@ import java.sql.Connection;
  * defect.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
+ * @deprecated Use a runtime-owned {@link DatabaseResourceManager} implementation for dry runs.
  */
+@Deprecated(since = "4.1.0")
 public class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 
     /**
