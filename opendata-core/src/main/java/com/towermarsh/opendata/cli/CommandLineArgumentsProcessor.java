@@ -28,16 +28,17 @@ import org.apache.commons.cli.ParseException;
  * Parses and validates the OpenData command line.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public class CommandLineArgumentsProcessor {
 
     /**
-     * the application
+     * Application name used in command-line help output.
      */
     private static final String APPLICATION_NAME = "OpenData";
     /**
-     * command line options
+     * Supported command-line options.
      */
     private final Options options = createOptions();
 
@@ -84,14 +85,14 @@ public class CommandLineArgumentsProcessor {
         if (arguments.length != 1) {
             return Arrays.copyOf(arguments, arguments.length);
         }
-        final var commandLine = arguments[0];
+        var commandLine = arguments[0];
         if (commandLine == null || commandLine.isBlank()) {
             return new String[0];
         }
         if (!containsWhitespace(commandLine)) {
             return Arrays.copyOf(arguments, arguments.length);
         }
-        List<String> tokens = new ArrayList<>();
+        var tokens = new ArrayList<String>();
         var token = new StringBuilder();
         char quote = 0;
         for (var index = 0; index < commandLine.length(); index++) {
@@ -128,17 +129,17 @@ public class CommandLineArgumentsProcessor {
     }
 
     /**
-     * check if a string contains white space
+     * Checks whether a string contains whitespace.
      *
      * @param value string to check
-     * @return true or false
+     * @return {@code true} if the string contains whitespace
      */
     private static boolean containsWhitespace(String value) {
         return value.chars().anyMatch(Character::isWhitespace);
     }
 
     /**
-     * add token to the list
+     * Adds a completed token to the list and clears its buffer.
      *
      * @param tokens token list
      * @param token token to add
@@ -217,18 +218,18 @@ public class CommandLineArgumentsProcessor {
                     false);
 
             writer.flush();
-        } catch (final IOException ex) {
+        } catch (IOException ex) {
             throw new CommandLineProcessingException("Unable to write command-line help", ex);
         }
     }
 
     /**
-     * create all the command line options
+     * Creates the supported command-line options.
      *
      * @return the available command line options
      */
     private static Options createOptions() {
-        final var result = new Options();
+        var result = new Options();
         result.addOption(Option.builder("p")
                 .longOpt("plugin")
                 .hasArg().argName("id|all")
@@ -300,10 +301,10 @@ public class CommandLineArgumentsProcessor {
     }
 
     /**
-     * Parse the command line
+     * Converts parsed Commons CLI options into validated OpenData arguments.
      *
-     * @param commandLine
-     * @return the parsed command line
+     * @param commandLine parsed Commons CLI command line
+     * @return validated OpenData arguments
      */
     private static CommandLineArguments toArguments(CommandLine commandLine) {
         var help = commandLine.hasOption("help");
@@ -317,7 +318,7 @@ public class CommandLineArgumentsProcessor {
                     "Use only one of --help, --about, --list-plugins, or --gui.");
         }
 
-        List<String> rawIds = parsePluginIds(commandLine);
+        var rawIds = parsePluginIds(commandLine);
         var all = rawIds.stream().anyMatch("all"::equals);
         if (all && rawIds.size() > 1) {
             throw new IllegalArgumentException("--plugin all cannot be combined with another plugin id.");
