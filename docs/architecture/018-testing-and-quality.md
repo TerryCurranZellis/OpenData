@@ -29,10 +29,10 @@ presence of package inventories across compiled, test and example source.
 | SpotBugs | Maximum effort, medium threshold | Fail on reported bugs |
 | Maven dependency analysis | Dependency Plugin | Fail on unresolved warnings |
 | JaCoCo | Coverage reports | Report only |
-| Javadoc | Maven Javadoc Plugin | Generate aggregate API docs as a separate CI step |
+| Javadoc | Maven Javadoc Plugin | Generate per-module API docs as a separate CI step |
 
 The branch sets `quality.failOnViolation=true` by default. GitHub Actions
-also explicitly requires it, generates aggregate Javadocs after Maven
+also explicitly requires it, generates per-module Javadocs after Maven
 verification, and uploads module reports.
 
 ```powershell
