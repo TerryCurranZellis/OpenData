@@ -1,7 +1,10 @@
 # First-run initialisation architecture (v4.0.0)
 
 **Document ID:** ARCH-030  
-**Status:** Implemented source, environment verification pending
+**Version:** 4.0.0  
+**Status:** Implemented source, environment verification pending  
+**Baseline date:** 10 November 2026  
+**Minimum Java version:** 24
 
 ## Flow and boundaries
 
@@ -19,7 +22,10 @@ JavaFX `Task` calls `InitialisationService.initialise`, which performs:
    file. No overwrite is permitted.
 3. `SqlServerInitialiser.initialise`: use temporary administrator SQL connections
    to create the database, SQL login, and core tables from resource copies of
-   `sql/002`, `003`, `003a` and `006`, using the existing `GO` parser.
+   `sql/setup/002-create-core-schema.sql`,
+   `003-create-configuration-store.sql`, `003a-create-plugin-registry.sql`
+   and `006-create-plugin-run-audit.sql`, using the API `SqlBatchParser` GO
+   batch splitter.
 4. `SqlServerInitialiser.installPluginSchemas`: invoke each plugin's
    `RegisterPlugin` hook using the administrator connection, allowing its
    DDL and `GRANT` statements.
@@ -32,10 +38,12 @@ JavaFX `Task` calls `InitialisationService.initialise`, which performs:
    switches `init=false`. This is the final success marker.
 7. JavaFX **Finish** loads the main application view; no plugin execution.
 
-The `setup` package is in `opendata-core`; no plugin depends on it. The API
-JPMS module exports contracts only, and the common module remains an automatic
-module. The core JPMS module declares JavaFX requirements and opens the GUI
-package to `javafx.fxml` for controller injection.
+The `setup` package is in `opendata-core`; no plugin depends on it. API owns
+shared plugin, database and exception contracts. Core does **not** depend on
+Common or provider implementation JARs; the `opendata-launcher` assembles
+those dependencies and supplies packaged plugin resources at runtime. The Core
+JPMS descriptor declares JavaFX requirements and opens the GUI package to
+`javafx.fxml` for controller injection.
 
 ## Failure semantics
 
@@ -51,6 +59,7 @@ examining the SQL state. Administrator credentials are not persisted.
 The old AES key file JVM/environment locations are deprecated and should be
 replaced by the file setting `security.aes-key-file`.
 
-The live SQL Server and JavaFX integration need verification on the supported
-Windows/JDK 24+ environment; local JDK 21 compilation cannot validate the
-full version 4 runtime reactor.
+The Maven reactor has passed JDK 24 compilation and strict automated checks.
+Live SQL Server and JavaFX integration still need a supported Windows desktop
+verification. See [first-run screenshot list](../development/gui-screenshot-plan.md)
+and [initialisation sequence PUML](../diagrams/source/first-run-initialisation-sequence.puml).

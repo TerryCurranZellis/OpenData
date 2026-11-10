@@ -1,9 +1,9 @@
 # Dependency Management
 
 **Document ID:** DEV-DEPENDENCY-001  
-**Version:** 3.1.0  
-**Status:** Version 3.1.0 modular build baseline  
-**Baseline date:** 18 September 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -18,14 +18,15 @@ notices when the dependency set changes.
 ## Module dependency rules
 
 - `opendata-api` must not depend on sibling OpenData modules.
-- `opendata-common` may depend on `opendata-api` but not on `opendata-core`.
+- `opendata-common` may depend on `opendata-api` but not on Core or providers.
 - Provider projects depend on `opendata-api`, `opendata-common`, and only the
   shared provider-support projects and external libraries they use.
-- `opendata-core` depends on `opendata-api`, `opendata-common`, and the six
-  provider projects included with the packaged application.
+- `opendata-core` depends on `opendata-api` only; it may not declare a
+  runtime or compile dependency on Common or provider implementations.
+- `opendata-launcher` assembles Core, Common and all six provider runtime JARs.
 
-Keep shared contracts in `opendata-api`, reusable implementation helpers in
-`opendata-common`, provider code in its own project under `opendata-plugins`,
+Keep shared contracts and Core-facing validation in `opendata-api`, provider
+implementation helpers in `opendata-common`, provider code in its own project under `opendata-plugins`,
 and application/runtime orchestration, registry, and execution infrastructure
 in `opendata-core`.
 
@@ -58,7 +59,7 @@ verification baseline for that module.
 1. read the library release notes and Java-version requirements;
 2. review licence compatibility and known security advisories;
 3. update one related dependency family at a time;
-4. run `mvn clean verify` from the repository root and inspect advisory quality reports;
+4. run strict `mvn -Dquality.failOnViolation=true clean verify` from the repository root;
 5. run affected parser, plugin and SQL Server acceptance tests;
 6. update the POMs, notices, documentation and ADRs together; and
 7. record the change in `CHANGELOG.md`.

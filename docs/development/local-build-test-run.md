@@ -1,9 +1,9 @@
 # Local Build, Test and Run
 
 **Document ID:** DEV-BUILD-001  
-**Version:** 3.1.0  
-**Status:** Current Version 3.1.0 developer procedure  
-**Baseline date:** 18 September 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -32,13 +32,12 @@ the Java 24 release target.
 Run from the repository root so the full reactor validates all modules:
 
 ```powershell
-mvn clean test
-mvn clean verify
+mvn -Dquality.failOnViolation=true clean verify
 ```
 
 Each module executes the same build-environment, Surefire, Checkstyle,
-SpotBugs, JaCoCo, Javadoc, and dependency-analysis configuration. Review the
-configured outputs even when advisory quality settings allow Maven to complete.
+SpotBugs, JaCoCo, Javadoc, and dependency-analysis configuration. Checkstyle, SpotBugs and dependency analysis are strict on this branch;
+review the reports and resolve every finding before merge.
 
 Build one provider project together with its required reactor dependencies with:
 
@@ -48,11 +47,21 @@ mvn -pl opendata-plugins/opendata-plugin-openmeteo -am verify
 
 ## Run from an IDE
 
-Run the `opendata-core` module entry point with:
+Run the executable `opendata-launcher` classpath with:
 
 ```text
 Main class: com.towermarsh.opendata.OpenData
+Project: opendata-launcher
 Working directory: repository root
+Classpath: launcher runtime dependencies (Core, Common and providers)
+```
+
+From a Maven terminal, first install reactor modules, then run the
+composed application:
+
+```powershell
+mvn clean install
+mvn -pl opendata-launcher exec:java
 ```
 
 No arguments starts the JavaFX GUI. Example explicit arguments are:
@@ -67,14 +76,16 @@ No arguments starts the JavaFX GUI. Example explicit arguments are:
 
 1. run the complete reactor unit suite on the changed branch;
 2. verify compilation/tests on the Java 24 minimum baseline before release;
-3. smoke-test the merged GUI from `opendata-core` on the current JDK 26 development environment;
+3. smoke-test the GUI from `opendata-launcher` on the current JDK 26 development environment;
 4. list registered plugins and inspect at least one plugin detail;
-5. run Ofgem, OpenMeteo and Octopus dry-runs separately;
+5. run each of the six provider plugins in a controlled dry run;
 6. run a controlled multi-plugin execution with bounded parallelism;
 7. test GUI registration, state changes, details, settings, logs and Help;
 8. test GUI Execute/Dry-run with the live-log completion gate;
-9. validate documentation and render diagrams; and
-10. run the SQL Server acceptance matrix for persistence/configuration changes.
+9. test `init=true` first-run setup with disposable SQL Server credentials,
+   confirm all six providers are registered disabled and review every wizard state;
+10. validate documentation and render diagrams; and
+11. run the SQL Server acceptance matrix for persistence/configuration changes.
 
 ## Documentation build
 

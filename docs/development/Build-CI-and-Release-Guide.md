@@ -1,9 +1,9 @@
 # Build, CI and Release Guide
 
 **Document ID:** DEV-CI-001  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 implementation baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -21,12 +21,12 @@ still be used for limited compilation checks of non-JavaFX modules.
 ## Local build stages
 
 ```powershell
-mvn clean test
-mvn clean verify
+mvn -Dquality.failOnViolation=true clean verify
 ```
 
 `verify` compiles, runs unit tests and executes the configured quality/reporting
-plugins. Review their outputs according to the POM's advisory/strict settings.
+plugins. The POM defaults to strict Checkstyle, SpotBugs and dependency analysis
+verification; any new finding fails the build.
 
 ## Documentation checks
 
@@ -49,17 +49,18 @@ configuration.
 Hosted CI does not replace SQL Server/live-provider acceptance, GUI interaction
 acceptance, Windows Help verification or final distribution inspection.
 
-## Version 3.0.0 release preparation
+## Version 4.0.0 baseline and 4.1.0 release preparation
 
 A release candidate must satisfy the
 [final release checklist](../release/Final-Release-Checklist.md), including:
 
-- clean `mvn clean verify` on Java 24;
+- clean strict `mvn -Dquality.failOnViolation=true clean verify` on Java 24;
 - GUI acceptance and final screenshot capture;
 - CHM Help plus JavaFX fallback verification;
 - clean documentation validation and diagram rendering;
 - clean/repeat SQL Server installation;
-- plugin dry-run/write, rollback and idempotency evidence;
+- provider-level dry-run/write, rollback and idempotency evidence for all six plugins;
+- confirmation that the runnable launcher includes Core, Common and plugin JAR resources;
 - dependency and licence review, including JavaFX;
 - proof that credentials, private keys, statements and database backups are not
   present in release artifacts; and

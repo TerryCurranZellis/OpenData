@@ -1,90 +1,80 @@
 # Security and Credentials
 
-**Document ID:** ARCH-017
-**Version:** 3.0.0  
-**Status:** Encryption implemented; source-baseline remediation required
-**Baseline date:** 15 August 2026  
+**Document ID:** ARCH-017  
+**Version:** 4.0.0  
+**Status:** AES-256-GCM and external key-file configuration implemented; environment verification required  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
 
 ## Security objective
 
-Secrets must not be committed to Git, copied into examples, written to logs,
-stored in documentation or retained in ordinary source resources. Encryption is
-one control; key separation, operating-system permissions and deployment design
-are equally important.
+OpenData must not commit usable passwords, AES keys, authentication tokens,
+customer statements or backups to Git. Key separation and filesystem
+permissions are as important as ciphertext encryption.
 
-## Implemented password protection (AES migration)
+## Credential protection
 
-`AesConfigurationPasswordCipher` uses AES-256-GCM with a fresh 96-bit nonce,
-128-bit authentication tag and a 256-bit random key in an ACL-protected file
-outside the repository and packaged resources. Ciphertext uses the `{aes}`
-prefix followed by unpadded Base64URL. An unchanged `ConfigurationPasswordCipher`
-interface keeps bootstrap loading, application registration and the GUI
-integration intact. The bootstrap and `core.application_property` are both
-re-encrypted when configuration is registered. Legacy `{enc}` RSA values need
-an explicit migration from the known SQL password.
+`AesConfigurationPasswordCipher` implements AES-256-GCM with a random
+nonce and authentication tag. Encrypted values use the `{aes}` marker and
+Base64URL encoding. `ApplicationBootstrapPropertiesLoader` reads
+`security.aes-key-file` and other database properties from
+`config/application.properties`; the user is **not** required to configure
+environment variables or JVM system properties.
 
-For setup and migration see
-`docs/guides/database-configuration-and-security.md`.
+The 4.0.0 first-run wizard accepts temporary SQL Server administrator
+credentials, creates or validates the external AES key, provisions the
+application account, saves encrypted application credentials, and clears
+`init=true` only on successful setup. It does not persist the administrator
+password. Store the AES key outside tracked source and distributable resources.
 
-## Critical baseline finding
+## Historical credential risks
 
-The uploaded project baseline includes a non-blank plaintext database password
-in the tracked bootstrap resource and a private PKCS#12 key store below
-`src/main/resources/config/security`. Co-locating encrypted values and the
-private decryption key in the repository removes most of the protection offered
-by encryption and risks publishing live credentials.
+Earlier development baselines documented plaintext passwords and PKCS#12
+private-key material inside source resources. The reviewed current tree includes
+encrypted bootstrap settings with an external key-file path, but that fact
+**does not establish** that historical Git commits or previously released
+artifacts are clean. Review repository history and previous releases separately,
+and rotate any credentials that may ever have been exposed.
 
-Before release or production use:
-
-1. rotate the database password if the committed value has ever been usable;
-2. remove plaintext credentials and private key stores from Git history and the
-   distributable source archive;
-3. add local bootstrap, private key and certificate-output paths to an explicit
-   ignore/deployment policy;
-4. generate environment-specific key material outside the repository;
-5. restrict the bootstrap and private key store to the service identity;
-6. use a strong PKCS#12 password supplied outside source control;
-7. verify that build, release and documentation archives exclude private key
-   material.
-
-The public certificate may be distributed when appropriate. The private key
-must not be treated as an application resource.
+Never include a real key, certificate private key, SQL password, customer
+statement or database backup in screenshots, logs, documentation or examples.
 
 ## SQL Server identity and permissions
 
-- server login: `OpenData`;
-- database user: `OpenData`;
-- application role: `opendata_app`;
-- database: `OpenData`.
-
-The role should receive only required read/write and execute rights. Broad
-schema grants must be reviewed against the configuration, audit and plugin
-operations actually performed.
+The wizard configures the application SQL login/database user and database
+permissions. Apply least privilege and test registration, execution and
+database access using the configured application account after provisioning.
+Do not continue using administrator credentials for normal execution.
 
 ## Transport security
 
-The local development URL uses `encrypt=true` with
-`trustServerCertificate=true`. That encrypts traffic without validating the
-server identity. Production requires a trusted SQL Server certificate and
-`trustServerCertificate=false`.
+Production SQL Server connections should validate the server identity using
+trusted certificates. The first-run wizard offers an explicit option to trust
+a self-signed SQL Server certificate for local environments only. Do not use
+that option as an unexamined production default.
 
-## Logging and files
+## Logging, files and recovery
 
-Passwords, private-key passwords, tokens, authentication headers and decrypted
-configuration values are prohibited at every log level. Source files may contain
-personal or commercially sensitive data; Octopus statements and archives need
-restricted directory permissions and an explicit retention policy.
+Passwords, tokens, authentication headers, AES key material and decrypted
+property values must never appear in logs, including detailed debug logs.
+Octopus PDFs and downloaded files may contain personal/commercially sensitive
+information and require appropriate access restrictions and retention rules.
 
-## Remaining hardening
+Core schema creation, plugin installation and bootstrap-file writes do not
+form a single distributed transaction. A failed setup leaves `init=true`,
+so retry must inspect existing SQL objects and correct permissions before
+attempting setup again.
 
-- external writable configuration location;
-- managed or operating-system-backed secret retrieval;
-- trusted SQL Server certificate;
-- bounded downloads and retry policies;
-- restricted database and filesystem access;
-- backup/restore tests;
-- dependency, secret and release-archive scanning;
-- secure deletion and retention rules for customer statements and failure data.
+## Release verification
+
+- Confirm key-file permissions and ensure the actual key is not in Git or packages.
+- Verify `{aes}` encryption/decryption and bootstrap recovery on a clean Windows
+  installation.
+- Validate SQL Server TLS certificate policy and least-privilege grants.
+- Scan release artifacts and Git history for credentials and private key files.
+- Test backup/restore, ingestion idempotency and customer-data retention.
+
+See [first-run setup](../guides/first-run-initialisation.md) and the
+[database security guide](../guides/database-configuration-and-security.md).

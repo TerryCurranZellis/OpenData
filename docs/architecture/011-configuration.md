@@ -8,18 +8,30 @@
 
 
 **Document ID:** ARCH-011  
-**Version:** 3.0.0  
-**Status:** Persistent registry and database-backed registration implemented  
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
 
 ## Bootstrap
 
-`src/main/resources/config/application.properties` is read before database
-lookup and contains version, database-backed switch, JDBC URL, user and plain
-(first registration) or `{enc}` encrypted password.
+`config/application.properties` is read before database access, including
+its `init` switch. It holds the SQL Server JDBC URL and login, a `{aes}`
+encrypted database password after setup, the runtime property-source setting,
+and the external AES key path `security.aes-key-file`. These settings are
+loaded by `ApplicationBootstrapPropertiesLoader`; no environment or JVM property
+is required for the key location. Legacy `{enc}` values are not the default for
+new Version 4.0.0 installations.
+
+## First-run setup
+
+With `init=true`, the JavaFX wizard validates SQL Server and application
+credentials, selects or creates the AES key, provisions core and plugin tables,
+registers discovered plugins disabled and finally writes `init=false`.
+Administrator credentials are temporary and must not be retained.
+See the [initialisation guide](../guides/first-run-initialisation.md).
 
 ## Packaged catalogue
 

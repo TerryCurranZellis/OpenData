@@ -1,9 +1,9 @@
 # Java Quality Guide
 
 **Document ID:** DEV-QUALITY-001  
-**Version:** 3.0.0  
-**Status:** Implemented advisory quality baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -22,16 +22,15 @@ quality baseline.
 |---|---|---|
 | Compilation | Maven Compiler Plugin, `release=24` | Fails build |
 | Unit tests | Maven Surefire | Fails build |
-| Checkstyle | `config/quality/checkstyle.xml` | Reports unless strict |
-| SpotBugs | Maximum effort, medium threshold | Reports unless strict |
-| PMD | `config/quality/pmd-ruleset.xml` | Reports unless strict |
+| Checkstyle | `config/quality/checkstyle.xml` | Fails build on violation |
+| SpotBugs | Maximum effort, medium threshold | Fails build on detected bugs |
 | JaCoCo | Test coverage report | Report only; no threshold |
-| Dependency analysis | Maven Dependency Plugin | Warns unless strict |
+| Dependency analysis | Maven Dependency Plugin | Fails on unresolved warnings |
 
-The POM defines `quality.failOnViolation=false`. This means normal verification
-still fails for compilation and test failures, but static-analysis and
-dependency-analysis findings are advisory. Strict mode changes that property to
-`true`.
+The 4.1.0 review branch defaults `quality.failOnViolation=true` in Maven;
+Checkstyle and SpotBugs findings and dependency-analysis warnings fail the
+normal verification build. PMD rules exist in the repository, but a PMD
+execution is not bound to the active `verify` lifecycle.
 
 ## Commands
 
@@ -58,18 +57,21 @@ quality reports are written beneath `target`.
 
 ## Interpreting results
 
-A successful non-strict build does **not** mean Checkstyle, SpotBugs, PMD or
-dependency analysis found nothing. Review the console and generated reports.
-Treat high-confidence defect findings as release blockers even when the current
-advisory configuration permits the build to continue.
+A successful strict verification build confirms that the configured Checkstyle
+and SpotBugs gates, Maven dependency analysis and tests passed. Review generated
+reports as additional evidence; coverage reporting has no enforced minimum.
 
-The GitHub build workflow runs ordinary `mvn clean verify`; it therefore uses the
-same advisory static-analysis setting. Tagged release automation is not a
+The GitHub Actions build explicitly runs
+`mvn --batch-mode --no-transfer-progress -Dquality.failOnViolation=true clean verify`. Tagged release automation is not a
 substitute for reviewing the reports.
 
 ## Source-quality expectations
 
-- All production packages containing Java classes have `package-info.java`.
+- All production packages, including templates, have `package-info.java`
+  listing classes, records, interfaces and enums with links.
+- Every Java source file has `@author Terry Curran` and a Javadoc `@version`;
+  modified source files use `@version 4.1.0` and retain historical `@since`.
+- `JavadocInventoryTest` and `ModuleBoundariesTest` prevent regression.
 - Public contracts and non-obvious transaction, concurrency and security
   behaviour require useful Javadoc.
 - New warnings should not be introduced merely because the historical baseline
@@ -83,7 +85,7 @@ substitute for reviewing the reports.
 
 The Maven Enforcer plugin is active and requires Maven 3.9 or later and Java 24
 or later. JaCoCo creates a report but no minimum coverage rule is configured.
-Static-analysis failures remain advisory unless `quality.failOnViolation=true`
-is supplied. Javadoc is configured but is not bound as a mandatory `verify`
-gate. These are explicit baseline limitations, not claims of strict quality
+Javadoc generation is configured but is not bound as a mandatory `verify`
+gate. Author/version/package coverage is checked by `JavadocInventoryTest`.
+JAcoCo reports do not enforce a minimum coverage percentage. These are explicit baseline limitations, not claims of strict quality
 gating.

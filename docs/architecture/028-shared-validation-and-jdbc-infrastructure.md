@@ -1,9 +1,9 @@
 # Shared Validation and JDBC Infrastructure
 
 **Document ID:** ARCH-028
-**Version:** 3.0.0  
-**Status:** Implemented in Version 3.0.0
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -24,15 +24,19 @@ persistence strategy.
 ![Shared validation and database persistence components](../diagrams/generated/database-persistence-components.svg){width=22.5cm}
 :::
 
-## Shared validation package
+## Shared validation ownership
 
-The package `com.towermarsh.opendata.validation` provides four complementary
-components.
+The 4.1.0 module split separates dependency-free validation contracts in API
+from provider-oriented utilities in Common. Core may call API
+`com.towermarsh.opendata.foundation.ValidationRules` but must not import Common.
+
+The package `com.towermarsh.opendata.validation` in Common retains provider
+conversion helpers:
 
 | Component | Responsibility |
 |---|---|
 | `PluginPropertyValues` | Typed access to values in a resolved `PluginDefinition` |
-| `ValidationRules` | Reusable text, range, duration and date-order rules |
+| `com.towermarsh.opendata.foundation.ValidationRules` (API) | Reusable text, range, duration and date-order rules for Core and plugins |
 | `SqlIdentifiers` | Validation and SQL Server bracket quoting of configured identifiers |
 | `ValueParser<T>` | Extension point for a plugin-specific value type |
 
@@ -46,8 +50,9 @@ method and applying domain constraints after conversion.
 
 ## Shared JDBC package
 
-The package `com.towermarsh.opendata.database.jdbc` contains execution
-mechanics that do not know a plugin schema.
+The Common package `com.towermarsh.opendata.database.jdbc` contains execution
+mechanics that do not know a plugin schema. Provider implementations can use
+these utilities; Core must not depend on Common.
 
 | Component | Responsibility |
 |---|---|
@@ -60,8 +65,9 @@ mechanics that do not know a plugin schema.
 | `JdbcUpsertExecutor` | Execute the common exists/insert/update loop |
 | `JdbcUpsertResult` | Combine inserted and updated counts safely |
 
-Checked failures leaving `JdbcTransactionTemplate` are wrapped in
-`DatabaseAccessException`. Runtime exceptions retain their original type.
+Checked failures leaving `JdbcTransactionTemplate` are wrapped in the
+Common compatibility `DatabaseAccessException`; the independent API database
+exception contract is available to Core. Runtime exceptions retain their original type.
 Rollback and cleanup failures are attached as suppressed exceptions rather than
 concealing the primary failure.
 
@@ -118,15 +124,13 @@ the same `JdbcTransactionTemplate` transaction.
 
 ## API lifecycle rules
 
-All public APIs introduced or materially adjusted by this Version 2.0.0 change
-must carry Javadoc `@since 2.0.0`.
+Public APIs originally introduced in Version 2.0.0 retain their historical
+`@since 2.0.0` tags. Types materially changed for 4.1.0 must also include
+`@version 4.1.0` and `@author Terry Curran`.
 
-When an obsolete public method must remain for source compatibility, it must
-carry both:
-
-```java
-@Deprecated(since = "2.0.0", forRemoval = false)
-```
+When an obsolete public method remains for source compatibility, it must
+carry `@Deprecated(since = "<deprecation release>")` and a Javadoc
+`@deprecated` tag naming its replacement.
 
 and a Javadoc `@deprecated` tag that names the replacement. Private helpers with
 no external callers should normally be removed rather than retained as dead

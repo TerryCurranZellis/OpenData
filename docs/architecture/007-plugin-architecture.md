@@ -1,9 +1,9 @@
 # Plugin Architecture
 
 **Document ID:** ARCH-007  
-**Version:** 3.0.0  
-**Status:** Implemented  
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** Current 4.0.0 baseline; 4.1.0 refactoring review  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -28,9 +28,10 @@ Each provider implementation is in its own Maven project under
 `opendata-plugins` (`opendata-plugin-<id>`). That project owns the provider
 source, tests, SQL script, definition, and a `config/plugins/index.properties`
 that lists only its plugin. Shared provider code lives in separate support
-projects under the same aggregator. `opendata-core` depends on the provider
-projects needed by the packaged application, making their separate JAR
-resources available to the classpath catalogue and reflective loader.
+projects under the same aggregator. `opendata-launcher` depends on the six provider
+projects and Core, making provider JAR resources available to the classpath
+catalogue and reflective loader. Core itself depends on API only and neither
+imports nor declares runtime dependencies on provider implementations.
 
 Every plugin follows the same five steps: **initialise** (configuration and
 orchestration), **extract**, **transform**, **load** and **finalise**
@@ -77,7 +78,8 @@ own context and runs selected plugins in a bounded executor.
 - finalisation must distinguish dry run, successful completion and failure.
 
 Ofgem is the HTML-to-XLSX reference, OpenMeteo is the parameterised JSON API
-reference, and Octopus is the local PDF and idempotent file-ledger reference.
+reference, Octopus and Octopus Adjustment ingest separate statement types, and
+Electric Demand and Electric Supply provide independent NESO CSV pipelines.
 
 The maintained [example plugin](../examples/example-plugin/README.md) is the
 starting point for new implementations.
