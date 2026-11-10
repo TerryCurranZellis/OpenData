@@ -6,17 +6,17 @@
   "metadata": {
     "documentType": "Developer guide",
     "audience": "OpenData maintainers and plugin developers",
-    "revisionSummary": "Version 4.0.0 file-based first-run GUI provisioning; legacy sections retained for reference"
+    "revisionSummary": "OpenData 4.0.0 first-run GUI, six providers and current module layout; 4.1.0 refactor under review"
   },
   "sections": [
     "shared/introduction.md",
     "architecture/030-first-run-initialisation.md",
+    "architecture/031-module-boundaries-4.1-review.md",
     "development/README.md",
     "development/repository-structure.md",
     "development/local-build-test-run.md",
     "development/javafx-gui-architecture.md",
     "development/gui-screenshot-plan.md",
-    "development/gui-v3.0-final-acceptance-checklist.md",
     "development/Java-Quality-Guide.md",
     "development/dependency-management.md",
     "development/Build-CI-and-Release-Guide.md",
@@ -42,6 +42,8 @@
     "architecture/021-ofgem-price-cap-architecture.md",
     "architecture/026-openmeteo-historical-weather-architecture.md",
     "architecture/027-octopus-energy-statement-architecture.md",
+    "architecture/029-octopus-adjustment-architecture.md",
+    "electricity-plugins.md",
     "architecture/028-shared-validation-and-jdbc-infrastructure.md",
     "architecture/018-testing-and-quality.md",
     "architecture/024-architecture-traceability.md",
@@ -55,8 +57,6 @@
     "release/Release-Process.md",
     "release/Distribution-Contents.md",
     "release/Final-Release-Checklist.md",
-    "review/RELEASE-READINESS-STATUS-3.0.0.md",
-    "review/FINAL-DOCUMENTATION-AUDIT-2026-08-04.md",
     "release/Release-Evidence-Index.md",
     "shared/glossary.md",
     "shared/licence.md",

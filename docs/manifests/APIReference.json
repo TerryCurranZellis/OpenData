@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "API and configuration reference",
     "audience": "Plugin developers, integrators and support engineers",
-    "revisionSummary": "Version 4.0.0 file-based first-run GUI provisioning; legacy sections retained for reference"
+    "revisionSummary": "OpenData 4.0.0 first-run GUI, six providers and current module layout; 4.1.0 refactor under review"
   },
   "sections": [
     "shared/introduction.md",
@@ -33,12 +33,18 @@
     "reference/openmeteo-schema.md",
     "reference/octopus-plugin.md",
     "reference/octopus-schema.md",
+    "reference/octopus-adjustment-plugin.md",
+    "reference/octopus-adjustment-configuration.md",
+    "reference/octopus-adjustment-schema.md",
+    "reference/octopus-adjustment-data-dictionary.md",
+    "electricity-plugins.md",
     "plugins/README.md",
     "plugins/ofgem/README.md",
     "plugins/ofgem/data-model.md",
     "plugins/ofgem/workbook-mapping.md",
     "plugins/openmeteo/README.md",
     "plugins/octopus/README.md",
+    "plugins/octopus-adjustment/README.md",
     "governance/README.md",
     "governance/data-and-privacy-governance.md",
     "governance/dependency-and-attribution-management.md",

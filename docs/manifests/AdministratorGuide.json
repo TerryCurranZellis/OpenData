@@ -6,17 +6,20 @@
   "metadata": {
     "documentType": "Administrator guide",
     "audience": "Database, platform and operations administrators",
-    "revisionSummary": "Version 4.0.0 file-based first-run GUI provisioning; legacy sections retained for reference"
+    "revisionSummary": "OpenData 4.0.0 first-run GUI, six providers and current module layout; 4.1.0 refactor under review"
   },
   "sections": [
     "shared/introduction.md",
     "guides/first-run-initialisation.md",
     "architecture/030-first-run-initialisation.md",
+    "architecture/017-security-and-credentials.md",
     "guides/sql-server-bootstrap.md",
     "guides/database-configuration-and-security.md",
     "guides/configuring-api-credentials.md",
     "operations/README.md",
     "operations/operations-runbook.md",
+    "operations/octopus-adjustment-operations.md",
+    "electricity-plugins.md",
     "operations/logging-and-pool.md",
     "operations/monitoring-and-diagnostics.md",
     "operations/backup-and-recovery.md",
@@ -33,7 +36,6 @@
     "release/Release-Process.md",
     "release/Distribution-Contents.md",
     "release/Final-Release-Checklist.md",
-    "review/RELEASE-READINESS-STATUS-3.0.0.md",
     "release/Release-Evidence-Index.md",
     "shared/glossary.md",
     "shared/licence.md",

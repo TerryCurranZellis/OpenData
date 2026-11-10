@@ -6,7 +6,7 @@
   "metadata": {
     "documentType": "Technical user guide",
     "audience": "Operators and technical users",
-    "revisionSummary": "Version 4.0.0 file-based first-run GUI provisioning; legacy sections retained for reference"
+    "revisionSummary": "OpenData 4.0.0 first-run GUI, six providers and current module layout; 4.1.0 refactor under review"
   },
   "sections": [
     "shared/introduction.md",
@@ -21,6 +21,8 @@
     "user-guide/06-ofgem-price-cap-plugin.md",
     "user-guide/07-openmeteo-weather-plugin.md",
     "user-guide/08-octopus-energy-statements.md",
+    "user-guide/13-octopus-adjustment-bills.md",
+    "electricity-plugins.md",
     "user-guide/08-multiple-plugins-and-parallelism.md",
     "user-guide/09-dry-runs.md",
     "user-guide/10-logs-audit-and-troubleshooting.md",
