@@ -3,7 +3,7 @@
 **Status:** Source implementation delivered; full reactor and live SQL Server
 acceptance **not yet verified**.  
 **Prepared:** 7 November 2026  
-**Minimum supported JDK:** 24 (core uses JavaFX 27 in this source archive).
+**Minimum supported JDK:** 24. The original 4.0.0 Core POM specified JavaFX 27, which was incompatible with JDK 24; the 4.1.0 review branch uses JavaFX 26.0.2.
 
 ## Included
 
@@ -19,6 +19,14 @@ acceptance **not yet verified**.
   becomes the success marker, never an early write.
 - JPMS module descriptors for API and core and reactor POM version 4.0.0.
 - Focused tests, administrator/user guidance, architecture and deprecation notes.
+
+## Review-branch verification status
+
+The 4.1.0 review branch has passed automated Maven tests and strict Checkstyle
+and SpotBugs verification on JDK 24. Its documentation workflow also validates
+the manifest, sources and links and builds HTML manuals. These results verify
+the review branch, not the original tagged 4.0.0 release or any deployed SQL
+Server environment.
 
 ## Validation outstanding
 

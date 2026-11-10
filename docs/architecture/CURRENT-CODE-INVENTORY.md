@@ -1,36 +1,54 @@
 # Current Code Inventory
 
-**Document ID:** ARCH-INVENTORY-001
-**Version:** 3.1.0  
-**Status:** Version 3.1.0 modular build baseline
-**Baseline date:** 18 September 2026  
-**Minimum Java version:** 24
+**Document ID:** ARCH-INVENTORY-001  
+**Application baseline:** OpenData 4.0.0  
+**Refactoring baseline:** 4.1.0 review branch  
+**Updated:** 10 November 2026  
+**Minimum supported Java:** 24
 
-This inventory reflects the root reactor and its nested provider-project
-aggregator.
+This inventory reflects the Java/Maven reactor with six provider plugins,
+the JavaFX first-run wizard and the 4.1.0 module-boundary refactor.
+The release version in the Maven POMs remains 4.0.0 until 4.1.0 is accepted.
 
-## Module inventory
+## Maven module inventory
 
-| Module | Current classes/contracts | Status |
+| Module | Ownership | Dependencies and packaging |
 |---|---|---|
-| `opendata-api` | plugin contracts, plugin execution records, immutable plugin/configuration records, database resource interfaces | Implemented |
-| `opendata-common` | shared validation, JDBC helpers, shared exceptions, utility helpers, logging context, and HTML link resolution support | Implemented |
-| `opendata-core` | application entry points, JavaFX GUI, CLI, bootstrap/configuration, plugin registry/execution infrastructure, downloads, parsers, and audit | Implemented |
-| `opendata-plugins` | aggregator for provider projects and shared provider-support projects | Implemented |
+| `opendata-api` | Plugin contracts, immutable configuration records, database interfaces, shared exception hierarchy and dependency-free formatting/validation utilities | No other OpenData module |
+| `opendata-common` | Reusable JDBC transaction/batch/upsert helpers, provider-oriented parsing/conversion, compatibility adapters and download strategies | API only |
+| `opendata-core` | OpenData entry point, CLI, JavaFX GUI, initialisation wizard, configuration, SQL Server access, plugin registry/execution, downloads, parsers and audits | API only |
+| `opendata-plugins` | Maven aggregator for six providers and two provider-specific support projects | Provider modules depend on API, Common and their own support modules as appropriate; never Core |
+| `opendata-launcher` | Application composition/packaged classpath provider discovery and integration tests | Core, Common and provider JARs; no reverse dependencies |
+
+**Six independent providers:** Ofgem, OpenMeteo, Octopus, Octopus Adjustment,
+Electric Demand and Electric Supply. Provider-specific NESO electricity and
+Octopus support code remains in separately named Maven submodules.
 
 ## Functional inventory
 
-| Area | Current classes/contracts | Status |
+| Area | Principal implementation | Notes |
 |---|---|---|
-| Bootstrap | `OpenData`, `OpenDataApplication`, `ApplicationInfo`, `ExecutionStatus` | Implemented |
-| JavaFX GUI | launcher/application, splash, FXML controller, plugin table, administration/detail/settings/log/help/about/execution services | Implemented |
-| CLI | command arguments, processor and selection resolver | Implemented |
-| Configuration sources | classpath/JDBC sources and registration service | Implemented |
-| Shared property processing | `PluginPropertyValues`, `ValueParser` | Implemented in `opendata-common`; used by Ofgem, OpenMeteo and Octopus |
-| Shared validation | `ValidationRules`, `SqlIdentifiers` | Implemented in `opendata-common` |
-| Download/discovery | JDK HTTP, Jsoup discovery and strategies | Implemented across `opendata-core` and `opendata-common` |
-| Shared JDBC execution | transaction template, cleanup callback, batch executor and typed upsert executor | Implemented in `opendata-common` |
-| Connection pooling | DBCP-backed SQL Server resource and pool snapshot contracts | Implemented across `opendata-core` and `opendata-api` |
-| Plugin registry | packaged catalogue, persistent registry, execution coordinator and reflection factory | Implemented in `opendata-core` |
-| Provider plugins | Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric Demand, Electric Supply | Separate Maven projects under `opendata-plugins` |
-| Plugin support | NESO electricity helpers and shared Octopus parser/records | Separate support projects under `opendata-plugins` |
+| CLI | `OpenData`, `CommandLineArgumentsProcessor` | `--gui`, `--execute`, `--dry-run`, `--detail`, registration/administration |
+| JavaFX desktop | GUI launcher, splash, controller, plugin table and execution log | Includes settings, detail, log, help and About views |
+| First-run setup | `InitialisationWizard`, `InitialisationService`, `SqlServerInitialiser` | Three input/review pages plus progress; `init=false` only on success |
+| Configuration | Bootstrap properties loader and AES-256-GCM cipher | AES key-file path read through application properties |
+| Registry | `JdbcPluginRegistry`, `PluginRegistrarLocator`, classpath/plugin-definition discovery | Registration does not automatically enable plugins |
+| Execution | `PluginExecutionCoordinator`, `ReflectionPluginFactory`, run audit | Bounded concurrency, dry-run and live logging |
+| Data access | `SQLServerResource`, `DatabaseResourceManager`, JDBC transaction/batch/upsert helpers | SQL Server and Apache Commons DBCP |
+| Download/parsing | JDK HTTP, Jsoup and format-specific parsers | Provider-specific extraction remains within providers |
+| Shared API | `CollectionCopies`, `ValidationRules`, `SqlBatchParser`, shared exceptions | No Core or Common dependency from API |
+| Quality | JUnit, Maven Enforcer, Checkstyle, SpotBugs, JaCoCo, dependency analysis | Checkstyle/SpotBugs fail the Maven build |
+
+## Architecture and validation
+
+See [Module boundaries review](031-module-boundaries-4.1-review.md) and
+[repository structure](../development/repository-structure.md).
+
+GitHub Actions builds compile and test the review branch using Java 24, with
+Checkstyle and SpotBugs enforcement. Documentation is also validated and HTML
+manuals are generated by a separate workflow. Passing automated checks does
+not replace Windows GUI, first-run SQL Server, and provider integration tests
+in the intended deployment environment.
+
+GUI screenshots are **not yet supplied**. The capture checklist is maintained
+in [GUI screenshot plan](../development/gui-screenshot-plan.md).
