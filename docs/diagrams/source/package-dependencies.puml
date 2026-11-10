@@ -1,72 +1,40 @@
 @startuml
 !pragma layout smetana
-title Principal Package Dependencies - Version 3.1.0
+title OpenData 4.0.0 — Maven Dependencies (4.1.0 Refactor)
+skinparam componentStyle rectangle
 top to bottom direction
 
-package app
-package cli
-package gui
-package config
-package "plugin (shared runtime)" as Plugin
-
-package "plugin.<id> (provider project)" as Provider {
-  [workflow facade] as Facade
-  [RegisterPlugin] as ProviderRegister
-  [initialise / config] as ProviderConfig
-  [download] as ProviderDownload
-  [extract] as ProviderExtract
-  [transform] as ProviderTransform
-  [transform.model] as ProviderModel
-  [transform.validate] as ProviderValidate
-  [load] as ProviderLoad
-  [finalise] as ProviderFinalise
+package "Runtime assembly (no reverse dependencies)" {
+    [opendata-launcher] as Launcher
 }
-
-package discovery
-package download
-package parser
-package validation
-package database
-package logging
-package exception
-package util
-package "plugin support projects" as ProviderSupport
-
-app --> cli
-app --> gui
-app --> config
-app --> Plugin
-app --> database
-app --> logging
-gui --> app : gateways/services
-gui --> config
-gui --> Plugin
-gui --> logging
-Plugin --> config
-Plugin --> database
-Plugin --> logging
-Facade --> Plugin
-Facade --> ProviderConfig
-Facade --> ProviderFinalise
-Plugin --> ProviderRegister : PluginRegistrar on registration
-ProviderRegister --> database : creates schema
-Facade --> ProviderDownload
-Facade --> ProviderExtract
-Facade --> ProviderTransform
-Facade --> ProviderValidate
-Facade --> ProviderLoad
-Provider --> ProviderSupport : shared provider code
-ProviderDownload --> download
-ProviderDownload --> discovery
-ProviderExtract --> parser
-ProviderTransform --> ProviderModel
-ProviderValidate --> ProviderModel
-ProviderLoad --> ProviderModel
-ProviderLoad --> database
-discovery --> exception
-download --> exception
-parser --> exception
-validation --> exception
-app --> util
-gui --> util
+package "Core application" {
+    [opendata-core] as Core
+    [JavaFX GUI and first-run wizard] as Gui
+    [CLI and execution coordinator] as Executor
+}
+package "Shared dependencies" {
+    [opendata-api] as Api
+    [opendata-common] as Common
+}
+package "Provider implementations" {
+    [opendata-plugins] as Plugins
+    [electricity support] as ElectricSupport
+    [octopus support] as OctopusSupport
+}
+Launcher --> Core : assembly
+Launcher --> Common : support JAR
+Launcher --> Plugins : provider JARs
+Core --> Api : compile only
+Common --> Api : contracts
+Plugins --> Api : plugin contracts
+Plugins --> Common : shared helpers
+Plugins --> ElectricSupport
+Plugins --> OctopusSupport
+Gui -[hidden]-> Executor
+Core -- Gui
+Core -- Executor
+note bottom of Core
+  Core does not declare dependencies on
+  Common or provider implementations.
+end note
 @enduml
