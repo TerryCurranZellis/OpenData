@@ -48,7 +48,9 @@ var batchSize = ValidationRules.requireRange(
         "database.batch-size");
 ```
 
-API-owned `com.towermarsh.opendata.foundation.ValidationRules` is available to Core and plugins; the Common implementation remains for provider compatibility.\n\n## `ValidationRules`
+API-owned `com.towermarsh.opendata.foundation.ValidationRules` is available to Core and plugins; the Common implementation remains for provider compatibility.
+
+## `ValidationRules`
 
 | Method | Rule |
 |---|---|
@@ -135,7 +137,9 @@ var loaded = JdbcBatchExecutor.execute(
         (statement, record) -> bindRecord(statement, record));
 ```
 
-In 4.1.0, the generic signature accepts an `Iterable<? extends T>` and a\n`JdbcStatementBinder<? super T>`, so a binder handling a base record type can\nprocess records of its subtypes without casts. The executor rejects blank SQL, null records and non-positive batch sizes. It
+In 4.1.0, the generic signature accepts an `Iterable<? extends T>` and a
+`JdbcStatementBinder<? super T>`, so a binder handling a base record type can
+process records of its subtypes without casts. The executor rejects blank SQL, null records and non-positive batch sizes. It
 counts normal update results, treats `Statement.SUCCESS_NO_INFO` as one affected
 record and fails if the driver reports `Statement.EXECUTE_FAILED`.
 
@@ -159,7 +163,11 @@ void insert(Connection connection, T record, C context);
 void update(Connection connection, T record, C context);
 ```
 
-The 4.1.0 upsert executor likewise accepts `Iterable<? extends T>` with a\n`JdbcUpsertAdapter<? super T, C>`; an adapter for a supertype may process\nsubtype records while preserving the context type.\n\n`JdbcUpsertResult.plus(...)` combines typed results from separate record sets.
+The 4.1.0 upsert executor likewise accepts `Iterable<? extends T>` with a
+`JdbcUpsertAdapter<? super T, C>`; an adapter for a supertype may process
+subtype records while preserving the context type.
+
+`JdbcUpsertResult.plus(...)` combines typed results from separate record sets.
 Use a set-based staging strategy instead when volume or concurrency makes one
 existence query per record inappropriate.
 
