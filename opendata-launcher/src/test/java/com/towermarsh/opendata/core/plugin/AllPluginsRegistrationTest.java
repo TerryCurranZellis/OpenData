@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.towermarsh.opendata.common.database.SqlScriptExecutor;
+import com.towermarsh.opendata.database.SqlBatchParser;
 import com.towermarsh.opendata.config.PluginRegistrationResolver;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -13,11 +13,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Integration checks for packaged plugin registrars and their SQL resources.
  *
- * <p>The test belongs to the Core package because the API owns
- * {@code com.towermarsh.opendata.plugin} as a named JPMS module package.</p>
+ * <p>This test runs in the executable launcher where all provider JARs and
+ * their registration resources are present.</p>
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 class AllPluginsRegistrationTest {
 
@@ -37,7 +38,7 @@ class AllPluginsRegistrationTest {
             try (var in = getClass().getClassLoader().getResourceAsStream(resource)) {
                 assertNotNull(in, resource);
                 var script = new String(in.readAllBytes(), StandardCharsets.UTF_8);
-                assertFalse(SqlScriptExecutor.batches(script).isEmpty());
+                assertFalse(SqlBatchParser.batches(script).isEmpty());
                 assertFalse(script.contains("USE [OpenData]"));
             }
         }

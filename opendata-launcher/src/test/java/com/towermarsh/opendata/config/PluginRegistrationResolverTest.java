@@ -21,7 +21,8 @@ import org.junit.jupiter.api.io.TempDir;
  * Tests shared packaged/external plugin registration resolution.
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 class PluginRegistrationResolverTest {
 
@@ -30,9 +31,9 @@ class PluginRegistrationResolverTest {
 
     @Test
     void listsPackagedPluginCatalogue() {
-        final var resolver = new PluginRegistrationResolver();
+        var resolver = new PluginRegistrationResolver();
 
-        final var ids = resolver.packagedPlugins().stream()
+        var ids = resolver.packagedPlugins().stream()
                 .map(plugin -> plugin.id())
                 .toList();
 
@@ -41,9 +42,9 @@ class PluginRegistrationResolverTest {
 
     @Test
     void resolvesNamedPackagedRegistration() {
-        final var resolver = new PluginRegistrationResolver();
+        var resolver = new PluginRegistrationResolver();
 
-        final var registrations = resolver.resolvePackaged(List.of("ofgem"));
+        var registrations = resolver.resolvePackaged(List.of("ofgem"));
 
         assertEquals(1, registrations.size());
         assertEquals("ofgem", registrations.get(0).descriptor().id());
@@ -53,10 +54,10 @@ class PluginRegistrationResolverTest {
 
     @Test
     void resolvesExternalFileUsingItsPluginId() throws IOException {
-        final var file = copyPackagedPlugin("ofgem");
-        final var resolver = new PluginRegistrationResolver();
+        var file = copyPackagedPlugin("ofgem");
+        var resolver = new PluginRegistrationResolver();
 
-        final var registration = resolver.resolveFile(file);
+        var registration = resolver.resolveFile(file);
 
         assertEquals("ofgem", registration.descriptor().id());
         assertTrue(registration.properties().containsKey("dataset.id"));
@@ -64,17 +65,17 @@ class PluginRegistrationResolverTest {
 
     @Test
     void preservesCliRequestedIdValidationForExternalFile() throws IOException {
-        final var file = copyPackagedPlugin("ofgem");
-        final var resolver = new PluginRegistrationResolver();
+        var file = copyPackagedPlugin("ofgem");
+        var resolver = new PluginRegistrationResolver();
 
         assertThrows(
                 PluginDefinitionException.class,
                 () -> resolver.resolveFile("openmeteo", file));
     }
 
-    private Path copyPackagedPlugin(final String pluginId) throws IOException {
-        final var resource = "config/plugins/" + pluginId + ".properties";
-        final var target = temporaryDirectory.resolve(pluginId + ".properties");
+    private Path copyPackagedPlugin(String pluginId) throws IOException {
+        var resource = "config/plugins/" + pluginId + ".properties";
+        var target = temporaryDirectory.resolve(pluginId + ".properties");
         try (var input = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(resource)) {
             if (input == null) {

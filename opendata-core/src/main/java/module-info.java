@@ -1,13 +1,14 @@
 /**
  * OpenData application, JavaFX presentation, execution and first-run setup.
- * Depends on API contracts and the shared automatic module, not on plugin
- * implementation modules. Plugins are discovered from classpath resources.
+ * Depends on API contracts, not on Common or provider implementation modules.
+ * Provider JARs and Common are assembled by the executable launcher.
  *
+ * @author Terry Curran
  * @since 4.0.0
+ * @version 4.1.0
  */
 module com.towermarsh.opendata.core {
     requires com.towermarsh.opendata.api;
-    requires com.towermarsh.opendata.common;
     requires java.sql;
     requires java.logging;
     requires java.net.http;

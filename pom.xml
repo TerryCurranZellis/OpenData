@@ -42,6 +42,7 @@
         <module>opendata-common</module>
         <module>opendata-plugins</module>
         <module>opendata-core</module>
+        <module>opendata-launcher</module>
     </modules>
 
     <dependencyManagement>

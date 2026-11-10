@@ -15,13 +15,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 class ClasspathPluginRegistryTest {
 
     @Test
     void listsAllBundledPluginsFromSingleClasspathIndex() {
-        final PluginRegistry registry =
+        PluginRegistry registry =
                 new ClasspathPluginRegistry();
 
         assertEquals(

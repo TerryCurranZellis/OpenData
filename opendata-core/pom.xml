@@ -168,42 +168,22 @@
             <artifactId>opendata-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
+<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opendata-plugin-electric-demand</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-electric-supply</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
+<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opendata-plugin-octopus</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-octopus-adjustment</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
+<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opendata-plugin-ofgem</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-openmeteo</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
+</dependencies>
     <build>
         <resources>
             <resource>
