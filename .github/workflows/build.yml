@@ -2,7 +2,7 @@ name: Build and quality
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'refactor/v4.1.0-review' ]
   pull_request:
   workflow_dispatch:
 
@@ -21,7 +21,7 @@ jobs:
           java-version: '24'
           cache: maven
       - name: Maven verification
-        run: mvn --batch-mode --no-transfer-progress clean verify
+        run: mvn --batch-mode --no-transfer-progress -Dquality.failOnViolation=true clean verify
       - name: Upload test and quality reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -29,8 +29,8 @@ jobs:
           name: quality-reports
           if-no-files-found: ignore
           path: |
-            target/surefire-reports/**
-            target/site/**
-            target/checkstyle-*.xml
-            target/pmd.xml
-            target/spotbugsXml.xml
+            **/target/surefire-reports/**
+            **/target/site/**
+            **/target/checkstyle-*.xml
+            **/target/pmd.xml
+            **/target/spotbugsXml.xml
