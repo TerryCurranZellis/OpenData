@@ -15,7 +15,8 @@ import java.util.Objects;
  * Provides consistent JDBC transaction, rollback, and pooled-session cleanup.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class JdbcTransactionTemplate {
 
@@ -73,13 +74,14 @@ public final class JdbcTransactionTemplate {
     }
 
     /**
-     * Execute.
+     * Executes one transaction and ensures cleanup on both success and failure.
      *
-     * @param connection input connection
-     * @param transaction input transaction
-     * @param cleanup input cleanup
-     * @return result of execute
-     * @throws Exception if execute fails
+     * @param <T> result type
+     * @param connection borrowed connection
+     * @param transaction transactional work
+     * @param cleanup cleanup action for the borrowed connection
+     * @return result returned by the work
+     * @throws Exception if the work or connection cleanup fails
      */
     @SuppressWarnings("ThrowFromFinallyBlock")
     private static <T> T execute(
@@ -90,7 +92,7 @@ public final class JdbcTransactionTemplate {
         connection.setAutoCommit(false);
         Exception primaryFailure = null;
         try {
-            T result = transaction.execute(connection);
+            var result = transaction.execute(connection);
             connection.commit();
             return result;
         } catch (Exception exception) {
@@ -109,10 +111,10 @@ public final class JdbcTransactionTemplate {
     }
 
     /**
-     * Rollback.
+     * Attempts rollback and suppresses rollback errors on the original failure.
      *
-     * @param connection input connection
-     * @param originalFailure input original failure
+     * @param connection borrowed connection
+     * @param originalFailure original transaction failure
      */
     private static void rollback(
             Connection connection,
@@ -125,12 +127,12 @@ public final class JdbcTransactionTemplate {
     }
 
     /**
-     * Cleanup.
+     * Restores the pooled connection state and reports cleanup failure.
      *
-     * @param connection input connection
-     * @param cleanup input cleanup
-     * @param originalAutoCommit input original auto commit
-     * @return result of cleanup
+     * @param connection borrowed connection
+     * @param cleanup connection-scoped cleanup action
+     * @param originalAutoCommit auto-commit state before the transaction
+     * @return cleanup failure or null
      */
     private static SQLException cleanup(
             Connection connection,

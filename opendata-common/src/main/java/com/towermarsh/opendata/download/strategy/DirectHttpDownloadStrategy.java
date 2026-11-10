@@ -30,7 +30,8 @@ import com.towermarsh.opendata.exception.DownloadException;
  * interrupt status.</p>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class DirectHttpDownloadStrategy {
 
@@ -59,7 +60,7 @@ public final class DirectHttpDownloadStrategy {
      * @param headers non-secret HTTP headers
      * @param requestTimeout request timeout
      * @return download result
-     * @throws com.towermarsh.opendata.exception.DownloadException
+     * @throws DownloadException if the request or file operation fails
      */
     public ResolvedDownload download(
             URI requestedUri,
@@ -128,11 +129,11 @@ public final class DirectHttpDownloadStrategy {
     }
 
     /**
-     * Move completed file.
+     * Atomically moves a completed download into place where supported.
      *
-     * @param partFile target part file
-     * @param destination input destination
-     * @throws IOException if move completed file fails
+     * @param partFile fully downloaded temporary file
+     * @param destination final destination
+     * @throws IOException if moving the completed file fails
      */
     private static void moveCompletedFile(
             Path partFile,
@@ -153,9 +154,9 @@ public final class DirectHttpDownloadStrategy {
     }
 
     /**
-     * Delete quietly.
+     * Removes a partial download without hiding the original error.
      *
-     * @param file target file
+     * @param file temporary file
      */
     private static void deleteQuietly(Path file) {
         try {

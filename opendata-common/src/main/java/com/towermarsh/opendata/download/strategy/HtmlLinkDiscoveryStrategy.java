@@ -23,7 +23,8 @@ import com.towermarsh.opendata.exception.DownloadException;
  * the resolved resource to disk.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class HtmlLinkDiscoveryStrategy {
 
@@ -58,7 +59,7 @@ public final class HtmlLinkDiscoveryStrategy {
      * @param requestTimeout request timeout
      * @param discovery link-discovery rules
      * @return completed download
-     * @throws com.towermarsh.opendata.exception.DownloadException
+     * @throws DownloadException if discovery or downloading fails
      */
     public ResolvedDownload download(
             URI landingPageUri,
@@ -84,13 +85,13 @@ public final class HtmlLinkDiscoveryStrategy {
     }
 
     /**
-     * Fetch html.
+     * Retrieves the landing page's HTML using the configured HTTP client.
      *
-     * @param uri input uri
-     * @param headers input headers
-     * @param timeout input timeout
-     * @return result of fetch html
-     * @throws DownloadException if fetch html fails
+     * @param uri landing-page URI
+     * @param headers non-secret request headers
+     * @param timeout HTTP request timeout
+     * @return HTML document text
+     * @throws DownloadException if HTTP retrieval is interrupted or fails
      */
     private String fetchHtml(
             URI uri,

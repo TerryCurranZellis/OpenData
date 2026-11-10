@@ -16,7 +16,8 @@ import java.util.logging.Logger;
  * classpath.
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
 
@@ -41,8 +42,6 @@ public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
 
     /**
      * {@inheritDoc}
-     *
-     * @return result of plugin id
      */
     @Override
     public String pluginId() {
@@ -51,8 +50,6 @@ public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
 
     /**
      * {@inheritDoc}
-     *
-     * @param database input database
      */
     @Override
     public void register(DatabaseResourceManager database) {
