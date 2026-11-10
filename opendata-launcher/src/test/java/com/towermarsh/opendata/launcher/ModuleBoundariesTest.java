@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
@@ -37,17 +38,17 @@ class ModuleBoundariesTest {
     void mavenDependenciesRespectModuleBoundaries() throws IOException {
         var root = repositoryRoot();
         checkPom(root.resolve("opendata-api/pom.xml"),
-                Set.of("opendata-core", "opendata-common"), true);
+                Set.of("opendata-core", "opendata-common", "opendata-launcher"), true);
         checkPom(root.resolve("opendata-common/pom.xml"),
-                Set.of("opendata-core"), true);
+                Set.of("opendata-core", "opendata-launcher"), true);
         checkPom(root.resolve("opendata-core/pom.xml"),
-                Set.of("opendata-common"), true);
+                Set.of("opendata-common", "opendata-launcher"), true);
 
         try (var plugins = Files.newDirectoryStream(root.resolve("opendata-plugins"), "opendata-plugin-*")) {
             for (var plugin : plugins) {
                 var pom = plugin.resolve("pom.xml");
                 if (Files.isRegularFile(pom)) {
-                    checkPom(pom, Set.of("opendata-core"), false);
+                    checkPom(pom, Set.of("opendata-core", "opendata-launcher"), false);
                 }
             }
         }
@@ -82,6 +83,52 @@ class ModuleBoundariesTest {
                 "import com.towermarsh.opendata.common.",
                 "import com.towermarsh.opendata.util.",
                 "import com.towermarsh.opendata.validation.");
+    }
+
+    /**
+     * Checks for accidental provider implementation imports in shared modules
+     * and forbidden Core imports in provider implementations.
+     *
+     * @throws IOException when production sources cannot be read
+     */
+    @Test
+    void providersAndSharedModulesDoNotImportForbiddenImplementations() throws IOException {
+        var root = repositoryRoot();
+        var providerClass = Pattern.compile(
+                "^import\\s+(?:static\\s+)?com\\.towermarsh\\.opendata\\.plugin\\.[a-z][a-z0-9]*\\.");
+        for (var module : List.of("opendata-api", "opendata-common", "opendata-core")) {
+            checkMatchingImports(root.resolve(module + "/src/main/java"), providerClass);
+        }
+        var plugins = root.resolve("opendata-plugins");
+        try (var directories = Files.newDirectoryStream(plugins, "opendata-plugin-*")) {
+            for (var plugin : directories) {
+                var sourceRoot = plugin.resolve("src/main/java");
+                if (Files.isDirectory(sourceRoot)) {
+                    checkImports(sourceRoot,
+                            "import com.towermarsh.opendata.core.",
+                            "import com.towermarsh.opendata.gui.",
+                            "import com.towermarsh.opendata.app.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Rejects imports matching a provider implementation package pattern.
+     *
+     * @param sourceRoot module Java source directory
+     * @param forbiddenPattern forbidden Java import
+     * @throws IOException when a source cannot be read
+     */
+    private static void checkMatchingImports(Path sourceRoot, Pattern forbiddenPattern) throws IOException {
+        try (var sources = Files.walk(sourceRoot)) {
+            for (var source : sources.filter(file -> file.toString().endsWith(".java")).toList()) {
+                for (var line : Files.readAllLines(source)) {
+                    assertFalse(forbiddenPattern.matcher(line.stripLeading()).find(),
+                            () -> source + " illegally imports provider implementation: " + line);
+                }
+            }
+        }
     }
 
     /**
