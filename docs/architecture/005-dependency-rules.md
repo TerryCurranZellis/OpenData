@@ -1,33 +1,56 @@
 # Dependency Rules
 
 **Document ID:** ARCH-005  
-**Version:** 3.0.0  
-**Status:** Baseline  
-**Baseline date:** 15 August 2026  
+**Version:** 4.0.0  
+**Status:** 4.1.0 dependency refactor implemented and verified by Maven tests  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
 
-## Rules
+## Mandatory module boundaries
 
-- `OpenData` and `OpenDataApplication` must not depend directly on Ofgem,
-  OpenMeteo or Octopus implementation classes.
-- The generic `plugin` package may depend on contracts and infrastructure, but
-  must not import `plugin.<id>` classes.
-- A provider package may use shared configuration, download, parser, database,
-  logging and exception packages.
-- Provider-to-provider dependencies are prohibited.
-- Plugin SQL and transaction logic belongs in `plugin.<id>.load` repositories.
-- CLI classes do not open database connections or execute plugins.
-- Infrastructure classes do not inspect command-line options.
-- Configuration records and provider models should be immutable.
-- Borrowed JDBC connections, streams, parsers and workbooks must remain inside
-  bounded resource scopes.
-- Dry-run branches must not call plugin persistence, audit or final archive
-  operations.
-- Secrets must not be logged or copied into plugin definitions.
+| Consumer | Permitted dependencies | Forbidden dependencies |
+|---|---|---|
+| `opendata-api` | JDK and third-party contracts only | Core, Common, all provider modules |
+| `opendata-common` | API and external libraries | Core and all provider modules |
+| `opendata-core` | API and external libraries | Common and all provider modules |
+| Provider plugins | API, Common, relevant provider-support modules | Core and other provider implementations |
+| `opendata-launcher` | Core, Common, API and provider JARs | No reverse dependency into launcher |
 
-The classpath registry names provider implementation classes as data in each
-provider project's `index.properties` and plugin definition. Core uses
-reflection rather than direct Java references to implementations, while its
-Maven dependencies make the selected provider projects available at runtime.
+Runtime-scoped dependencies are **still dependencies**: they are not permitted
+in Core merely because they are declared with `<scope>runtime</scope>`.
+Only the launcher may assemble the provider implementation JARs.
+
+The provider-neutral plugin factory loads the implementation class named in
+metadata, but it does not import provider implementation types. Provider
+registrars are discovered from their conventional class names and packaged
+resources using interfaces defined in API.
+
+## Additional code rules
+
+- CLI and JavaFX presentation code delegate database access and execution to
+  application services.
+- Provider-to-provider implementation references are not permitted.
+- Provider-specific SQL and transaction logic belongs in provider-owned load
+  repositories; Common supplies reusable helpers where appropriate.
+- Dry-run execution must not write provider data, normal run-audit rows or
+  final archives.
+- Configuration and provider data models should prefer immutable records.
+- JDBC resources, streams, workbooks and parsers must have bounded lifetimes.
+- Secrets must not appear in logs, committed source or plugin definitions.
+
+## Verification
+
+`opendata-launcher` contains `ModuleBoundariesTest`, which checks POM
+declarations, Java imports and the Core module descriptor. Run the full
+reactor with strict Checkstyle, SpotBugs and tests:
+
+```powershell
+mvn -Dquality.failOnViolation=true clean verify
+```
+
+For implementation history and remaining environment checks, see
+[4.1.0 module-boundary review](031-module-boundaries-4.1-review.md).
+
+![Principal Maven dependency boundaries](../diagrams/generated/package-dependencies.svg)

@@ -1,9 +1,9 @@
 # Package Structure
 
 **Document ID:** ARCH-004  
-**Version:** 3.1.0  
-**Status:** Current implementation and target ownership  
-**Baseline date:** 18 September 2026  
+**Version:** 4.0.0  
+**Status:** 4.1.0 dependency-boundary source layout  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
@@ -12,29 +12,28 @@
 
 | Module | Package / area | Responsibility |
 |---|---|---|
-| `opendata-api` | `config.model` | Immutable plugin-definition, endpoint, and credential records |
-| `opendata-api` | `database` | Shared database resource contracts and pool snapshots |
-| `opendata-api` | `plugin` | Shared plugin contracts and immutable run metadata |
-| `opendata-common` | `database`, `database.jdbc` | Shared database exception types and reusable JDBC execution helpers |
-| `opendata-common` | `download.strategy` | Shared download-resolution strategies |
-| `opendata-common` | `exception` | Shared exception types |
-| `opendata-common` | `logging`, `util` | Shared plugin log context and reusable utility helpers |
-| `opendata-common` | `validation` | Typed property parsing and reusable validation rules |
-| `opendata-plugins/opendata-plugin-<id>` | `plugin.<id>` | Provider workflow facade, staged pipeline (`initialise`, `extract`, `transform`, `load`, `finalise`) and `RegisterPlugin` |
-| `opendata-plugins/opendata-plugin-electricity-common` | `plugin.neso` | Shared NESO and electricity-provider support |
-| `opendata-plugins/opendata-plugin-octopus-common` | `plugin.octopus` | Shared Octopus statement parser, records, and PDF text extraction |
-| `opendata-core` | `core.plugin` | Provider-neutral registries, execution coordinator, audit, and factories |
-| `opendata-core` | root / `app` | Entry point, orchestration and run status |
-| `opendata-core` | `cli` | Commons CLI and immutable arguments |
-| `opendata-core` | `config`, `config.model` | Bootstrap, registration, property sources, and runtime configuration |
-| `opendata-core` | `download`, `discovery`, `parser`, `etl` | Shared acquisition, selection, parsing, and staged pipeline contracts |
-| `opendata-core` | `database.audit` | Ingestion audit persistence |
-| `opendata-core` | `gui` | JavaFX lifecycle, controllers, dialogs, and live log presentation |
-| `opendata-core` | `logging`, `model` | Shared runtime support owned by the executable application |
+| `opendata-api` | `config.model` | Immutable endpoint, property and configuration contracts |
+| `opendata-api` | `database` | JDBC resource contract, database exceptions and `SqlBatchParser` |
+| `opendata-api` | `exception` | Shared checked application, plugin and validation exceptions |
+| `opendata-api` | `foundation` | Validation rules, duration formatting, cause messages and discovery normalisation |
+| `opendata-api` | `plugin` | `OpenDataPlugin`, `PluginRegistrar`, descriptor, metrics, context and log scope |
+| `opendata-common` | `common.database`, `common.database.jdbc` | Reusable provider database helpers and compatibility adapters |
+| `opendata-common` | `download.strategy`, `util`, `validation`, `common.logging` | Provider-oriented parsing, download, validation and compatibility helpers |
+| `opendata-core` | `app`, `cli`, root entry point | Application entry and CLI policy |
+| `opendata-core` | `config`, `core.database`, `core.plugin` | Runtime configuration, SQL Server and execution infrastructure |
+| `opendata-core` | `setup`, `gui` | First-run provisioning and JavaFX presentation |
+| `opendata-core` | `download`, `discovery`, `parser`, `etl`, `core.logging` | Provider-neutral processing and runtime logging |
+| `opendata-plugins/opendata-plugin-<id>` | `plugin.<provider>` | Provider five-stage pipeline and `RegisterPlugin` |
+| `opendata-plugin-electricity-common` | `plugin.neso` | Shared NESO CKAN/CSV helpers |
+| `opendata-plugin-octopus-common` | `plugin.octopus` | Shared statement extraction, models and parsing |
+| `opendata-launcher` | `pom.xml`, integration test packages | Provider classpath assembly; no core implementation code duplication |
 
-## Package documentation rule
+## Package documentation
 
-Every production package containing classes must have `package-info.java` in its
-owning module. Package pages must list only the types compiled from that module;
-module splits must therefore update both the source layout and the package
-Javadocs together.
+Every Java production package, including provider implementation and sample
+packages, has a `package-info.java` describing its compiled classes,
+interfaces, enums and records with Javadoc `{@link Type}` references.
+A Maven regression test checks author/version tags and package file coverage.
+
+Do not relocate a class across a module boundary without updating its Javadoc,
+POM and module descriptor, package inventory, and corresponding tests.

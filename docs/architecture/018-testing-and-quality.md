@@ -1,27 +1,43 @@
 # Testing and Quality
 
 **Document ID:** ARCH-018  
-**Version:** 3.1.0  
-**Status:** Version 3.1.0 modular build baseline  
-**Baseline date:** 18 September 2026  
+**Version:** 4.0.0  
+**Status:** Strict Java 24 quality verification, 4.1.0 review branch  
+**Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
 ---
 
-## Automated baseline
+## Automated Maven verification
 
-The Maven reactor compiles with Java release 24 and configures Surefire in every
-module. Active JUnit suites currently live in the modules that own tests:
-`opendata-common` for shared JDBC, validation, and strategy tests, and
-`opendata-core` for application, GUI, parser, registry, and provider tests.
+The Maven reactor compiles with `release=24` and verifies API, Common,
+provider-support projects, six provider plugins, Core and the launcher.
 
-## Quality tooling
+Unit and local integration tests reside with their owner module. Tests requiring
+the **combined packaged provider classpath** live in `opendata-launcher`,
+not Core. `ModuleBoundariesTest` protects the Maven, Java import and JPMS
+boundaries. `JavadocInventoryTest` checks author/version Javadocs and the
+presence of package inventories across compiled, test and example source.
 
-Each module declares the same build-environment, Checkstyle, SpotBugs, JaCoCo,
-Javadoc, and dependency-analysis verification. The property
-`quality.failOnViolation` defaults to `false`, so static and dependency findings
-are advisory unless strict mode is selected:
+## Quality gates
+
+| Check | Implementation | Build outcome |
+|---|---|---|
+| Java compilation | Maven Compiler Plugin (`release=24`) | Fail on errors |
+| Unit and integration tests | JUnit/Surefire | Fail on test errors |
+| Checkstyle | Repository `config/quality/checkstyle.xml` | Fail on violations |
+| SpotBugs | Maximum effort, medium threshold | Fail on reported bugs |
+| Maven dependency analysis | Dependency Plugin | Fail on unresolved warnings |
+| JaCoCo | Coverage reports | Report only |
+| JavaDoc | Maven Javadoc Plugin | Generate/review separately |
+
+The branch sets `quality.failOnViolation=true` by default. GitHub Actions
+also explicitly requires it and uploads all module reports.
 
 ```powershell
-mvn clean verify -Dquality.failOnViolation=true
+mvn -Dquality.failOnViolation=true clean verify
 ```
+
+GitHub Actions exercises JDK 24 and JavaFX 26.0.2. Desktop UI, live SQL
+Server provisioning, provider API connectivity and document screenshot
+captures still require environment-specific validation.
