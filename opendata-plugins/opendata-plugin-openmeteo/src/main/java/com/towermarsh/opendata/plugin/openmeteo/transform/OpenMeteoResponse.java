@@ -17,7 +17,8 @@ import java.util.List;
  * @param timezone timezone of record
  * @param daily this is a daily record
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record OpenMeteoResponse(
@@ -57,6 +58,9 @@ public record OpenMeteoResponse(
      * @param sunset sunset times
      * @param daylightDurationSeconds daylight duration values in seconds
      * @param weatherCodes WMO weather interpretation codes
+     *
+     * @author Terry Curran
+     * @version 4.1.0
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Daily(
@@ -98,9 +102,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of observation dates.
          *
-         * @return result of time
+         * @return observation dates
          */
         @Override
         public List<String> time() {
@@ -108,9 +112,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of daily maximum temperatures.
          *
-         * @return result of maximum temperatures
+         * @return daily high temperatures in degrees Celsius
          */
         @Override
         public List<Double> maximumTemperatures() {
@@ -118,9 +122,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of daily minimum temperatures.
          *
-         * @return result of minimum temperatures
+         * @return daily low temperatures in degrees Celsius
          */
         @Override
         public List<Double> minimumTemperatures() {
@@ -128,9 +132,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of daily mean temperatures.
          *
-         * @return result of mean temperatures
+         * @return daily mean temperatures in degrees Celsius
          */
         @Override
         public List<Double> meanTemperatures() {
@@ -138,9 +142,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of sunrise times.
          *
-         * @return result of sunrise
+         * @return sunrise times
          */
         @Override
         public List<String> sunrise() {
@@ -148,9 +152,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of sunset times.
          *
-         * @return result of sunset
+         * @return sunset times
          */
         @Override
         public List<String> sunset() {
@@ -158,9 +162,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of daylight duration values.
          *
-         * @return result of daylight duration seconds
+         * @return daylight duration values in seconds
          */
         @Override
         public List<Double> daylightDurationSeconds() {
@@ -168,9 +172,9 @@ public record OpenMeteoResponse(
         }
 
         /**
-         * {@inheritDoc}
+         * Returns an immutable snapshot of weather interpretation codes.
          *
-         * @return result of weather codes
+         * @return WMO weather codes
          */
         @Override
         public List<Integer> weatherCodes() {
@@ -179,10 +183,11 @@ public record OpenMeteoResponse(
     }
 
     /**
-     * Immutable copy.
+     * Converts a nullable API list into an immutable list.
      *
-     * @param values value of values
-     * @return result of immutable copy
+     * @param <T> type of the weather observation
+     * @param values optional observation values
+     * @return immutable values, or an empty list when the input is null
      */
     private static <T> List<T> immutableCopy(List<T> values) {
         return values == null ? List.of() : List.copyOf(values);
