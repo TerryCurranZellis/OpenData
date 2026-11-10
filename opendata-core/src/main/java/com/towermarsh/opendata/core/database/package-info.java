@@ -10,6 +10,7 @@
  * <ul>
  * <li>{@link DatabaseConnectionManager} &mdash; Compatibility facade used by repositories to borrow pooled connections.</li>
  * <li>{@link DatabaseHealthCheck} &mdash; Performs a lightweight SQL Server identity and database check.</li>
+ * <li>{@link UnavailableDatabaseResourceManager} &mdash; Rejects database access during Core dry-run execution.</li>
  * <li>{@link SqlServerRepository} &mdash; SQL Server implementation of the application database repository.</li>
  * <li>{@link SQLServerResource} &mdash; Singleton SQL Server resource backed by Apache Commons DBCP.</li>
  * </ul>
@@ -25,6 +26,7 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 package com.towermarsh.opendata.core.database;

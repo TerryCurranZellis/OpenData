@@ -4,16 +4,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Shared database exception types used by the OpenData JDBC infrastructure.
+ * Compatibility database exception types, dry-run adapters and SQL execution helpers.
  *
  * <h2>Classes</h2>
  * <ul>
- * <li>{@link DatabaseAccessException} &mdash; Wraps checked persistence failures with stable application-facing messages.</li>
- * <li>{@link DatabaseException} &mdash; Signals an irrecoverable database operation failure.</li>
- * <li>{@link UnavailableDatabaseResourceManager} &mdash; Dry-run marker resource that rejects persistent writes.</li>
+ * <li>{@link DatabaseAccessException} &mdash; Deprecated persistence exception; use the API exception.</li>
+ * <li>{@link DatabaseException} &mdash; Deprecated database exception; use the API exception.</li>
+ * <li>{@link UnavailableDatabaseResourceManager} &mdash; Deprecated dry-run marker.</li>
+ * <li>{@link SqlScriptExecutor} &mdash; SQL script execution and compatibility batch parsing.</li>
  * </ul>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 package com.towermarsh.opendata.common.database;

@@ -4,14 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Shared logging context used by concurrent plugin execution.
+ * Deprecated logging-scope compatibility adapter delegating to the API logging context.
  *
  * <h2>Classes</h2>
  * <ul>
- * <li>{@link PluginLogContext} &mdash; Per-thread plugin and run identifiers added to every log line.</li>
+ * <li>{@link PluginLogContext} &mdash; Legacy plugin/run scope; use API {@link com.towermarsh.opendata.plugin.PluginLogContext}.</li>
  * </ul>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 package com.towermarsh.opendata.common.logging;
