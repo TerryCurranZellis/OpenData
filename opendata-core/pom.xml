@@ -168,21 +168,6 @@
             <artifactId>opendata-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-electric-demand</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-octopus</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opendata-plugin-ofgem</artifactId>
-            <scope>runtime</scope>
-        </dependency>
 </dependencies>
     <build>
         <resources>
