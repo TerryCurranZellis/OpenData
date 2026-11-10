@@ -25,7 +25,8 @@ import java.util.Optional;
  * @param credentials secret references
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public record PluginDefinition(
         String id,

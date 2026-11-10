@@ -16,9 +16,10 @@ import java.util.Objects;
  * @param implementationClass configured implementation class
  * @param enabled whether the plugin may be executed
  * @param configurationVersion plugin configuration version
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public record PluginDescriptor(
         String id,
@@ -28,7 +29,16 @@ public record PluginDescriptor(
         boolean enabled,
         int configurationVersion) {
 
-    /** Validates and normalises record components. */
+    /**
+     * Validates required plugin metadata and normalises text fields.
+     *
+     * @param id stable plugin identifier
+     * @param displayName name shown to the user
+     * @param description plugin description
+     * @param implementationClass executable plugin class
+     * @param enabled whether normal execution is permitted
+     * @param configurationVersion plugin configuration version
+     */
     public PluginDescriptor {
         id = requireText(id, "id");
         displayName = requireText(displayName, "displayName");

@@ -20,9 +20,10 @@ import java.util.UUID;
  * @param database database resource manager available to the plugin
  * @param clock clock used for time-based operations
  * @param dryRun whether the plugin is executing in dry-run mode
-  *
+ *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public record PluginExecutionContext(
         UUID runId,
@@ -32,7 +33,16 @@ public record PluginExecutionContext(
         Clock clock,
         boolean dryRun) {
 
-    /** Validates and normalises record components. */
+    /**
+     * Validates that all required per-run dependencies are present.
+     *
+     * @param runId unique identifier for this execution
+     * @param descriptor selected installed plugin
+     * @param definition resolved plugin configuration
+     * @param database database access contract for the run
+     * @param clock execution clock
+     * @param dryRun whether writes must be suppressed
+     */
     public PluginExecutionContext {
         Objects.requireNonNull(runId, "runId");
         Objects.requireNonNull(descriptor, "descriptor");

@@ -18,7 +18,8 @@ import com.towermarsh.opendata.database.DatabaseResourceManager;
  * must be idempotent.</p>
  *
  * @author Terry Curran
- * @version 3.1.0
+ * @since 3.1.0
+ * @version 4.1.0
  */
 public interface PluginRegistrar {
 
