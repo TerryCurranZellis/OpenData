@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
  * Validates first-run request input and safe SQL Server JDBC construction.
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 class InitialisationRequestTest {
 
@@ -42,6 +43,30 @@ class InitialisationRequestTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new InitialisationRequest("localhost", 1433, "OpenData", "sa", "",
                         "OpenData", "application", Path.of("key"), false));
+    }
+
+
+    /** Preserves significant whitespace in both SQL Server passwords. */
+    @Test
+    void preservesLeadingAndTrailingPasswordWhitespace() {
+        final var request = new InitialisationRequest("localhost", 1433,
+                "OpenData", "sa", " admin pass ", "OpenData", " app pass ",
+                Path.of("key"), false);
+        assertEquals(" admin pass ", request.administratorPassword());
+        assertEquals(" app pass ", request.applicationPassword());
+    }
+
+    /** A string consisting only of whitespace is not a valid password. */
+    @Test
+    void rejectsWhitespaceOnlyPasswords() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new InitialisationRequest("localhost", 1433,
+                        "OpenData", "sa", "   ", "OpenData", "app",
+                        Path.of("key"), false));
+        assertThrows(IllegalArgumentException.class,
+                () -> new InitialisationRequest("localhost", 1433,
+                        "OpenData", "sa", "admin", "OpenData", "   ",
+                        Path.of("key"), false));
     }
 
     /** Creates a representative valid request. */
