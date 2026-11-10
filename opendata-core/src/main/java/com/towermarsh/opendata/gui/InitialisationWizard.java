@@ -38,13 +38,14 @@ import javafx.stage.Stage;
  * The main application is displayed only after successful completion.
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 public final class InitialisationWizard {
 
-    private final Stage stage;
-    private final Runnable completed;
-    private final InitialisationService service;
+    private Stage stage;
+    private Runnable completed;
+    private InitialisationService service;
     private final BorderPane root = new BorderPane();
     private final Label heading = new Label();
     private final Label guidance = new Label();
@@ -99,13 +100,13 @@ public final class InitialisationWizard {
      * the init flag or starting the main OpenData window.
      */
     public void show() {
-        final var top = new VBox(5, heading, guidance);
+        var top = new VBox(5, heading, guidance);
         top.setPadding(new Insets(20));
         heading.setStyle("-fx-font-size: 21px; -fx-font-weight: bold;");
         guidance.setWrapText(true);
         root.setTop(top);
         root.setPadding(new Insets(12));
-        final var buttons = new HBox(12, back, next, cancel);
+        var buttons = new HBox(12, back, next, cancel);
         buttons.setAlignment(Pos.CENTER_RIGHT);
         buttons.setPadding(new Insets(18));
         root.setBottom(buttons);
@@ -195,7 +196,7 @@ public final class InitialisationWizard {
      *
      * @param destination zero-based wizard page
      */
-    private void changePage(final int destination) {
+    private void changePage(int destination) {
         if (destination < 0 || destination >= pages.size()) {
             return;
         }
@@ -234,7 +235,7 @@ public final class InitialisationWizard {
      * @return step one form
      */
     private Node connectionPage() {
-        final var grid = grid();
+        var grid = grid();
         line(grid, 0, "SQL Server host", host);
         line(grid, 1, "TCP port", port);
         line(grid, 2, "Database name", database);
@@ -250,16 +251,16 @@ public final class InitialisationWizard {
      * @return step two form
      */
     private Node accountPage() {
-        final var grid = grid();
+        var grid = grid();
         line(grid, 0, "Application SQL login", applicationLogin);
         line(grid, 1, "Application password", applicationPassword);
         line(grid, 2, "Confirm password", confirmPassword);
-        final var browse = new Button("Browse...");
+        var browse = new Button("Browse...");
         browse.setOnAction(event -> chooseKeyFile());
-        final var keyLine = new HBox(8, keyPath, browse);
+        var keyLine = new HBox(8, keyPath, browse);
         HBox.setHgrow(keyPath, Priority.ALWAYS);
         line(grid, 3, "External AES key file", keyLine);
-        final var note = new Label("A new 256-bit key will be generated if the file does not exist. "
+        var note = new Label("A new 256-bit key will be generated if the file does not exist. "
                 + "Restrict file permissions; never add the key to Git.");
         note.setWrapText(true);
         grid.add(note, 1, 4);
@@ -270,10 +271,10 @@ public final class InitialisationWizard {
      * Lets the user choose a path for the AES secret key.
      */
     private void chooseKeyFile() {
-        final var picker = new FileChooser();
+        var picker = new FileChooser();
         picker.setTitle("Select existing or new AES key filename");
         picker.setInitialFileName("opendata-aes.key");
-        final File file = picker.showSaveDialog(stage);
+        var file = picker.showSaveDialog(stage);
         if (file != null) {
             keyPath.setText(file.toPath().toAbsolutePath().toString());
         }
@@ -286,7 +287,7 @@ public final class InitialisationWizard {
      */
     private Node reviewPage() {
         reviewContent.setWrapText(true);
-        final var wrapper = new VBox(20, reviewContent);
+        var wrapper = new VBox(20, reviewContent);
         wrapper.setPadding(new Insets(25));
         return wrapper;
     }
@@ -299,7 +300,7 @@ public final class InitialisationWizard {
     private Node progressPage() {
         log.setEditable(false);
         log.setWrapText(true);
-        final var area = new VBox(8, new Label("Installation progress"), log);
+        var area = new VBox(8, new Label("Installation progress"), log);
         VBox.setVgrow(log, Priority.ALWAYS);
         area.setPadding(new Insets(10));
         return area;
@@ -310,11 +311,11 @@ public final class InitialisationWizard {
      *
      * @param request validated first-run configuration
      */
-    private void runInstallation(final InitialisationRequest request) {
+    private void runInstallation(InitialisationRequest request) {
         changePage(3);
         busy.set(true);
         cancel.setDisable(true);
-        final Task<List<String>> work = new Task<>() {
+        var work = new Task<List<String>>() {
             /** Performs database work and reports progress safely to JavaFX. */
             @Override
             protected List<String> call() {
@@ -334,11 +335,11 @@ public final class InitialisationWizard {
             busy.set(false);
             cancel.setDisable(false);
             cancel.setText("Close");
-            final var exception = work.getException();
+            var exception = work.getException();
             log.appendText("SETUP FAILED: " + exception.getMessage() + System.lineSeparator());
             log.appendText("init remains true. Correct the problem and restart the wizard." + System.lineSeparator());
         });
-        final var worker = new Thread(work, "opendata-initialisation");
+        var worker = new Thread(work, "opendata-initialisation");
         worker.setDaemon(true);
         worker.start();
     }
@@ -349,7 +350,7 @@ public final class InitialisationWizard {
      * @return form grid
      */
     private static GridPane grid() {
-        final var grid = new GridPane();
+        var grid = new GridPane();
         grid.setHgap(18);
         grid.setVgap(14);
         grid.setPadding(new Insets(24));
@@ -364,8 +365,8 @@ public final class InitialisationWizard {
      * @param label field label
      * @param input form control
      */
-    private static void line(final GridPane grid, final int row,
-            final String label, final Node input) {
+    private static void line(GridPane grid, int row,
+            String label, Node input) {
         grid.add(new Label(label), 0, row);
         grid.add(input, 1, row);
         GridPane.setHgrow(input, Priority.ALWAYS);
@@ -380,8 +381,8 @@ public final class InitialisationWizard {
      * @param title alert heading
      * @param detail error detail
      */
-    private void showError(final String title, final String detail) {
-        final var alert = new Alert(Alert.AlertType.ERROR);
+    private void showError(String title, String detail) {
+        var alert = new Alert(Alert.AlertType.ERROR);
         alert.initOwner(stage);
         alert.setTitle(title);
         alert.setHeaderText(title);
