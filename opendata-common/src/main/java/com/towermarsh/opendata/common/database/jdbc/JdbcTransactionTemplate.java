@@ -90,12 +90,12 @@ public final class JdbcTransactionTemplate {
             JdbcConnectionCleanup cleanup) throws Exception {
         var originalAutoCommit = connection.getAutoCommit();
         connection.setAutoCommit(false);
-        Exception primaryFailure = null;
+        Throwable primaryFailure = null;
         try {
             var result = transaction.execute(connection);
             connection.commit();
             return result;
-        } catch (Exception exception) {
+        } catch (Exception | Error exception) {
             primaryFailure = exception;
             rollback(connection, exception);
             throw exception;
@@ -118,7 +118,7 @@ public final class JdbcTransactionTemplate {
      */
     private static void rollback(
             Connection connection,
-            Exception originalFailure) {
+            Throwable originalFailure) {
         try {
             connection.rollback();
         } catch (SQLException rollbackFailure) {
@@ -132,21 +132,21 @@ public final class JdbcTransactionTemplate {
      * @param connection borrowed connection
      * @param cleanup connection-scoped cleanup action
      * @param originalAutoCommit auto-commit state before the transaction
-     * @return cleanup failure or null
+     * @return checked or unchecked cleanup failure, or null
      */
-    private static SQLException cleanup(
+    private static Exception cleanup(
             Connection connection,
             JdbcConnectionCleanup cleanup,
             boolean originalAutoCommit) {
-        SQLException failure = null;
+        Exception failure = null;
         try {
             cleanup.cleanup(connection);
-        } catch (SQLException exception) {
+        } catch (SQLException | RuntimeException exception) {
             failure = exception;
         }
         try {
             connection.setAutoCommit(originalAutoCommit);
-        } catch (SQLException exception) {
+        } catch (SQLException | RuntimeException exception) {
             if (failure == null) {
                 failure = exception;
             } else {
