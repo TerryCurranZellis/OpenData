@@ -13,12 +13,14 @@ import java.time.Duration;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-/** Tests typed application-property access. @version 2.1 */
+/** Tests typed application-property access. @version 4.1.0
+ * @author Terry Curran
+ */
 class ApplicationPropertyValuesTest {
 
     @Test
     void parsesTypesCaseInsensitively() {
-        final var values = new ApplicationPropertyValues(Map.of(
+        var values = new ApplicationPropertyValues(Map.of(
                 "COUNT", " 12 ",
                 "enabled", "yes",
                 "timeout", "PT45S"));
@@ -31,14 +33,14 @@ class ApplicationPropertyValuesTest {
     @Test
     @SuppressWarnings("ThrowableResultIgnored")
     void rejectsInvalidTypedValues() {
-        final var values = new ApplicationPropertyValues(Map.of("count", "twelve"));
+        var values = new ApplicationPropertyValues(Map.of("count", "twelve"));
         assertThrows(OpenDataConfigurationException.class, () -> values.integer("count", 1));
     }
 
     @Test
     @SuppressWarnings("ThrowableResultIgnored")
     void allowsBlankOptionalDefaultsButRequiresNamedValues() {
-        final var values = new ApplicationPropertyValues(Map.of());
+        var values = new ApplicationPropertyValues(Map.of());
         assertEquals("", values.text("database.password", ""));
         assertThrows(OpenDataConfigurationException.class, () -> values.requiredText("database.url"));
     }

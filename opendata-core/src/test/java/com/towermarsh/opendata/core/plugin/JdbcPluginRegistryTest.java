@@ -26,7 +26,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/** Tests persistent plugin registry reads and status changes. */
+/** Tests persistent plugin registry reads and status changes.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 @ExtendWith(MockitoExtension.class)
 class JdbcPluginRegistryTest {
 
@@ -67,7 +70,7 @@ class JdbcPluginRegistryTest {
         when(resultSet.getBoolean("is_enabled")).thenReturn(false);
         when(resultSet.getInt("configuration_version")).thenReturn(2);
 
-        final var plugins = new JdbcPluginRegistry(database).list();
+        var plugins = new JdbcPluginRegistry(database).list();
 
         assertEquals(1, plugins.size());
         assertEquals("ofgem", plugins.get(0).id());

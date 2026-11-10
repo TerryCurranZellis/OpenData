@@ -15,7 +15,10 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Tests external plugin definition registration sources. */
+/** Tests external plugin definition registration sources.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class ConfigurationServiceTest {
 
     @TempDir
@@ -36,8 +39,8 @@ class ConfigurationServiceTest {
                 property.batch-size.type=integer
                 """);
 
-        final var source = new PropertiesFileConfigurationPropertiesSource(pluginFile);
-        final var definition = new PropertiesPluginDefinitionLoader(source)
+        var source = new PropertiesFileConfigurationPropertiesSource(pluginFile);
+        var definition = new PropertiesPluginDefinitionLoader(source)
                 .load("example", Map.of());
 
         assertEquals("example", definition.id());
@@ -59,7 +62,7 @@ class ConfigurationServiceTest {
                 dataset.id=example-data
                 """);
 
-        final var source = new PropertiesFileConfigurationPropertiesSource(pluginFile);
+        var source = new PropertiesFileConfigurationPropertiesSource(pluginFile);
         assertThrows(PluginDefinitionException.class,
                 () -> new PropertiesPluginDefinitionLoader(source)
                         .load("different", Map.of()));
@@ -68,7 +71,7 @@ class ConfigurationServiceTest {
     @Test
     @SuppressWarnings("ThrowableResultIgnored")
     void missingExternalPluginFileIsRejected() {
-        final var source = new PropertiesFileConfigurationPropertiesSource(
+        var source = new PropertiesFileConfigurationPropertiesSource(
                 temporaryDirectory.resolve("missing.properties"));
         assertThrows(PluginDefinitionException.class,
                 () -> source.loadPluginProperties("missing"));

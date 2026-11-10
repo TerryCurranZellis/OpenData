@@ -4,6 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Regression tests for SqlScriptExecutor behaviour.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class SqlScriptExecutorTest {
 
     @Test

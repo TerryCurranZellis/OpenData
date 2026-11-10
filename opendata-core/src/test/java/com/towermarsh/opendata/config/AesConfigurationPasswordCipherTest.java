@@ -19,7 +19,10 @@ import java.util.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/** Tests for short, authenticated AES-256-GCM password values. */
+/** Tests for short, authenticated AES-256-GCM password values.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class AesConfigurationPasswordCipherTest {
 
     @TempDir Path temporaryDirectory;
@@ -34,7 +37,7 @@ class AesConfigurationPasswordCipherTest {
 
     @Test
     void roundTripsWithShortCiphertext() throws Exception {
-        final var cipher = newCipher("key-a.txt");
+        var cipher = newCipher("key-a.txt");
         final String encrypted = cipher.encrypt("SQL-Password12");
         assertTrue(encrypted.startsWith("{aes}"));
         assertTrue(encrypted.length() < 80);
@@ -44,14 +47,14 @@ class AesConfigurationPasswordCipherTest {
 
     @Test
     void usesFreshNonceForEveryEncryption() throws Exception {
-        final var cipher = newCipher("key-a.txt");
+        var cipher = newCipher("key-a.txt");
         assertNotEquals(cipher.encrypt("same password"), cipher.encrypt("same password"));
     }
 
     @Test
     void rejectsWrongKeyAndModifiedCiphertext() throws Exception {
-        final var first = newCipher("key-a.txt");
-        final var second = newCipher("key-b.txt");
+        var first = newCipher("key-a.txt");
+        var second = newCipher("key-b.txt");
         final String encrypted = first.encrypt("secret");
         assertThrows(OpenDataConfigurationException.class,
                 () -> second.decrypt(encrypted));
@@ -67,7 +70,7 @@ class AesConfigurationPasswordCipherTest {
 
     @Test
     void supportsPlaintextDuringMigrationButRefusesLegacyRsa() throws Exception {
-        final var cipher = newCipher("key-a.txt");
+        var cipher = newCipher("key-a.txt");
         assertEquals("plain", cipher.decrypt("plain"));
         assertFalse(cipher.isEncrypted("plain"));
         assertThrows(OpenDataConfigurationException.class,
@@ -78,7 +81,7 @@ class AesConfigurationPasswordCipherTest {
 
     @Test
     void failsWhenKeyFileIsMissing() {
-        final var cipher = new AesConfigurationPasswordCipher(
+        var cipher = new AesConfigurationPasswordCipher(
                 temporaryDirectory.resolve("missing.key"));
         assertThrows(OpenDataConfigurationException.class,
                 () -> cipher.encrypt("secret"));

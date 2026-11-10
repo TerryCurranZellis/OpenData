@@ -15,7 +15,10 @@ import java.util.List;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
-/** Verifies shared date/time conversions across providers. */
+/** Verifies shared date/time conversions across providers.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class DateTimeParsersTest {
 
     @Test

@@ -14,14 +14,17 @@ import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/** Tests OpenData command-line parsing and validation. */
+/** Tests OpenData command-line parsing and validation.
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class CommandLineArgumentsProcessorTest {
 
     private final CommandLineArgumentsProcessor processor = new CommandLineArgumentsProcessor();
 
     @Test
     void acceptsRepeatedAndCommaSeparatedPluginsInOrder() {
-        final var arguments = processor.parse(new String[]{
+        var arguments = processor.parse(new String[]{
             "--plugin", "openmeteo,ofgem", "--plugin", "octopus",
             "--execute", "--parallelism", "3"
         });
@@ -33,7 +36,7 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void recognisesAllForRun() {
-        final var arguments = processor.parse(new String[]{"--plugin", "all", "--execute"});
+        var arguments = processor.parse(new String[]{"--plugin", "all", "--execute"});
         assertTrue(arguments.allPluginsRequested());
         assertTrue(arguments.pluginIds().isEmpty());
         assertTrue(arguments.executeRequested());
@@ -42,14 +45,14 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void acceptsExecuteShortOption() {
-        final var arguments = processor.parse(new String[]{"-p", "ofgem", "-x"});
+        var arguments = processor.parse(new String[]{"-p", "ofgem", "-x"});
         assertTrue(arguments.executeRequested());
         assertTrue(arguments.runRequested());
     }
 
     @Test
     void acceptsDetailForExactlyOneNamedPlugin() {
-        final var arguments = processor.parse(new String[]{"--plugin", "ofgem", "--detail"});
+        var arguments = processor.parse(new String[]{"--plugin", "ofgem", "--detail"});
         assertEquals(List.of("ofgem"), arguments.pluginIds());
         assertEquals(PluginCommand.DETAIL, arguments.command());
         assertTrue(arguments.detailRequested());
@@ -87,12 +90,12 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void acceptsDryRunWithoutExecute() {
-        final var longForm = processor.parse(new String[]{"--plugin", "ofgem", "--dry-run"});
+        var longForm = processor.parse(new String[]{"--plugin", "ofgem", "--dry-run"});
         assertTrue(longForm.dryRun());
         assertFalse(longForm.executeRequested());
         assertTrue(longForm.runRequested());
 
-        final var shortForm = processor.parse(new String[]{"-p", "ofgem", "-n"});
+        var shortForm = processor.parse(new String[]{"-p", "ofgem", "-n"});
         assertTrue(shortForm.dryRun());
         assertFalse(shortForm.executeRequested());
         assertTrue(shortForm.runRequested());
@@ -129,14 +132,14 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void acceptsRemoveAlias() {
-        final var arguments = processor.parse(new String[]{"--plugin", "all", "--remove"});
+        var arguments = processor.parse(new String[]{"--plugin", "all", "--remove"});
         assertTrue(arguments.unregisterRequested());
         assertTrue(arguments.allPluginsRequested());
     }
 
     @Test
     void acceptsPluginDefinitionFileForOneRegistration() {
-        final var arguments = processor.parse(new String[]{
+        var arguments = processor.parse(new String[]{
             "--plugin", "example", "--register", "--file", "C:\\OpenData\\example.properties"
         });
         assertEquals(Path.of("C:\\OpenData\\example.properties"),
@@ -146,11 +149,11 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void assignsDisableToDAndDryRunToN() {
-        final var disable = processor.parse(new String[]{"--plugin", "ofgem", "-d"});
+        var disable = processor.parse(new String[]{"--plugin", "ofgem", "-d"});
         assertTrue(disable.disableRequested());
         assertFalse(disable.dryRun());
 
-        final var dryRun = processor.parse(new String[]{"--plugin", "ofgem", "-x", "-n"});
+        var dryRun = processor.parse(new String[]{"--plugin", "ofgem", "-x", "-n"});
         assertEquals(PluginCommand.RUN, dryRun.command());
         assertTrue(dryRun.executeRequested());
         assertTrue(dryRun.dryRun());
@@ -158,7 +161,7 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void acceptsLongDryRun() {
-        final var arguments = processor.parse(new String[]{"--plugin all --execute --dry-run"});
+        var arguments = processor.parse(new String[]{"--plugin all --execute --dry-run"});
         assertTrue(arguments.allPluginsRequested());
         assertTrue(arguments.executeRequested());
         assertTrue(arguments.dryRun());
@@ -186,7 +189,7 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void preservesQuotedFilePathWhenLauncherPassesOneArgument() {
-        final var arguments = processor.parse(new String[]{
+        var arguments = processor.parse(new String[]{
             "--plugin example --register --file \"C:\\OpenData Files\\example.properties\""
         });
         assertEquals(Path.of("C:\\OpenData Files\\example.properties"),
@@ -301,7 +304,7 @@ class CommandLineArgumentsProcessorTest {
 
     @Test
     void reservesShortVForVerboseLogging() {
-        final var arguments = processor.parse(new String[]{"--plugin", "example", "--execute", "-v"});
+        var arguments = processor.parse(new String[]{"--plugin", "example", "--execute", "-v"});
         assertTrue(arguments.verbose());
         assertFalse(arguments.aboutRequested());
     }

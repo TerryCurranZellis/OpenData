@@ -6,6 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Regression tests for PluginFailureReport behaviour.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class PluginFailureReportTest {
 
     @Test

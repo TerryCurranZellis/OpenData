@@ -13,11 +13,17 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Regression tests for PluginSelectionResolver behaviour.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 class PluginSelectionResolverTest {
     @Test
     void allReturnsOnlyEnabledPluginsInRegistryOrder() {
-        final var enabled = descriptor("openmeteo", true);
-        final var disabled = descriptor("future", false);
+        var enabled = descriptor("openmeteo", true);
+        var disabled = descriptor("future", false);
         final PluginRegistry registry = new PluginRegistry() {
             @Override
             public List<PluginDescriptor> list() {
@@ -41,15 +47,15 @@ class PluginSelectionResolverTest {
 
     @Test
     void selectedPluginResolvesById() {
-        final var ofgem = descriptor("ofgem", true);
+        var ofgem = descriptor("ofgem", true);
         final PluginRegistry registry = registry(ofgem);
         assertEquals(List.of(ofgem), new PluginSelectionResolver().resolve(List.of("ofgem"), registry));
     }
 
     @Test
     void explicitGuiSelectionResolvesCanonicalIdsInRequestedOrder() {
-        final var ofgem = descriptor("ofgem", true);
-        final var openmeteo = descriptor("openmeteo", true);
+        var ofgem = descriptor("ofgem", true);
+        var openmeteo = descriptor("openmeteo", true);
         final PluginRegistry registry = registry(ofgem, openmeteo);
 
         assertEquals(

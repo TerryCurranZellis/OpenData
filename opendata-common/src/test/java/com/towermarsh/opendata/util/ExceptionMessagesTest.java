@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-/** Tests safe exception message extraction. @version 2.1 */
+/** Tests safe exception message extraction. @version 4.1.0
+ * @author Terry Curran
+ */
 class ExceptionMessagesTest {
 
     @Test
     void returnsDeepestCauseMessage() {
-        final var exception = new IllegalStateException("outer", new IllegalArgumentException("root"));
+        var exception = new IllegalStateException("outer", new IllegalArgumentException("root"));
         assertEquals("root", ExceptionMessages.rootCauseMessage(exception));
     }
 
@@ -25,8 +27,8 @@ class ExceptionMessagesTest {
 
     @Test
     void terminatesForCircularCauseChains() {
-        final var first = new CircularThrowable("first");
-        final var second = new CircularThrowable("second");
+        var first = new CircularThrowable("first");
+        var second = new CircularThrowable("second");
         first.cause = second;
         second.cause = first;
         assertEquals("second", ExceptionMessages.rootCauseMessage(first));
