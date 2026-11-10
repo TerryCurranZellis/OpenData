@@ -183,27 +183,25 @@ public final class SQLServerResource implements DatabaseResourceManager {
      */
     @Override
     public void close() {
-        if (!closed.compareAndSet(false, true)) {
-            return;
-        }
-        try {
-            var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
-            poolingDriver.closePool(poolName);
-            LOGGER.log(Level.INFO, "SQL Server pool {0} closed.", poolName);
-        } catch (SQLException exception) {
-            throw new DatabaseException("Unable to close SQL Server pool " + poolName, exception);
-        } finally {
-            clearInstance();
-        }
-    }
-
-    /**
-     * Clears the singleton instance in a thread-safe manner. This method uses
-     * synchronization on the private lock to safely write to the static field.
-     */
-    private static void clearInstance() {
+        // Initialisation and shutdown must share one lock. Otherwise a new
+        // instance can register the same pool name while the previous instance
+        // is still closing, allowing the old shutdown to close the new pool.
         synchronized (LOCK) {
-            instance = null;
+            if (!closed.compareAndSet(false, true)) {
+                return;
+            }
+            try {
+                var poolingDriver = (PoolingDriver) DriverManager.getDriver(POOL_URL_PREFIX);
+                poolingDriver.closePool(poolName);
+                LOGGER.log(Level.INFO, "SQL Server pool {0} closed.", poolName);
+            } catch (SQLException exception) {
+                throw new DatabaseException("Unable to close SQL Server pool " + poolName, exception);
+            } finally {
+                // A stale resource must not clear a newly installed singleton.
+                if (instance == this) {
+                    instance = null;
+                }
+            }
         }
     }
 
