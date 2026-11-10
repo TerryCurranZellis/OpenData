@@ -22,7 +22,8 @@ import java.util.regex.Pattern;
  * @param aesKeyFile external AES key file location
  * @param trustServerCertificate whether to skip certificate-chain validation
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 public record InitialisationRequest(
         String server,
@@ -54,8 +55,8 @@ public record InitialisationRequest(
         database = validateIdentifier(database, "Database name");
         applicationUser = validateIdentifier(applicationUser, "Application login");
         administrator = requireText(administrator, "Administrator login");
-        administratorPassword = requireText(administratorPassword, "Administrator password");
-        applicationPassword = requireText(applicationPassword, "Application password");
+        administratorPassword = requirePassword(administratorPassword, "Administrator password");
+        applicationPassword = requirePassword(applicationPassword, "Application password");
         aesKeyFile = Objects.requireNonNull(aesKeyFile, "aesKeyFile")
                 .toAbsolutePath().normalize();
     }
@@ -102,4 +103,22 @@ public record InitialisationRequest(
         }
         return value.strip();
     }
+
+    /**
+     * Validates a secret without modifying leading or trailing whitespace.
+     *
+     * <p>SQL Server passwords may legitimately contain whitespace at either
+     * end, so trimming would change the credentials entered in the wizard.</p>
+     *
+     * @param value password supplied by the user
+     * @param label field name
+     * @return unchanged non-blank password
+     */
+    private static String requirePassword(final String value, final String label) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(label + " is required.");
+        }
+        return value;
+    }
+
 }
