@@ -67,3 +67,18 @@ module, and contribution guidance.
 ## Historic electricity plugins (NESO)
 
 Two independent plugins: `electric-demand` and `electric-supply`. See [electricity plugin guide](docs/electricity-plugins.md).
+
+## Code quality and architectural review
+
+The 4.1.0 review branch runs strict Checkstyle, SpotBugs and test verification:
+
+```powershell
+mvn -Dquality.failOnViolation=true clean verify
+```
+
+Development of strict module boundaries is tracked in the
+[4.1.0 module-boundary review](docs/architecture/031-module-boundaries-4.1-review.md).
+The base 4.0.0 code still includes Core -> Common and Core -> provider runtime
+links; those are explicitly **not** compliant with the 4.1.0 target and must
+be removed only together with safe application/launcher restructuring.
+JavaFX 26.0.2 is selected in the review branch to preserve JDK 24 compatibility.
