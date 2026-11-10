@@ -87,6 +87,11 @@ paired with `JdbcStatementBinder<? super T>`. `JdbcUpsertExecutor.execute`
 accepts `Iterable<? extends T>` paired with `JdbcUpsertAdapter<? super T, C>`.
 This uses Java's variance rules to share the same binding or persistence logic
 across subtype records without unsafe casts. Dedicated JDBC tests verify both.
+`JdbcBatchExecutor` treats `SUCCESS_NO_INFO` as one estimated affected row,
+rejects failed or unrecognised negative update-count entries, and throws
+`SQLException` if the accumulated `int` affected-row count would overflow.
+Tests check overflow both within and across batches; this protects metric
+accuracy rather than silently reporting a wrapped negative count.
 
 ## Core configuration persistence
 
