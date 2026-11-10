@@ -10,6 +10,7 @@ import com.towermarsh.opendata.plugin.PluginMetrics;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,6 +22,15 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -178,6 +188,62 @@ public Connection getConnection() throws SQLException {
         assertThrows(IllegalArgumentException.class, () ->
                 new PluginExecutionCoordinator(factory, new NoOpPluginRunAudit(),
                         database, Clock.systemUTC(), Duration.ofMillis(-1)));
+    }
+
+
+    /** A normal execution records start and successful completion once. */
+    @Test
+    void liveRunCreatesAndCompletesAudit() throws Exception {
+        final PluginRunAudit audit = mock(PluginRunAudit.class);
+        final DatabaseResourceManager database = mock(DatabaseResourceManager.class);
+        final PluginFactory factory = ignored -> context -> new PluginMetrics(4, 3, 1, 0);
+        final var coordinator = new PluginExecutionCoordinator(
+                factory, audit, database, Clock.systemUTC(), Duration.ofSeconds(2));
+
+        final var summary = coordinator.execute(List.of(plugin("ofgem")), 1, false);
+
+        assertEquals(PluginRunStatus.SUCCESS, summary.results().get(0).status());
+        verify(audit).started(any(UUID.class), eq("ofgem"), anyString(), any());
+        verify(audit).completed(argThat(result ->
+                result.status() == PluginRunStatus.SUCCESS
+                && result.metrics().inserted() == 3));
+    }
+
+    /** Dry runs never create audit rows even when they complete successfully. */
+    @Test
+    void dryRunDoesNotRecordAudit() throws Exception {
+        final PluginRunAudit audit = mock(PluginRunAudit.class);
+        final DatabaseResourceManager database = mock(DatabaseResourceManager.class);
+        final PluginFactory factory = ignored -> context -> PluginMetrics.ZERO;
+        final var coordinator = new PluginExecutionCoordinator(
+                factory, audit, database, Clock.systemUTC(), Duration.ofSeconds(2));
+
+        final var summary = coordinator.execute(List.of(plugin("ofgem")), 1, true);
+
+        assertEquals(PluginRunStatus.DRY_RUN, summary.results().get(0).status());
+        verify(audit, never()).started(any(), anyString(), anyString(), any());
+        verify(audit, never()).completed(any());
+    }
+
+    /** An audit completion failure must not be reported as plugin success. */
+    @Test
+    void reportsFailedAuditCompletionAsFailedRun() throws Exception {
+        final PluginRunAudit audit = mock(PluginRunAudit.class);
+        doThrow(new IllegalStateException("Audit update failed"))
+                .when(audit).completed(any());
+        final DatabaseResourceManager database = mock(DatabaseResourceManager.class);
+        final PluginFactory factory = ignored -> context -> PluginMetrics.ZERO;
+        final var coordinator = new PluginExecutionCoordinator(
+                factory, audit, database, Clock.systemUTC(), Duration.ofSeconds(2));
+
+        final var summary = coordinator.execute(List.of(plugin("ofgem")), 1, false);
+
+        assertEquals(PluginRunStatus.FAILED, summary.results().get(0).status());
+        assertNotNull(summary.results().get(0).errorMessage().orElse(null));
+        assertTrue(summary.results().get(0).errorMessage().orElse("")
+                .contains("run-audit completion failed"));
+        verify(audit).started(any(UUID.class), eq("ofgem"), anyString(), any());
+        verify(audit).completed(any());
     }
 
     private static ResolvedPlugin plugin(final String id) {
