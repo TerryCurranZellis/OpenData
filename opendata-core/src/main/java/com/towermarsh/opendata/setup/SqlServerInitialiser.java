@@ -4,7 +4,7 @@
  */
 package com.towermarsh.opendata.setup;
 
-import com.towermarsh.opendata.common.database.SqlScriptExecutor;
+import com.towermarsh.opendata.database.SqlBatchParser;
 import com.towermarsh.opendata.config.PluginRegistration;
 import com.towermarsh.opendata.core.plugin.PluginRegistrarLocator;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
@@ -25,7 +25,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * SQL resources are idempotent and run using administrator connections.
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @since 4.0.0
+ * @version 4.1.0
  */
 public final class SqlServerInitialiser {
 
@@ -242,7 +243,7 @@ public final class SqlServerInitialiser {
             throw new OpenDataConfigurationException("Unable to read core SQL setup resource " + resource, exception);
         }
         var batchNumber = 0;
-        for (var batch : SqlScriptExecutor.batches(script)) {
+        for (var batch : SqlBatchParser.batches(script)) {
             batchNumber++;
             try (var statement = connection.createStatement()) {
                 statement.execute(batch);

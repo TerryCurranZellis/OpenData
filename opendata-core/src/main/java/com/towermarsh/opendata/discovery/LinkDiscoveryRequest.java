@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.discovery;
 
-import com.towermarsh.opendata.util.DiscoveryTextNormalizer;
+import com.towermarsh.opendata.foundation.DiscoveryTextNormalizer;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +23,8 @@ import java.util.regex.Pattern;
  * @param textPattern optional regular expression applied to link text and title
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @since 3.3.0
+ * @version 4.1.0
  */
 public record LinkDiscoveryRequest(
         URI pageUri,

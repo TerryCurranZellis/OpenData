@@ -6,8 +6,8 @@
 package com.towermarsh.opendata.core.plugin;
 
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.util.DurationFormatter;
-import com.towermarsh.opendata.util.ExceptionMessages;
+import com.towermarsh.opendata.foundation.DurationFormatter;
+import com.towermarsh.opendata.foundation.ExceptionMessages;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Shared logging and resource-shutdown helpers for plugin execution entry points.
  *
  * @author Terry Curran
- * @version 3.3.0
+ * @version 4.1.0
  * @since 3.3.0
  */
 public final class PluginExecutionSupport {

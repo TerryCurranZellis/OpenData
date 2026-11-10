@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.config;
 
-import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -18,7 +18,8 @@ import java.util.Objects;
  * Loads and stores configuration properties in SQL Server.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @since 2.0.0
+ * @version 4.1.0
  */
 public final class JdbcConfigurationPropertiesSource
         implements ConfigurationPropertiesSource {

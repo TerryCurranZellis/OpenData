@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.gui;
 
-import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.core.plugin.PluginRegistry;
 import com.towermarsh.opendata.core.plugin.PluginRunStatus;
@@ -27,7 +27,8 @@ import java.util.Optional;
  * JavaFX controller while preserving the existing CLI registry contract.</p>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @since 3.0.0
+ * @version 4.1.0
  */
 public final class PluginTableDataService {
 

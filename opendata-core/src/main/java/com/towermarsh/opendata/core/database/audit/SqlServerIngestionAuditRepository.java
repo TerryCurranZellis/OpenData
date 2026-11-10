@@ -6,7 +6,7 @@
 package com.towermarsh.opendata.core.database.audit;
 
 import com.towermarsh.opendata.core.database.DatabaseConnectionManager;
-import com.towermarsh.opendata.common.database.DatabaseException;
+import com.towermarsh.opendata.database.DatabaseException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -21,7 +21,8 @@ import java.util.Objects;
  * SQL Server implementation of the framework ingestion audit repository.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public final class SqlServerIngestionAuditRepository
         implements IngestionAuditRepository {
