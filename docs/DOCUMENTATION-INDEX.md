@@ -11,7 +11,8 @@
 - [API and configuration reference](reference/README.md)
 - [Governance and compliance](governance/README.md)
 - [Release process](release/Release-Process.md)
-- [Current release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md)
+- [Version 4.0.0 release status and test plan](release/Release-4.0.0.md)
+- [Version 4.1.0 source review (in progress)](review/VERSION-4.1.0-SOURCE-REVIEW.md)
 
 ## OpenData 4.0.0 — initialisation
 
@@ -29,11 +30,12 @@
 | `manifests/DeveloperGuide.json` | Maintainers and plugin developers |
 | `manifests/APIReference.json` | Integrators and support engineers |
 
-## Version 3.0.0 GUI implementation
+## Current JavaFX GUI (introduced in 3.0.0; updated in 4.0.0)
 
 - [JavaFX GUI architecture](development/javafx-gui-architecture.md)
 - [Graphical interface user guide](user-guide/12-graphical-interface.md)
-- [GUI screenshot plan](development/gui-screenshot-plan.md)
+- [Version 4.0.0 GUI and initialisation screenshot inventory](development/gui-screenshot-plan.md)
+- [First-run wizard sequence diagram](diagrams/source/gui-initialisation-sequence.puml)
 - [ADR-0051: JavaFX graphical interface](decisions/ADR-0051-javafx-graphical-interface.md)
 - [ADR-0052: Java 24, JavaFX lifecycle and Swing retirement](decisions/ADR-0052-java-24-javafx-lifecycle-and-swing-retirement.md)
 - [ADR-0053: JavaFX controller/service boundary](decisions/ADR-0053-javafx-controller-service-boundary.md)

@@ -1,0 +1,41 @@
+@startuml
+!theme plain
+title OpenData 4.0.0 first-run SQL Server initialisation
+actor Operator
+participant "OpenData / bootstrap loader" as Main
+participant "InitialisationWizard (JavaFX)" as Wizard
+participant "InitialisationService" as Service
+participant "PluginRegistrationResolver" as PluginDiscovery
+participant "SqlServerInitialiser" as SQL
+database "SQL Server" as Database
+participant "ApplicationBootstrapPropertiesLoader" as Props
+Operator -> Main: Start application
+Main -> Props: Read init flag
+Props --> Main: init=true
+Main -> Wizard: Open first-run wizard
+Operator -> Wizard: SQL server/admin + app account + AES key location
+Wizard -> Wizard: Validate required values and confirmation
+Operator -> Wizard: Review / Initialise
+Wizard -> Service: initialise(InitialisationRequest) [background Task]
+Service -> PluginDiscovery: Discover and validate definitions
+PluginDiscovery --> Service: Validated plugin list
+Service -> Service: Validate/create AES key (do not overwrite)
+Service -> SQL: Create database and application SQL login
+SQL -> Database: Core schema, configuration, registry and audit DDL
+Database --> SQL: Result
+loop Each discovered plugin
+  SQL -> Database: Install plugin schema using admin login
+  Database --> SQL: Result
+end
+SQL --> Service: Initialisation result
+Service -> Database: Store configuration and disabled registrations
+Database --> Service: Confirm
+Service -> Props: Atomically write encrypted bootstrap / init=false
+Props --> Service: Complete
+Service --> Wizard: Success
+Wizard --> Operator: Finish — Open OpenData
+note over Wizard,Operator
+  On failure, display the error and log.
+  Keep init=true and do not launch main GUI.
+end note
+@enduml

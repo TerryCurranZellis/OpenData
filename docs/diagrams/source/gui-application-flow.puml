@@ -1,29 +1,47 @@
 @startuml
 !theme plain
-title OpenData 3.0.0 JavaFX Application Flow
+title OpenData 4.0.0 startup, initialisation and execution
 start
 :OpenData.main(args);
-if (No command-line arguments?) then (yes)
-  :Treat as --gui;
-endif
-if (--gui selected?) then (yes)
-  :GuiLauncher;
-  :OpenDataGuiApplication;
-  :Show StartupSplashScreen;
-  :Load main FXML and controller;
-  :Display maximised main window;
-  :Load registered plugin table;
-  :Operator selects menu/toolbar action;
-  if (Execution action?) then (yes)
-    :Confirm Execute or Dry-run;
-    :PluginExecutionGateway;
-    :Show live execution log;
+:Read bootstrap configuration;
+if (init=true?) then (yes)
+  if (JavaFX desktop available?) then (yes)
+    :Launch OpenDataGuiApplication;
+    :Display InitialisationWizard;
+    :Validate SQL administrator and application settings;
+    :Discover/validate plugin definitions;
+    :InitialisationService provisions SQL schema and plugins;
+    if (Initialisation successful?) then (yes)
+      :Atomically persist encrypted bootstrap;
+      :Set init=false;
+      :Finish; 
+      :Open normal JavaFX main window;
+    else (no)
+      :Display failure and setup log;
+      :Keep init=true for recovery;
+      stop
+    endif
   else (no)
-    :Administration / Details / Settings / Help;
+    :Report GUI required for initialisation;
+    stop
   endif
 else (no)
-  :Parse CLI operation;
-  :OpenDataApplication shared services;
+  if (No arguments or --gui?) then (yes)
+    :GuiLauncher / OpenDataGuiApplication;
+    :Show splash screen;
+    :Load main FXML, plugin table and status;
+    :Operator selects menu or toolbar action;
+    if (Execute or dry-run?) then (yes)
+      :Confirm selected plugins;
+      :PluginExecutionGateway;
+      :Show live log and result;
+    else (no)
+      :Registration, settings, details or help;
+    endif
+  else (no)
+    :Process CLI arguments;
+    :OpenDataApplication shared services;
+  endif
 endif
 stop
 @enduml
