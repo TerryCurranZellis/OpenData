@@ -7,7 +7,12 @@ package com.towermarsh.opendata.plugin.example.transform.model;
 
 import java.util.Objects;
 
-/** One immutable provider record with source lineage. */
+/**
+ * One immutable provider record with source lineage.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public record ExampleRecord(long sourceRow, String value) {
 
     public ExampleRecord {

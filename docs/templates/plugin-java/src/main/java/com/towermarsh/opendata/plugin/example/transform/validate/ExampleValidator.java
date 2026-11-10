@@ -10,7 +10,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
-/** Enforces response-level and cross-record rules. */
+/**
+ * Enforces response-level and cross-record rules.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleValidator {
 
     /**
@@ -27,7 +32,7 @@ public final class ExampleValidator {
                     "The example source produced no records");
         }
 
-        final var values = new HashSet<String>();
+        var values = new HashSet<String>();
         for (var record : records) {
             if (!values.add(record.value())) {
                 throw new IllegalArgumentException(

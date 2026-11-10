@@ -13,7 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** Converts the downloaded example text file into typed records. */
+/**
+ * Converts the downloaded example text file into typed records.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleTransformer {
 
     /**
@@ -26,8 +31,8 @@ public final class ExampleTransformer {
     public List<ExampleRecord> transform(final DataFile source)
             throws IOException {
         Objects.requireNonNull(source, "source");
-        final var records = new ArrayList<ExampleRecord>();
-        final var lines = Files.readAllLines(source.getFilePath());
+        var records = new ArrayList<ExampleRecord>();
+        var lines = Files.readAllLines(source.getFilePath());
         for (int index = 0; index < lines.size(); index++) {
             final String value = lines.get(index).trim();
             if (!value.isEmpty()) {

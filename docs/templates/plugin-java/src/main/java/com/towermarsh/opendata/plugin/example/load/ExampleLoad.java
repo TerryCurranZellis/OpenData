@@ -11,7 +11,12 @@ import com.towermarsh.opendata.plugin.example.transform.model.ExampleRecord;
 import java.util.List;
 import java.util.Objects;
 
-/** Applies dry-run policy and delegates write mode to the repository loader. */
+/**
+ * Applies dry-run policy and delegates write mode to the repository loader.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleLoad {
 
     /**
@@ -32,7 +37,7 @@ public final class ExampleLoad {
                     records.size(), 0, 0, records.size());
         }
 
-        final var result = new ExampleLoader(context.database())
+        var result = new ExampleLoader(context.database())
                 .load(records, context.runId());
         return new PluginMetrics(
                 records.size(),

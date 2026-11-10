@@ -13,7 +13,12 @@ import com.towermarsh.opendata.plugin.example.config.ExampleConfiguration;
 import com.towermarsh.opendata.plugin.example.initialise.ExampleInitialise;
 import java.util.Objects;
 
-/** Thin framework entry point for one example plugin execution. */
+/**
+ * Thin framework entry point for one example plugin execution.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExamplePlugin implements OpenDataPlugin {
 
     public static final String PLUGIN_ID = "example";

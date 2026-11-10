@@ -21,6 +21,9 @@ import java.util.Objects;
  * @param requestTimeout request timeout
  * @param maximumBytes maximum accepted response size
  * @since 2.0.0
+ *
+ * @author Terry Curran
+ * @version 4.1.0
  */
 public record ExampleConfiguration(
         URI sourceUri,
@@ -61,7 +64,7 @@ public record ExampleConfiguration(
                             + definition.id() + "'");
         }
 
-        final var properties = new PluginPropertyValues(definition);
+        var properties = new PluginPropertyValues(definition);
         return new ExampleConfiguration(
                 definition.requireEndpoint("source").uri(),
                 properties.requiredPath("download-path"),

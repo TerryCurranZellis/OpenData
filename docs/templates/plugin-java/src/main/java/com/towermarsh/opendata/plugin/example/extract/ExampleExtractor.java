@@ -10,7 +10,12 @@ import com.towermarsh.opendata.model.DataFile;
 import com.towermarsh.opendata.plugin.example.download.ExampleDownloader;
 import java.util.Objects;
 
-/** Obtains the example source representation. */
+/**
+ * Obtains the example source representation.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleExtractor {
 
     private final ExampleDownloader downloader;

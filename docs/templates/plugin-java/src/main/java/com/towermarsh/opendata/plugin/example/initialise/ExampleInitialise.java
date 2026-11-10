@@ -19,7 +19,12 @@ import com.towermarsh.opendata.plugin.example.transform.validate.ExampleValidato
 import java.util.List;
 import java.util.Objects;
 
-/** Creates stage objects and controls the complete example lifecycle. */
+/**
+ * Creates stage objects and controls the complete example lifecycle.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleInitialise {
 
     private final ExampleExtractor extract;

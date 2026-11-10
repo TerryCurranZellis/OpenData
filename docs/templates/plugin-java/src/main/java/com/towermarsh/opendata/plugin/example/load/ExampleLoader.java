@@ -17,6 +17,9 @@ import java.util.UUID;
  * Demonstrates a provider-owned SQL batch inside the shared transaction boundary.
  *
  * @since 2.0.0
+ *
+ * @author Terry Curran
+ * @version 4.1.0
  */
 public final class ExampleLoader {
 

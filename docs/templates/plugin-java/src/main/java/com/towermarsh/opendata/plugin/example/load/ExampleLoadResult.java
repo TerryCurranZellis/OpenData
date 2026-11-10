@@ -5,7 +5,12 @@
  */
 package com.towermarsh.opendata.plugin.example.load;
 
-/** Row counts returned by the example transactional loader. */
+/**
+ * Row counts returned by the example transactional loader.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public record ExampleLoadResult(long inserted, long updated, long skipped) {
 
     public ExampleLoadResult {

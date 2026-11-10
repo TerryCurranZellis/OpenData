@@ -14,7 +14,12 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Performs non-destructive final reporting for the example template. */
+/**
+ * Performs non-destructive final reporting for the example template.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleFinalise {
 
     private static final Logger LOGGER = Logger.getLogger(

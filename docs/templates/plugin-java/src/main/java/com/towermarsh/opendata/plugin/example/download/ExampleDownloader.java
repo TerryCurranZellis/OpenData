@@ -13,7 +13,12 @@ import com.towermarsh.opendata.plugin.example.config.ExampleConfiguration;
 import java.time.Duration;
 import java.util.Objects;
 
-/** Provider acquisition helper used by the extract stage. */
+/**
+ * Provider acquisition helper used by the extract stage.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleDownloader {
 
     private final ExampleConfiguration configuration;
