@@ -17,20 +17,21 @@ import com.towermarsh.opendata.config.model.DownloadStrategyType;
 
 /**
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 class PropertiesPluginDefinitionLoaderTest {
 
     @Test
     void loadsStructuredOfgemDefinition() {
-        final var loader = new PropertiesPluginDefinitionLoader();
-        final var definition = loader.load("ofgem", Map.of());
+        var loader = new PropertiesPluginDefinitionLoader();
+        var definition = loader.load("ofgem", Map.of());
 
         assertEquals("ofgem", definition.id());
         assertEquals("ofgem-energy-price-cap", definition.datasetId());
         assertEquals(1, definition.endpoints().size());
 
-        final var endpoint =
+        var endpoint =
                 definition.requireEndpoint("price-cap-publication");
 
         assertEquals(DatasetFormat.HTML, endpoint.contentFormat());
@@ -45,8 +46,8 @@ class PropertiesPluginDefinitionLoaderTest {
 
     @Test
     void runtimeOverrideChangesStructuredProperty() {
-        final var loader = new PropertiesPluginDefinitionLoader();
-        final var definition = loader.load(
+        var loader = new PropertiesPluginDefinitionLoader();
+        var definition = loader.load(
                 "ofgem",
                 Map.of(
                         "property.database.target-schema.value",
@@ -59,8 +60,8 @@ class PropertiesPluginDefinitionLoaderTest {
 
     @Test
     void loadsOctopusDefinitionWithoutEndpoints() {
-        final var loader = new PropertiesPluginDefinitionLoader();
-        final var definition = loader.load(
+        var loader = new PropertiesPluginDefinitionLoader();
+        var definition = loader.load(
                 "octopus",
                 Map.of(
                         "property.input.directory.value", "data/in",

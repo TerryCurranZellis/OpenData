@@ -16,16 +16,17 @@ import com.towermarsh.opendata.core.config.model.BootstrapConfig;
 
 /**
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 class ApplicationConfigTest {
 
     @Test
     void exposesSelectedPluginIdentifier() {
-        final var plugin =
+        var plugin =
                 new PropertiesPluginDefinitionLoader().load("ofgem", Map.of());
 
-        final var config = new ApplicationConfig(
+        var config = new ApplicationConfig(
                 new BootstrapConfig(
                         "OpenData",
                         "test",
