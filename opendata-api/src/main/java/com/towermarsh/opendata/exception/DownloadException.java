@@ -6,30 +6,32 @@
 package com.towermarsh.opendata.exception;
 
 /**
- * Indicates a data import failure.
- *
+ * Indicates an error downloading OpenData files.
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
-public class ImportException extends OpenDataException {
+public class DownloadException extends OpenDataException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new import exception.
+     * Creates a new download exception.
      *
      * @param message the detail message
      */
-    public ImportException(String message) {
+    public DownloadException(String message) {
         super(message);
     }
 
     /**
-     * s a new import exception.
+     * Creates a new download exception.
      *
      * @param message the detail message
      * @param cause the cause of this exception
      */
-    public ImportException(
+    public DownloadException(
             String message,
             Throwable cause) {
 

@@ -6,29 +6,33 @@
 package com.towermarsh.opendata.exception;
 
 /**
- * Indicates an error downloading OpenData files.
+ * Base exception for all OpenData application errors.
+ *
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
-public class DownloadException extends OpenDataException {
+public class OpenDataException extends Exception {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new download exception.
+     * Creates a new OpenData exception.
      *
      * @param message the detail message
      */
-    public DownloadException(String message) {
+    public OpenDataException(String message) {
         super(message);
     }
 
     /**
-     * Creates a new download exception.
+     * Creates a new OpenData exception.
      *
      * @param message the detail message
      * @param cause the cause of this exception
      */
-    public DownloadException(
+    public OpenDataException(
             String message,
             Throwable cause) {
 

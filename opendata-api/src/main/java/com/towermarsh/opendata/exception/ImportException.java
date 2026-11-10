@@ -6,32 +6,36 @@
 package com.towermarsh.opendata.exception;
 
 /**
- * Thrown when application or plugin configuration cannot be loaded, parsed or
- * validated.
+ * Indicates a data import failure.
+ *
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
-public class ConfigurationException extends RuntimeException {
+public class ImportException extends OpenDataException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new configuration exception.
+     * Creates a new import exception.
      *
      * @param message the detail message
-     *
      */
-    public ConfigurationException(String message) {
+    public ImportException(String message) {
         super(message);
     }
 
     /**
-     * Creates a new configuration exception.
+     * Creates a new import exception.
      *
      * @param message the detail message
      * @param cause the cause of this exception
-     *
      */
-    public ConfigurationException(String message, Throwable cause) {
+    public ImportException(
+            String message,
+            Throwable cause) {
+
         super(message, cause);
     }
 }

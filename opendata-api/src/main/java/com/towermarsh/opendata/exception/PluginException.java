@@ -19,9 +19,12 @@ package com.towermarsh.opendata.exception;
  * </pre>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @since 1.0.0
+ * @version 4.1.0
  */
 public class PluginException extends OpenDataException {
+
+    private static final long serialVersionUID = 1L;
 
     private final String pluginName;
 
