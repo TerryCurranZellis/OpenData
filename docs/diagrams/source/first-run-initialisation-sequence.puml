@@ -1,0 +1,43 @@
+@startuml
+!pragma layout smetana
+title OpenData 4.0.0 — First-Run Initialisation Sequence
+autonumber
+actor Operator
+participant "OpenData bootstrap" as Bootstrap
+participant "JavaFX InitialisationWizard" as Wizard
+participant "InitialisationService" as Service
+participant "SqlServerInitialiser" as Initialiser
+participant "Plugin definition discovery" as Discovery
+database "SQL Server" as Database
+collections "config/application.properties" as Properties
+
+Bootstrap -> Properties: Read init flag and bootstrap settings
+alt init=true
+  Bootstrap -> Wizard: Display three-step wizard
+  Operator -> Wizard: SQL Server, app login, AES key settings
+  Wizard -> Wizard: Validate entries and review
+  Operator -> Wizard: Confirm Initialise
+  Wizard -> Service: initialise(request, progressCallback)
+  note over Wizard,Service: Runs on JavaFX background Task
+  Service -> Initialiser: Provision database and application account
+  Initialiser -> Database: Create core schema / tables / role
+  Database --> Initialiser: DDL results
+  Initialiser --> Service: Provisioned database
+  Service -> Discovery: Load packaged and external plugin definitions
+  Discovery --> Service: Validated plugin definitions
+  Service -> Database: Install schemas and register disabled plugins
+  Database --> Service: Registration results
+  Service -> Properties: Persist encrypted credentials, AES key path, init=false
+  Properties --> Service: Saved configuration
+  Service --> Wizard: Success and progress log
+  Wizard --> Operator: Finish — Open OpenData
+  Wizard -> Bootstrap: Open main JavaFX interface
+else init=false
+  Bootstrap --> Operator: Run normally (GUI or CLI)
+end
+opt Setup failure
+  Service --> Wizard: Error / diagnostic progress
+  Wizard --> Operator: Setup failed; correct and retry
+  note over Service,Properties: init remains true; avoid storing admin password
+end
+@enduml
