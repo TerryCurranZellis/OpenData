@@ -12,7 +12,12 @@ import com.towermarsh.opendata.plugin.PluginMetrics;
 import java.util.List;
 import java.util.Objects;
 
-/** Compact example of the current executable plugin contract. */
+/**
+ * Compact example of the current executable plugin contract.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExamplePlugin implements OpenDataPlugin {
 
     public static final String PLUGIN_ID = "example";
@@ -61,7 +66,7 @@ public final class ExamplePlugin implements OpenDataPlugin {
                     records.size(), 0, 0, records.size());
         }
 
-        final var result = new ExampleRepository(context.database())
+        var result = new ExampleRepository(context.database())
                 .save(records, context.runId());
         return new PluginMetrics(
                 records.size(),

@@ -10,7 +10,15 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.Objects;
 
-/** Typed values derived from the generic plugin definition. */
+/**
+ * Typed values derived from the generic plugin definition.
+ *
+ * @param endpoint source API endpoint
+ * @param requestTimeout positive HTTP request timeout
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public record ExamplePluginConfiguration(
         URI endpoint,
         Duration requestTimeout) {

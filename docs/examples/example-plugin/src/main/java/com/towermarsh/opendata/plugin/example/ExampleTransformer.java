@@ -7,7 +7,12 @@ package com.towermarsh.opendata.plugin.example;
 
 import java.util.List;
 
-/** Placeholder transformation; replace with real parsing and validation. */
+/**
+ * Placeholder transformation; replace with real parsing and validation.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleTransformer {
 
     /**

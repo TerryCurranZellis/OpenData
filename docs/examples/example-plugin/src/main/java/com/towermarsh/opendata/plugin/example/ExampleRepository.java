@@ -10,7 +10,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/** Safe placeholder for provider-owned transactional persistence. */
+/**
+ * Safe placeholder for provider-owned transactional persistence.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleRepository {
 
     private final DatabaseResourceManager database;

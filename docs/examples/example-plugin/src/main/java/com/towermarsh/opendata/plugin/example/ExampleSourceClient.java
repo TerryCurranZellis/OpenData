@@ -10,7 +10,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Objects;
 
-/** Minimal HTTP extraction example; production code needs source-specific limits. */
+/**
+ * Minimal HTTP extraction example; production code needs source-specific limits.
+ *
+ * @author Terry Curran
+ * @version 4.1.0
+ */
 public final class ExampleSourceClient {
 
     private final HttpClient client = HttpClient.newBuilder()
@@ -28,13 +33,13 @@ public final class ExampleSourceClient {
             final ExamplePluginConfiguration configuration)
             throws Exception {
         Objects.requireNonNull(configuration, "configuration");
-        final var request = HttpRequest.newBuilder(
+        var request = HttpRequest.newBuilder(
                 configuration.endpoint())
                 .timeout(configuration.requestTimeout())
                 .GET()
                 .build();
 
-        final var response = client.send(
+        var response = client.send(
                 request,
                 HttpResponse.BodyHandlers.ofString());
 
