@@ -45,6 +45,7 @@ class SqlBatchParserTest {
      * The returned list cannot be modified by setup consumers.
      */
     @Test
+    @SuppressWarnings("ThrowableResultIgnored")
     void returnsImmutableBatches() {
         var batches = SqlBatchParser.batches("SELECT 1;");
         assertThrows(UnsupportedOperationException.class, () -> batches.add("SELECT 2;"));
@@ -54,6 +55,7 @@ class SqlBatchParserTest {
      * A missing script is rejected before processing.
      */
     @Test
+             @SuppressWarnings("ThrowableResultIgnored")
     void rejectsNullScript() {
         assertThrows(NullPointerException.class, () -> SqlBatchParser.batches(null));
     }
