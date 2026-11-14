@@ -7,7 +7,7 @@
 
     <groupId>com.towermarsh</groupId>
     <artifactId>opendata-parent</artifactId>
-    <version>4.0.0</version>
+    <version>4.2.0</version>
     <packaging>pom</packaging>
 
     <name>OpenData</name>
@@ -40,8 +40,8 @@
     <modules>
         <module>opendata-api</module>
         <module>opendata-common</module>
-        <module>opendata-plugins</module>
         <module>opendata-core</module>
+        <module>opendata-plugins</module>
         <module>opendata-launcher</module>
     </modules>
 

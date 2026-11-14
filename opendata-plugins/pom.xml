@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.towermarsh</groupId>
         <artifactId>opendata-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>opendata-plugins</artifactId>
@@ -15,14 +15,14 @@
     <description>Aggregator for independently buildable OpenData provider plugins.</description>
 
     <modules>
+        <module>opendata-plugin-electricity-common</module>
+        <module>opendata-plugin-octopus-common</module>
         <module>opendata-plugin-electric-demand</module>
         <module>opendata-plugin-electric-supply</module>
         <module>opendata-plugin-octopus</module>
         <module>opendata-plugin-octopus-adjustment</module>
         <module>opendata-plugin-ofgem</module>
         <module>opendata-plugin-openmeteo</module>
-        <module>opendata-plugin-electricity-common</module>
-        <module>opendata-plugin-octopus-common</module>
     </modules>
 
     <build>
