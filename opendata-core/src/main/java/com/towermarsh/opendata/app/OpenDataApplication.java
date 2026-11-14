@@ -22,7 +22,7 @@ import com.towermarsh.opendata.config.PropertiesPluginDefinitionLoader;
 import com.towermarsh.opendata.config.AesConfigurationPasswordCipher;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.core.database.SQLServerResource;
-import com.towermarsh.opendata.core.database.UnavailableDatabaseResourceManager;
+import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.core.logging.LoggingManager;
 import com.towermarsh.opendata.core.plugin.JdbcPluginRegistry;
 import com.towermarsh.opendata.core.plugin.JdbcPluginRunAudit;
@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  *
  * @author Terry Curran
  * @since 3.0.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 public class OpenDataApplication {
 

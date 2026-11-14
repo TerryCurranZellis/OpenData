@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
-import com.towermarsh.opendata.common.database.UnavailableDatabaseResourceManager;
+import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 /** Tests adjustment load dry-run isolation.
  * @author Terry Curran
- * @version 4.1.0
+ * @version 4.2.0
  */
 class OctopusAdjustmentLoadTest {
 

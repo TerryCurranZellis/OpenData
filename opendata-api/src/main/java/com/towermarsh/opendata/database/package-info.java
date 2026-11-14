@@ -10,6 +10,7 @@
  * <ul>
  * <li>{@link DatabaseAccessException} &mdash; Database access/persistence failures.</li>
  * <li>{@link DatabaseException} &mdash; Base unchecked database failure.</li>
+ * <li>{@link UnavailableDatabaseResourceManager} &mdash; Shared fail-closed database resource for dry runs.</li>
  * <li>{@link SqlBatchParser} &mdash; Splits SQL Server GO-delimited scripts.</li>
  * </ul>
  *
@@ -25,6 +26,6 @@
  *
  * @author Terry Curran
  * @since 3.1.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 package com.towermarsh.opendata.database;

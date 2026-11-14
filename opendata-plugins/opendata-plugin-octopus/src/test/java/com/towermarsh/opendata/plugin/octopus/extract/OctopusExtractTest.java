@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import com.towermarsh.opendata.config.model.PluginDefinition;
-import com.towermarsh.opendata.common.database.UnavailableDatabaseResourceManager;
+import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 /** Tests Octopus statement discovery and dry-run database isolation.
  * @author Terry Curran
- * @version 4.1.0
+ * @version 4.2.0
  */
 class OctopusExtractTest {
 
