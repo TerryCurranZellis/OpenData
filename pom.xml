@@ -332,6 +332,27 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <!--
+            Only the root aggregate report uses classpath-style Javadoc.
+            OpenData intentionally combines explicit JPMS modules (API/Core)
+            with automatic modules (providers). Maven Javadoc cannot aggregate
+            mixed module styles in JPMS mode. Runtime compilation remains modular.
+            Child projects retain their existing individual Javadoc settings.
+        -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <legacyMode>true</legacyMode>
+                    <disableSourcepathUsage>true</disableSourcepathUsage>
+                    <sourceFileExcludes>
+                        <sourceFileExclude>**/module-info.java</sourceFileExclude>
+                    </sourceFileExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
     <!--
         Create a unified Javadoc reference across the entire Maven reactor.
@@ -358,6 +379,14 @@
                     <reportSet>
                         <id>aggregate</id>
                         <inherited>false</inherited>
+                        <!-- Apply the same non-modular setting for 'mvn site'. -->
+                        <configuration>
+                            <legacyMode>true</legacyMode>
+                            <disableSourcepathUsage>true</disableSourcepathUsage>
+                            <sourceFileExcludes>
+                                <sourceFileExclude>**/module-info.java</sourceFileExclude>
+                            </sourceFileExcludes>
+                        </configuration>
                         <reports>
                             <report>aggregate</report>
                         </reports>
