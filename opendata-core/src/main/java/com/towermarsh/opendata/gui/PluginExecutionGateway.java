@@ -67,25 +67,25 @@ public final class PluginExecutionGateway {
      * @throws InterruptedException when plugin execution is interrupted
      */
     public PluginExecutionSummary execute(
-            final List<String> pluginIds,
-            final boolean dryRun) throws IOException, InterruptedException {
-        final var requested = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
+            List<String> pluginIds,
+            boolean dryRun) throws IOException, InterruptedException {
+        var requested = List.copyOf(Objects.requireNonNull(pluginIds, "pluginIds"));
         if (requested.isEmpty()) {
             throw new IllegalArgumentException("At least one plugin must be selected.");
         }
 
-        final var passwordCipher = new AesConfigurationPasswordCipher();
-        final var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
+        var passwordCipher = new AesConfigurationPasswordCipher();
+        var bootstrap = new ApplicationBootstrapPropertiesLoader(passwordCipher)
                 .load(Map.of());
 
-        final List<ResolvedPlugin> plugins;
-        final ApplicationRuntimeConfiguration runtime;
+        List<ResolvedPlugin> plugins;
+        ApplicationRuntimeConfiguration runtime;
         DatabaseResourceManager configurationDatabase = null;
         try {
             configurationDatabase = SQLServerResource.initialise(
                     bootstrap.toDatabasePoolConfiguration());
-            final var registry = new JdbcPluginRegistry(configurationDatabase);
-            final var propertiesSource = bootstrap.useDatabaseProperties()
+            var registry = new JdbcPluginRegistry(configurationDatabase);
+            var propertiesSource = bootstrap.useDatabaseProperties()
                     ? new JdbcConfigurationPropertiesSource(configurationDatabase)
                     : new ClasspathConfigurationPropertiesSource();
             runtime = ApplicationRuntimeConfiguration.load(propertiesSource, Map.of());
@@ -95,8 +95,8 @@ public final class PluginExecutionGateway {
                         "application.database.password must be supplied for a database-writing run.");
             }
 
-            final var selected = new PluginSelectionResolver().resolve(requested, registry);
-            final var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
+            var selected = new PluginSelectionResolver().resolve(requested, registry);
+            var definitionLoader = new PropertiesPluginDefinitionLoader(propertiesSource);
             plugins = selected.stream()
                     .map(descriptor -> new ResolvedPlugin(
                     descriptor,
@@ -106,14 +106,14 @@ public final class PluginExecutionGateway {
             PluginExecutionSupport.closeDatabase(LOGGER, configurationDatabase);
         }
 
-        final int parallelism = runtime.execution().maxParallelPlugins();
+        var parallelism = runtime.execution().maxParallelPlugins();
         LOGGER.log(Level.INFO,
                 "GUI selected {0} registered plugin(s); parallelism={1}; dryRun={2}",
                 new Object[]{plugins.size(), Math.min(parallelism, plugins.size()), dryRun});
 
         DatabaseResourceManager executionDatabase = null;
         try {
-            final PluginRunAudit audit;
+            PluginRunAudit audit;
             if (dryRun) {
                 executionDatabase = new UnavailableDatabaseResourceManager();
                 audit = new NoOpPluginRunAudit();
@@ -122,13 +122,13 @@ public final class PluginExecutionGateway {
                 audit = new JdbcPluginRunAudit(executionDatabase);
             }
 
-            final var coordinator = new PluginExecutionCoordinator(
+            var coordinator = new PluginExecutionCoordinator(
                     new ReflectionPluginFactory(),
                     audit,
                     executionDatabase,
                     Clock.systemUTC(),
                     runtime.execution().shutdownTimeout());
-            final var summary = coordinator.execute(plugins, parallelism, dryRun);
+            var summary = coordinator.execute(plugins, parallelism, dryRun);
             PluginExecutionSupport.logSummary(LOGGER, summary);
             return summary;
         } finally {

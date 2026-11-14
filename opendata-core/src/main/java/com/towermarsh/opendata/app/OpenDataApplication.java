@@ -187,7 +187,7 @@ public class OpenDataApplication {
         }
         LoggingManager.configure(runtime.logging(), arguments.verbose());
 
-        final List<PluginDescriptor> selected;
+        List<PluginDescriptor> selected;
         if (arguments.allPluginsRequested()) {
             selected = registry.list().stream()
                     .filter(pluginDescriptor -> pluginDescriptor.enabled())

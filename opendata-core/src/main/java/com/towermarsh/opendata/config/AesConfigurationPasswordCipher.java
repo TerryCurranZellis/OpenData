@@ -33,25 +33,12 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * @author Terry Curran
  * @since 4.0.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 public class AesConfigurationPasswordCipher implements ConfigurationPasswordCipher {
 
     public static final String ENCRYPTED_PREFIX = "{aes}";
     public static final String KEY_FILE_SETTING = "security.aes-key-file";
-    /**
-     * @deprecated Since 4.0.0, use {@code security.aes-key-file} in
-     * {@code config/application.properties}; JVM key location is legacy only.
-     */
-    @Deprecated(since = "4.0.0", forRemoval = false)
-    public static final String KEY_FILE_PROPERTY = "opendata.config.key-file";
-    /**
-     * @deprecated Since 4.0.0, use {@code security.aes-key-file} in
-     * {@code config/application.properties}; environment key location is legacy only.
-     */
-    @Deprecated(since = "4.0.0", forRemoval = false)
-    public static final String KEY_FILE_ENVIRONMENT_VARIABLE = "OPENDATA_CONFIG_KEY_FILE";
-
     private static final int NONCE_LENGTH = 12;
     private static final int TAG_LENGTH_BITS = 128;
     private static final int KEY_LENGTH_BYTES = 32;
@@ -61,7 +48,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
 
     /**
      * Loads the AES key path from the ordinary application properties file.
-     * The previous JVM/environment fallbacks remain for older installations.
+     * Key-file locations are configured through application.properties only.
      */
     public AesConfigurationPasswordCipher() {
         this(resolveKeyFile());
@@ -111,7 +98,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
      * @return decrypted plain-text password
      */
     @Override
-    public String decrypt(final String storedValue) {
+    public String decrypt(String storedValue) {
         Objects.requireNonNull(storedValue, "storedValue");
         rejectLegacyRsaValue(storedValue);
         if (!isEncrypted(storedValue)) {
@@ -143,7 +130,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
      * @return decrypted plain-text password
      */
     @Override
-    public boolean isEncrypted(final String storedValue) {
+    public boolean isEncrypted(String storedValue) {
         return storedValue != null && storedValue.startsWith(ENCRYPTED_PREFIX);
     }
 
@@ -177,7 +164,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
 
     /**
      * Resolves the key location through the existing file-based configuration.
-     * Deprecated JVM/environment settings are supported only as fallbacks.
+     * No JVM properties or environment variables are consulted.
      *
      * @return configured key file or null
      */
@@ -186,14 +173,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
         if (configured == null) {
             configured = keyFileFromClasspath();
         }
-        if (configured != null) {
-            return configured;
-        }
-        var legacy = System.getProperty(KEY_FILE_PROPERTY);
-        if (legacy == null || legacy.isBlank()) {
-            legacy = System.getenv(KEY_FILE_ENVIRONMENT_VARIABLE);
-        }
-        return legacy == null || legacy.isBlank() ? null : Path.of(legacy);
+        return configured;
     }
 
     /**
@@ -202,7 +182,7 @@ public class AesConfigurationPasswordCipher implements ConfigurationPasswordCiph
      * @param file properties file
      * @return key path or null
      */
-    private static Path keyFileFromProperties(final Path file) {
+    private static Path keyFileFromProperties(Path file) {
         if (!Files.isRegularFile(file)) {
             return null;
         }

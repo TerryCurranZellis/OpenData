@@ -11,7 +11,6 @@
  * <li>{@link ApplicationBootstrapPropertiesLoader} &mdash; Loads and stores the minimal bootstrap application properties file.</li>
  * <li>{@link ApplicationConfigurationService} &mdash; Creates the Phase 1 {@link ApplicationConfig}.</li>
  * <li>{@link ApplicationPropertyValues} &mdash; Typed, case-insensitive access to application configuration properties.</li>
- * <li>{@link BootstrapConfigurationLoader} &mdash; Loads application bootstrap configuration from the classpath.</li>
  * <li>{@link ClasspathConfigurationPropertiesSource} &mdash; Loads configuration properties from packaged classpath resources.</li>
  * <li>{@link ConfigurationLoader} &mdash; Loads and merges framework, application and packaged plugin properties.</li>
  * <li>{@link ConfigurationRegistrationService} &mdash; Registers application configuration and validated plugin definitions in SQL Server, then updates the bootstrap file for database-backed operation.</li>
@@ -54,7 +53,7 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @version 4.2.0
 
  * <p><b>Version 4 bootstrap:</b> {@link ApplicationBootstrapPropertiesLoader} reads the
  * init switch; {@link AesConfigurationPasswordCipher} uses security.aes-key-file.</p>
