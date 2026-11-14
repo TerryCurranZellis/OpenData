@@ -6,9 +6,9 @@
 /**
  * Open-Meteo transformation models.
  *
- * <h2>Classes</h2>
+ * <h2>Enums</h2>
  * <ul>
- * <li>{@link WmoWeatherCode} &mdash; Maps WMO weather interpretation codes returned by Open-Meteo.</li>
+ * <li>{@link WmoWeatherCode} &mdash; Typed WMO weather interpretation codes returned by Open-Meteo.</li>
  * </ul>
  *
  * <h2>Records</h2>
@@ -17,6 +17,6 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 4.2.0
  */
 package com.towermarsh.opendata.plugin.openmeteo.transform.model;

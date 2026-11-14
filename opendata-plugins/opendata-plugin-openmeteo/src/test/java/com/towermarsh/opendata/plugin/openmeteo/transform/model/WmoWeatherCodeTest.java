@@ -17,6 +17,8 @@ class WmoWeatherCodeTest {
     @Test
     void mapsKnownWeatherCodes() {
         assertEquals("Clear sky", WmoWeatherCode.description(0));
+        assertEquals(WmoWeatherCode.CLEAR_SKY, WmoWeatherCode.fromCode(0));
+        assertEquals(0, WmoWeatherCode.CLEAR_SKY.code());
         assertEquals("Heavy freezing rain", WmoWeatherCode.description(67));
         assertEquals(
                 "Thunderstorm with heavy hail",
@@ -26,5 +28,6 @@ class WmoWeatherCodeTest {
     @Test
     void mapsUnknownWeatherCode() {
         assertEquals("Unknown", WmoWeatherCode.description(1234));
+        assertEquals(WmoWeatherCode.UNKNOWN, WmoWeatherCode.fromCode(1234));
     }
 }
