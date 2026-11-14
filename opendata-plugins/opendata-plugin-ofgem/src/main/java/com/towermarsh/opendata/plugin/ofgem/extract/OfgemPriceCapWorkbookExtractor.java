@@ -8,6 +8,10 @@ package com.towermarsh.opendata.plugin.ofgem.extract;
 import com.towermarsh.opendata.exception.ImportException;
 import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapLevel;
 import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapPeriod;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPaymentMethod;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemRegion;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemTariffType;
+import com.towermarsh.opendata.plugin.ofgem.transform.OfgemConsumptionBasis;
 import com.towermarsh.opendata.plugin.ofgem.transform.OfgemPriceCapWorkbookData;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,10 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -41,7 +43,7 @@ import org.apache.poi.ss.util.CellReference;
  * row numbers, while retaining the known C:J output-column meanings.</p>
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 4.2.0
  */
 public final class OfgemPriceCapWorkbookExtractor {
 
@@ -56,16 +58,15 @@ public final class OfgemPriceCapWorkbookExtractor {
                     .appendPattern("MMMM uuuu")
                     .toFormatter(Locale.UK);
 
-    private static final Map<String, String> PAYMENT_METHODS = paymentMethods();
     private static final List<ColumnMeaning> OUTPUT_COLUMNS = List.of(
-            new ColumnMeaning(2, "ELECTRICITY_SINGLE_RATE", "NIL"),
-            new ColumnMeaning(3, "ELECTRICITY_SINGLE_RATE", "BENCHMARK"),
-            new ColumnMeaning(4, "ELECTRICITY_MULTI_REGISTER", "NIL"),
-            new ColumnMeaning(5, "ELECTRICITY_MULTI_REGISTER", "BENCHMARK"),
-            new ColumnMeaning(6, "GAS", "NIL"),
-            new ColumnMeaning(7, "GAS", "BENCHMARK"),
-            new ColumnMeaning(8, "DUAL_FUEL", "NIL"),
-            new ColumnMeaning(9, "DUAL_FUEL", "BENCHMARK"));
+            new ColumnMeaning(2, OfgemTariffType.ELECTRICITY_SINGLE_RATE, OfgemConsumptionBasis.NIL),
+            new ColumnMeaning(3, OfgemTariffType.ELECTRICITY_SINGLE_RATE, OfgemConsumptionBasis.BENCHMARK),
+            new ColumnMeaning(4, OfgemTariffType.ELECTRICITY_MULTI_REGISTER, OfgemConsumptionBasis.NIL),
+            new ColumnMeaning(5, OfgemTariffType.ELECTRICITY_MULTI_REGISTER, OfgemConsumptionBasis.BENCHMARK),
+            new ColumnMeaning(6, OfgemTariffType.GAS, OfgemConsumptionBasis.NIL),
+            new ColumnMeaning(7, OfgemTariffType.GAS, OfgemConsumptionBasis.BENCHMARK),
+            new ColumnMeaning(8, OfgemTariffType.DUAL_FUEL, OfgemConsumptionBasis.NIL),
+            new ColumnMeaning(9, OfgemTariffType.DUAL_FUEL, OfgemConsumptionBasis.BENCHMARK));
 
     /**
      * Extracts a typed period and all price-cap-level cells.
@@ -92,10 +93,10 @@ public final class OfgemPriceCapWorkbookExtractor {
             var period = parsePeriod(
                     periodName,
                     findSourceColumnReference(sheet, formatter, evaluator));
-            List<OfgemPriceCapLevel> levels = new ArrayList<>();
+            var levels = new ArrayList<OfgemPriceCapLevel>();
 
-            for (var payment : PAYMENT_METHODS.entrySet()) {
-                var sectionRow = findRow(sheet, payment.getKey(), formatter, evaluator);
+            for (var payment : OfgemPaymentMethod.values()) {
+                var sectionRow = findRow(sheet, payment.heading(), formatter, evaluator);
                 var regionHeaderRow = findFollowingRow(
                         sheet,
                         sectionRow,
@@ -105,7 +106,7 @@ public final class OfgemPriceCapWorkbookExtractor {
                 extractSection(
                         sheet,
                         regionHeaderRow + 2,
-                        payment.getValue(),
+                        payment.code(),
                         formatter,
                         evaluator,
                         levels);
@@ -151,7 +152,7 @@ public final class OfgemPriceCapWorkbookExtractor {
 
             var vatIncluded = regionText.toLowerCase(Locale.ROOT)
                     .contains("inc vat");
-            var regionCode = regionCode(regionText);
+            var regionCode = OfgemRegion.fromDisplayName(regionText).code();
             for (var meaning : OUTPUT_COLUMNS) {
                 var cell = row == null ? null : row.getCell(meaning.columnIndex());
                 var formatted = format(cell, formatter, evaluator).trim();
@@ -162,8 +163,8 @@ public final class OfgemPriceCapWorkbookExtractor {
                 destination.add(new OfgemPriceCapLevel(
                         regionCode,
                         paymentMethodCode,
-                        meaning.tariffTypeCode(),
-                        meaning.consumptionBasisCode(),
+                        meaning.tariffType().name(),
+                        meaning.consumptionBasis().name(),
                         amount,
                         vatIncluded,
                         OUTPUT_SHEET,
@@ -377,60 +378,15 @@ public final class OfgemPriceCapWorkbookExtractor {
     }
 
     /**
-     * Region code.
-     *
-     * @param displayName requested display name
-     * @return result of region code
-     * @throws ImportException if region code fails
-     */
-    private static String regionCode(String displayName) throws ImportException {
-        var normalised = displayName.trim().toLowerCase(Locale.ROOT);
-        if (normalised.startsWith("gb average")) {
-            return "GB_AVERAGE";
-        }
-        return switch (normalised) {
-            case "north west" -> "NORTH_WEST";
-            case "northern" -> "NORTHERN";
-            case "yorkshire" -> "YORKSHIRE";
-            case "northern scotland" -> "NORTHERN_SCOTLAND";
-            case "southern" -> "SOUTHERN";
-            case "southern scotland" -> "SOUTHERN_SCOTLAND";
-            case "n wales and mersey" -> "N_WALES_AND_MERSEY";
-            case "london" -> "LONDON";
-            case "south east" -> "SOUTH_EAST";
-            case "eastern" -> "EASTERN";
-            case "east midlands" -> "EAST_MIDLANDS";
-            case "midlands" -> "MIDLANDS";
-            case "southern western" -> "SOUTHERN_WESTERN";
-            case "south wales" -> "SOUTH_WALES";
-            default -> throw new ImportException(
-                    "Unrecognised Ofgem charge-restriction region: " + displayName);
-        };
-    }
-
-    /**
-     * Payment methods.
-     *
-     * @return result of payment methods
-     */
-    private static Map<String, String> paymentMethods() {
-        Map<String, String> result = new LinkedHashMap<>();
-        result.put("Other Payment Method", "OTHER");
-        result.put("Standard Credit", "STANDARD_CREDIT");
-        result.put("PPM", "PPM");
-        return Map.copyOf(result);
-    }
-
-    /**
      * Creates a column meaning instance.
      *
      * @param columnIndex input column index
-     * @param tariffTypeCode input tariff type code
-     * @param consumptionBasisCode input consumption basis code
+     * @param tariffType input tariff type
+     * @param consumptionBasis input consumption basis
      */
     private record ColumnMeaning(
             int columnIndex,
-            String tariffTypeCode,
-            String consumptionBasisCode) {
+            OfgemTariffType tariffType,
+            OfgemConsumptionBasis consumptionBasis) {
     }
 }
