@@ -27,7 +27,7 @@ import org.apache.commons.csv.CSVFormat;
  * @author Terry Curran
  * @version 4.2.0
  */
-public class CsvDataParser implements DataParser<Map<String, String>> {
+public final class CsvDataParser implements DataParser<Map<String, String>> {
 
     private final CsvParserOptions options;
 

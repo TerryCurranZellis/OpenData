@@ -30,7 +30,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  * @author Terry Curran
  * @version 4.2.0
  */
-public class ExcelDataParser implements DataParser<Map<String, String>> {
+public final class ExcelDataParser implements DataParser<Map<String, String>> {
 
     private final ExcelParserOptions options;
 
