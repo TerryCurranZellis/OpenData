@@ -4,11 +4,8 @@
  */
 package com.towermarsh.opendata.plugin.octopus.extract;
 
-import com.towermarsh.opendata.database.DatabaseAccessException;
+import com.towermarsh.opendata.common.database.jdbc.JdbcCompletedFileKeys;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +13,7 @@ import java.util.Set;
  * Reads the names and hashes of successfully processed Octopus statements.
  *
  * @author Terry Curran
- * @version 2.0.0
+ * @version 4.2.0
  */
 public final class OctopusProcessedFileRepository {
 
@@ -39,24 +36,8 @@ public final class OctopusProcessedFileRepository {
      * @return a set of processed files
      */
     public Set<String> findProcessedFileKeys() {
-        var sql = """
-                SELECT [file_name], [sha256]
-                  FROM [octopus].[statement_file]
-                 WHERE [status] = 'COMPLETED'
-                """;
-        try (var connection = database.getConnection(); 
-             var statement = connection.prepareStatement(sql); 
-             var results = statement.executeQuery()) {
-            Set<String> keys = new HashSet<>();
-            while (results.next()) {
-                keys.add(key(results.getString(1), results.getString(2)));
-            }
-            return Set.copyOf(keys);
-        } catch (SQLException exception) {
-            throw new DatabaseAccessException(
-                    "Unable to read processed Octopus statement files. Re-register the octopus plugin to create its tables.",
-                    exception);
-        }
+        return JdbcCompletedFileKeys.read(
+                database, "octopus", "statement_file", "Unable to read processed Octopus statement files. Re-register the octopus plugin to create its tables.");
     }
 
     /**
@@ -66,6 +47,6 @@ public final class OctopusProcessedFileRepository {
      * @return the key has
      */
     public static String key(String fileName, String sha256) {
-        return fileName.toLowerCase(Locale.ROOT) + "|" + sha256.toLowerCase(Locale.ROOT);
+        return JdbcCompletedFileKeys.key(fileName, sha256);
     }
 }
