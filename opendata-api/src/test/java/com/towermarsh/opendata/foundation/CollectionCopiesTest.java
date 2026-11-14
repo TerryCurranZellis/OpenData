@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.LinkedHashSet;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,7 +19,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Terry Curran
  * @since 4.1.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 class CollectionCopiesTest {
 
@@ -49,6 +50,15 @@ class CollectionCopiesTest {
     void nullElementsAreRejected() {
         assertThrows(NullPointerException.class,
                 () -> CollectionCopies.immutableOrEmpty(Arrays.asList("first", null)));
+    }
+
+    /**
+     * A set is also accepted as a source of an immutable list snapshot.
+     */
+    @Test
+    void sourceMayBeAnyCollection() {
+        var source = new LinkedHashSet<>(List.of("one", "two"));
+        assertEquals(List.of("one", "two"), CollectionCopies.immutableOrEmpty(source));
     }
 
     /**

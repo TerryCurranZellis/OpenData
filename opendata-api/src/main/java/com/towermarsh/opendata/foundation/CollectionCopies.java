@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.foundation;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Terry Curran
  * @since 4.1.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 public final class CollectionCopies {
 
@@ -20,7 +21,7 @@ public final class CollectionCopies {
     }
 
     /**
-     * Copies a nullable list to a non-null immutable snapshot.
+     * Copies a nullable collection to a non-null immutable list snapshot.
      *
      * <p>A null input produces an empty list. Null elements are rejected,
      * preserving the behaviour of {@link List#copyOf(java.util.Collection)}.</p>
@@ -30,7 +31,7 @@ public final class CollectionCopies {
      * @return an immutable snapshot, or an empty list if values is null
      * @throws NullPointerException if a source element is null
      */
-    public static <T> List<T> immutableOrEmpty(List<? extends T> values) {
+    public static <T> List<T> immutableOrEmpty(Collection<? extends T> values) {
         return values == null ? List.of() : List.copyOf(values);
     }
 }
