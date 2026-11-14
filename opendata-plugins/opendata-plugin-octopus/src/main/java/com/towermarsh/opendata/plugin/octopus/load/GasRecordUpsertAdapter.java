@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.plugin.octopus.load;
 
-import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.GasRecord;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

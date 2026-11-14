@@ -29,8 +29,8 @@ import java.util.logging.Logger;
  *   <li><b>Extract</b> – discovers and makes PDF files available in the input
  *       directory (placeholder: currently lists existing files).</li>
  *   <li><b>Transform</b> – parses PDF text into structured
- *       {@link com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord}
- *       and {@link com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord}
+ *       {@link com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord}
+ *       and {@link com.towermarsh.opendata.plugin.octopus.common.transform.model.GasRecord}
  *       instances.</li>
  *   <li><b>Load</b> – persists records to the database; passes through on a
  *       dry run (placeholder: database write pending).</li>

@@ -5,6 +5,8 @@
 package com.towermarsh.opendata.plugin.octopus.extract;
 
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
+import com.towermarsh.opendata.plugin.octopus.common.extract.ExtractedOctopusStatement;
+import com.towermarsh.opendata.plugin.octopus.common.extract.PdfTextExtractor;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
 import com.towermarsh.opendata.util.PathDigestSupport;
 import java.io.IOException;

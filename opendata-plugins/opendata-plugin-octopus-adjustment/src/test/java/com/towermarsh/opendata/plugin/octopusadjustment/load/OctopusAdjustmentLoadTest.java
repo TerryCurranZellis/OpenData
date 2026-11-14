@@ -11,7 +11,7 @@ import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.database.UnavailableDatabaseResourceManager;
 import com.towermarsh.opendata.plugin.PluginDescriptor;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord;
 import com.towermarsh.opendata.plugin.octopusadjustment.extract.ExtractedOctopusAdjustment;
 import com.towermarsh.opendata.plugin.octopusadjustment.initialise.OctopusAdjustmentConfiguration;
 import com.towermarsh.opendata.plugin.octopusadjustment.transform.OctopusAdjustmentParseResult;

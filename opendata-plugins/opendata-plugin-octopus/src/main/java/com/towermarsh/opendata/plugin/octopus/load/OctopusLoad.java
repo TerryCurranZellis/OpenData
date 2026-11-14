@@ -9,7 +9,7 @@ package com.towermarsh.opendata.plugin.octopus.load;
 import com.towermarsh.opendata.plugin.PluginExecutionContext;
 import com.towermarsh.opendata.plugin.PluginMetrics;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
-import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
+import com.towermarsh.opendata.plugin.octopus.common.transform.OctopusParseResult;
 import java.util.Objects;
 import java.util.logging.Logger;
 

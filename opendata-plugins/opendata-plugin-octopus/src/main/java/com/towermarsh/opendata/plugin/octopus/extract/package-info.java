@@ -13,12 +13,12 @@
  * <ul>
  * <li>{@link OctopusExtract} &mdash; Discovers, filters and reads local Octopus Energy statement PDFs.</li>
  * <li>{@link OctopusProcessedFileRepository} &mdash; Reads the names and hashes of successfully processed Octopus statements.</li>
- * <li>{@link PdfTextExtractor} &mdash; Extracts plain text from a PDF file using Apache PDFBox 3.x.</li>
+ * <li>{@link com.towermarsh.opendata.plugin.octopus.common.extract.PdfTextExtractor} &mdash; Extracts plain text from a PDF file using Apache PDFBox 3.x.</li>
  * </ul>
  *
  * <h2>Records</h2>
  * <ul>
- * <li>{@link ExtractedOctopusStatement} &mdash; Immutable content and provenance for one extracted Octopus statement.</li>
+ * <li>{@link com.towermarsh.opendata.plugin.octopus.common.extract.ExtractedOctopusStatement} &mdash; Immutable content and provenance for one extracted Octopus statement.</li>
  * </ul>
  *
  * @author Terry Curran

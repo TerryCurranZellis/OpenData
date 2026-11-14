@@ -5,9 +5,9 @@
 package com.towermarsh.opendata.plugin.octopus.finalise;
 
 import com.towermarsh.opendata.plugin.PluginMetrics;
-import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
+import com.towermarsh.opendata.plugin.octopus.common.extract.ExtractedOctopusStatement;
 import com.towermarsh.opendata.plugin.octopus.initialise.OctopusConfiguration;
-import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
+import com.towermarsh.opendata.plugin.octopus.common.transform.OctopusParseResult;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;

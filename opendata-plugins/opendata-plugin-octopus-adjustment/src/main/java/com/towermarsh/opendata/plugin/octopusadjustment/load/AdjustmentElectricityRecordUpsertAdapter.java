@@ -5,7 +5,7 @@
  */
 package com.towermarsh.opendata.plugin.octopusadjustment.load;
 
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

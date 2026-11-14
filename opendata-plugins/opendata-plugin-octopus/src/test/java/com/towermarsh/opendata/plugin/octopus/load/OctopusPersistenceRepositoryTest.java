@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
-import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
-import com.towermarsh.opendata.plugin.octopus.transform.OctopusParseResult;
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
-import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
+import com.towermarsh.opendata.plugin.octopus.common.extract.ExtractedOctopusStatement;
+import com.towermarsh.opendata.plugin.octopus.common.transform.OctopusParseResult;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.GasRecord;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

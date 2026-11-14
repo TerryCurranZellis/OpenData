@@ -5,9 +5,9 @@
  */
 package com.towermarsh.opendata.plugin.octopusadjustment.transform;
 
-import com.towermarsh.opendata.plugin.octopus.transform.OctopusStatementParser;
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
-import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.OctopusStatementParser;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.GasRecord;
 import com.towermarsh.opendata.plugin.octopusadjustment.extract.ExtractedOctopusAdjustment;
 import java.io.IOException;
 import java.util.ArrayList;
