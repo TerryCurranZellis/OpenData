@@ -20,6 +20,7 @@ import com.towermarsh.opendata.gui.GuiLauncher;
 import com.towermarsh.opendata.app.ApplicationInfo;
 import static com.towermarsh.opendata.foundation.DurationFormatter.formatElapsed;
 import static com.towermarsh.opendata.foundation.ExceptionMessages.rootCauseMessage;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -64,10 +65,7 @@ public final class OpenData {
             enableUTF8Console();
             LoggingManager.initialise(Path.of("logs"));
             logger = LoggingManager.getLogger();
-            var effectiveArguments
-                    = args.length == 0
-                            ? new String[]{"--gui"}
-                    : args;
+            var effectiveArguments = args.length == 0 ? new String[]{"--gui"} : args;
             var arguments = processor.parse(effectiveArguments);
             LoggingManager.setVerbose(arguments.verbose());
             logStartup(ApplicationInfo.current(), arguments);
@@ -75,7 +73,7 @@ public final class OpenData {
             // operation; no SQL connection or AES key is needed to inspect it.
             if (new ApplicationBootstrapPropertiesLoader(
                     new AesConfigurationPasswordCipher()).initialisationRequested()) {
-                if (java.awt.GraphicsEnvironment.isHeadless()) {
+                if (GraphicsEnvironment.isHeadless()) {
                     throw new OpenDataConfigurationException(
                             "init=true requires a desktop session. Start OpenData with a graphical desktop.");
                 }
@@ -95,7 +93,7 @@ public final class OpenData {
             status = ExecutionStatus.COMMAND_LINE_ERROR;
             logger.log(Level.SEVERE, "Command-line error: {0}", rootCauseMessage(exception));
             processor.printHelp(new PrintWriter(System.err, true, StandardCharsets.UTF_8));
-        } catch (PluginDefinitionException | OpenDataConfigurationException exception) {
+        } catch (OpenDataConfigurationException exception) {
             status = ExecutionStatus.CONFIGURATION_ERROR;
             logger.log(Level.SEVERE, "Configuration error: {0}", rootCauseMessage(exception));
         } catch (DatabaseException exception) {
@@ -108,7 +106,7 @@ public final class OpenData {
         } catch (IOException exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
             logger.log(Level.SEVERE, "Application I/O failure: {0}", rootCauseMessage(exception));
-        } catch (Exception exception) {
+        } catch (PluginDefinitionException exception) {
             status = ExecutionStatus.APPLICATION_FAILURE;
             logger.log(Level.SEVERE, "Unexpected application failure: {0}", rootCauseMessage(exception));
             logger.log(Level.FINE, "Unexpected application failure details.", exception);

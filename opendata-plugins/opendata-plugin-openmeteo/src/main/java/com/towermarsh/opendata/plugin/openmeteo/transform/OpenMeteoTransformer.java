@@ -57,7 +57,7 @@ public class OpenMeteoTransformer {
                  int weatherCode = requireValue(
                         weatherCodes.get(index),
                         "daily.weatherCodes[%d]".formatted(index));
-                long daylightMinutes =
+                var daylightMinutes =
                         Math.round(requireValue(
                                 daylightDurations.get(index),
                                 "daily.daylightDurationSeconds[%d]".formatted(index)) / 60.0);
