@@ -8,12 +8,13 @@ package com.towermarsh.opendata.parser;
 import com.towermarsh.opendata.exception.ImportException;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Map;
 
 /**
  * Creates the framework parser appropriate to a downloaded file.
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 4.2.0
  */
 public final class DataParserFactory {
 
@@ -30,7 +31,7 @@ public final class DataParserFactory {
      * @return matching parser
      * @throws ImportException if the extension is unsupported
      */
-    public static DataParser forFile(Path file) throws ImportException {
+    public static DataParser<Map<String, String>> forFile(Path file) throws ImportException {
         Objects.requireNonNull(file, "file");
         try {
             return switch (DataFormat.fromPath(file)) {

@@ -7,7 +7,6 @@ package com.towermarsh.opendata.parser;
 
 import com.towermarsh.opendata.exception.ImportException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,9 +28,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  * Parser for Excel `.xls` and `.xlsx` workbooks.
   *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 4.2.0
  */
-public final class ExcelDataParser implements DataParser {
+public class ExcelDataParser implements DataParser<Map<String, String>> {
 
     private final ExcelParserOptions options;
 
@@ -61,29 +60,29 @@ public final class ExcelDataParser implements DataParser {
     @Override
     public List<Map<String, String>> parse(Path file) throws ImportException {
         Objects.requireNonNull(file, "file");
-        try (InputStream input = Files.newInputStream(file);
-                Workbook workbook = WorkbookFactory.create(input)) {
-            Sheet sheet = selectSheet(workbook);
-            Row headerRow = sheet.getRow(options.headerRowIndex());
+        try (var input = Files.newInputStream(file);
+                var workbook = WorkbookFactory.create(input)) {
+            var sheet = selectSheet(workbook);
+            var headerRow = sheet.getRow(options.headerRowIndex());
             if (headerRow == null) {
                 throw new ImportException(
                         "Header row " + options.headerRowIndex()
                         + " does not exist in sheet " + sheet.getSheetName());
             }
 
-            DataFormatter formatter = new DataFormatter(Locale.UK);
+            var formatter = new DataFormatter(Locale.UK);
             FormulaEvaluator evaluator = options.evaluateFormulas()
                     ? workbook.getCreationHelper().createFormulaEvaluator()
                     : null;
-            List<String> headers = readHeaders(headerRow, formatter, evaluator);
-            List<Map<String, String>> records = new ArrayList<>();
+            var headers = readHeaders(headerRow, formatter, evaluator);
+            var records = new ArrayList<Map<String, String>>();
 
             for (int rowIndex = options.firstDataRowIndex();
                     rowIndex <= sheet.getLastRowNum();
                     rowIndex++) {
-                Row row = sheet.getRow(rowIndex);
-                Map<String, String> record = readRow(row, headers, formatter, evaluator);
-                boolean blank = record.values().stream().allMatch(String::isBlank);
+                var row = sheet.getRow(rowIndex);
+                var record = readRow(row, headers, formatter, evaluator);
+                var blank = record.values().stream().allMatch(String::isBlank);
                 if (!blank || !options.skipCompletelyBlankRows()) {
                     records.add(record);
                 }
@@ -133,17 +132,17 @@ public final class ExcelDataParser implements DataParser {
             Row headerRow,
             DataFormatter formatter,
             FormulaEvaluator evaluator) throws ImportException {
-        int columnCount = Math.max(0, headerRow.getLastCellNum());
+        var columnCount = Math.max(0, headerRow.getLastCellNum());
         if (columnCount == 0) {
             throw new ImportException("Excel header row contains no cells");
         }
 
-        List<String> headers = new ArrayList<>(columnCount);
-        Map<String, Integer> occurrences = new HashMap<>();
+        var headers = new ArrayList<String>(columnCount);
+        var occurrences = new HashMap<String, Integer>();
         for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-            String raw = format(headerRow.getCell(columnIndex), formatter, evaluator).trim();
-            String base = raw.isEmpty() ? "COLUMN_" + (columnIndex + 1) : raw;
-            int occurrence = occurrences.merge(base, 1, Integer::sum);
+            var raw = format(headerRow.getCell(columnIndex), formatter, evaluator).trim();
+            var base = raw.isEmpty() ? "COLUMN_" + (columnIndex + 1) : raw;
+            var occurrence = occurrences.merge(base, 1, Integer::sum);
             headers.add(occurrence == 1 ? base : base + "_" + occurrence);
         }
         return List.copyOf(headers);
@@ -163,9 +162,9 @@ public final class ExcelDataParser implements DataParser {
             List<String> headers,
             DataFormatter formatter,
             FormulaEvaluator evaluator) {
-        Map<String, String> record = new LinkedHashMap<>();
+        var record = new LinkedHashMap<String, String>();
         for (int columnIndex = 0; columnIndex < headers.size(); columnIndex++) {
-            Cell cell = row == null ? null : row.getCell(columnIndex);
+            var cell = row == null ? null : row.getCell(columnIndex);
             record.put(headers.get(columnIndex), format(cell, formatter, evaluator));
         }
         return record;

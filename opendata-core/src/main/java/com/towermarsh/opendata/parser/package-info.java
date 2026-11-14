@@ -8,7 +8,7 @@
  *
  * <h2>Classes</h2>
  * <ul>
- * <li>{@link CsvDataParser} &mdash; Apache Commons CSV implementation of {@link DataParser}.</li>
+ * <li>{@link CsvDataParser} &mdash; Apache Commons CSV implementation of {@link DataParser} using a typed record contract.</li>
  * <li>{@link DataParserFactory} &mdash; Creates the framework parser appropriate to a downloaded file.</li>
  * <li>{@link ExcelDataParser} &mdash; Parser for Excel `.xls` and `.xlsx` workbooks.</li>
  * <li>{@link JsonDataParser} &mdash; Parser for JSON datasets.</li>
@@ -31,6 +31,6 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 4.2.0
  */
 package com.towermarsh.opendata.parser;

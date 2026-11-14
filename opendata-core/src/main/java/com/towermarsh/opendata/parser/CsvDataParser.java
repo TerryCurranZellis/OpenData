@@ -7,7 +7,6 @@ package com.towermarsh.opendata.parser;
 
 import com.towermarsh.opendata.exception.ImportException;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
 /**
  * Apache Commons CSV implementation of {@link DataParser}.
@@ -28,9 +25,9 @@ import org.apache.commons.csv.CSVRecord;
  * lines.</p>
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 4.2.0
  */
-public final class CsvDataParser implements DataParser {
+public class CsvDataParser implements DataParser<Map<String, String>> {
 
     private final CsvParserOptions options;
 
@@ -60,7 +57,7 @@ public final class CsvDataParser implements DataParser {
     @Override
     public List<Map<String, String>> parse(Path file) throws ImportException {
         Objects.requireNonNull(file, "file");
-        CSVFormat format = CSVFormat.DEFAULT.builder()
+        var format = CSVFormat.DEFAULT.builder()
                 .setDelimiter(options.delimiter())
                 .setHeader()
                 .setSkipHeaderRecord(true)
@@ -68,10 +65,10 @@ public final class CsvDataParser implements DataParser {
                 .setIgnoreEmptyLines(options.ignoreEmptyLines())
                 .get();
 
-        try (Reader reader = Files.newBufferedReader(file, options.charset()); CSVParser parser = format.parse(reader)) {
-            List<Map<String, String>> records = new ArrayList<>();
-            for (CSVRecord csvRecord : parser) {
-                Map<String, String> record = new LinkedHashMap<>();
+        try (var reader = Files.newBufferedReader(file, options.charset()); var parser = format.parse(reader)) {
+            var records = new ArrayList<Map<String, String>>();
+            for (var csvRecord : parser) {
+                var record = new LinkedHashMap<String, String>();
                 for (String header : parser.getHeaderNames()) {
                     record.put(header, csvRecord.isMapped(header)
                             ? csvRecord.get(header) : "");

@@ -9,26 +9,27 @@ import com.towermarsh.opendata.exception.ImportException;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Defines a common interface for data parsers.
+ * Defines a typed interface for parsing source files into records.
+ *
+ * @param <T> record type returned by this parser
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 4.2.0
  *
  *
  */
-public interface DataParser {
+public interface DataParser<T> {
 
     /**
      * Parses a data file.
      *
      * @param file input file
-     * @return list of records
+     * @return list of parsed records of type T
      * @throws ImportException if parsing fails
      */
-    List<Map<String, String>> parse(
+    List<T> parse(
             Path file)
             throws ImportException;
 }

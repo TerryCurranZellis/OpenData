@@ -8,7 +8,6 @@ package com.towermarsh.opendata.etl;
 import com.towermarsh.opendata.download.DataDownloader;
 import com.towermarsh.opendata.exception.DownloadException;
 import com.towermarsh.opendata.exception.ImportException;
-import com.towermarsh.opendata.model.DataFile;
 import com.towermarsh.opendata.parser.DataParser;
 
 import java.net.URI;
@@ -25,12 +24,12 @@ import java.util.Map;
  *
  *
  * @author Terry Curran
- * @version 1.0.0
+ * @version 4.2.0
  */
-public final class ExtractService {
+public class ExtractService {
 
     private final DataDownloader downloader;
-    private final DataParser parser;
+    private final DataParser<Map<String, String>> parser;
 
     /**
      * Creates an extract service.
@@ -40,7 +39,7 @@ public final class ExtractService {
      */
     public ExtractService(
             DataDownloader downloader,
-            DataParser parser) {
+            DataParser<Map<String, String>> parser) {
 
         this.downloader = downloader;
         this.parser = parser;
@@ -61,7 +60,7 @@ public final class ExtractService {
             Path destination)
             throws DownloadException, ImportException {
 
-        DataFile file
+        var file
                 = downloader.download(
                         source,
                         destination);
