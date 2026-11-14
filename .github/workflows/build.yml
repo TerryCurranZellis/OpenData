@@ -26,6 +26,31 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress -DskipTests -Dquality.failOnViolation=true install javadoc:javadoc
       - name: Generate unified reactor Javadocs
         run: mvn --batch-mode --no-transfer-progress -DskipTests javadoc:aggregate
+      - name: Verify unified Javadoc coverage
+        shell: bash
+        run: |
+          root="target/reports/apidocs"
+          pages=(
+            index.html
+            com/towermarsh/opendata/config/model/AuthenticationType.html
+            com/towermarsh/opendata/common/database/SqlScriptExecutor.html
+            com/towermarsh/opendata/OpenData.html
+            com/towermarsh/opendata/plugin/neso/NesoCkanClient.html
+            com/towermarsh/opendata/plugin/electricdemand/ElectricDemandPlugin.html
+            com/towermarsh/opendata/plugin/electricsupply/ElectricSupplyPlugin.html
+            com/towermarsh/opendata/plugin/octopus/common/transform/OctopusStatementParser.html
+            com/towermarsh/opendata/plugin/octopus/OctopusPlugin.html
+            com/towermarsh/opendata/plugin/octopusadjustment/OctopusAdjustmentPlugin.html
+            com/towermarsh/opendata/plugin/ofgem/OfgemPlugin.html
+            com/towermarsh/opendata/plugin/openmeteo/OpenMeteoPlugin.html
+          )
+          for page in "${pages[@]}"; do
+            if [[ ! -s "$root/$page" ]]; then
+              echo "::error::Unified Javadoc is missing $page"
+              exit 1
+            fi
+          done
+          echo "Unified Javadoc includes API, Common, Core and each provider."
       - name: Upload test and quality reports
         if: always()
         uses: actions/upload-artifact@v4
