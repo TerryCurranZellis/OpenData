@@ -24,7 +24,7 @@ import javafx.stage.Stage;
  * startup logic.</p>
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @version 4.2.0
  */
 public final class OpenDataGuiApplication extends Application {
 
@@ -47,7 +47,7 @@ public final class OpenDataGuiApplication extends Application {
      * @throws IOException if the FXML cannot be loaded
      */
     @Override
-    public void start(final Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException {
         if (new ApplicationBootstrapPropertiesLoader(
                 new AesConfigurationPasswordCipher()).initialisationRequested()) {
             new InitialisationWizard(stage, () -> {
@@ -60,7 +60,7 @@ public final class OpenDataGuiApplication extends Application {
             }).show();
             return;
         }
-        final var splash = OpenDataSplashScreen.show();
+        var splash = OpenDataSplashScreen.show();
         try {
             configureMainStage(stage);
             splash.closeAfterMinimumDisplay(stage::show);
@@ -76,16 +76,16 @@ public final class OpenDataGuiApplication extends Application {
      * @param stage primary application stage
      * @throws IOException if the FXML cannot be loaded
      */
-    private static void configureMainStage(final Stage stage) throws IOException {
-        final var view = Objects.requireNonNull(
+    private static void configureMainStage(Stage stage) throws IOException {
+        var view = Objects.requireNonNull(
                 OpenDataGuiApplication.class.getResource(VIEW_RESOURCE),
                 "Unable to locate " + VIEW_RESOURCE);
 
-        final var loader = new FXMLLoader(view);
-        final Parent root = loader.load();
-        final var scene = new Scene(root, INITIAL_WIDTH, INITIAL_HEIGHT);
+        var loader = new FXMLLoader(view);
+        Parent root = loader.load();
+        var scene = new Scene(root, INITIAL_WIDTH, INITIAL_HEIGHT);
 
-        final var iconResource = OpenDataGuiApplication.class.getResourceAsStream(APPLICATION_ICON);
+        var iconResource = OpenDataGuiApplication.class.getResourceAsStream(APPLICATION_ICON);
         if (iconResource != null) {
             try (iconResource) {
                 stage.getIcons().add(new Image(iconResource));
@@ -105,7 +105,7 @@ public final class OpenDataGuiApplication extends Application {
      *
      * @param args command-line arguments passed to JavaFX
      */
-    public static void launchGui(final String... args) {
+    public static void launchGui(String... args) {
         Application.launch(OpenDataGuiApplication.class, args);
     }
 }

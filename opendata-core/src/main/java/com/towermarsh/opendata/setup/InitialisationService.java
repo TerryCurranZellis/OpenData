@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  * The init flag is only cleared after every database operation succeeds.
  *
  * @author Terry Curran
- * @version 4.0.0
+ * @version 4.2.0
  */
 public final class InitialisationService {
 
@@ -67,10 +67,10 @@ public final class InitialisationService {
      * @param sqlInitialiser database schema installer
      */
     public InitialisationService(
-            final ApplicationBootstrapPropertiesLoader loader,
-            final PluginRegistrationResolver resolver,
-            final PluginConfigurationDirectoryScanner scanner,
-            final SqlServerInitialiser sqlInitialiser) {
+            ApplicationBootstrapPropertiesLoader loader,
+            PluginRegistrationResolver resolver,
+            PluginConfigurationDirectoryScanner scanner,
+            SqlServerInitialiser sqlInitialiser) {
         this.loader = Objects.requireNonNull(loader, "loader");
         this.resolver = Objects.requireNonNull(resolver, "resolver");
         this.scanner = Objects.requireNonNull(scanner, "scanner");
@@ -87,7 +87,7 @@ public final class InitialisationService {
      * @return identifiers of registered disabled plugins
      */
     public List<String> initialise(
-            final InitialisationRequest request, final Consumer<String> progress) {
+            InitialisationRequest request,Consumer<String> progress) {
         Objects.requireNonNull(request, "request");
         Objects.requireNonNull(progress, "progress");
         if (!loader.initialisationRequested()) {
@@ -95,20 +95,20 @@ public final class InitialisationService {
                     "Initialisation has already completed; set init=true intentionally before rerunning setup.");
         }
         progress.accept("Discovering and validating plugin configuration files...");
-        final var registrations = resolvePlugins();
+        var registrations = resolvePlugins();
         progress.accept(registrations.size() + " plugin definition(s) validated.");
         prepareKey(request.aesKeyFile());
-        final ConfigurationPasswordCipher cipher = new AesConfigurationPasswordCipher(request.aesKeyFile());
-        final var bootstrap = new ApplicationBootstrapProperties(
+        ConfigurationPasswordCipher cipher = new AesConfigurationPasswordCipher(request.aesKeyFile());
+        var bootstrap = new ApplicationBootstrapProperties(
                 ApplicationInfo.current().version(), request.jdbcUrl(request.database()),
                 request.applicationUser(), request.applicationPassword(), true);
         sqlInitialiser.initialise(request, progress);
         sqlInitialiser.installPluginSchemas(request, registrations, progress);
         progress.accept("Connecting using the newly configured application login...");
         try (var database = SQLServerResource.initialise(bootstrap.toDatabasePoolConfiguration())) {
-            final var registry = new JdbcPluginRegistry(database);
+            var registry = new JdbcPluginRegistry(database);
             progress.accept("Recording OpenData application settings...");
-            final var values = new LinkedHashMap<>(ApplicationRuntimeConfiguration.defaultPropertyValues());
+            var values = new LinkedHashMap<>(ApplicationRuntimeConfiguration.defaultPropertyValues());
             values.putAll(new ClasspathConfigurationPropertiesSource().loadApplicationProperties());
             values.put("application.version", ApplicationInfo.current().version());
             values.put("application.use-database-properties", "true");
@@ -120,7 +120,7 @@ public final class InitialisationService {
             new JdbcConfigurationPropertiesSource(database)
                     .saveApplicationProperties(values, List.of("database.password"));
             for (var registration : registrations) {
-                final var disabled = asDisabled(registration);
+                var disabled = asDisabled(registration);
                 progress.accept("Registering " + disabled.descriptor().id() + " (disabled)...");
                 registry.register(disabled.descriptor(), disabled.properties());
                 registry.setEnabled(disabled.descriptor().id(), false);
@@ -143,7 +143,7 @@ public final class InitialisationService {
      * @return validated registrations in stable ID order
      */
     public List<PluginRegistration> resolvePlugins() {
-        final Map<String, PluginRegistration> registrations = new LinkedHashMap<>();
+        Map<String, PluginRegistration> registrations = new LinkedHashMap<>();
         try {
             for (var packaged : resolver.resolveAllPackaged()) {
                 registrations.put(packaged.descriptor().id(), packaged);
@@ -156,10 +156,10 @@ public final class InitialisationService {
                 throw exception;
             }
         }
-        final Map<String, Path> paths = new LinkedHashMap<>();
+        Map<String, Path> paths = new LinkedHashMap<>();
         for (var file : scanner.scan()) {
-            final var registration = resolver.resolveFile(file);
-            final var previous = paths.putIfAbsent(registration.descriptor().id(), file);
+            var registration = resolver.resolveFile(file);
+            var previous = paths.putIfAbsent(registration.descriptor().id(), file);
             if (previous != null && !previous.equals(file)) {
                 throw new OpenDataConfigurationException("Duplicate plugin.id in " + previous + " and " + file);
             }
@@ -176,13 +176,13 @@ public final class InitialisationService {
      * @param source validated registration
      * @return disabled registration
      */
-    public static PluginRegistration asDisabled(final PluginRegistration source) {
+    public static PluginRegistration asDisabled(PluginRegistration source) {
         Objects.requireNonNull(source, "source");
-        final var descriptor = source.descriptor();
-        final var disabled = new PluginDescriptor(descriptor.id(), descriptor.displayName(),
+        var descriptor = source.descriptor();
+        var disabled = new PluginDescriptor(descriptor.id(), descriptor.displayName(),
                 descriptor.description(), descriptor.implementationClass(), false,
                 descriptor.configurationVersion());
-        final var properties = new LinkedHashMap<>(source.properties());
+        var properties = new LinkedHashMap<>(source.properties());
         properties.put("plugin.enabled", "false");
         return new PluginRegistration(disabled, properties);
     }
@@ -194,11 +194,11 @@ public final class InitialisationService {
      *
      * @param keyFile destination outside source control
      */
-    public static void prepareKey(final Path keyFile) {
+    public static void prepareKey(Path keyFile) {
         Objects.requireNonNull(keyFile, "keyFile");
         try {
             if (Files.exists(keyFile)) {
-                final var decoded = Base64.getDecoder().decode(
+                var decoded = Base64.getDecoder().decode(
                         Files.readString(keyFile, StandardCharsets.US_ASCII).trim());
                 if (decoded.length != 32) {
                     throw new OpenDataConfigurationException("Existing AES key must be 32 Base64-encoded bytes.");
@@ -206,12 +206,12 @@ public final class InitialisationService {
                 java.util.Arrays.fill(decoded, (byte) 0);
                 return;
             }
-            final var parent = Objects.requireNonNull(keyFile.toAbsolutePath().getParent(), "key directory");
+            var parent = Objects.requireNonNull(keyFile.toAbsolutePath().getParent(), "key directory");
             Files.createDirectories(parent);
-            final var bytes = new byte[32];
+            var bytes = new byte[32];
             KEY_RANDOM.nextBytes(bytes);
             try {
-                final var content = Base64.getEncoder().encodeToString(bytes) + System.lineSeparator();
+                var content = Base64.getEncoder().encodeToString(bytes) + System.lineSeparator();
                 try {
                     Files.writeString(keyFile, content, StandardCharsets.US_ASCII,
                             java.nio.file.StandardOpenOption.CREATE_NEW);
