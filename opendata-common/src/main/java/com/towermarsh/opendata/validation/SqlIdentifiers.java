@@ -5,6 +5,8 @@
  */
 package com.towermarsh.opendata.validation;
 
+import com.towermarsh.opendata.foundation.ValidationRules;
+
 import java.util.regex.Pattern;
 
 /**

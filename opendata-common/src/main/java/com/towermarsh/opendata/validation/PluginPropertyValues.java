@@ -5,6 +5,8 @@
  */
 package com.towermarsh.opendata.validation;
 
+import com.towermarsh.opendata.foundation.ValidationRules;
+
 import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.config.model.PluginPropertyDefinition;
 import java.math.BigDecimal;

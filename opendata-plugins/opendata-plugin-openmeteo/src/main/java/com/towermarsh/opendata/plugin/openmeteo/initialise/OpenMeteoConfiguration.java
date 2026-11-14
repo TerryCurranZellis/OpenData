@@ -8,7 +8,7 @@ package com.towermarsh.opendata.plugin.openmeteo.initialise;
 import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.validation.PluginPropertyValues;
 import com.towermarsh.opendata.validation.SqlIdentifiers;
-import com.towermarsh.opendata.validation.ValidationRules;
+import com.towermarsh.opendata.foundation.ValidationRules;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;

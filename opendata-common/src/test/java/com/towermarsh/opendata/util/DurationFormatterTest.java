@@ -9,8 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
+import com.towermarsh.opendata.foundation.DurationFormatter;
 
-/** Tests shared elapsed-duration formatting. @version 4.1.0
+/** Tests shared elapsed-duration formatting. @version 4.2.0
  * @author Terry Curran
  */
 class DurationFormatterTest {

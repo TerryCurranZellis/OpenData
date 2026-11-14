@@ -7,8 +7,9 @@ package com.towermarsh.opendata.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import com.towermarsh.opendata.foundation.ExceptionMessages;
 
-/** Tests safe exception message extraction. @version 4.1.0
+/** Tests safe exception message extraction. @version 4.2.0
  * @author Terry Curran
  */
 class ExceptionMessagesTest {

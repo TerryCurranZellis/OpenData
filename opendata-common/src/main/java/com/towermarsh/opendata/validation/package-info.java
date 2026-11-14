@@ -5,13 +5,12 @@
  */
 /**
  * Shared validation contracts, typed plugin-property parsing, and reusable
- * validation rules.
+ * validation rules from the API module.
  *
  * <h2>Classes</h2>
  * <ul>
  * <li>{@link PluginPropertyValues} &mdash; Provides consistent typed access to resolved plugin property values.</li>
  * <li>{@link SqlIdentifiers} &mdash; Validates and quotes SQL Server identifiers supplied through configuration.</li>
- * <li>{@link ValidationRules} &mdash; Reusable validation rules for configuration and transformed records.</li>
  * </ul>
  *
  * <h2>Interfaces</h2>
@@ -20,6 +19,6 @@
  * </ul>
  *
  * @author Terry Curran
- * @version 3.0.0
+ * @version 4.2.0
  */
 package com.towermarsh.opendata.validation;

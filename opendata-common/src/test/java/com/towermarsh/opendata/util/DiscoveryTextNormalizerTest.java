@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import com.towermarsh.opendata.foundation.DiscoveryTextNormalizer;
 
 /**
  * Tests shared discovery-text normalization helpers.

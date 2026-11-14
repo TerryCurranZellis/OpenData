@@ -8,7 +8,7 @@ package com.towermarsh.opendata.plugin.ofgem.initialise;
 import com.towermarsh.opendata.config.model.PluginDefinition;
 import com.towermarsh.opendata.config.model.PluginEndpointDefinition;
 import com.towermarsh.opendata.validation.PluginPropertyValues;
-import com.towermarsh.opendata.validation.ValidationRules;
+import com.towermarsh.opendata.foundation.ValidationRules;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Objects;
