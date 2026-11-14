@@ -52,6 +52,17 @@ ElectricityRecord
 GasRecord
 ```
 
+Since OpenData 4.2.0 the reusable statement classes are held in the separate
+`opendata-plugin-octopus-common` Maven project under these packages:
+
+- `com.towermarsh.opendata.plugin.octopus.common.extract`;
+- `com.towermarsh.opendata.plugin.octopus.common.transform`;
+- `com.towermarsh.opendata.plugin.octopus.common.transform.model`.
+
+The ordinary `octopus.extract` and `octopus.transform` packages remain in the
+statement plugin. This avoids split Java packages when generating the unified
+Javadoc reference across all Maven modules.
+
 `OctopusStatementParser` is particularly important because duplicating its
 statement interpretation would create two independent parsing rule sets for the
 same billing structure.

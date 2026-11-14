@@ -2,7 +2,7 @@
 
 - **Status:** Accepted and implemented
 - **Date:** 2026-08-02
-- **Updated:** 2026-08-03
+- **Updated:** 2026-11-14
 - **Decision owners:** OpenData maintainers
 
 ## Context
@@ -43,8 +43,8 @@ Implement plugin id `octopus` as a local-folder pipeline:
 
 ## Implementation evidence
 
-- `plugin.octopus.extract.OctopusExtract` and `PdfTextExtractor`;
-- `plugin.octopus.transform.OctopusStatementParser`;
+- `plugin.octopus.extract.OctopusExtract` and `plugin.octopus.common.extract.PdfTextExtractor`;
+- `plugin.octopus.common.transform.OctopusStatementParser`;
 - `plugin.octopus.load.OctopusPersistenceRepository`;
 - `plugin.octopus.finalise.OctopusFinalise`;
 - `sql/007a-create-octopus-schema.sql`.
