@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.octopus.extract;
+package com.towermarsh.opendata.plugin.octopus.common.extract;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -18,7 +18,7 @@ import java.nio.file.Path;
  * bills use a two-column layout, the extracted text interleaves the left and
  * right columns; callers must join and normalise the lines before applying
  * pattern-matching (see
- * {@link com.towermarsh.opendata.plugin.octopus.transform.OctopusStatementParser}
+ * {@link com.towermarsh.opendata.plugin.octopus.common.transform.OctopusStatementParser}
  * for this processing).
  *
  * <h2>Example</h2>

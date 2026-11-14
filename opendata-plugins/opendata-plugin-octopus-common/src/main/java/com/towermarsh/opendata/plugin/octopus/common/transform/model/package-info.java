@@ -16,4 +16,4 @@
  * @since 4.1.0
  * @version 4.1.0
  */
-package com.towermarsh.opendata.plugin.octopus.transform.model;
+package com.towermarsh.opendata.plugin.octopus.common.transform.model;

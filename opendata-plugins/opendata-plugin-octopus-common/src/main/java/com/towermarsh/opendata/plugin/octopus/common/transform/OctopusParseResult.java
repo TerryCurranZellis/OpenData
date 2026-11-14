@@ -2,11 +2,11 @@
  * Copyright © 2026 Terry Curran
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.octopus.transform;
+package com.towermarsh.opendata.plugin.octopus.common.transform;
 
-import com.towermarsh.opendata.plugin.octopus.extract.ExtractedOctopusStatement;
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
-import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
+import com.towermarsh.opendata.plugin.octopus.common.extract.ExtractedOctopusStatement;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.GasRecord;
 import java.util.List;
 import java.util.Objects;
 

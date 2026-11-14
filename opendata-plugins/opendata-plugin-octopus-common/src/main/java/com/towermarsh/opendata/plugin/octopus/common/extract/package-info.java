@@ -20,4 +20,4 @@
  * @since 4.1.0
  * @version 4.1.0
  */
-package com.towermarsh.opendata.plugin.octopus.extract;
+package com.towermarsh.opendata.plugin.octopus.common.extract;

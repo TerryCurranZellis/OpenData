@@ -3,13 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.octopus.transform;
+package com.towermarsh.opendata.plugin.octopus.common.transform;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import com.towermarsh.opendata.plugin.octopus.extract.PdfTextExtractor;
-import com.towermarsh.opendata.plugin.octopus.transform.model.ElectricityRecord;
-import com.towermarsh.opendata.plugin.octopus.transform.model.GasRecord;
+import com.towermarsh.opendata.plugin.octopus.common.extract.PdfTextExtractor;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.ElectricityRecord;
+import com.towermarsh.opendata.plugin.octopus.common.transform.model.GasRecord;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;

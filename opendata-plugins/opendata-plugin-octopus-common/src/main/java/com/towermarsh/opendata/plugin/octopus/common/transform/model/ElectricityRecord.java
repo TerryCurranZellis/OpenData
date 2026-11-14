@@ -3,26 +3,27 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-package com.towermarsh.opendata.plugin.octopus.transform.model;
+package com.towermarsh.opendata.plugin.octopus.common.transform.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Immutable record holding one row of extracted gas billing data,
- * matching the column layout of {@code gas_data.csv}.
+ *
+ * Immutable record holding one row of extracted electricity billing data,
+ * matching the column layout of {@code electric_data.csv}.
  *
  * <h2>Example</h2>
  * <pre>
- *   GasRecord r = new GasRecord(
+ *   ElectricityRecord r = new ElectricityRecord(
  *       LocalDate.of(2022, 1, 5), LocalDate.of(2021, 12, 7), LocalDate.of(2022, 1, 5),
  *       "Octopus Exclusive 12M Fixed", LocalDate.of(2021, 12, 4), LocalDate.of(2022, 1, 3),
- *       "3343444302", "E6E01319111907",
- *       LocalDate.of(2021, 12, 4), new BigDecimal("1664.2"), "Smart meter reading",
- *       LocalDate.of(2022, 1, 4), new BigDecimal("1839.9"), "Smart meter reading",
- *       new BigDecimal("175.8"), new BigDecimal("1952.1"), new BigDecimal("2.98"),
- *       new BigDecimal("17.00"), new BigDecimal("5.27"), new BigDecimal("66.61"));
+ *       "2000012845052", "20E5013326",
+ *       LocalDate.of(2021, 12, 4), new BigDecimal("2257.0"), "Smart meter reading",
+ *       LocalDate.of(2022, 1, 4), new BigDecimal("2481.3"), "Smart meter reading",
+ *       new BigDecimal("224.3"), new BigDecimal("15.51"), new BigDecimal("19.23"),
+ *       new BigDecimal("5.96"), new BigDecimal("42.78"));
  * </pre>
  *
  * @param billDate                statement date in {@code yyyy-MM-dd} format
@@ -31,34 +32,32 @@ import java.util.Objects;
  * @param tariffName              Octopus tariff name
  * @param tariffPeriodStart       tariff sub-period start in {@code yyyy-MM-dd}
  * @param tariffPeriodEnd         tariff sub-period end in {@code yyyy-MM-dd}
- * @param mprn                    Meter Point Reference Number (gas supply point ID)
+ * @param mpan                    13-digit Meter Point Administration Number
  * @param meterId                 physical meter serial number
  * @param startReadingDate        opening meter reading date in {@code yyyy-MM-dd}
- * @param startReadingValue       opening meter reading (m³) as a string
+ * @param startReadingValue       opening meter reading (kWh) as a string
  * @param startReadingType        how the opening reading was obtained
  * @param endReadingDate          closing meter reading date in {@code yyyy-MM-dd}
- * @param endReadingValue         closing meter reading (m³) as a string
+ * @param endReadingValue         closing meter reading (kWh) as a string
  * @param endReadingType          how the closing reading was obtained
- * @param consumptionM3           gas consumed in cubic metres as a string
- * @param energyUsedKwh           energy equivalent in kWh as a string; may be negative
+ * @param energyUsedKwh           energy consumed (kWh) as a string; may be negative
  * @param unitRatePKwh            unit rate in pence per kWh as a string
  * @param standingChargeRatePDay  standing charge rate in pence per day as a string
  * @param standingChargeTotalGbp  billed standing charge total (£) as a string
- * @param totalCostGbp            total gas charge including VAT (£) as a string
+ * @param totalCostGbp            total electricity charge including VAT (£) as a string
  * 
  * @author Terry Curran
  * @since 2.0.0
  * @version 4.1.0
- *
  */
-public record GasRecord(
+public record ElectricityRecord(
         LocalDate billDate,
         LocalDate billPeriodStart,
         LocalDate billPeriodEnd,
         String tariffName,
         LocalDate tariffPeriodStart,
         LocalDate tariffPeriodEnd,
-        String mprn,
+        String mpan,
         String meterId,
         LocalDate startReadingDate,
         BigDecimal startReadingValue,
@@ -66,7 +65,6 @@ public record GasRecord(
         LocalDate endReadingDate,
         BigDecimal endReadingValue,
         String endReadingType,
-        BigDecimal consumptionM3,
         BigDecimal energyUsedKwh,
         BigDecimal unitRatePKwh,
         BigDecimal standingChargeRatePDay,
@@ -76,14 +74,14 @@ public record GasRecord(
     /**
      * Validates and normalises record components.
      */
-    public GasRecord {
+    public ElectricityRecord {
         Objects.requireNonNull(billDate, "billDate");
         Objects.requireNonNull(billPeriodStart, "billPeriodStart");
         Objects.requireNonNull(billPeriodEnd, "billPeriodEnd");
         tariffName = normaliseText(tariffName, "tariffName", false);
         Objects.requireNonNull(tariffPeriodStart, "tariffPeriodStart");
         Objects.requireNonNull(tariffPeriodEnd, "tariffPeriodEnd");
-        mprn = normaliseText(mprn, "mprn", true);
+        mpan = normaliseText(mpan, "mpan", true);
         meterId = normaliseText(meterId, "meterId", true);
         Objects.requireNonNull(startReadingDate, "startReadingDate");
         Objects.requireNonNull(startReadingValue, "startReadingValue");
@@ -91,7 +89,6 @@ public record GasRecord(
         Objects.requireNonNull(endReadingDate, "endReadingDate");
         Objects.requireNonNull(endReadingValue, "endReadingValue");
         endReadingType = normaliseText(endReadingType, "endReadingType", false);
-        Objects.requireNonNull(consumptionM3, "consumptionM3");
         Objects.requireNonNull(energyUsedKwh, "energyUsedKwh");
         Objects.requireNonNull(unitRatePKwh, "unitRatePKwh");
         Objects.requireNonNull(standingChargeRatePDay, "standingChargeRatePDay");
@@ -106,8 +103,8 @@ public record GasRecord(
         if (startReadingDate.isAfter(endReadingDate)) {
             throw new IllegalArgumentException("startReadingDate must not be after endReadingDate");
         }
-        if (!mprn.isBlank() && !mprn.matches("\\d+")) {
-            throw new IllegalArgumentException("mprn must be blank or numeric");
+        if (!mpan.isBlank() && !mpan.matches("\\d{13}")) {
+            throw new IllegalArgumentException("mpan must be blank or 13 digits");
         }
     }
 
