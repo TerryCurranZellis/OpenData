@@ -5,6 +5,7 @@
  */
 package com.towermarsh.opendata.common.database;
 
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import com.towermarsh.opendata.plugin.PluginRegistrar;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Terry Curran
  * @since 3.1.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 public abstract class SqlResourcePluginRegistrar implements PluginRegistrar {
 

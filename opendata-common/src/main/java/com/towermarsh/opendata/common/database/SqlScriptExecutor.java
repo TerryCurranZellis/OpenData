@@ -5,13 +5,13 @@
  */
 package com.towermarsh.opendata.common.database;
 
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import com.towermarsh.opendata.database.SqlBatchParser;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Objects;
  *
  * @author Terry Curran
  * @since 3.1.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 public class SqlScriptExecutor {
 
@@ -57,18 +57,6 @@ public class SqlScriptExecutor {
             throw new DatabaseAccessException(
                     "Unable to run SQL script " + resource + ": " + exception.getMessage(), exception);
         }
-    }
-
-    /**
-     * Splits a script into executable batches, dropping empty and comment-only batches.
-     *
-     * @param script script text
-     * @return ordered batches
-     * @deprecated Use {@link SqlBatchParser#batches(String)} directly from API.
-     */
-    @Deprecated(since = "4.1.0", forRemoval = false)
-    public static List<String> batches(String script) {
-        return SqlBatchParser.batches(script);
     }
 
     /**

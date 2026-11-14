@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.towermarsh.opendata.common.database.DatabaseAccessException;
+import com.towermarsh.opendata.database.DatabaseAccessException;
 import com.towermarsh.opendata.database.DatabaseResourceManager;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ import org.mockito.InOrder;
  *
  * @author Terry Curran
  * @since 2.0.0
- * @version 4.1.0
+ * @version 4.2.0
  */
 class JdbcTransactionTemplateTest {
 
