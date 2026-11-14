@@ -24,6 +24,8 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress -Dquality.failOnViolation=true clean verify
       - name: Generate module Javadocs
         run: mvn --batch-mode --no-transfer-progress -DskipTests -Dquality.failOnViolation=true install javadoc:javadoc
+      - name: Generate unified reactor Javadocs
+        run: mvn --batch-mode --no-transfer-progress -DskipTests javadoc:aggregate
       - name: Upload test and quality reports
         if: always()
         uses: actions/upload-artifact@v4
