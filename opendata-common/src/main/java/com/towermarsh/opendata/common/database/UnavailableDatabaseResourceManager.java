@@ -17,7 +17,7 @@ import java.sql.Connection;
  * @version 4.1.0
  * @deprecated Use a runtime-owned {@link DatabaseResourceManager} implementation for dry runs.
  */
-@Deprecated(since = "4.1.0")
+@Deprecated(since = "4.1.0",forRemoval = true)
 public class UnavailableDatabaseResourceManager implements DatabaseResourceManager {
 
     /**

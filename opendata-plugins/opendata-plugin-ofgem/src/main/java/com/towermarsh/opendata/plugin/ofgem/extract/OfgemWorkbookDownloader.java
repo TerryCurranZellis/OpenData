@@ -17,13 +17,17 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-/** Ofgem-specific discovery, download, and optional source-file archiving.  *
-* @author Terry Curran
-* @version 1.0.0
-*/
+/**
+ * Ofgem-specific discovery, download, and optional source-file archiving.
+ *
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
 public final class OfgemWorkbookDownloader {
-    private static final Logger LOGGER =
-            Logger.getLogger(OfgemWorkbookDownloader.class.getName());
+
+    private static final Logger LOGGER
+            = Logger.getLogger(OfgemWorkbookDownloader.class.getName());
 
     private final OfgemConfiguration configuration;
 
@@ -31,19 +35,19 @@ public final class OfgemWorkbookDownloader {
      *
      * @param configuration
      */
-    public OfgemWorkbookDownloader(final OfgemConfiguration configuration) {
+    public OfgemWorkbookDownloader(OfgemConfiguration configuration) {
         this.configuration = Objects.requireNonNull(configuration, "configuration");
     }
 
     /**
      *
-     * @return
-     * @throws DownloadException
+     * @return @throws DownloadException
+     * @throws com.towermarsh.opendata.exception.DownloadException
      */
     public ResolvedDownload download() throws DownloadException {
-        final var endpoint = configuration.publicationEndpoint();
-        final var discovery = endpoint.linkDiscovery().orElseThrow(() ->
-                new IllegalArgumentException("Ofgem publication endpoint requires link discovery"));
+        var endpoint = configuration.publicationEndpoint();
+        var discovery = endpoint.linkDiscovery().orElseThrow(()
+                -> new IllegalArgumentException("Ofgem publication endpoint requires link discovery"));
         LOGGER.info(() -> "Discovering current Ofgem price-cap workbook from " + endpoint.uri());
         return new HtmlLinkDiscoveryStrategy(configuration.connectTimeout()).download(
                 endpoint.uri(),
@@ -59,18 +63,18 @@ public final class OfgemWorkbookDownloader {
      * @param effectiveFrom
      * @throws IOException
      */
-    public void archive(final Path downloadedFile, final LocalDate effectiveFrom)
+    public void archive(Path downloadedFile, LocalDate effectiveFrom)
             throws IOException {
         Objects.requireNonNull(downloadedFile, "downloadedFile");
         Objects.requireNonNull(effectiveFrom, "effectiveFrom");
         if (!configuration.archiveOriginalFile()) {
             return;
         }
-        final Path archive = configuration.archiveDirectory()
+        Path archive = configuration.archiveDirectory()
                 .resolve(effectiveFrom.toString())
                 .resolve(configuration.outputFilename())
                 .normalize();
-        final var archiveParent = archive.getParent();
+        var archiveParent = archive.getParent();
         if (archiveParent == null) {
             throw new IOException("Archive path must include a parent directory: " + archive);
         }

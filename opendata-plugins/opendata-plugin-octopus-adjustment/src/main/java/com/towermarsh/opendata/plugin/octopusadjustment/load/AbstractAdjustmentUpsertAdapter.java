@@ -30,9 +30,9 @@ abstract class AbstractAdjustmentUpsertAdapter<T>
     private final String updateSql;
 
     AbstractAdjustmentUpsertAdapter(
-            final String existsSql,
-            final String insertSql,
-            final String updateSql) {
+            String existsSql,
+            String insertSql,
+            String updateSql) {
         this.existsSql = ValidationRules.requireText(existsSql, "existsSql");
         this.insertSql = ValidationRules.requireText(insertSql, "insertSql");
         this.updateSql = ValidationRules.requireText(updateSql, "updateSql");
@@ -41,13 +41,13 @@ abstract class AbstractAdjustmentUpsertAdapter<T>
     /** {@inheritDoc} */
     @Override
     public final boolean exists(
-            final Connection connection,
-            final T record,
-            final UUID runId) throws SQLException {
+            Connection connection,
+            T record,
+            UUID runId) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         Objects.requireNonNull(record, "record");
         Objects.requireNonNull(runId, "runId");
-        try (PreparedStatement statement = connection.prepareStatement(existsSql)) {
+        try (var statement = connection.prepareStatement(existsSql)) {
             bindKey(statement, record, 1);
             try (var result = statement.executeQuery()) {
                 return result.next();
@@ -58,13 +58,13 @@ abstract class AbstractAdjustmentUpsertAdapter<T>
     /** {@inheritDoc} */
     @Override
     public final void insert(
-            final Connection connection,
-            final T record,
-            final UUID runId) throws SQLException {
+            Connection connection,
+            T record,
+            UUID runId) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         Objects.requireNonNull(record, "record");
         Objects.requireNonNull(runId, "runId");
-        try (PreparedStatement statement = connection.prepareStatement(insertSql)) {
+        try (var statement = connection.prepareStatement(insertSql)) {
             bindInsert(statement, record, runId);
             statement.executeUpdate();
         }
@@ -73,9 +73,9 @@ abstract class AbstractAdjustmentUpsertAdapter<T>
     /** {@inheritDoc} */
     @Override
     public final void update(
-            final Connection connection,
-            final T record,
-            final UUID runId) throws SQLException {
+            Connection connection,
+            T record,
+            UUID runId) throws SQLException {
         Objects.requireNonNull(connection, "connection");
         Objects.requireNonNull(record, "record");
         Objects.requireNonNull(runId, "runId");

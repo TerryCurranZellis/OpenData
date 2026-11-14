@@ -19,7 +19,7 @@ import java.util.Objects;
  * @version 4.1.0
  */
 public final class OfgemInitialise {
-    private OfgemConfiguration configuration;
+    private final OfgemConfiguration configuration;
     private final OfgemWorkbookDownloader extract;
     private final OfgemPriceCapWorkbookExtractor transform;
     private final OfgemWorkbookDataValidator validator;
@@ -51,7 +51,7 @@ public final class OfgemInitialise {
         Objects.requireNonNull(context, "context");
         ResolvedDownload download = null;
         OfgemPriceCapWorkbookData records = null;
-        PluginMetrics metrics = PluginMetrics.ZERO;
+        var metrics = PluginMetrics.ZERO;
         try {
             download = extract.download();
             records = validator.validate(transform.extract(download.localFile()));

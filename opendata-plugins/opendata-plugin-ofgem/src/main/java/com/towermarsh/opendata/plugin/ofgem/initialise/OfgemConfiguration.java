@@ -71,14 +71,14 @@ public record OfgemConfiguration(
      * @return typed Ofgem configuration
      * @since 2.0.0
      */
-    public static OfgemConfiguration from(final PluginDefinition definition) {
+    public static OfgemConfiguration from(PluginDefinition definition) {
         Objects.requireNonNull(definition, "definition");
         if (!"ofgem".equalsIgnoreCase(definition.id())) {
             throw new IllegalArgumentException(
                     "Expected plugin id 'ofgem' but received '" + definition.id() + "'");
         }
 
-        final PluginPropertyValues properties = new PluginPropertyValues(definition);
+        var properties = new PluginPropertyValues(definition);
         return new OfgemConfiguration(
                 definition.requireEndpoint(ENDPOINT_NAME),
                 properties.text(

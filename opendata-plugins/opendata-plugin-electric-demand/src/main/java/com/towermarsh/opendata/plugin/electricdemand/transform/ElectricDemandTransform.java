@@ -11,7 +11,7 @@ import com.towermarsh.opendata.plugin.neso.NesoSettings;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import static java.nio.file.Files.newBufferedReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,9 +45,13 @@ public class ElectricDemandTransform {
         Objects.requireNonNull(settings, "settings");
         List<DemandRecord> records = new ArrayList<>();
         for (var resource : extraction.resources()) {
-            try (Reader reader = Files.newBufferedReader(resource.file(), StandardCharsets.UTF_8);
-                    var csv = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true)
-                            .setIgnoreSurroundingSpaces(true).setIgnoreEmptyLines(true).get().parse(reader)) {
+            try (Reader reader = newBufferedReader(resource.file(), StandardCharsets.UTF_8); var csv
+                    = CSVFormat.DEFAULT.builder()
+                            .setHeader()
+                            .setSkipHeaderRecord(true)
+                            .setIgnoreSurroundingSpaces(true)
+                            .setIgnoreEmptyLines(true)
+                            .get().parse(reader)) {
                 for (var row : csv) {
                     var record = parse(row);
                     if (!record.settlementDate().isBefore(settings.startDate())

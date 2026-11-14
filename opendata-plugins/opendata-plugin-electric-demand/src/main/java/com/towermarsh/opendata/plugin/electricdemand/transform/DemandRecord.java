@@ -6,6 +6,8 @@
 package com.towermarsh.opendata.plugin.electricdemand.transform;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import static java.util.Collections.unmodifiableList;
 import java.util.List;
 
 /**
@@ -13,18 +15,26 @@ import java.util.List;
  *
  * @param settlementDate settlement date
  * @param settlementPeriod settlement period (1-50)
- * @param values nullable MW values in order: national demand, transmission system
- * demand, England and Wales demand, embedded wind, embedded solar, pumping
+ * @param values nullable MW values in order: national demand, transmission
+ * system demand, England and Wales demand, embedded wind, embedded solar,
+ * pumping
  *
  * @author Terry Curran
  * @version 3.1.0
  */
-public record DemandRecord(LocalDate settlementDate, int settlementPeriod, List<Double> values) {
+public record DemandRecord(
+        LocalDate settlementDate,
+        int settlementPeriod,
+        List<Double> values) {
 
-    /** Number of measure columns. */
+    /**
+     * Number of measure columns.
+     */
     public static final int MEASURES = 6;
 
-    /** Validates the record. */
+    /**
+     * Validates the record.
+     */
     public DemandRecord {
         if (settlementPeriod < 1 || settlementPeriod > 50) {
             throw new IllegalArgumentException("Invalid settlement period: " + settlementPeriod);
@@ -32,6 +42,6 @@ public record DemandRecord(LocalDate settlementDate, int settlementPeriod, List<
         if (values.size() != MEASURES) {
             throw new IllegalArgumentException("Expected " + MEASURES + " measures");
         }
-        values = java.util.Collections.unmodifiableList(new java.util.ArrayList<>(values));
+        values = unmodifiableList(new ArrayList<>(values));
     }
 }

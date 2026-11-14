@@ -71,7 +71,7 @@ public final class ElectricSupplyInitialise {
         var completed = false;
         try {
             extraction = extractor.extract(settings);
-            final var records = transformer.transform(extraction, settings);
+            var records = transformer.transform(extraction, settings);
             metrics = loader.load(records, context);
             completed = true;
             return metrics;

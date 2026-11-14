@@ -60,7 +60,7 @@ public final class OctopusPlugin implements OpenDataPlugin {
      *
      * @param definition resolved plugin definition
      */
-    public OctopusPlugin(final PluginDefinition definition) {
+    public OctopusPlugin(PluginDefinition definition) {
         this(OctopusConfiguration.from(definition));
     }
 

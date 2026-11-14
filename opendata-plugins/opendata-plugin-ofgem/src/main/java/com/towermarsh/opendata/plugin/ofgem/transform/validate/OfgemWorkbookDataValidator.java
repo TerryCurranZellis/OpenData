@@ -11,10 +11,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-/** Validates invariants that span multiple extracted Ofgem price-cap rows.  *
-* @author Terry Curran
-* @version 1.0.0
-*/
+/**
+ * Validates invariants that span multiple extracted Ofgem price-cap rows.
+ *
+ *
+ * @author Terry Curran
+ * @version 1.0.0
+ */
 public final class OfgemWorkbookDataValidator {
 
     /**
@@ -23,17 +26,17 @@ public final class OfgemWorkbookDataValidator {
      * @return
      * @throws ImportException
      */
-    public OfgemPriceCapWorkbookData validate(final OfgemPriceCapWorkbookData data)
+    public OfgemPriceCapWorkbookData validate(OfgemPriceCapWorkbookData data)
             throws ImportException {
         Objects.requireNonNull(data, "data");
-        final Set<String> sourceCells = new HashSet<>();
-        final Set<String> businessKeys = new HashSet<>();
+        Set<String> sourceCells = new HashSet<>();
+        Set<String> businessKeys = new HashSet<>();
         for (var level : data.levels()) {
-            final String sourceCell = level.sourceSheet() + '!' + level.sourceCell();
+            var sourceCell = level.sourceSheet() + '!' + level.sourceCell();
             if (!sourceCells.add(sourceCell)) {
                 throw new ImportException("Duplicate Ofgem source cell: " + sourceCell);
             }
-            final String businessKey = String.join(
+            var businessKey = String.join(
                     "|",
                     level.regionCode(),
                     level.paymentMethodCode(),

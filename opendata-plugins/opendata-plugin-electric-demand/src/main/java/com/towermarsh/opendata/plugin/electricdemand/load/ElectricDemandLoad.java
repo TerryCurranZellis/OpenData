@@ -56,8 +56,7 @@ public class ElectricDemandLoad {
         try (var connection = context.database().getConnection()) {
             var original = connection.getAutoCommit();
             connection.setAutoCommit(false);
-            try (var update = connection.prepareStatement(UPDATE);
-                    var insert = connection.prepareStatement(INSERT)) {
+            try (var update = connection.prepareStatement(UPDATE); var insert = connection.prepareStatement(INSERT)) {
                 for (var record : records) {
                     bind(update, 1, record.values());
                     update.setDate(7, Date.valueOf(record.settlementDate()));

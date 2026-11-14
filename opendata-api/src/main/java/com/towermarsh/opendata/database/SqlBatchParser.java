@@ -37,7 +37,7 @@ public final class SqlBatchParser {
         var batch = new StringBuilder();
         var state = new ScanState();
 
-        int offset = 0;
+        var offset = 0;
         while (offset < script.length()) {
             int end = offset;
             while (end < script.length()
@@ -46,16 +46,16 @@ public final class SqlBatchParser {
                 end++;
             }
 
-            int next = end;
+            var next = end;
             if (next < script.length()) {
-                char newline = script.charAt(next++);
+                var newline = script.charAt(next++);
                 if (newline == '\r' && next < script.length()
                         && script.charAt(next) == '\n') {
                     next++;
                 }
             }
 
-            String line = script.substring(offset, end);
+            var line = script.substring(offset, end);
             if (state.mode == Mode.NORMAL && line.strip().equalsIgnoreCase("GO")) {
                 addBatch(result, batch, state.executable);
                 batch.setLength(0);
@@ -78,9 +78,9 @@ public final class SqlBatchParser {
     }
 
     private static void scan(String line, ScanState state) {
-        for (int i = 0; i < line.length(); i++) {
-            char current = line.charAt(i);
-            char next = i + 1 < line.length() ? line.charAt(i + 1) : '\0';
+        for (var i = 0; i < line.length(); i++) {
+            var current = line.charAt(i);
+            var next = i + 1 < line.length() ? line.charAt(i + 1) : '\0';
             switch (state.mode) {
                 case NORMAL -> {
                     if (current == '-' && next == '-') {

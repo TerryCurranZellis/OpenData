@@ -11,12 +11,15 @@ import java.util.Objects;
 
 /**
  * Ofgem plugin entry point; delegates all flow control to Initialise.
+ *
  * @author Terry Curran
  * @version 4.1.0
  */
 public final class OfgemPlugin implements OpenDataPlugin {
 
-    /** Stable identifier for the Ofgem plugin. */
+    /**
+     * Stable identifier for the Ofgem plugin.
+     */
     public static final String PLUGIN_ID = "ofgem";
     private final OfgemInitialise initialise;
 
@@ -25,14 +28,18 @@ public final class OfgemPlugin implements OpenDataPlugin {
      *
      * @param definition source and database settings for the Ofgem plugin
      */
-    public OfgemPlugin(PluginDefinition definition) { this(OfgemConfiguration.from(definition)); }
+    public OfgemPlugin(PluginDefinition definition) {
+        this(OfgemConfiguration.from(definition));
+    }
 
     /**
      * Creates the plugin from validated Ofgem configuration.
      *
      * @param configuration validated Ofgem configuration
      */
-    public OfgemPlugin(OfgemConfiguration configuration) { this.initialise = new OfgemInitialise(configuration); }
+    public OfgemPlugin(OfgemConfiguration configuration) {
+        this.initialise = new OfgemInitialise(configuration);
+    }
 
     /**
      * Executes the Ofgem pipeline using the provided run context.
@@ -41,7 +48,8 @@ public final class OfgemPlugin implements OpenDataPlugin {
      * @return row counts for this execution
      * @throws Exception if extraction, transformation or persistence fails
      */
-    @Override public PluginMetrics execute(PluginExecutionContext context) throws Exception {
+    @Override
+    public PluginMetrics execute(PluginExecutionContext context) throws Exception {
         return initialise.execute(Objects.requireNonNull(context, "context"));
     }
 
@@ -50,5 +58,7 @@ public final class OfgemPlugin implements OpenDataPlugin {
      *
      * @return current Ofgem configuration
      */
-    public OfgemConfiguration configuration() { return initialise.configuration(); }
+    public OfgemConfiguration configuration() {
+        return initialise.configuration();
+    }
 }

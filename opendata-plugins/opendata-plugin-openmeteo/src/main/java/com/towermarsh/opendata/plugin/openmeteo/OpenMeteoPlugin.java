@@ -45,6 +45,7 @@ public class OpenMeteoPlugin implements OpenDataPlugin {
 
     /**
      * execute the plugin
+     *
      * @param context
      * @return
      * @throws Exception
@@ -56,6 +57,7 @@ public class OpenMeteoPlugin implements OpenDataPlugin {
 
     /**
      * Execute the plugin
+     *
      * @param start
      * @param end
      * @return

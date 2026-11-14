@@ -15,7 +15,10 @@ package com.towermarsh.opendata.plugin.openmeteo.load;
  * @author Terry Curran
  * @version 1.0.0
  */
-public record OpenMeteoPersistenceResult(long inserted, long updated, long skipped) {
+public record OpenMeteoPersistenceResult(
+        long inserted, 
+        long updated, 
+        long skipped) {
 
     /**
      * Validates and normalises record components.

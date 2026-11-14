@@ -77,26 +77,26 @@ public final class OfgemPriceCapWorkbookExtractor {
     public OfgemPriceCapWorkbookData extract(Path workbookFile)
             throws ImportException {
         Objects.requireNonNull(workbookFile, "workbookFile");
-        try (InputStream input = Files.newInputStream(workbookFile);
-                Workbook workbook = WorkbookFactory.create(input)) {
-            Sheet sheet = workbook.getSheet(OUTPUT_SHEET);
+        try (var input = Files.newInputStream(workbookFile);
+                var workbook = WorkbookFactory.create(input)) {
+            var sheet = workbook.getSheet(OUTPUT_SHEET);
             if (sheet == null) {
                 throw new ImportException(
                         "Ofgem workbook does not contain worksheet: " + OUTPUT_SHEET);
             }
 
-            DataFormatter formatter = new DataFormatter(Locale.UK);
-            FormulaEvaluator evaluator = workbook.getCreationHelper()
+            var formatter = new DataFormatter(Locale.UK);
+            var evaluator = workbook.getCreationHelper()
                     .createFormulaEvaluator();
-            String periodName = findPeriodName(sheet, formatter, evaluator);
-            OfgemPriceCapPeriod period = parsePeriod(
+            var periodName = findPeriodName(sheet, formatter, evaluator);
+            var period = parsePeriod(
                     periodName,
                     findSourceColumnReference(sheet, formatter, evaluator));
             List<OfgemPriceCapLevel> levels = new ArrayList<>();
 
-            for (Map.Entry<String, String> payment : PAYMENT_METHODS.entrySet()) {
-                int sectionRow = findRow(sheet, payment.getKey(), formatter, evaluator);
-                int regionHeaderRow = findFollowingRow(
+            for (var payment : PAYMENT_METHODS.entrySet()) {
+                var sectionRow = findRow(sheet, payment.getKey(), formatter, evaluator);
+                var regionHeaderRow = findFollowingRow(
                         sheet,
                         sectionRow,
                         "Charge Restriction Region",
@@ -142,23 +142,23 @@ public final class OfgemPriceCapWorkbookExtractor {
             DataFormatter formatter,
             FormulaEvaluator evaluator,
             List<OfgemPriceCapLevel> destination) throws ImportException {
-        for (int rowIndex = firstDataRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-            Row row = sheet.getRow(rowIndex);
-            String regionText = value(row, 1, formatter, evaluator).trim();
+        for (var rowIndex = firstDataRow; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            var row = sheet.getRow(rowIndex);
+            var regionText = value(row, 1, formatter, evaluator).trim();
             if (regionText.isBlank()) {
                 return;
             }
 
-            boolean vatIncluded = regionText.toLowerCase(Locale.ROOT)
+            var vatIncluded = regionText.toLowerCase(Locale.ROOT)
                     .contains("inc vat");
-            String regionCode = regionCode(regionText);
-            for (ColumnMeaning meaning : OUTPUT_COLUMNS) {
-                Cell cell = row == null ? null : row.getCell(meaning.columnIndex());
-                String formatted = format(cell, formatter, evaluator).trim();
+            var regionCode = regionCode(regionText);
+            for (var meaning : OUTPUT_COLUMNS) {
+                var cell = row == null ? null : row.getCell(meaning.columnIndex());
+                var formatted = format(cell, formatter, evaluator).trim();
                 if (formatted.isBlank() || formatted.equals("-")) {
                     continue;
                 }
-                BigDecimal amount = parseAmount(formatted, cell);
+                var amount = parseAmount(formatted, cell);
                 destination.add(new OfgemPriceCapLevel(
                         regionCode,
                         paymentMethodCode,
@@ -186,12 +186,12 @@ public final class OfgemPriceCapWorkbookExtractor {
             Sheet sheet,
             DataFormatter formatter,
             FormulaEvaluator evaluator) throws ImportException {
-        int rowIndex = findRow(
+        var rowIndex = findRow(
                 sheet,
                 "28AD Charge Restriction Period:",
                 formatter,
                 evaluator);
-        String periodName = value(sheet.getRow(rowIndex), 2, formatter, evaluator).trim();
+        var periodName = value(sheet.getRow(rowIndex), 2, formatter, evaluator).trim();
         if (periodName.isBlank()) {
             throw new ImportException("Ofgem charge-restriction period is blank");
         }
@@ -209,15 +209,15 @@ public final class OfgemPriceCapWorkbookExtractor {
     private static OfgemPriceCapPeriod parsePeriod(
             String periodName,
             Integer sourceColumnReference) throws ImportException {
-        String[] parts = periodName.split("\\s+-\\s+", 2);
+        var parts = periodName.split("\\s+-\\s+", 2);
         if (parts.length != 2) {
             throw new ImportException("Unrecognised Ofgem period: " + periodName);
         }
         try {
-            YearMonth firstMonth = YearMonth.parse(parts[0].trim(), MONTH_YEAR);
-            YearMonth lastMonth = YearMonth.parse(parts[1].trim(), MONTH_YEAR);
-            LocalDate from = firstMonth.atDay(1);
-            LocalDate to = lastMonth.atEndOfMonth();
+            var firstMonth = YearMonth.parse(parts[0].trim(), MONTH_YEAR);
+            var lastMonth = YearMonth.parse(parts[1].trim(), MONTH_YEAR);
+            var from = firstMonth.atDay(1);
+            var to = lastMonth.atEndOfMonth();
             return new OfgemPriceCapPeriod(
                     periodName, from, to, sourceColumnReference, true);
         } catch (DateTimeParseException exception) {
@@ -238,19 +238,19 @@ public final class OfgemPriceCapWorkbookExtractor {
             Sheet sheet,
             DataFormatter formatter,
             FormulaEvaluator evaluator) throws ImportException {
-        String marker = "Column reference, current charging period:";
-        for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
-            Row row = sheet.getRow(rowIndex);
+        var marker = "Column reference, current charging period:";
+        for (var rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            var row = sheet.getRow(rowIndex);
             if (row == null) {
                 continue;
             }
-            int lastColumn = Math.max(0, row.getLastCellNum());
-            for (int columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
-                String text = value(row, columnIndex, formatter, evaluator).trim();
+            var lastColumn = Math.max(0, row.getLastCellNum());
+            for (var columnIndex = 0; columnIndex < lastColumn; columnIndex++) {
+                var text = value(row, columnIndex, formatter, evaluator).trim();
                 if (!text.equalsIgnoreCase(marker)) {
                     continue;
                 }
-                String reference = value(
+                var reference = value(
                         row, columnIndex + 1, formatter, evaluator).trim();
                 if (reference.isBlank()) {
                     return null;
@@ -284,7 +284,7 @@ public final class OfgemPriceCapWorkbookExtractor {
             String expectedText,
             DataFormatter formatter,
             FormulaEvaluator evaluator) throws ImportException {
-        for (int rowIndex = afterRow + 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+        for (var rowIndex = afterRow + 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
             if (value(sheet.getRow(rowIndex), 1, formatter, evaluator)
                     .trim().equalsIgnoreCase(expectedText)) {
                 return rowIndex;
@@ -309,7 +309,7 @@ public final class OfgemPriceCapWorkbookExtractor {
             String expectedText,
             DataFormatter formatter,
             FormulaEvaluator evaluator) throws ImportException {
-        for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+        for (var rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
             if (value(sheet.getRow(rowIndex), 1, formatter, evaluator)
                     .trim().equalsIgnoreCase(expectedText)) {
                 return rowIndex;
@@ -360,14 +360,14 @@ public final class OfgemPriceCapWorkbookExtractor {
      */
     private static BigDecimal parseAmount(String formatted, Cell cell)
             throws ImportException {
-        String normalised = formatted
+        var normalised = formatted
                 .replace("£", "")
                 .replace(",", "")
                 .trim();
         try {
             return new BigDecimal(normalised);
         } catch (NumberFormatException exception) {
-            String location = cell == null
+            var location = cell == null
                     ? "unknown cell"
                     : cell.getAddress().formatAsString();
             throw new ImportException(
@@ -384,7 +384,7 @@ public final class OfgemPriceCapWorkbookExtractor {
      * @throws ImportException if region code fails
      */
     private static String regionCode(String displayName) throws ImportException {
-        String normalised = displayName.trim().toLowerCase(Locale.ROOT);
+        var normalised = displayName.trim().toLowerCase(Locale.ROOT);
         if (normalised.startsWith("gb average")) {
             return "GB_AVERAGE";
         }

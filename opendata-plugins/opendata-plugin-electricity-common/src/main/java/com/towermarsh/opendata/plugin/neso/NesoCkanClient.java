@@ -10,10 +10,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
+import static java.net.URI.create;
+import static java.net.URLEncoder.encode;
+import static java.net.http.HttpRequest.newBuilder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,9 +71,9 @@ public final class NesoCkanClient {
         Objects.requireNonNull(nameFilter, "nameFilter");
 
         var separator = settings.baseUrl().contains("?") ? "&" : "?";
-        var uri = URI.create(settings.baseUrl() + separator + "id="
-                + URLEncoder.encode(settings.datasetId(), StandardCharsets.UTF_8));
-        var response = http.send(request(uri), HttpResponse.BodyHandlers.ofString());
+        var uri = create(settings.baseUrl() + separator + "id="
+                + encode(settings.datasetId(), StandardCharsets.UTF_8));
+        var response = http.send(request(uri), BodyHandlers.ofString());
         if (response.statusCode() != 200) {
             throw new IOException("NESO catalogue request failed with HTTP %d for %s"
                     .formatted(response.statusCode(), uri));
@@ -108,7 +110,7 @@ public final class NesoCkanClient {
     private URI resolveDownloadUrl(JsonNode resource, String name)
             throws IOException {
 
-        var base = URI.create(settings.baseUrl()).resolve("/");
+        var base = create(settings.baseUrl()).resolve("/");
         var id = resource.path("id").asText("").trim();
         var rawUrl = resource.path("url").asText("").trim();
         var datastore = "datastore".equalsIgnoreCase(
@@ -197,14 +199,14 @@ public final class NesoCkanClient {
             NesoResource resource, Path directory, int index)
             throws IOException, InterruptedException {
         Objects.requireNonNull(resource, "resource");
-        var uri = URI.create(resource.url());
+        var uri = create(resource.url());
         if (!"https".equalsIgnoreCase(uri.getScheme())) {
             throw new IOException("Refusing non-HTTPS NESO download URL: " + uri);
         }
         LOG.log(Level.INFO, "Downloading {0} from NESO", resource.name());
         var target = directory.resolve("resource-%03d.csv".formatted(index));
         var response = http.send(
-                request(uri), HttpResponse.BodyHandlers.ofInputStream());
+                request(uri), BodyHandlers.ofInputStream());
         try (var stream = response.body()) {
             if (!"https".equalsIgnoreCase(response.uri().getScheme())) {
                 throw new IOException("NESO redirected download to a non-HTTPS URL: "
@@ -226,7 +228,7 @@ public final class NesoCkanClient {
      * @return result of request
      */
     private HttpRequest request(URI uri) {
-        return HttpRequest.newBuilder(uri)
+        return newBuilder(uri)
                 .timeout(settings.requestTimeout())
                 .header("User-Agent", USER_AGENT)
                 .GET()

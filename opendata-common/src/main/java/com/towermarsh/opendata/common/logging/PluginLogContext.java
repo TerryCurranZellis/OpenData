@@ -17,7 +17,7 @@ import java.util.UUID;
  * @version 4.1.0
  * @deprecated Use {@link com.towermarsh.opendata.plugin.PluginLogContext} instead.
  */
-@Deprecated(since = "4.1.0")
+@Deprecated(since = "4.1.0",forRemoval = true)
 public final class PluginLogContext {
 
     /**

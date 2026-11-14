@@ -11,9 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Result of a NESO extract step: downloaded CSV files inside a working directory.
+ * Result of a NESO extract step: downloaded CSV files inside a working
+ * directory.
  *
  * @param workingDirectory temporary directory holding the downloads
  * @param resources downloaded resources
@@ -21,21 +24,30 @@ import java.util.Objects;
  * @author Terry Curran
  * @version 3.1.0
  */
-public record NesoExtraction(Path workingDirectory, List<NesoResource> resources) {
+public record NesoExtraction(
+        Path workingDirectory,
+        List<NesoResource> resources) {
 
-    /** Validates the extraction. */
+    private static final Logger LOG = Logger.getLogger(NesoExtraction.class.getName());
+
+    /**
+     * Validates the extraction.
+     */
     public NesoExtraction {
         Objects.requireNonNull(workingDirectory, "workingDirectory");
         resources = List.copyOf(Objects.requireNonNull(resources, "resources"));
     }
 
-    /** Empty extraction used before the extract step has run. */
+    /**
+     * Empty extraction used before the extract step has run.
+     */
     public static NesoExtraction empty() {
         return new NesoExtraction(Path.of("."), List.of());
     }
 
     /**
-     * Deletes the working directory and its files if it was created by an extract step.
+     * Deletes the working directory and its files if it was created by an
+     * extract step.
      */
     public void cleanUp() {
         if (resources.isEmpty() && !Files.isDirectory(workingDirectory)) {
@@ -53,9 +65,8 @@ public record NesoExtraction(Path workingDirectory, List<NesoResource> resources
                 }
             });
         } catch (IOException | UncheckedIOException exception) {
-            java.util.logging.Logger.getLogger(NesoExtraction.class.getName())
-                    .log(java.util.logging.Level.WARNING,
-                            "Unable to remove NESO working directory " + workingDirectory, exception);
+            LOG.log(Level.WARNING,
+                    "Unable to remove NESO working directory " + workingDirectory, exception);
         }
     }
 }

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public final class OfgemFinalise {
     private static final Logger LOGGER = Logger.getLogger(OfgemFinalise.class.getName());
-    private OfgemWorkbookDownloader downloader;
+    private final OfgemWorkbookDownloader downloader;
 
     /**
      * Creates finalisation support for a workbook downloader.

@@ -43,7 +43,7 @@ public class ElectricSupplyLoad {
      * @return metrics
      * @throws SQLException when the database write fails
      */
-    public PluginMetrics load(List<GenerationMixRecord> records, final PluginExecutionContext context)
+    public PluginMetrics load(List<GenerationMixRecord> records, PluginExecutionContext context)
             throws SQLException {
         Objects.requireNonNull(records, "records");
         Objects.requireNonNull(context, "context");
@@ -59,7 +59,7 @@ public class ElectricSupplyLoad {
             try (var update = connection.prepareStatement(UPDATE);
                     var insert = connection.prepareStatement(INSERT)) {
                 for (var record : records) {
-                    final var timestamp = Timestamp.from(record.dateTimeUtc());
+                    var timestamp = Timestamp.from(record.dateTimeUtc());
                     bind(update, 1, record.values());
                     update.setTimestamp(14, timestamp);
                     if (update.executeUpdate() > 0) {

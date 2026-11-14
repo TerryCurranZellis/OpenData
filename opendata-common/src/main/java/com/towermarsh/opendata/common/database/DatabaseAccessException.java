@@ -13,7 +13,7 @@ package com.towermarsh.opendata.common.database;
  * @version 4.1.0
  * @deprecated Use {@link com.towermarsh.opendata.database.DatabaseAccessException}.
  */
-@Deprecated(since = "4.1.0")
+@Deprecated(since = "4.1.0",forRemoval = true)
 public class DatabaseAccessException extends DatabaseException {
 
     private static final long serialVersionUID = 1L;
