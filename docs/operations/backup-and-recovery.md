@@ -1,8 +1,8 @@
 # Backup and Recovery
 
 **Document ID:** OPS-RECOVERY-001  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 operational baseline  
+**Version:** 4.2.0 (current Maven source)  
+**Status:** Current AES configuration recovery guidance  
 **Baseline date:** 15 August 2026  
 
 ---
@@ -10,12 +10,14 @@
 ## Protected assets
 
 - `OpenData` database including `core.plugin_registry`, properties and schema history;
-- encrypted bootstrap and matching protected private key;
+- writable `config/application.properties` and the matching external AES-256 key file specified by `security.aes-key-file`;
 - external complete plugin definition files retained by deployment policy;
 - provider archives, logs and release/test evidence.
 
-Restore database, application revision, schema scripts, bootstrap and certificate
-as one compatible set. Test the application principal and JVM trust settings.
+Restore the database, compatible application JARs, SQL scripts, bootstrap and
+**matching original AES key file** as one compatible set. Do not generate a new AES
+key when restoring existing `{aes}` ciphertext. Test the application SQL
+principal and SQL Server TLS certificate trust settings.
 
 Unregister removes metadata/configuration, not provider data or historical audit.
 After accidental unregister, re-register the correct definition and restore the
