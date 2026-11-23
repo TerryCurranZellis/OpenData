@@ -12,10 +12,11 @@
 
 ## Build environment
 
-The full reactor build enforces Maven 3.9 or later and Java 24 or later because
+The checked-in full reactor build enforces Maven 3.9 or later and **JDK 26 or later** because
 `opendata-core` packages the JavaFX application. Maven compilation uses
 `release=24`. The current developer workstation baseline is JDK 26 with Apache
-NetBeans 31, but release verification must still include JDK 24. Older JDKs may
+NetBeans 31. JavaFX 27 is selected in Core; a Java 24 bytecode target is not
+proof that the GUI will run on JDK 24. Older JDKs may
 still be used for limited compilation checks of non-JavaFX modules.
 
 ## Local build stages
@@ -41,7 +42,7 @@ Workshop.
 
 ## GitHub workflows
 
-The repository build workflow verifies the Java 24 minimum baseline. The
+The repository build workflow must use a JDK matching the Maven Enforcer rule (26+) to verify the current branch. The
 documentation workflow validates/generated maintained manuals and the release
 workflow handles tagged or manually dispatched releases according to repository
 configuration.
@@ -54,7 +55,7 @@ acceptance, Windows Help verification or final distribution inspection.
 A release candidate must satisfy the
 [final release checklist](../release/Final-Release-Checklist.md), including:
 
-- clean strict `mvn -Dquality.failOnViolation=true clean verify` on Java 24;
+- clean strict `mvn -Dquality.failOnViolation=true clean verify` on JDK 26+;
 - GUI acceptance and final screenshot capture;
 - CHM Help plus JavaFX fallback verification;
 - clean documentation validation and diagram rendering;
