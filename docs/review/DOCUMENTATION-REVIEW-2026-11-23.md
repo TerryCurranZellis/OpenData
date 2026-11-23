@@ -46,7 +46,7 @@ If all external toolchains are installed and operational, expect 16 delivered ma
 .\scripts\Build-Documentation.ps1 -Document All -Format Docx
 ```
 
-The GitHub documentation workflow successfully validated and built all four HTML and DOCX manuals. **PDF and CHM have not been built or verified by that workflow** and require local Windows acceptance. A passing documentation build is not a substitute for testing each manual's embedded images, cross-references, page layout, TOC and CHM Help navigation.
+GitHub documentation validation succeeded for the branch: all four HTML and all four DOCX manuals were built and checked for non-empty outputs. The JDK 26 GitHub **Build and quality** workflow also completed successfully after alignment with Maven Enforcer, including Maven `clean verify`, module Javadocs, unified Javadocs and their coverage checks (run [45152629569](https://github.com/TerryCurranZellis/OpenData/actions/runs/45152629569)). **PDF and CHM have not been built or verified by that workflow** and require local Windows acceptance. A passing documentation build is not a substitute for testing each manual's embedded images, cross-references, page layout, TOC and CHM Help navigation.
 
 ## Pending GUI screenshot capture
 
@@ -58,6 +58,6 @@ Capture real JavaFX states on a disposable SQL Server installation. Verify sensi
 
 - Replace placeholders with reviewed real application screenshots before release.
 - Test the full `-Format All -RenderDiagrams` invocation on the Windows workstation using all required external tools; inspect four PDF and four CHM outputs, TOC, screenshot resolution and page breaks.
-- Confirm Maven/Java workflow results after the JDK 26 change; code quality is distinct from the successful documentation CI workflow.
+- Preserve the successful JDK 26 GitHub Java build evidence alongside the successful documentation workflow; rerun on the final reviewed commit before merge.
 - Review and update any provider/CLI/GUI documentation if a subsequent Java implementation change alters behaviour; do not automatically rewrite historical ADRs and release records.
 - Keep the pull request draft until the above acceptance evidence is recorded.
