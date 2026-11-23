@@ -1,5 +1,9 @@
 # OpenData Documentation Index
 
+**Checked-in build:** OpenData 4.2.0 (`pom.xml`). Some first-run and
+historical guides deliberately retain their original 4.0.0 and 3.x version
+labels; these should not be interpreted as the current Maven release number.
+
 ## Start here
 
 - [Project README](../README.md)
@@ -23,6 +27,11 @@
 - [4.1.0 dependency-boundary review and acceptance criteria](architecture/031-module-boundaries-4.1-review.md)
 
 ## Generated manuals
+
+Use `scripts/Build-Documentation.ps1 -Document All -Format All -RenderDiagrams`
+from Windows PowerShell with Pandoc, Java/PlantUML, XeLaTeX and Microsoft
+HTML Help Workshop installed. See [build instructions](../scripts/README.md)
+and [screenshot placeholders](screenshots/README.md).
 
 | Manifest | Audience |
 |---|---|
