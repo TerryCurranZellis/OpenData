@@ -3,7 +3,7 @@
 **Document ID:** GUIDE-INIT-040  
 **Release:** 4.0.0  
 **Applies to:** SQL Server installations running the JavaFX desktop application  
-**Compatible JavaFX baseline:** JavaFX 26.0.2 for Java 24+ (on the 4.1.0 review branch)
+**Current checked-in Maven version:** 4.2.0 (Core now selects JavaFX 27; full builds require JDK 26+). The earlier 4.1.0 review used JavaFX 26.0.2.
 
 ## When the wizard runs
 
