@@ -5,7 +5,7 @@
   "author": "OpenData Framework Project",
   "language": "en-GB",
   "dateFormat": "dd MMMM yyyy",
-  "projectVersion": "3.0.0",
+  "projectVersion": "4.2.0",
   "sourceDirectory": "docs",
   "buildDirectory": "docs/build",
   "manifestDirectory": "docs/manifests",
