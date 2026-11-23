@@ -4,9 +4,9 @@ OpenData documentation is maintained as Markdown and PlantUML and assembled into
 manifest-defined manuals.
 
 Use the [complete documentation index](DOCUMENTATION-INDEX.md) for navigation.
-The active implementation baseline is Version 3.1.0, including the split
+The current Maven reactor is Version 4.2.0 (the first-run GUI was introduced in 4.0.0), including the split
 `opendata-api`, `opendata-common`, `opendata-core`, and the `opendata-plugins`
-aggregator. Each provider plugin and shared plugin-support project is a child
+aggregator and `opendata-launcher`. Each provider plugin and shared provider-support project is a child
 project of `opendata-plugins`.
 
 ## Structure
@@ -24,6 +24,7 @@ project of `opendata-plugins`.
 | `diagrams/source/` | PlantUML sources |
 | `diagrams/generated/` | Rendered SVG files referenced by Markdown |
 | `manifests/` | One JSON composition manifest per generated manual |
+| `screenshots/` | Clearly marked temporary PNG placeholders for 4.0 GUI views, to be replaced by real captures |
 
 ## Validation and generation
 
@@ -42,3 +43,10 @@ than PowerShell changes.
 ## Historic electricity plugins (NESO)
 
 See [Historical electricity plugins](electricity-plugins.md) for independent GB demand and generation mix ingestion.
+
+The build produces four manuals in each selected format. `-Format All` requests HTML,
+DOCX, PDF and CHM; those formats have separate external-tool dependencies. A
+failure in one format is reported without silently skipping other manuals.
+The [screenshot plan](development/gui-screenshot-plan.md) lists required real
+GUI captures and the [placeholder directory](screenshots/README.md) explains
+how to replace the temporary figures.
