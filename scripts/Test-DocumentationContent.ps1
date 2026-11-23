@@ -7,6 +7,12 @@
 #>
 
 #Requires -Version 5.1
+[CmdletBinding()]
+param(
+    [string] $ProjectRoot = (Split-Path -Parent $PSScriptRoot),
+    [string] $CsvPath,
+    [switch] $IncludeTemplates
+)
 
 function check-documents {
 [CmdletBinding()]
@@ -149,6 +155,4 @@ if ($ordered.Count -gt 0) { exit 1 }
 exit 0
 #>
 }
-check-documents -ProjectRoot 'C:\Users\terry\Documents\NetBeansProjects\opendata' -CsvPath 'c:\Users\terry\Documents\NetBeansProjects\opendata\scripts\check.csv'
-
-import-csv -path 'c:\Users\terry\Documents\NetBeansProjects\opendata\scripts\check.csv' | out-gridview
+check-documents -ProjectRoot $ProjectRoot -CsvPath $CsvPath -IncludeTemplates:$IncludeTemplates

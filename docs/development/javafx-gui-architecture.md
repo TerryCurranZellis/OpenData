@@ -16,17 +16,16 @@ reimplement SQL, plugin selection or ETL business logic in controllers.
 
 ## Runtime baseline
 
-Version 3.0.0 requires Java 24 or later for the full application because the
-GUI runtime depends on JavaFX. The current development environment is:
+This document retains the original Version 3.0.0 GUI architecture for
+historical context. The **checked-in 4.2.0 Maven reactor** requires JDK 26+
+under Maven Enforcer, selects JavaFX 27 in Core, and compiles with `release=24`.
+Compiling bytecode for Java 24 does not establish that the selected JavaFX
+runtime supports JDK 24. The development environment uses JDK 26 and Apache
+NetBeans 31. Earlier 3.x GUI builds used JavaFX 26.x and a Java 24 baseline.
 
-- JDK 26;
-- Apache NetBeans 31; and
-- JavaFX 26.0.1.
-
-Maven compiles with `release=24` and the Enforcer rule accepts Java 24 or later
-for the full reactor. Development on JDK 26 must therefore avoid relying on
-APIs unavailable to the Java 24 release target. Older JDKs may still be used
-for limited compilation checks of non-JavaFX modules.
+For current installation and release verification, follow
+[local build instructions](local-build-test-run.md), not historical 3.x
+minimum-runtime requirements.
 
 ## Startup and lifecycle
 
@@ -219,8 +218,8 @@ build.
 
 ## Testing and release acceptance
 
-The release candidate should be tested on JDK 24 (minimum contract) and may also
-be exercised on the JDK 26 development environment. GUI acceptance covers:
+The current release candidate should be tested on JDK 26 or newer, consistent
+with the checked-in Maven Enforcer rule and JavaFX dependency. GUI acceptance covers:
 
 - startup/no-argument routing;
 - plugin-table loading and selection;

@@ -3,7 +3,7 @@
 **Document ID:** GUIDE-INIT-040  
 **Release:** 4.0.0  
 **Applies to:** SQL Server installations running the JavaFX desktop application  
-**Compatible JavaFX baseline:** JavaFX 26.0.2 for Java 24+ (on the 4.1.0 review branch)
+**Current checked-in Maven version:** 4.2.0 (Core now selects JavaFX 27; full builds require JDK 26+). The earlier 4.1.0 review used JavaFX 26.0.2.
 
 ## When the wizard runs
 
@@ -149,6 +149,24 @@ For this first-run guide, capture the following actual application views:
 - `gui-init-progress.png`: asynchronous setup progress;
 - `gui-init-success.png`: successful completion;
 - `gui-init-failure.png`: representative safe failure and recovery.
+
+The following illustrations use temporary placeholders until approved captures
+from the application replace them. The filenames remain stable for generated
+HTML, DOCX, PDF and CHM manuals.
+
+![OpenData first-run database server — screenshot placeholder](../screenshots/gui-init-database-server.png)
+
+![OpenData first-run application account — screenshot placeholder](../screenshots/gui-init-application-account.png)
+
+![OpenData first-run aes key file chooser — screenshot placeholder](../screenshots/gui-init-aes-key-file-chooser.png)
+
+![OpenData first-run review — screenshot placeholder](../screenshots/gui-init-review.png)
+
+![OpenData first-run progress — screenshot placeholder](../screenshots/gui-init-progress.png)
+
+![OpenData first-run success — screenshot placeholder](../screenshots/gui-init-success.png)
+
+![OpenData first-run failure — screenshot placeholder](../screenshots/gui-init-failure.png)
 
 See [first-run initialisation sequence](../diagrams/source/first-run-initialisation-sequence.puml)
 for the maintainable PlantUML source. Screenshots must be captured from the

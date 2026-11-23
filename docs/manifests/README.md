@@ -12,3 +12,15 @@ To add a guide, add its Markdown sources, copy an existing manifest, assign a un
 . .\scripts\Invoke-Documentation.ps1
 Invoke-Documentation -Action All
 ```
+
+The maintained repository has four manifests. To build all four manuals in
+every supported format, run from the repository root:
+
+```powershell
+.\scripts\Build-Documentation.ps1 -Document All -Format All -RenderDiagrams
+```
+
+This requires Pandoc, PlantUML/Java, XeLaTeX/SVG conversion tools (PDF) and
+Microsoft HTML Help Workshop (CHM). Each failed format is reported and the
+remaining documents are attempted. Images referenced by the manuals reside in
+`docs/diagrams/generated` (PlantUML) or `docs/screenshots` (GUI captures).

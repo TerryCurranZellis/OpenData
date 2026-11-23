@@ -1,15 +1,14 @@
 # Configuration Reference
 
-> **OpenData 4.0.0:** This document contains legacy version 3 examples.
-> For the current first-run workflow, read
+> **OpenData 4.x:** For new installations using the first-run workflow, read
 > [First-run configuration wizard](../guides/first-run-initialisation.md)
 > and [First-run architecture](../architecture/030-first-run-initialisation.md).
 > With `init=true`, the GUI wizard runs before CLI commands.
 
 
 **Document ID:** REF-CONFIG-001  
-**Version:** 3.0.0  
-**Status:** OpenData 3.0.0 implementation reference  
+**Version:** 4.2.0 (current source baseline)  
+**Status:** Updated bootstrap reference; original registration semantics retained  
 **Baseline date:** 15 August 2026  
 
 ---
@@ -18,7 +17,7 @@
 
 | Source | Purpose |
 |---|---|
-| Writable/classpath `config/application.properties` | Minimal database bootstrap and first-registration application defaults |
+| Writable `config/application.properties` | First-run `init` gate, SQL Server connection and AES key-file location; packaged defaults apply when no writable file exists |
 | Classpath `config/plugins/index.properties` | Packaged plugin catalogue used by `--plugin all --register` |
 | Classpath `config/plugins/<id>.properties` | Packaged definition used when registering a named plugin without `--file` |
 | External `--file <plugin.properties>` | Complete definition for one named plugin during CLI registration only |
@@ -33,15 +32,22 @@ plugin and must contain the same unprefixed keys as a packaged plugin definition
 
 ## Bootstrap configuration
 
-The writable bootstrap contains:
+On a new installation, the writable bootstrap starts with `init=true`.
+After a successful first-run wizard, it contains values similar to:
 
 ```properties
-application.version=2.0.0
+init=false
+application.version=4.0.0
 application.use-database-properties=true
-database.url=jdbc:sqlserver://...
+database.url=jdbc:sqlserver://localhost:1433;databaseName=OpenData;encrypt=true;trustServerCertificate=false
 database.user=OpenData
-database.password={enc}...
+database.password={aes}<encrypted-payload>
+security.aes-key-file=C:/ProgramData/OpenData/security/database.key
 ```
+
+The checked-in parent POM is version 4.2.0; the application version line above
+illustrates the original wizard's 4.0.0 deployment properties. The `{enc}`
+RSA format is legacy and must not be used for a new installation.
 
 Help and About do not need SQL Server. Plugin listing, administration and
 execution require bootstrap database access because the persistent registry is

@@ -1,101 +1,50 @@
-# OpenData 3.0.0 Quick Start
+# OpenData Quick Start (current Maven reactor)
 
 **Document ID:** GUIDE-QUICKSTART-001  
-**Version:** 3.0.0  
-**Status:** Current  
-**Baseline date:** 15 August 2026  
+**Source version:** 4.2.0 Maven project  
+**Historical feature baseline:** 4.0.0 JavaFX first-run wizard  
+**Build requirements:** Maven 3.9+ and JDK 26+ (compiler target 24)
 
----
+## 1. Build and launch
 
-## 1. Build
+From the repository root:
 
 ```powershell
-mvn clean verify
-mvn package
+mvn -Dquality.failOnViolation=true clean verify
+mvn clean install
+mvn -pl opendata-launcher exec:java
 ```
 
-Use main class `com.towermarsh.opendata.OpenData` with the repository root as
-working directory.
+The launcher assembles Core, Common and the six provider JARs; do not run Core alone when you need packaged provider discovery. The first-run wizard requires a Windows graphical desktop with JavaFX.
 
-## 2. Install SQL Server
+## 2. Configure the database on a new installation
 
-Run the numbered scripts in `sql/README.md`, including
-`003a-create-plugin-registry.sql`. Plugin tables are created automatically when each plugin is registered.
+Copy `config/application.properties.example` to `config/application.properties` or use the packaged first-run defaults. Keep `init=true`. Launch OpenData and complete the three-step [first-run wizard](first-run-initialisation.md), followed by its progress/finish page.
 
-## 3. Prepare certificate and bootstrap
+Provide a reachable SQL Server, temporary SQL administrator credentials, a separate application SQL login and an external AES key-file path. The wizard creates/reuses the database and account, installs core and available plugin schemas, stores the encrypted application password and registers all discovered providers **disabled**. It sets `init=false` only when installation succeeds.
 
-Replace the development certificate/private key. Before initial registration,
-set `application.use-database-properties=false` and a temporary plain database
-password in `src/main/resources/config/application.properties`. For a protected
-PFX use `-Dopendata.config.keystore.password=<password>`.
+For an existing installation, **migrate the current bootstrap properties and AES key** rather than reinitialising production data. The [database configuration guide](database-configuration-and-security.md) explains the property `security.aes-key-file`.
 
-## 4. Register and inspect
+## 3. Review and enable plugins
+
+With initialisation complete, use the GUI table or the CLI to review registrations. All six providers should remain disabled until you approve their settings:
 
 ```text
-opendata --plugin all --register
 opendata --list-plugins
 opendata --plugin ofgem --detail
+opendata --plugin ofgem --enable
 ```
 
-Successful registration persists application configuration, plugin definitions
-and registry metadata, encrypts the password and enables database-backed mode.
+If a provider was not discovered, inspect the packaged `config/plugins/index.properties` catalogue or use the GUI's Register/From File actions. Provider implementation classes must be present in the launcher classpath.
 
-Use `--plugin <id> --detail` when you want to inspect the stored configuration
-for one registered plugin. `--detail` accepts one named plugin only; it does not
-use `--execute` and cannot be used with `all`.
-
-## 5. Start the graphical interface
-
-Run with no arguments, or explicitly request the GUI:
-
-```text
-opendata
-opendata --gui
-```
-
-Use the plugin table and menu/toolbar actions for registration, administration,
-details, execution, dry-run, logs, settings and Help.
-
-## 6. Dry-run
-
-Execution is explicit. `--plugin` selects what should run. A normal write run is
-authorised with `--execute` (or `-x`); a dry-run is authorised independently with
-`--dry-run` (or `-n`).
+## 4. Safe execution
 
 ```text
 opendata --plugin ofgem --dry-run
-opendata --plugin openmeteo --dry-run
-opendata --plugin octopus --dry-run
+opendata --plugin ofgem --execute
 opendata --plugin all --dry-run --parallelism 3
 ```
 
-Dry run still reads the SQL registry/configuration, but plugin execution creates
-no provider writes, generic audit rows or archive movements.
+`--dry-run` (or `-n`) is separate from write-mode `--execute` (or `-x`). Check each provider's source availability, settings, log and audit before scheduling write-mode runs.
 
-## 7. Administration examples
-
-```text
-opendata --plugin octopus --detail
-opendata --plugin octopus --disable
-opendata --plugin octopus --enable
-opendata --plugin octopus --unregister
-opendata --plugin octopus --register
-```
-
-Administration commands and `--detail` do not use `--execute`. Use `-x` for
-execution, `-n` for dry run, and remember that `-d` means disable.
-
-## 8. First write run
-
-Back up SQL Server, then explicitly authorise one plugin at a time:
-
-```text
-opendata --plugin ofgem --execute
-opendata --plugin openmeteo --execute
-opendata --plugin octopus --execute
-```
-
-Reconcile logs/audit/provider rows, then test repeated and parallel execution
-before routine scheduling.
-
----
+See the [technical user guide](../user-guide/README.md), [CLI reference](../reference/command-line-reference.md) and [SQL Server setup guide](sql-server-bootstrap.md) for further details.

@@ -44,7 +44,6 @@ Output format: All, Html, Docx, Pdf, Chm or None.
     [ValidateSet('Build', 'Test', 'Clean', 'All')]
     [string] $Action = 'Build',
 
-    [Parameter(Mandatory=$true)]
     [string] $ProjectRoot,
 
     [string[]] $Document = @('All'),
@@ -1648,7 +1647,9 @@ $formats = if ($OutputFormat -eq 'All') {
     @($OutputFormat)
 }
 
+    $formatFailures = New-Object -TypeName 'System.Collections.Generic.List[string]'
     foreach ($item in $formats) {
+      try {
       $extension = $item.ToLowerInvariant()
       $output = Join-Path -Path $build -ChildPath (
       '{0}.{1}' -f (Get-OutputBaseName -Manifest $Manifest), $extension)
@@ -1707,7 +1708,14 @@ if ($item -ne 'Chm' -and $LASTEXITCODE -ne 0) {
 }
       $Size = (Get-item -path $Output).Length
       Write-Output -InputObject ('Created {0}, {1} bytes' -f $output,$size)
-      
+      } catch {
+        $message = ('{0} ({1}): {2}' -f $Manifest.Id, $item, $_.Exception.Message)
+        $formatFailures.Add($message)
+        Write-Warning $message
+      }
+    }
+    if ($formatFailures.Count -gt 0) {
+      throw ('One or more output formats failed: {0}' -f ($formatFailures -join '; '))
     }
   }
 
@@ -1756,12 +1764,25 @@ if ($item -ne 'Chm' -and $LASTEXITCODE -ne 0) {
       }
       Test-Documentation -Root $ProjectRoot -WarningsAreErrors:$FailOnWarning
       $manifests = @(Select-DocumentationManifests -Root $ProjectRoot -Requested $Document)
+      $buildFailures = New-Object -TypeName 'System.Collections.Generic.List[string]'
       foreach ($manifest in $manifests) {
-        Publish-Document -Root $ProjectRoot `
-        -Manifest $manifest `
-        -OutputFormat $Format `
-        -DocxReference $ReferenceDoc
+        try {
+          Publish-Document -Root $ProjectRoot `
+          -Manifest $manifest `
+          -OutputFormat $Format `
+          -DocxReference $ReferenceDoc
+        } catch {
+          $message = ('{0}: {1}' -f $manifest.Id, $_.Exception.Message)
+          $buildFailures.Add($message)
+          Write-Warning $message
+        }
       }
+      if ($buildFailures.Count -gt 0) {
+        throw ('Documentation build incomplete; {0} manifest(s) failed: {1}' -f
+          $buildFailures.Count, ($buildFailures -join ' | '))
+      }
+      Write-Output -InputObject ('Documentation build completed: {0} manifest(s), format={1}.' -f
+        $manifests.Count, $Format)
     }
   }
 }
@@ -1770,16 +1791,14 @@ if ($item -ne 'Chm' -and $LASTEXITCODE -ne 0) {
 # Validate-Documentation.ps1.
 if ($MyInvocation.InvocationName -ne '.') {
     $ProjectRoot = (Resolve-Path (Join-Path -Path $PSScriptRoot -ChildPath '..')).Path
-    $ReferenceDoc = Join-Path -Path $ProjectRoot -ChildPath 'docs\templates\Reference Styles.docx'
     $Parameters = @{
         Action         = 'Build'
         ProjectRoot    = $ProjectRoot
         Document       = 'All'
-        Format         = 'Docx'
+        Format         = 'All'
         FailOnWarning  = $true
         Verbose        = $true
         RenderDiagrams = $true
-        ReferenceDoc   = $ReferenceDoc
     }
 
     Invoke-Documentation @Parameters

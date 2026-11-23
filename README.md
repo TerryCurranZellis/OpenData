@@ -1,8 +1,8 @@
 # OpenData
 
-Version: **4.0.0**
+Checked-in Maven version: **4.2.0** (4.0 first-run GUI documentation retained as a feature baseline)
 
-OpenData is a Java 24 modular monolith for acquiring, validating, and loading
+OpenData is a modular Java application targeting Java 24 bytecode and currently requiring JDK 26 for full Maven builds for acquiring, validating, and loading
 OpenData sources through a shared framework, a JavaFX desktop interface, and a
 command-line entry point.
 
@@ -33,13 +33,13 @@ SQL credentials are not stored. See the
 [First-run guide](docs/guides/first-run-initialisation.md).
 
 Existing version 3 users should migrate their bootstrap file rather than
-reinitialize a live database. Full runtime validation is pending on JDK 24+.
+reinitialize a live database. Runtime compatibility must be verified against the JavaFX dependencies for the selected release.
 
 ## Build
 
 Prerequisites:
 
-- Java 24 or later for the full reactor build (`opendata-core` uses JavaFX)
+- JDK 26 or later for the full reactor build (as enforced by the root Maven POM; `maven.compiler.release` remains 24)
 - Maven 3.9 or later
 
 Run the full reactor build from the repository root:
@@ -57,7 +57,7 @@ mvn -pl opendata-plugins/opendata-plugin-openmeteo -am verify
 ```
 
 Older JDKs may still be used for limited compilation checks of the non-JavaFX
-modules, but the supported full build remains Java 24 or later.
+modules, but the full reactor currently requires JDK 26 or later.
 
 To launch a complete plugin-capable application from the repository root, install
 the reactor artifacts and run the launcher:
@@ -83,15 +83,19 @@ Two independent plugins: `electric-demand` and `electric-supply`. See [electrici
 
 ## Code quality and architectural review
 
-The 4.1.0 review branch runs strict Checkstyle, SpotBugs and test verification:
+The checked-in 4.2.0 reactor runs strict Checkstyle, SpotBugs and test verification:
 
 ```powershell
 mvn -Dquality.failOnViolation=true clean verify
 ```
 
-Development of strict module boundaries is tracked in the
+The earlier module-boundary migration is documented in the
 [4.1.0 module-boundary review](docs/architecture/031-module-boundaries-4.1-review.md).
-The 4.1.0 review branch separates provider assembly into `opendata-launcher`,
-removes Common and provider dependencies from Core, and adds source/POM boundary
-tests. The branch still requires final CI and desktop verification before release.
-JavaFX 26.0.2 is selected in the review branch to preserve JDK 24 compatibility.
+The current Maven reactor includes `opendata-launcher` and isolates Core from Common
+and provider implementations. The checked-in Core POM selects JavaFX 27; verify
+runtime support and GUI acceptance with the actual release JDK before distribution.
+
+To generate all four maintained manuals, use
+`./scripts/Build-Documentation.ps1 -Document All -Format All -RenderDiagrams`.
+HTML and DOCX need Pandoc, PDF also needs the configured XeLaTeX/SVG tools,
+and CHM needs Microsoft HTML Help Workshop on Windows.

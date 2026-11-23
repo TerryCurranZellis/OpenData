@@ -1,69 +1,45 @@
 # 2. Prerequisites and Installation
 
-> **Version 4.0.0:** Initial setup is now available through the
-> [first-run GUI wizard](../guides/first-run-initialisation.md). The manual
-> bootstrap below is retained for pre-v4 installations and administration.
-
-
 **Document ID:** USER-002  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 operational baseline  
-**Baseline date:** 15 August 2026  
-
----
+**Current checked-in source:** OpenData Maven 4.2.0  
+**First-run GUI feature baseline:** OpenData 4.0.0
 
 ## Required software
 
-- JDK 17 or later;
-- Maven 3.9 or later;
-- Microsoft SQL Server;
-- Apache NetBeans or another classpath-aware Java launcher;
-- PowerShell 5.1 or later for the supplied support scripts; and
-- outbound HTTPS access for Ofgem and OpenMeteo.
+- **JDK 26 or later for the current complete Maven build.** The compiler release target is 24, but this is not a runtime-compatibility promise for the checked-in JavaFX 27 dependencies.
+- Maven 3.9 or later, a working JavaFX desktop on Windows, and Microsoft SQL Server.
+- Network access to the selected providers' APIs or input data, subject to their terms.
+- Windows PowerShell 5.1 for the repository automation scripts.
+- For documentation builds: Pandoc; Java and PlantUML for diagrams; XeLaTeX plus SVG conversion for PDF; Microsoft HTML Help Workshop for CHM.
 
-Pandoc and PlantUML are required only when rebuilding generated documentation.
+## Compile and launch
 
-## Build
+From the repository root:
 
 ```powershell
-mvn clean verify
-mvn package
+mvn -Dquality.failOnViolation=true clean verify
+mvn clean install
+mvn -pl opendata-launcher exec:java
 ```
 
-The build produces `target/opendata-2.0.0.jar`, but the JAR does not contain all
-runtime dependencies and has no configured `Main-Class`. Configure the launcher
-with:
+`opendata-launcher` is the runnable composition module. Core has no provider implementation dependencies. In NetBeans, run the launcher with the repository root as its working directory and the launcher runtime dependencies on its classpath.
 
-```text
-Main class: com.towermarsh.opendata.OpenData
-Working directory: repository root
-```
+## Initial installation
 
-The working directory is significant because the current bootstrap and
-certificate paths are resolved beneath `src/main/resources/config` from
-`user.dir`.
+Copy the example file to writable `config/application.properties` (or use the packaged first-run defaults), leaving `init=true`. OpenData then starts the [three-step SQL Server first-run wizard](../guides/first-run-initialisation.md), followed by its progress/completion screen.
 
-## Local directories
+The wizard configures the database, application SQL login, AES password encryption and packaged providers. It registers discovered providers disabled and writes `init=false` on success. Do **not** use the old `.pfx`/`{enc}` bootstrap from 3.x guides for a new installation.
 
-Create writable directories for logs, working files and plugin inputs. For
-Octopus, define separate input and archive directories and protect them as
-personal financial data.
+Existing installations should preserve their data, copy/migrate the current `config/application.properties` and external AES key, and start with `init=false` only after verifying the database.
+
+## Runtime directories
+
+Provide writable log and plugin input/archive locations, as configured for your environment. For example:
 
 ```text
 C:\OpenData\logs
 C:\Attachments\octopus\incoming
-C:\Attachments\octopusrchive
+C:\Attachments\octopus\archive
 ```
 
-## First checks
-
-Help and About do not require SQL Server:
-
-```text
-opendata --help
-opendata --about
-```
-
-`--list-plugins` reads the persistent registry and therefore requires the SQL
-schema and valid bootstrap database connection. Continue with
-[SQL Server setup](03-sql-server-setup.md) before listing or registering plugins.
+Protect energy statements and application secrets as private data. See [Configuration](04-configuration.md), [SQL Server setup](03-sql-server-setup.md) and the [quick start](../guides/quick-start.md).

@@ -34,12 +34,22 @@ Invoke-Documentation -ProjectRoot $PWD -Action Clean
 | `-Action` | `Build` | `Build`, `Test`, `Clean`, or `All` |
 | `-ProjectRoot` | auto-detected | Optional repository root containing `config/documentation.json` |
 | `-Document` | `All` | One or more manifest ids, manifest base names, output base names, or `All` |
-| `-Format` | `All` | `Html`, `Docx`, `Pdf`, `All`, or `None` |
+| `-Format` | `All` | `Html`, `Docx`, `Pdf`, `Chm`, `All` (all four), or `None` |
 | `-ReferenceDoc` | manifest/default | Optional DOCX reference document override |
 | `-RenderDiagrams` | false | Render PlantUML SVG files before building |
 | `-FailOnWarning` | false | Treat validation warnings as errors |
 
-`Build-Documentation.ps1` and `Validate-Documentation.ps1` are maintained wrappers around the manifest-driven `Invoke-Documentation` function.
+`Build-Documentation.ps1` and `Validate-Documentation.ps1` are maintained wrappers around the manifest-driven `Invoke-Documentation` function. Running `Invoke-Documentation.ps1` directly now builds all manifests in all four formats, rather than DOCX only. A format failure is reported, and remaining formats/manuals are still attempted; a build with any failure ends with a non-success result.
+
+```powershell
+.\scripts\Validate-Documentation.ps1 -FailOnWarning
+.\scripts\Build-Documentation.ps1 -Document All -Format All -RenderDiagrams
+# Preview without optional PDF/CHM dependencies:
+.\scripts\Build-Documentation.ps1 -Document All -Format Docx
+.\scripts\Test-DocumentationContent.ps1 -CsvPath 'docs/build/documentation-content-audit.csv'
+```
+
+The output directory is `docs/build`. Four manifests should yield four HTML, four DOCX, four PDF and four CHM files when all toolchains are present. The real GUI screenshots must replace the [temporary placeholders](../docs/screenshots/README.md) before release.
 
 ## Document discovery and composition
 
@@ -80,8 +90,11 @@ Maintained scripts target Windows PowerShell 5.1. Pandoc must be on `PATH`; diag
 ```powershell
 .\scripts\New-ConfigurationEncryptionKey.ps1 `
     -Path 'C:\ProgramData\OpenData\security\database.key'
-$env:OPENDATA_CONFIG_KEY_FILE = 'C:\ProgramData\OpenData\security\database.key'
 ```
+
+Set `security.aes-key-file=C:/ProgramData/OpenData/security/database.key` in
+`config/application.properties`, read by the normal configuration loader.
+Do not require an environment variable or JVM property for this setting.
 
 Protect the key file using NTFS ACLs; never commit it. For migration and
 startup instructions see `docs/guides/database-configuration-and-security.md`.

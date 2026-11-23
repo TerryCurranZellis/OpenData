@@ -35,8 +35,29 @@ jobs:
       - name: Build HTML manuals
         shell: pwsh
         run: ./scripts/Build-Documentation.ps1 -Document All -Format Html
+      - name: Build DOCX manuals
+        shell: pwsh
+        run: ./scripts/Build-Documentation.ps1 -Document All -Format Docx
+      - name: Check one HTML and DOCX per manifest
+        shell: pwsh
+        run: |
+          $manifests = @(Get-ChildItem docs/manifests -Filter '*.json' -File)
+          foreach ($manifestFile in $manifests) {
+            $manifest = Get-Content $manifestFile.FullName -Raw | ConvertFrom-Json
+            $base = [IO.Path]::GetFileNameWithoutExtension([string]$manifest.output)
+            foreach ($extension in @('html','docx')) {
+              $file = Join-Path docs/build ("{0}.{1}" -f $base, $extension)
+              if (-not (Test-Path -LiteralPath $file -PathType Leaf) -or
+                  (Get-Item -LiteralPath $file).Length -eq 0) {
+                throw "Expected documentation output missing or empty: $file"
+              }
+            }
+          }
+          Write-Host ("Verified {0} manifests in HTML and DOCX." -f $manifests.Count)
       - name: Upload documentation
         uses: actions/upload-artifact@v4
         with:
-          name: opendata-documentation-html
-          path: docs/build/*.html
+          name: opendata-documentation-html-docx
+          path: |
+            docs/build/*.html
+            docs/build/*.docx

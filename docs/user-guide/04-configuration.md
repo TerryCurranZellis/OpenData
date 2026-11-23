@@ -1,128 +1,52 @@
 # 4. Configuration
 
-> **Version 4.0.0:** Initial setup is now available through the
-> [first-run GUI wizard](../guides/first-run-initialisation.md). The manual
-> bootstrap below is retained for pre-v4 installations and administration.
-
-
 **Document ID:** USER-004  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 operational baseline  
-**Baseline date:** 15 August 2026  
-
----
+**Checked-in source:** OpenData Maven 4.2.0  
+**First-run feature baseline:** 4.0.0
 
 ## Configuration sources
 
-OpenData uses:
+OpenData reads writable deployment bootstrap properties from `config/application.properties` (relative to the working directory) or the packaged first-run defaults. When `init=true`, the JavaFX wizard runs **before** CLI or plugin processing. On successful setup, the wizard writes `init=false`, enables database-backed configuration and retains the SQL application password encrypted using AES-256-GCM.
 
-1. built-in runtime defaults;
-2. the repository-local bootstrap file for the SQL Server connection;
-3. packaged application/plugin properties during initial registration; and
-4. SQL Server application/plugin properties after registration.
+The bootstrap stores database connection values and the external key **file path** under `security.aes-key-file`. No JVM option or environment variable is required. After initialisation, application settings, plugin definitions and enabled status are stored in SQL Server:
 
-The writable bootstrap file is:
+| SQL Server table | Meaning |
+|---|---|
+| `core.application_property` | Application settings and encrypted secret values |
+| `core.plugin_registry` | Plugin metadata and authoritative enabled status |
+| `core.plugin_property` | Registered plugin configuration properties |
 
-```text
-src/main/resources/config/application.properties
-```
+Use the normal properties loader; never paste the AES key itself into `application.properties`. Protect both the file and the key path with appropriate filesystem permissions.
 
-It contains the version marker, database-backed switch, database URL, database
-user and encrypted database password. The initial registration requires a valid
-plain database password in this file; successful registration encrypts and
-rewrites it.
+## Register and inspect providers
 
-## Register packaged plugins
+The first-run wizard discovers packaged or external plugin definitions and registers them disabled. From the GUI, **Register** scans the normal configuration folders and **Register from File** opens a JavaFX file chooser for a specific `.properties` definition.
+
+For an existing initialised installation, the CLI supports explicit registration:
 
 ```text
 opendata --plugin all --register
 opendata --plugin ofgem --register
-opendata --plugin ofgem --plugin openmeteo --register
-```
-
-Registration refreshes application properties, inserts or updates selected
-plugin metadata in `core.plugin_registry`, replaces each selected plugin's
-complete `core.plugin_property` set and enables database-backed configuration.
-Re-registering an existing plugin preserves its current enabled/disabled status.
-
-
-## Register plugins from the graphical interface
-
-In Version 3.0.0, **Register** scans the OpenData plugin configuration folder for
-new complete `.properties` definitions. The deployment-style location is
-`config/plugins`; a development checkout also scans
-the provider projects' `src/main/resources/config/plugins` directories under
-`opendata-plugins`. Existing registered ids are excluded and
-new definitions are shown for confirmation before they are written.
-
-Use **Register from File** when the definition is elsewhere. The JavaFX file
-chooser selects one complete `.properties` file and OpenData reads its
-`plugin.id` from the file before validation and registration.
-
-## Inspect stored plugin configuration
-
-Use `--detail` to display the configuration currently stored for one registered
-plugin:
-
-```text
 opendata --plugin ofgem --detail
-```
-
-The command displays the plugin id, display name and current enabled/disabled
-status, followed by the stored property names and values read from
-`core.plugin_property`.
-
-`--detail` requires exactly one named plugin. It cannot be used with `all`,
-multiple plugin selections, `--execute`, `--dry-run`, `--file`, or another
-plugin administration operation.
-
-This is useful after registration or re-registration to confirm which
-configuration OpenData will read for that plugin.
-
-## Register one plugin from a file
-
-Copy a complete packaged definition, edit it outside the repository, then run:
-
-```text
 opendata --plugin openmeteo --register --file C:\OpenData\openmeteo.properties
 ```
 
-The file must contain the full unprefixed plugin definition, including
-`plugin.id`, implementation class, dataset, endpoints and typed properties. Its
-`plugin.id` must match the selected command-line id. `--file` cannot be used with
-`all`, multiple plugin ids, enable, disable, unregister, detail, or a normal run.
+The external definition must include a matching `plugin.id` and a loadable implementation class. Re-registration updates stored definitions without forcing an existing registered plugin to become enabled.
 
-`plugin.enabled` supplies the initial status only when the plugin is first
-registered. Use `--enable` or `--disable` for subsequent lifecycle changes.
-
-After registration, the stored values can be checked with:
-
-```text
-opendata --plugin openmeteo --detail
-```
-
-## Administration
+## Manage plugin state
 
 ```text
 opendata --list-plugins
-opendata --plugin octopus --detail
-opendata --plugin octopus --disable
 opendata --plugin octopus --enable
+opendata --plugin octopus --disable
+opendata --plugin octopus --detail
 opendata --plugin octopus --unregister
 ```
 
-Unregistering removes both metadata and stored plugin properties. Provider data
-and historical audit rows are not deleted.
+After registration, `core.plugin_registry.is_enabled` is authoritative; changing `plugin.enabled` in a file alone does not change existing registry status. Unregistering removes the plugin registry entry and its stored properties, not imported provider data.
 
-## Security warning
+## Security and migrations
 
-The uploaded baseline contains development credential/private-key material.
-Remove it from source control, replace the certificate pair and rotate any
-exposed database password before release or production use.
+Do not expose the database password, AES key, SQL administrator credential, API tokens or customer billing data in source control or screenshots. The historical `{enc}`/RSA ciphertext format is not supported by the AES reader. Follow [Database access security](../guides/database-configuration-and-security.md) and [First-run migration guidance](../guides/first-run-initialisation.md) for upgrades; do not reset `init=true` on a functioning production database.
 
-Plugin configuration should contain secret references rather than actual secret
-values. Because `--detail` writes stored plugin configuration to standard
-output, do not redirect or share its output where configured values should not
-be disclosed.
-
----
+See the [full configuration reference](../reference/configuration-reference.md) and [plugin properties reference](../reference/plugin-properties-reference.md).
