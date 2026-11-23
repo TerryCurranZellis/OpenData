@@ -1,15 +1,14 @@
 # Operations Runbook
 
-> **OpenData 4.0.0:** This document contains legacy version 3 examples.
-> For the current first-run workflow, read
+> **OpenData 4.x:** For the current first-run workflow, read
 > [First-run configuration wizard](../guides/first-run-initialisation.md)
 > and [First-run architecture](../architecture/030-first-run-initialisation.md).
 > With `init=true`, the GUI wizard runs before CLI commands.
 
 
 **Document ID:** OPS-RUNBOOK-001  
-**Version:** 3.0.0  
-**Status:** Version 3.0.0 pre-production baseline  
+**Version:** 4.2.0 (current Maven source)  
+**Status:** Current operational guidance; historical CLI examples retained  
 **Baseline date:** 15 August 2026  
 
 ---
@@ -20,8 +19,8 @@
 
 1. record application/schema/documentation versions;
 2. verify launcher working directory;
-3. apply SQL scripts including registry migration/grants;
-4. replace/protect bootstrap credentials and certificate material;
+3. on new installations, complete the first-run wizard; on existing installations verify schema and grants before running migrations;
+4. protect `config/application.properties`, the external AES key identified by `security.aes-key-file`, SQL credentials and server TLS trust;
 5. verify log/input/work/archive permissions and capacity;
 6. back up SQL Server and protected configuration.
 
