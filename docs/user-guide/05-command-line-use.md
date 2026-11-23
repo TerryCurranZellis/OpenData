@@ -1,8 +1,8 @@
 # Command-Line Use
 
 **Document ID:** USER-CLI-005  
-**Version:** 3.0.0  
-**Status:** OpenData 3.0.0 implementation guidance  
+**Version:** 4.2.0 (current source baseline)  
+**Status:** Current CLI user guidance; commands originated in earlier releases  
 **Baseline date:** 15 August 2026  
 
 ---
