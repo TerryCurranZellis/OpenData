@@ -16,12 +16,14 @@ order:
 6. `008-grant-application-permissions.sql`
 7. `009-grant-shared-schema-permissions.sql`
 
-Plugin schemas (`ofgem`, `openmeteo`, `octopus`, `electricdemand`,
-`electricsupply`) are no longer created by scripts in this folder. Each plugin
-creates its own schema and tables when it is registered, from
-`opendata-core/src/main/resources/sql/plugins/<id>.sql`. The login used by
-OpenData therefore needs permission to create schemas and tables (for example
-membership of `db_owner`, or `CREATE SCHEMA` and `CREATE TABLE`).
+Provider schemas for Ofgem, OpenMeteo, Octopus, Octopus Adjustment, Electric
+Demand and Electric Supply are not created by top-level SQL scripts. Each
+provider owns its SQL resource at
+`opendata-plugins/opendata-plugin-<id>/src/main/resources/sql/plugins/<id>.sql`
+and its `RegisterPlugin` class applies that resource at registration. Normal
+plugin registration therefore requires suitable DDL privileges; the JavaFX
+first-run wizard uses temporary administrator rights for initial schema creation
+and grants the separate application account its configured role/permissions.
 
 Supply the login password only through the SQLCMD variable. The application
 connects to database `OpenData` as user `OpenData`. `010-verification-queries.sql`
