@@ -150,6 +150,24 @@ For this first-run guide, capture the following actual application views:
 - `gui-init-success.png`: successful completion;
 - `gui-init-failure.png`: representative safe failure and recovery.
 
+The following illustrations use temporary placeholders until approved captures
+from the application replace them. The filenames remain stable for generated
+HTML, DOCX, PDF and CHM manuals.
+
+![OpenData first-run database server — screenshot placeholder](../screenshots/gui-init-database-server.png)
+
+![OpenData first-run application account — screenshot placeholder](../screenshots/gui-init-application-account.png)
+
+![OpenData first-run aes key file chooser — screenshot placeholder](../screenshots/gui-init-aes-key-file-chooser.png)
+
+![OpenData first-run review — screenshot placeholder](../screenshots/gui-init-review.png)
+
+![OpenData first-run progress — screenshot placeholder](../screenshots/gui-init-progress.png)
+
+![OpenData first-run success — screenshot placeholder](../screenshots/gui-init-success.png)
+
+![OpenData first-run failure — screenshot placeholder](../screenshots/gui-init-failure.png)
+
 See [first-run initialisation sequence](../diagrams/source/first-run-initialisation-sequence.puml)
 for the maintainable PlantUML source. Screenshots must be captured from the
 running JavaFX application and checked for secrets before publication.
