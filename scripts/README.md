@@ -95,7 +95,6 @@ Maintained scripts target Windows PowerShell 5.1. Pandoc must be on `PATH`; diag
 Set `security.aes-key-file=C:/ProgramData/OpenData/security/database.key` in
 `config/application.properties`, read by the normal configuration loader.
 Do not require an environment variable or JVM property for this setting.
-```
 
 Protect the key file using NTFS ACLs; never commit it. For migration and
 startup instructions see `docs/guides/database-configuration-and-security.md`.
