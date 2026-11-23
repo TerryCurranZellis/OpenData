@@ -252,8 +252,12 @@ therefore displays the latest persisted run status/date after refresh.
 
 Capture two states because they document different behaviour:
 
+![OpenData execution log while running — screenshot placeholder](../screenshots/gui-execution-log-running.png)
+
 - `gui-execution-log-running.png` — live log while work is active, with formatted
   plugin/run output visible and **Close** visibly disabled;
+![OpenData execution log after completion — screenshot placeholder](../screenshots/gui-execution-log-complete.png)
+
 - `gui-execution-log-complete.png` — completed outcome with **Close** enabled.
 
 A multi-plugin run is preferred for the running capture if it naturally produces
