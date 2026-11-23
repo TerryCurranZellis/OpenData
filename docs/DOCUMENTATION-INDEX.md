@@ -74,6 +74,7 @@ and [screenshot placeholders](screenshots/README.md).
 - [Historical 3.0.0 release readiness](review/RELEASE-READINESS-STATUS-3.0.0.md)
 - [Version 3.0.0 release record](release/Release-3.0.0.md)
 - [Version 3.0.0 documentation update record](review/VERSION-3.0.0-DOCUMENTATION-UPDATE-2026-08-15.md)
+- [Current documentation review (23 November 2026)](review/DOCUMENTATION-REVIEW-2026-11-23.md)
 - [Final release checklist](release/Final-Release-Checklist.md)
 - [Release evidence index](release/Release-Evidence-Index.md)
 - [ADR register](decisions/ADR-REGISTER.md)
