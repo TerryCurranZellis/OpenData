@@ -2,7 +2,7 @@
 
 **Document ID:** DEV-INDEX-001  
 **Version:** 4.0.0  
-**Status:** OpenData 4.0.0 baseline; 4.1.0 code refactor in review
+**Status:** 4.0 GUI feature documentation; checked-in Maven build at 4.2.0
 **Baseline date:** 10 November 2026  
 **Minimum Java version:** 24
 
@@ -10,7 +10,7 @@
 
 ## Development baseline
 
-- Minimum supported JDK: 24.
+- Full Maven build JDK: **26 or later**, enforced by the checked-in root POM; bytecode compilation target is 24.
 - Current development JDK: 26.
 - Current development IDE: Apache NetBeans 31.
 - Maven: 3.9 or later.
@@ -63,7 +63,7 @@ from that module.
 
 ## Mandatory local verification
 
-Run `mvn clean verify` with Java 24 or later. Checkstyle and SpotBugs are
+Run `mvn clean verify` with JDK 26 or later. Checkstyle and SpotBugs are
 configured to fail on detected violations; the CI equivalent explicitly sets
 `-Dquality.failOnViolation=true`. Tests requiring all six provider JARs
 run in `opendata-launcher`, not in the API-only Core dependency tree.
